@@ -1,0 +1,14 @@
+<testsuite name="Mocha Tests" tests="2" failures="1" errors="1" skipped="0" timestamp="Mon, 15 Feb 2016 15:04:16 GMT" time="0.007">
+<testcase classname="Array #indexOf()" name="should return -1 when the value is not present" time="0.001"/>
+<testcase classname="Theme #constructor" name="constructor name equals a" time="0.001"><failure><![CDATA['a' == ''
+AssertionError: 'a' == ''
+    at Context.&lt;anonymous&gt; (C:\Users\Rob\Documents\Integratieproject\kandoe.git\test\theme.js:9:20)
+    at callFn (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runnable.js:315:21)
+    at Test.Runnable.run (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runnable.js:308:7)
+    at Runner.runTest (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:422:10)
+    at C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:533:12
+    at next (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:342:14)
+    at C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:352:7
+    at next (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:284:14)
+    at Immediate._onImmediate (C:\Users\Rob\Documents\Integratieproject\kandoe.git\node_modules\mocha\lib\runner.js:320:5)]]></failure></testcase>
+</testsuite>

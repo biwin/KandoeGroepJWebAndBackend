@@ -1,19 +1,13 @@
-System.register(['assert'], function(exports_1) {
-    var assert;
-    return {
-        setters:[
-            function (assert_1) {
-                assert = assert_1;
-            }],
-        execute: function() {
-            describe('theme', function () {
-                describe('test', function () {
-                    it('1 = 1', function () {
-                        assert.equal(1, 1);
-                    });
-                });
-            });
-        }
-    }
+/// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
+var assert = require('assert');
+var theme_1 = require("../app/backend/model/theme");
+describe('Theme', function () {
+    describe('#constructor', function () {
+        it('constructor name equals a', function () {
+            var theme = new theme_1.Theme("a", "description");
+            assert.equal(theme.name, 'a');
+        });
+    });
 });
 //# sourceMappingURL=theme.js.map
