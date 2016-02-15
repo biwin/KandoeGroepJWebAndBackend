@@ -13,6 +13,12 @@
     },
     "chai/chai.d.ts": {
       "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
+    },
+    "mongoose/mongoose.d.ts": {
+      "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
+    },
+    "node/node.d.ts": {
+      "commit": "bda9391b4987bbf91a713ccaf586c108106ced1f"
     }
   }
 }
