@@ -39,7 +39,9 @@
     "rxjs": "5.0.0-beta.0",
     "systemjs": "0.19.6",
     "zone.js": "0.5.11",
-    "mocha": "^2.4.5",
+    "mocha": "^2.4.5"
+  },
+  "devDependencies": {
     "typescript": "^1.7.5"
   },
   "private": true,
