@@ -13,10 +13,11 @@ describe('Theme', () => {
     });
     describe('#addTheme', () => {
         it('', () =>{
-            var themaDao:ThemeDao = new ThemeDao();
+            var themeDao:ThemeDao = new ThemeDao();
             var theme:Theme = new Theme("Bars", "The bars we could visit this weekend");
-            themaDao.create(theme);
-            themaDao.read(1);
+            themeDao.create(theme);
+            var themeResult = themeDao.read("Bars");
+            assert.equal(themeResult.name, theme.name)
         });
     });
 });

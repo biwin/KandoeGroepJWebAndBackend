@@ -1,5 +1,6 @@
 export class Theme {
-    private id:number;
+    private _id:number;
+    private creatorId:number;
     private _name:string;
     private description:string;
     private tags:string[];
