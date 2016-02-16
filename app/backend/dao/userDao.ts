@@ -11,7 +11,6 @@ export class UserDao {
     private _db:Mongoose;
 
     constructor() {
-        console.log("JASPER");
         this._db = new Mongoose().connect(DaoConstants.CONNECTION_URL);
         this._userSchema = new Schema({
             _id: String,
@@ -23,10 +22,8 @@ export class UserDao {
 
     create(id:string, email:string, password:string): User {
         var user = new this._userModel({_id: id, _email: email, _password: password});
-        console.log("jasper??");
         user.save((createdUser) => {
-            console.log("hello");
-            console.log(createdUser);
+
         });
         return null;
     }
