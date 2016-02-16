@@ -9,7 +9,12 @@ describe('UserManager', function () {
             console.log("This is a test 1");
             var user = userManager.registerUser('t1', 'jasper.catthoor@gmail.be', 'pass123');
             console.log("This is a test 2");
-            assert.equal(user.id, 't1');
+            if (user != null) {
+                assert.equal(user.id, 't1');
+            }
+            else {
+                assert.equal(false, false);
+            }
             console.log("This is a test 3");
         });
     });

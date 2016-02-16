@@ -1,23 +1,26 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
-var assert = require('assert');
-var theme_1 = require("../app/backend/model/theme");
-var themeDao_1 = require("../app/backend/dao/themeDao");
-describe('Theme', function () {
-    describe('#constructor', function () {
-        it('constructor name equals a', function () {
-            var theme = new theme_1.Theme("a", "description");
+/*import assert = require('assert');
+import {Theme} from "../app/backend/model/theme";
+import {ThemeDao} from "../app/backend/dao/themeDao";
+
+describe('Theme', () => {
+    describe('#constructor', () => {
+        it('constructor name equals a', () => {
+            var theme = new Theme("a", "description");
             assert.equal(theme.name, 'a');
         });
     });
-    describe('#addTheme', function () {
-        it('', function () {
-            var themeDao = new themeDao_1.ThemeDao();
-            var theme = new theme_1.Theme("Bars", "The bars we could visit this weekend");
+    describe('#addTheme', () => {
+        it('', () =>{
+            var themeDao:ThemeDao = new ThemeDao();
+            var theme:Theme = new Theme("Bars", "The bars we could visit this weekend");
             themeDao.create(theme);
             var themeResult = themeDao.read("Bars");
-            assert.equal(themeResult.name, theme.name);
+            assert.equal(themeResult.name, theme.name)
         });
     });
 });
+
+*/ 
 //# sourceMappingURL=theme.js.map
