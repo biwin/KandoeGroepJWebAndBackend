@@ -7,7 +7,7 @@ var UserManager = (function () {
         this._userDao = new userDao_1.UserDao();
     }
     UserManager.prototype.registerUser = function (id, email, password) {
-        return this._userDao.createUser(id, email, password);
+        return this._userDao.create(id, email, password);
     };
     return UserManager;
 })();

@@ -6,7 +6,7 @@ describe('UserManager', function () {
     describe('createUser', function () {
         it('should return the created user object', function () {
             var userManager = new userManager_1.UserManager();
-            var user = userManager.create('t1', 'jasper.catthoor@gmail.be', 'pass123');
+            var user = userManager.registerUser('t1', 'jasper.catthoor@gmail.be', 'pass123');
             assert.equal(user.id, 't1');
         });
     });

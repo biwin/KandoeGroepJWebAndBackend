@@ -13,7 +13,7 @@ export class UserManager {
     }
 
     registerUser(id: string,email: string,password: string): User{
-        return this._userDao.createUser(id,email,password);
+        return this._userDao.create(id,email,password);
 
 
     }
