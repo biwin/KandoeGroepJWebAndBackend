@@ -44,6 +44,7 @@ import {Theme} from "../model/theme";
 import {DaoConstants} from "./daoConstants";
 import {MongoCallback} from "mongodb";
 import {Db} from "mongodb";
+import {CursorResult} from "mongodb";
 export class ThemeDao {
     private client:MongoClient;
 
@@ -51,24 +52,19 @@ export class ThemeDao {
         this.client = new MongoClient();
     }
 
-    read(name:string):Theme {
-        /**
-         * werkt nog niet
-         * */
-
-        var theme:Theme = new Theme(1, "dicks", "");
-
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            var a = db.collection('themes').find({'_name': name}).limit(1).next();
-            console.log(a);
+    read(name:string, callback:(t:Theme) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db:Db) => {
+            return db.collection('themes').find({'_name': name}).limit(1).next();
+        }).then((cursor:CursorResult) => {
+            callback(cursor);
         });
-
-        return theme;
     }
 
     create(t:Theme) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('themes').insertOne(t);
+            db.collection('themes').insertOne(t).then(() => {
+                db.close();
+            });
         });
     }
 }

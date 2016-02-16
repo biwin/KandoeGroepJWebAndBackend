@@ -6,7 +6,7 @@ import {ThemeDao} from "../app/backend/dao/themeDao";
 
 describe('Theme', () => {
     describe('#addTheme', () => {
-        it('', () =>{
+        it('theme must be saved in the database', () =>{
             var themeDao:ThemeDao = new ThemeDao();
             var theme:Theme = new Theme(1,"Bars","Bars we want to visit");
             themeDao.create(theme);

@@ -5,7 +5,7 @@ var theme_1 = require("../app/backend/model/theme");
 var themeDao_1 = require("../app/backend/dao/themeDao");
 describe('Theme', function () {
     describe('#addTheme', function () {
-        it('', function () {
+        it('theme must be saved in the database', function () {
             var themeDao = new themeDao_1.ThemeDao();
             var theme = new theme_1.Theme(1, "Bars", "Bars we want to visit");
             themeDao.create(theme);

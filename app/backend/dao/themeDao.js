@@ -38,26 +38,23 @@ export class ThemeDao {
 }*/
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 var mongodb_1 = require("mongodb");
-var theme_1 = require("../model/theme");
 var daoConstants_1 = require("./daoConstants");
 var ThemeDao = (function () {
     function ThemeDao() {
         this.client = new mongodb_1.MongoClient();
     }
-    ThemeDao.prototype.read = function (name) {
-        /**
-         * werkt nog niet
-         * */
-        var theme = new theme_1.Theme(1, "dicks", "");
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            var a = db.collection('themes').find({ '_name': name }).limit(1).next();
-            console.log(a);
+    ThemeDao.prototype.read = function (name, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('themes').find({ '_name': name }).limit(1).next();
+        }).then(function (cursor) {
+            callback(cursor);
         });
-        return theme;
     };
     ThemeDao.prototype.create = function (t) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').insertOne(t);
+            db.collection('themes').insertOne(t).then(function () {
+                db.close();
+            });
         });
     };
     return ThemeDao;
