@@ -12,7 +12,7 @@ describe('UserManager', () => {
             if (user != null) {
                 assert.equal(user.id, 't1');
             } else {
-                assert.equal(false, false);
+                assert.equal(false, true);
             }
         });
     });
