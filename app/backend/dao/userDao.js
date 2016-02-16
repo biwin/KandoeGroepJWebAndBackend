@@ -14,6 +14,7 @@ var UserDao = (function () {
     UserDao.prototype.create = function (id, email, password) {
         var user = new this._userModel({ _id: id, _email: email, _password: password });
         user.save(function (createdUser) {
+            console.log("<test>" + createdUser + "</test>");
         });
         return null;
     };

@@ -23,7 +23,7 @@ export class UserDao {
     create(id:string, email:string, password:string): User {
         var user = new this._userModel({_id: id, _email: email, _password: password});
         user.save((createdUser) => {
-
+            console.log("<test>" + createdUser + "</test>");
         });
         return null;
     }
