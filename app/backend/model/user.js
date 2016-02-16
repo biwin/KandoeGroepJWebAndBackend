@@ -1,43 +1,6 @@
-/**
- * Created by Jan on 16/02/2016.
- */
-var User = (function () {
-    function User(id, email, password) {
-        this._id = id;
-        this._email = email;
-        this._password = password;
-    }
-    Object.defineProperty(User.prototype, "id", {
-        get: function () {
-            return this._id;
-        },
-        set: function (value) {
-            this._id = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(User.prototype, "email", {
-        get: function () {
-            return this._email;
-        },
-        set: function (value) {
-            this._email = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(User.prototype, "password", {
-        get: function () {
-            return this._password;
-        },
-        set: function (value) {
-            this._password = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return User;
-})();
-exports.User = User;
-//# sourceMappingURL=user.js.map
+var mongoose_1 = require("mongoose");
+var mongoose_2 = require("mongoose");
+var userSchema = new mongoose_1.Schema({ email: String, password: String, displayName: String });
+var User = mongoose_2.model("User", userSchema);
+module.exports = User;
+//# sourceMappingURL=User.js.map
