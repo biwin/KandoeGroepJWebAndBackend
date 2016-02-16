@@ -1,11 +1,10 @@
-var userdao = require('../dao/udo');
+var userDao_1 = require("../dao/userDao");
 var UserManager = (function () {
-    //private _userDao: UserDao;
     function UserManager() {
-        //  this._userDao = new UserDao();
+        this._userDao = new userDao_1.UserDao();
     }
     UserManager.prototype.registerUser = function (id, email, password) {
-        return userdao.create(id, email, password);
+        return this._userDao.create(id, email, password);
     };
     return UserManager;
 })();
