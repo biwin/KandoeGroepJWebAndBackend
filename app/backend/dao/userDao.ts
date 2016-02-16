@@ -22,7 +22,7 @@ export class UserDao {
     }
 
     create(id:string, email:string, password:string): User {
-        var user = new this._userModel( {_id: id,_email: email,_password: password});
+        var user = new this._userModel({_id: id, _email: email, _password: password});
         console.log("jasper??");
         user.save((createdUser) => {
             console.log("hello");
