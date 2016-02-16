@@ -1407,7 +1407,7 @@ declare module "fs" {
     export var W_OK: number;
     /** Constant for fs.access(). File can be executed by the calling process. */
     export var X_OK: number;
-    /** Tests a user's permissions for the file specified by path. */
+    /** Tests a User's permissions for the file specified by path. */
     export function access(path: string, callback: (err: NodeJS.ErrnoException) => void): void;
     export function access(path: string, mode: number, callback: (err: NodeJS.ErrnoException) => void): void;
     /** Synchronous version of fs.access. This throws if any accessibility checks fail, and does nothing otherwise. */
