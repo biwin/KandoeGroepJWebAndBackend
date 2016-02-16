@@ -1,9 +1,0 @@
-test
-JASPER
-This is a test 1
-jasper??
-This is a test 2
-This is a test 3
-<testsuite name="Mocha Tests" tests="1" failures="0" errors="0" skipped="0" timestamp="Tue, 16 Feb 2016 12:52:52 GMT" time="0.033">
-<testcase classname="UserManager createUser" name="should return the created user object" time="0.019"/>
-</testsuite>
