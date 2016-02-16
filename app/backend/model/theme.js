@@ -1,8 +1,9 @@
 var Theme = (function () {
-    function Theme(name, description, tags) {
-        this.name = name;
-        this.description = description;
-        this.tags = tags;
+    function Theme(_creatorId, _name, _description, _tags) {
+        this._creatorId = _creatorId;
+        this._name = _name;
+        this._description = _description;
+        this._tags = _tags;
     }
     return Theme;
 })();
