@@ -3,8 +3,8 @@
 import {Document} from "mongoose";
 export interface ITheme extends Document {
     _id:number,
-    creatorId:number,
+    _creatorId:number,
     _name:string,
-    description:string,
-    tags:string[]
+    _description:string,
+    _tags:string[]
 }

@@ -7,31 +7,35 @@ import {Schema} from "mongoose";
 import {Model} from "mongoose";
 import {ITheme} from "../model/iTheme";
 import {model} from "mongoose";
+import {keyValDiff} from "angular2/src/core/change_detection/change_detection";
 
 export class ThemeDao {
-    private db:Mongoose;
-    private themeScheme:Schema;
-    private themeModel:Model<ITheme>;
+    private _db:Mongoose;
+    private _themeScheme:Schema;
+    private _themeModel:Model<ITheme>;
 
     constructor() {
-        this.db = new Mongoose().connect(DaoConstants.CONNECTION_URL);
-        this.themeScheme = new Schema({
-            id:Number,
-            creatorId:Number,
+        this._db = new Mongoose().connect(DaoConstants.CONNECTION_URL);
+        this._themeScheme = new Schema({
+            _id:Number,
+            _creatorId:Number,
             _name:String,
-            description:String,
-            tags:[]
+            _description:String,
+            _tags:[]
         });
-        this.themeModel = model<ITheme>('Theme', this.themeScheme);
+        this._themeModel = model<ITheme>('Theme', this._themeScheme);
     }
 
     read(name:string):Theme {
-        this.themeModel.find({}).where('name').equals(name).exec((err:any, t:Theme) => {
-
+        var theme:Theme;
+        this._themeModel.find({}).where('name').equals(name).exec((err:any, t:Theme) => {
+            theme = t;
         });
+        return theme;
     }
 
     create(theme:Theme):void {
-        this.themeModel.
+
+
     }
 }

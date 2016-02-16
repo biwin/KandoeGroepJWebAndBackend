@@ -5,19 +5,13 @@ import {Theme} from "../app/backend/model/theme";
 import {ThemeDao} from "../app/backend/dao/themeDao";
 
 describe('Theme', () => {
-    describe('#constructor', () => {
-        it('constructor name equals a', () => {
-            var theme = new Theme("a", "description");
-            assert.equal(theme.name, 'a');
-        });
-    });
     describe('#addTheme', () => {
-        it('', () =>{
+        it('Theme must have Bars as name', () =>{
             var themeDao:ThemeDao = new ThemeDao();
-            var theme:Theme = new Theme("Bars", "The bars we could visit this weekend");
+            var theme:Theme = new Theme(1, "Bars", "The bars we could visit this weekend");
             themeDao.create(theme);
             var themeResult = themeDao.read("Bars");
-            assert.equal(themeResult.name, theme.name)
+            assert.equal(themeResult._name, theme._name);
         });
     });
 });
