@@ -1,4 +1,3 @@
-import {User} from "../model/user";
 import {UserDao} from "../dao/userDao";
 
 export class UserManager {
@@ -9,7 +8,7 @@ export class UserManager {
         this._userDao = new UserDao();
     }
 
-    registerUser(id: string,email: string,password: string): User {
+    registerUser(id: string,email: string,password: string): Object {
         return this._userDao.create(id,email,password);
     }
 }
