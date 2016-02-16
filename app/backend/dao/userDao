@@ -5,11 +5,13 @@ import {DaoConstants} from "./daoConstants";
 import {Schema} from "mongoose";
 import {Model} from "mongoose";
 import {IUser} from "../model/iUser";
+import {User} from "../model/user";
 
 export class UserDao {
     private _userSchema:Schema;
     private _userModel:Model<IUser>;
     private _db:Mongoose;
+
 
 
     constructor() {
@@ -20,5 +22,13 @@ export class UserDao {
             _password: String
         }, {versionKey: false});
         this._userModel = mongoose.model('User',_userSchema);
+
+    }
+
+    create(id:string, email:string, password:string):User {
+        var user = new this._userModel( {_id: id,_email: email,_password: password});
+        user.save((createdUser) =>{
+            return createdUser;
+        });
     }
 }
