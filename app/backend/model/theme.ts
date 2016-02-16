@@ -1,17 +1,4 @@
 export class Theme {
-    private id:number;
-    private _name:string;
-    private description:string;
-    private tags:string[];
 
-    constructor(name:string, description:string, tags?:string[]) {
-        this._name = name;
-        this.description = description;
-        this.tags = tags;
-    }
-
-
-    get name():string {
-        return this._name;
-    }
+    constructor(public name: string, private description: string, private tags?:string[]) { }
 }
