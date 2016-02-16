@@ -1,9 +1,14 @@
-test
-JASPER
-This is a test 1
-jasper??
-This is a test 2
-This is a test 3
-<testsuite name="Mocha Tests" tests="1" failures="0" errors="0" skipped="0" timestamp="Tue, 16 Feb 2016 12:52:52 GMT" time="0.033">
-<testcase classname="UserManager createUser" name="should return the created user object" time="0.019"/>
+<testsuite name="Mocha Tests" tests="1" failures="1" errors="1" skipped="0" timestamp="Tue, 16 Feb 2016 14:02:34 GMT" time="0.011">
+<testcase classname="UserManager createUser" name="should return the created user object" time="0.001"><failure><![CDATA[userdao.create is not a function
+TypeError: userdao.create is not a function
+    at UserManager.registerUser (F:\Integratieproject2-new\kandoe\app\backend\logic\userManager.js:8:24)
+    at Context.&lt;anonymous&gt; (F:\Integratieproject2-new\kandoe\test\user.js:9:36)
+    at callFn (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runnable.js:315:21)
+    at Test.Runnable.run (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runnable.js:308:7)
+    at Runner.runTest (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:422:10)
+    at F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:533:12
+    at next (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:342:14)
+    at F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:352:7
+    at next (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:284:14)
+    at Immediate._onImmediate (F:\Integratieproject2-new\kandoe\node_modules\mocha\lib\runner.js:320:5)]]></failure></testcase>
 </testsuite>

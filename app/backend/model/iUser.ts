@@ -1,10 +1,7 @@
-/// <reference path="../../../typings/mongoose/mongoose.d.ts" />
+interface IUser {
+    name: string;
+    email: string;
+    password: string;
+};
 
-import {Document} from "mongoose";
-
-export interface IUser extends Document {
-    _id:string;
-    _email:string;
-    _password:string;
-
-}
+export = IUser;
