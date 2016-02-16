@@ -11,7 +11,7 @@ export class UserDao {
         this._db = new Mongoose().connect(DaoConstants.CONNECTION_URL);
     }
 
-    create(id:string, email:string, password:string): Object {
+    create(id:string, email:string, password:string):Object {
         var user = new User({name: id, email: email, password: password});
         user.save();
         return null;
