@@ -1,5 +1,4 @@
 import {User} from "../model/user";
-let userdao = require('../dao/udo');
 
 export class UserManager {
 
