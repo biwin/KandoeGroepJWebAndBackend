@@ -1,7 +1,4 @@
 var userDao_1 = require("../dao/userDao");
-/**
- * Created by Jan on 16/02/2016.
- */
 var UserManager = (function () {
     function UserManager() {
         this._userDao = new userDao_1.UserDao();

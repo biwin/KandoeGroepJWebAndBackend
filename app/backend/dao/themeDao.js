@@ -15,14 +15,6 @@ var ThemeDao = (function () {
         });
         this.themeModel = mongoose_3.model('Theme', this.themeScheme);
     }
-    ThemeDao.prototype.read = function (name) {
-        this.themeModel.find({}).where('name').equals(name).exec(function (err, t) {
-        });
-    };
-    ThemeDao.prototype.create = function (theme) {
-        this.themeModel.
-        ;
-    };
     return ThemeDao;
 })();
 exports.ThemeDao = ThemeDao;

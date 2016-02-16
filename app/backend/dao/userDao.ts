@@ -1,9 +1,7 @@
 /// <reference path="../../../typings/mongoose/mongoose.d.ts" />
 
-import {Mongoose} from "mongoose";
+import {Mongoose, Model, Schema, model} from "mongoose";
 import {DaoConstants} from "./daoConstants";
-import {Schema} from "mongoose";
-import {Model} from "mongoose";
 import {IUser} from "../model/iUser";
 import {User} from "../model/user";
 
@@ -12,23 +10,24 @@ export class UserDao {
     private _userModel:Model<IUser>;
     private _db:Mongoose;
 
-
-
     constructor() {
+        console.log("JASPER");
         this._db = new Mongoose().connect(DaoConstants.CONNECTION_URL);
-        this._userSchema = new mongoose.Schema({
+        this._userSchema = new Schema({
             _id: String,
             _email: String,
             _password: String
         }, {versionKey: false});
-        this._userModel = mongoose.model('User',_userSchema);
-
+        this._userModel = model<IUser>('User', this._userSchema);
     }
 
-    create(id:string, email:string, password:string):User {
+    create(id:string, email:string, password:string): User {
         var user = new this._userModel( {_id: id,_email: email,_password: password});
-        user.save((createdUser) =>{
-            return createdUser;
+        console.log("jasper??");
+        user.save((createdUser) => {
+            console.log("hello");
+            console.log(createdUser);
         });
+        return null;
     }
 }

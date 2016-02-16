@@ -25,13 +25,13 @@ export class ThemeDao {
         this.themeModel = model<ITheme>('Theme', this.themeScheme);
     }
 
-    read(name:string):Theme {
+    /*read(name:string):Theme {
         this.themeModel.find({}).where('name').equals(name).exec((err:any, t:Theme) => {
 
         });
-    }
+    }*/
 
-    create(theme:Theme):void {
-        this.themeModel.
-    }
+   /* create(theme:Theme):void {
+      //  this.themeModel.
+    }*/
 }
