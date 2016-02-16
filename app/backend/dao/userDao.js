@@ -7,7 +7,7 @@ var UserDao = (function () {
         this._db = new mongoose_1.Mongoose().connect(daoConstants_1.DaoConstants.CONNECTION_URL);
         this._userSchema = new mongoose_1.Schema({
             _id: String,
-            _email: Strin,
+            _email: String,
             _password: String
         }, { versionKey: false });
         this._userModel = mongoose_1.model('User', this._userSchema);
