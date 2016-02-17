@@ -50,10 +50,11 @@ var ThemeDao = (function () {
             callback(cursor);
         });
     };
-    ThemeDao.prototype.create = function (t) {
+    ThemeDao.prototype.create = function (t, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').insertOne(t).then(function () {
                 db.close();
+                callback();
             });
         });
     };

@@ -9,11 +9,13 @@ describe('Theme', () => {
         it('theme must be saved in the database', (done:any) =>{
             var themeDao:ThemeDao = new ThemeDao();
             var theme:Theme = new Theme(1,"Bars","Bars we want to visit");
-            themeDao.create(theme);
-            themeDao.read("Bars", (t:Theme) => {
-                assert.equal(t._name, theme._name);
-                done();
+            themeDao.create(theme, () => {
+                themeDao.read("Bars", (t:Theme) => {
+                    assert.equal(t._name, theme._name);
+                    done();
+                });
             });
+
         });
     });
 });

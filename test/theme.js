@@ -8,10 +8,11 @@ describe('Theme', function () {
         it('theme must be saved in the database', function (done) {
             var themeDao = new themeDao_1.ThemeDao();
             var theme = new theme_1.Theme(1, "Bars", "Bars we want to visit");
-            themeDao.create(theme);
-            themeDao.read("Bars", function (t) {
-                assert.equal(t._name, theme._name);
-                done();
+            themeDao.create(theme, function () {
+                themeDao.read("Bars", function (t) {
+                    assert.equal(t._name, theme._name);
+                    done();
+                });
             });
         });
     });

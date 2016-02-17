@@ -45,6 +45,7 @@ import {DaoConstants} from "./daoConstants";
 import {MongoCallback} from "mongodb";
 import {Db} from "mongodb";
 import {CursorResult} from "mongodb";
+
 export class ThemeDao {
     private client:MongoClient;
 
@@ -60,10 +61,11 @@ export class ThemeDao {
         });
     }
 
-    create(t:Theme) {
+    create(t:Theme, callback?:()=>any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('themes').insertOne(t).then(() => {
                 db.close();
+                callback();
             });
         });
     }
