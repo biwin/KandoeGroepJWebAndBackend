@@ -6,14 +6,17 @@ var themeDao_1 = require("../app/backend/dao/themeDao");
 describe('Theme', function () {
     describe('#addTheme', function () {
         it('theme must be saved in the database', function (done) {
-            var themeDao = new themeDao_1.ThemeDao();
-            var theme = new theme_1.Theme(1, "Bars", "Bars we want to visit");
-            themeDao.create(theme, function () {
-                themeDao.read("Bars", function (t) {
-                    assert.equal(t._name, theme._name);
-                    done();
+            this.timeout(0);
+            setTimeout(function () {
+                var themeDao = new themeDao_1.ThemeDao();
+                var theme = new theme_1.Theme(1, "Bars", "Bars we want to visit");
+                themeDao.create(theme, function () {
+                    themeDao.read("Bars", function (t) {
+                        assert.equal(t._name, theme._name);
+                        done();
+                    });
                 });
-            });
+            }, 3000);
         });
     });
 });
