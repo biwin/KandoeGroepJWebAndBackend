@@ -21,6 +21,7 @@ describe('UserManager', function () {
     });
     describe('createUser', function () {
         it('Register user, should return user from database', function (done) {
+            this.timeout(0);
             var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
             userManager.registerUser(user, function (u) {
                 try {
@@ -48,6 +49,7 @@ describe('UserManager', function () {
     });
     describe('deleteUser', function () {
         it('Delete existing user, should return true', function (done) {
+            this.timeout(0);
             userManager.deleteUser('Jasper', function (b) {
                 try {
                     assert.equal(b, true);

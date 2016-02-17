@@ -26,6 +26,7 @@ describe('UserManager', () => {
 
     describe('createUser', () => {
         it('Register user, should return user from database', function(done: any) {
+            this.timeout(0);
             var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
             userManager.registerUser(user, (u: User) => {
                 try {
@@ -53,6 +54,7 @@ describe('UserManager', () => {
 
     describe('deleteUser', () => {
         it('Delete existing user, should return true', function(done: any) {
+            this.timeout(0);
             userManager.deleteUser('Jasper', (b: boolean) => {
                 try {
                     assert.equal(b, true);
