@@ -1,20 +1,20 @@
-/*
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
+import assert = require('assert');
 import {UserManager} from "../app/backend/logic/userManager";
-var assert = require('assert');
-
+import {timeout} from "rxjs/operator/timeout";
+import {User} from "../app/backend/model/user";
 
 describe('UserManager', () => {
     describe('createUser', () => {
-        it('should return the created user object', () => {
-            var userManager = new UserManager();
-            var user = userManager.registerUser('t1','jasper.catthoor@gmail.be','pass123');
-            if (user != null) {
-                assert.equal(user.id, 't1');
-            } else {
-                assert.equal(false, true);
-            }
+        it('user must be saved in the database', function(done: any) {
+            //this.timeout(0);
+            var userManager: UserManager = new UserManager();
+            var user: User = new User("Jasper", "jasper.catthoor@student.kdg.be", "password");
+            userManager.registerUser(user, (u: User) => {
+                assert.equal(u._name, user._name);
+                done();
+            });
         });
     });
-});*/
+});

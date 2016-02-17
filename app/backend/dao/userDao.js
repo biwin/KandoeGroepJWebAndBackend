@@ -1,15 +1,27 @@
-/// <reference path="../../../typings/mongoose/mongoose.d.ts" />
-var mongoose_1 = require("mongoose");
+/// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
-var User = require("../model/User");
 var UserDao = (function () {
     function UserDao() {
-        this._db = new mongoose_1.Mongoose().connect(daoConstants_1.DaoConstants.CONNECTION_URL);
+        this.client = new mongodb_1.MongoClient();
     }
-    UserDao.prototype.create = function (id, email, password) {
-        var user = new User({ name: id, email: email, password: password });
-        user.save();
-        return null;
+    UserDao.prototype.read = function (name, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('users').find({ '_name': name }).limit(1).next();
+        }).then(function (cursor) {
+            callback(cursor);
+        });
+    };
+    UserDao.prototype.create = function (u, callback) {
+        console.log("hello");
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            console.log("hi");
+            db.collection('users').insertOne(u).then(function () {
+                console.log("test");
+                db.close();
+                callback();
+            });
+        });
     };
     return UserDao;
 })();

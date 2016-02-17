@@ -1,21 +1,19 @@
-/*
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
-import {UserManager} from "../app/backend/logic/userManager";
 var assert = require('assert');
-
-
-describe('UserManager', () => {
-    describe('createUser', () => {
-        it('should return the created user object', () => {
-            var userManager = new UserManager();
-            var user = userManager.registerUser('t1','jasper.catthoor@gmail.be','pass123');
-            if (user != null) {
-                assert.equal(user.id, 't1');
-            } else {
-                assert.equal(false, true);
-            }
+var userManager_1 = require("../app/backend/logic/userManager");
+var user_1 = require("../app/backend/model/user");
+describe('UserManager', function () {
+    describe('createUser', function () {
+        it('user must be saved in the database', function (done) {
+            //this.timeout(0);
+            var userManager = new userManager_1.UserManager();
+            var user = new user_1.User("Jasper", "jasper.catthoor@student.kdg.be", "password");
+            userManager.registerUser(user, function (u) {
+                assert.equal(u._name, user._name);
+                done();
+            });
         });
     });
-});*/
+});
 //# sourceMappingURL=user.js.map
