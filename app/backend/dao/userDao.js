@@ -5,20 +5,24 @@ var UserDao = (function () {
     function UserDao() {
         this.client = new mongodb_1.MongoClient();
     }
-    UserDao.prototype.read = function (name, callback) {
+    UserDao.prototype.readUser = function (name, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('users').find({ '_name': name }).limit(1).next();
         }).then(function (cursor) {
             callback(cursor);
         });
     };
-    UserDao.prototype.create = function (u, callback) {
-        console.log("hello");
+    UserDao.prototype.createUser = function (u, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            console.log("hi");
             db.collection('users').insertOne(u).then(function () {
-                console.log("test");
                 db.close();
+                callback();
+            });
+        });
+    };
+    UserDao.prototype.deleteUser = function (name, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').deleteOne({ '_name': name }, function (err, results) {
                 callback();
             });
         });

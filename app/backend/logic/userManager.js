@@ -5,10 +5,9 @@ var UserManager = (function () {
     }
     UserManager.prototype.registerUser = function (user, callback) {
         var _this = this;
-        this.userNameTaken(user._name, function (taken) {
-            console.log(taken);
+        this.userExists(user._name, function (taken) {
             if (!taken) {
-                _this._dao.create(user, function () {
+                _this._dao.createUser(user, function () {
                     _this.getUser(user._name, callback);
                 });
             }
@@ -17,12 +16,29 @@ var UserManager = (function () {
             }
         });
     };
-    UserManager.prototype.getUser = function (name, callback) {
-        this._dao.read(name, callback);
+    /*
+     * Returns false if the user doesn't exist or when the user couldn't be deleted.
+     */
+    UserManager.prototype.deleteUser = function (name, callback) {
+        var _this = this;
+        this.userExists(name, function (exists) {
+            if (!exists) {
+                callback(false);
+            }
+            else {
+                _this._dao.deleteUser(name, function () {
+                    _this.getUser(name, function (u) {
+                        callback(u == null);
+                    });
+                });
+            }
+        });
     };
-    UserManager.prototype.userNameTaken = function (name, callback) {
-        this._dao.read(name, function (u) {
-            console.log("User [" + name + "] taken: " + (u != null));
+    UserManager.prototype.getUser = function (name, callback) {
+        this._dao.readUser(name, callback);
+    };
+    UserManager.prototype.userExists = function (name, callback) {
+        this._dao.readUser(name, function (u) {
             callback(u != null);
         });
     };

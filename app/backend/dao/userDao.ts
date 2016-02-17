@@ -15,7 +15,7 @@ export class UserDao {
         this.client = new MongoClient();
     }
 
-    read(name: string, callback: (u: User) => any) {
+    readUser(name: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_name': name}).limit(1).next();
         }).then((cursor: CursorResult) => {
@@ -23,13 +23,18 @@ export class UserDao {
         });
     }
 
-    create(u: User, callback: () => any) {
-        console.log("hello");
+    createUser(u: User, callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            console.log("hi");
             db.collection('users').insertOne(u).then(() => {
-                console.log("test");
                 db.close();
+                callback();
+            });
+        });
+    }
+
+    deleteUser(name: string, callback: () => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').deleteOne({'_name': name}, (err: any, results: any) => {
                 callback();
             });
         });

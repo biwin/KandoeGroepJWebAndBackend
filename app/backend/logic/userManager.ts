@@ -10,10 +10,9 @@ export class UserManager {
     }
 
     registerUser(user: User, callback: (u: User) => any) {
-        this.userNameTaken(user._name, (taken) => {
-            console.log(taken);
+        this.userExists(user._name, (taken) => {
             if (!taken) {
-                this._dao.create(user, () => {
+                this._dao.createUser(user, () => {
                     this.getUser(user._name, callback);
                 });
             } else {
@@ -22,14 +21,30 @@ export class UserManager {
         });
     }
 
-    getUser(name: string, callback: (u: User) => any) {
-        this._dao.read(name, callback);
+    /*
+     * Returns false if the user doesn't exist or when the user couldn't be deleted.
+     */
+    deleteUser(name: string, callback: (b: boolean) => any) {
+        this.userExists(name, (exists) => {
+            if (!exists) {
+                callback(false);
+            } else {
+                this._dao.deleteUser(name, () => {
+                    this.getUser(name, (u: User) => {
+                        callback(u == null);
+                    });
+                });
+            }
+        });
     }
 
-    userNameTaken(name: string, callback: (b: boolean) => any) {
-        this._dao.read(name, (u: User) => {
-            console.log("User [" + name + "] taken: " + (u != null));
-           callback(u != null);
+    getUser(name: string, callback: (u: User) => any) {
+        this._dao.readUser(name, callback);
+    }
+
+    userExists(name: string, callback: (b: boolean) => any) {
+        this._dao.readUser(name, (u: User) => {
+            callback(u != null);
         });
     }
 }
