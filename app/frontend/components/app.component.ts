@@ -1,9 +1,12 @@
 import {Component} from 'angular2/core';
+import {NavigationBar} from './navigationBar';
 
 @Component({
     selector: 'my-app',
-    template: '<h1>My First Angular2 App</h1>'
+    template: '<navigation-bar></navigation-bar>',
+    directives: [NavigationBar]
 })
+
 export class AppComponent {
 
 }

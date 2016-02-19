@@ -32,6 +32,7 @@
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
     "express": "^3.4.8",
+    "materialize-css": "^0.97.5",
     "mocha": "^2.4.5",
     "mongodb": "^2.1.7",
     "morgan": "^1.6.1",

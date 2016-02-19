@@ -9,12 +9,18 @@
     <script src="../static/systemjs/dist/system.src.js"></script>
     <script src="../static/rxjs/bundles/Rx.js"></script>
     <script src="../static/angular2/bundles/angular2.dev.js"></script>
+
+    <link href="../static/materialize-css/css/ghpages-materialize.css" rel="stylesheet" />
+
     <script>
-        System.config({packages: {app: {format: 'register', defaultExtension: 'js'}}});
+        System.config({packages: {app: {defaultExtension: 'js'}}});
         System.import('app/frontend/components/main').then(null, console.error.bind(console));
     </script>
+
 </head>
+
 <body>
-    <my-app>Enio omg</my-app>
+    <my-app></my-app>
 </body>
+
 </html>
