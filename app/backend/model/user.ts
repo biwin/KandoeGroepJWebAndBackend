@@ -1,7 +1,5 @@
-import {Schema} from "mongoose";
-import {model} from "mongoose";
-import {IUserModel} from "./iUserModel";
+export class User {
 
-var userSchema = new Schema({ email: String, password: String, displayName: String });
-var User = model<IUserModel>("User", userSchema);
-export = User;
+    private _id: number;
+    constructor(public _name: string, public _email: string, public _password: string, public _role: string) { }
+}

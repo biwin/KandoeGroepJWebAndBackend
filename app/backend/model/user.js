@@ -1,6 +1,11 @@
-var mongoose_1 = require("mongoose");
-var mongoose_2 = require("mongoose");
-var userSchema = new mongoose_1.Schema({ email: String, password: String, displayName: String });
-var User = mongoose_2.model("User", userSchema);
-module.exports = User;
+var User = (function () {
+    function User(_name, _email, _password, _role) {
+        this._name = _name;
+        this._email = _email;
+        this._password = _password;
+        this._role = _role;
+    }
+    return User;
+})();
+exports.User = User;
 //# sourceMappingURL=user.js.map
