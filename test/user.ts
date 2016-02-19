@@ -5,6 +5,7 @@ import {UserManager} from "../app/backend/logic/userManager";
 import {timeout} from "rxjs/operator/timeout";
 import {User} from "../app/backend/model/user";
 import {Organisation} from "../app/backend/model/organisation";
+import {ObjectID} from "mongodb";
 
 var userManager: UserManager;
 
@@ -45,9 +46,24 @@ describe('UserManager', () => {
         });
     });
 
-    describe('getUser', () => {
+    var userId: string;
+    describe('getUserByName', () => {
         it('Read existing user, should return the user', function(done: any) {
             userManager.getUser('Jasper', (u: User) => {
+                try {
+                    assert.equal('Jasper', u._name);
+                    userId = u._id;
+                    done();
+                } catch(e) {
+                    return done(e);
+                }
+            });
+        });
+    });
+
+    describe('getUserById', () => {
+        it('Read existing user, should return the user', function(done: any) {
+            userManager.getUserById(userId, (u: User) => {
                 try {
                     assert.equal('Jasper', u._name);
                     done();
@@ -85,16 +101,29 @@ describe('UserManager', () => {
             });
         });
     });
-    
+
     describe('createOrganisation', () => {
+        var jasper: User;
+        var rob: User;
         before(function(done: any) {
+            this.timeout(0);
             var users: number = 0;
-            userManager.registerUser(new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin'), () => { if (++users == 2) done(); });
-            userManager.registerUser(new User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'admin'), () => { if (++users == 2) done(); });
+            try {
+                userManager.registerUser(new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin'), (u: User) => {
+                    jasper = u;
+                    if (++users == 2) done();
+                });
+                userManager.registerUser(new User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'admin'), (u: User) => {
+                    rob = u;
+                    if (++users == 2) done();
+                });
+            } catch(e) {
+                done(e);
+            }
         });
         it('Create organisation, should return organisation from database', function(done: any) {
             this.timeout(0);
-            var organisation = new Organisation('OrganisationName', ['Jasper', 'Rob']);
+            var organisation = new Organisation('OrganisationName', [jasper._id, rob._id]);
             userManager.createOrganisation(organisation, (o: Organisation) => {
                 try {
                     assert.equal(organisation._name, o._name);
@@ -107,12 +136,21 @@ describe('UserManager', () => {
     });
 
     describe('addUserToOrganisation', () => {
+        var jan: User;
         before(function(done: any) {
-            userManager.registerUser(new User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin'), () => { done(); });
+            this.timeout(0);
+            try {
+                userManager.registerUser(new User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin'), (u: User) => {
+                    jan = u;
+                    done();
+                });
+            } catch(e) {
+                done(e);
+            }
         });
         it('Add user to organisation, should return organisation from database', function(done: any) {
             this.timeout(0);
-            userManager.addToOrganisation('OrganisationName', 'Jan', (o: Organisation) => {
+            userManager.addToOrganisation('OrganisationName', jan._id, (o: Organisation) => {
                 try {
                     assert.equal(o._organisators.length, 3);
                     done();
@@ -122,4 +160,45 @@ describe('UserManager', () => {
             });
         });
     });
+
+    describe('removeUserFromOrganisation', () => {
+        var michael: User;
+        before(function(done: any) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin'), (u: User) => {
+                    michael = u;
+                    userManager.addToOrganisation('OrganisationName', michael._id, () => { done(); });
+                });
+            } catch(e) {
+                done(e);
+            }
+        });
+        it('Remove user from organisation, should return true since user was in organisation', function(done: any) {
+            this.timeout(0);
+            userManager.removeUserFromOrganisation('OrganisationName', michael._id, (b: boolean) => {
+                try {
+                    console.log('Michael id2: ' + michael._id);
+                    assert.equal(b, true);
+                    done();
+                } catch(e) {
+                    return done(e);
+                }
+            });
+        });
+    });
+
+  /*  describe('removeUserFromOrganisation', () => {
+        it('Remove user from organisation, should return false since user was NOT in organisation', function(done: any) {
+            this.timeout(0);
+            userManager.removeUserFromOrganisation('OrganisationName', 'nonExistingUserId1234', (b: boolean) => {
+                try {
+                    assert.equal(b, false);
+                    done();
+                } catch(e) {
+                    return done(e);
+                }
+            });
+        });
+    });*/
 });

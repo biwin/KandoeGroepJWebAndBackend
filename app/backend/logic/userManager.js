@@ -40,6 +40,9 @@ var UserManager = (function () {
     UserManager.prototype.getUser = function (name, callback) {
         this._dao.readUser(name, callback);
     };
+    UserManager.prototype.getUserById = function (id, callback) {
+        this._dao.readUserById(id, callback);
+    };
     UserManager.prototype.createOrganisation = function (organisation, callback) {
         var _this = this;
         this.organisationExists(organisation._name, function (exists) {
@@ -56,10 +59,36 @@ var UserManager = (function () {
     UserManager.prototype.getOrganisation = function (name, callback) {
         this._dao.readOrganisation(name, callback);
     };
-    UserManager.prototype.addToOrganisation = function (organisationName, userName, callback) {
+    UserManager.prototype.addToOrganisation = function (oName, uId, callback) {
         var _this = this;
-        this._dao.addToOrganisation(organisationName, userName, function () {
-            _this.getOrganisation(organisationName, callback);
+        this.userIdInOrganisation(oName, uId, function (alreadyInOrganisation) {
+            if (alreadyInOrganisation) {
+                callback(null);
+            }
+            else {
+                _this._dao.addToOrganisation(oName, uId, function () {
+                    _this.getOrganisation(oName, callback);
+                });
+            }
+        });
+    };
+    /*
+     * Returns false if the user doesn't exist or when the user couldn't be deleted.
+     */
+    UserManager.prototype.removeUserFromOrganisation = function (oName, uId, callback) {
+        var _this = this;
+        this.userIdInOrganisation(oName, uId, function (userAlreadyInOrganisation) {
+            console.log("User in organisation? " + userAlreadyInOrganisation);
+            if (!userAlreadyInOrganisation) {
+                callback(false);
+            }
+            else {
+                _this._dao.deleteUserFromOrganisation(oName, uId, function () {
+                    _this.getOrganisation(oName, function (o) {
+                        callback(o == null);
+                    });
+                });
+            }
         });
     };
     UserManager.prototype.userExists = function (name, callback) {
@@ -70,6 +99,16 @@ var UserManager = (function () {
     UserManager.prototype.organisationExists = function (name, callback) {
         this._dao.readOrganisation(name, function (o) {
             callback(o != null);
+        });
+    };
+    UserManager.prototype.userIdInOrganisation = function (oName, uId, callback) {
+        this.getOrganisation(oName, function (o) {
+            /*var userInOrganisation = o._organisators.filter((value) => {
+                return value.localeCompare(uId) == 0;
+            }).length == 1;
+            console.log("User in organisation? " + userInOrganisation);
+            callback(userInOrganisation);*/
+            callback(false);
         });
     };
     return UserManager;

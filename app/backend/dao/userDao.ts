@@ -1,5 +1,4 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
-
 import {MongoClient} from "mongodb";
 import {DaoConstants} from "./daoConstants";
 import {User} from "../model/user";
@@ -7,6 +6,7 @@ import {MongoCallback} from "mongodb";
 import {Db} from "mongodb";
 import {CursorResult} from "mongodb";
 import {Organisation} from "../model/organisation";
+import {ObjectID} from "mongodb";
 
 export class UserDao {
 
@@ -31,6 +31,14 @@ export class UserDao {
     readUser(name: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_name': name}).limit(1).next();
+        }).then((cursor: CursorResult) => {
+            callback(cursor);
+        });
+    }
+
+    readUserById(id: string, callback: (u: User) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_id': new ObjectID(id)}).limit(1).next();
         }).then((cursor: CursorResult) => {
             callback(cursor);
         });
@@ -65,14 +73,24 @@ export class UserDao {
     readOrganisation(name: string, callback: (o: Organisation) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').find({'_name': name}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
                 callback(cursor);
             })
         });
     }
 
-    addToOrganisation(organisationName: string, userName: string, callback: () => any) {
+    addToOrganisation(oName: string, uId: string, callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_name': organisationName}, {$push: {'_organisators': userName}}).then(() => {
+            db.collection('organisations').updateOne({'_name': oName}, {$push: {'_organisators': uId}}).then(() => {
+                db.close();
+                callback();
+            });
+        });
+    }
+
+    deleteUserFromOrganisation(oName: string, uId: string, callback: () => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_name': oName}, {$pull: {'_organisators': uId}}).then(() => {
                 db.close();
                 callback();
             });
