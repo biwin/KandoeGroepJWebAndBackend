@@ -8,6 +8,7 @@ app.use(morgan('dev'));
 
 app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/components', express.static('app/frontend/components'));
+app.use('/app/backend/model', express.static('app/backend/model'));
 
 app.get('/test', function(req, res) {
     res.sendfile('index.html');
