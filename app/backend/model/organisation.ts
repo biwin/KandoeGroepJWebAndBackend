@@ -1,5 +1,13 @@
+import {Group} from "./group";
 export class Organisation {
 
-    private _id: number;
-    constructor(public _name: string, public _organisators: string[]) { }
+    private _id: string;
+    private _groups: Group[];
+    constructor(public _name: string, public _organisators?: string[]) {
+
+    }
+
+    get groups():Group[] {
+        return this._groups;
+    }
 }

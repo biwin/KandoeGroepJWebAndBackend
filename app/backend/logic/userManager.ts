@@ -2,6 +2,7 @@ import {UserDao} from "../dao/userDao";
 import {User} from "../model/user";
 import {Organisation} from "../model/organisation";
 import {ObjectID} from "mongodb";
+import {Group} from "../model/group";
 
 export class UserManager {
 
@@ -22,6 +23,23 @@ export class UserManager {
                     this.getUser(user._name, callback);
                 });
             } else {
+                callback(null);
+            }
+        });
+    }
+
+    registerGroup(group:Group, callback: (g: Group) => any  ) {
+        this.groupExists(group._name, (taken) => {
+
+            if (!taken) {
+                this._dao.readOrganisation(group._organisationId, (o:Organisation) => {
+                    this._dao.createGroup(group, () => {
+                        o.groups.push(group);
+                        this.getGroup(group._name, callback);
+                    });
+                });
+
+            } else  {
                 callback(null);
             }
         });
@@ -52,6 +70,16 @@ export class UserManager {
         this._dao.readUserById(id, callback);
     }
 
+    getGroup(gName:string, callback: (g:Group) => any) {
+        this._dao.readGroup(gName, callback);
+
+    }
+
+    getGroupById(id: string, callback: (g:Group) => any) {
+        this._dao.readGroupById(id, callback);
+    }
+
+
     createOrganisation(organisation: Organisation, callback: (o: Organisation) => any) {
         this.organisationExists(organisation._name, (exists) => {
             if (exists) {
@@ -80,6 +108,20 @@ export class UserManager {
         });
     }
 
+    addToGroup(uId:String, gName:String, callback: (g: Group) => any) {
+        this.userIdInGroup(gName, uId, (alreadyInGroup: boolean) => {
+            if (alreadyInGroup) {
+                callback(null);
+            }
+            else {
+                this._dao.addToGroup(uId,gName, () => {
+                    this.getGroup(gName, callback)
+                });
+            }
+        });
+
+    }
+
     /*
      * Returns false if the user doesn't exist or when the user couldn't be deleted.
      */
@@ -104,6 +146,12 @@ export class UserManager {
         });
     }
 
+    groupExists(name: string, callback: (b: boolean) => any) {
+        this._dao.readGroup(name, (g: Group) => {
+            callback(g != null);
+        });
+    }
+
     organisationExists(name: string, callback: (b: boolean) => any) {
         this._dao.readOrganisation(name, (o: Organisation) => {
             callback(o != null);
@@ -120,4 +168,7 @@ export class UserManager {
             callback(false);
         });
     }
+
+
+
 }

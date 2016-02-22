@@ -7,6 +7,8 @@ import {Db} from "mongodb";
 import {CursorResult} from "mongodb";
 import {Organisation} from "../model/organisation";
 import {ObjectID} from "mongodb";
+import {Group} from "../model/group";
+import any = jasmine.any;
 
 export class UserDao {
 
@@ -36,6 +38,15 @@ export class UserDao {
         });
     }
 
+    readGroup(gName:string, callback: (g: Group) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_name': name}).limit(1).next();
+        }).then((cursor:CursorResult) => {
+           callback(cursor);
+        });
+
+    }
+
     readUserById(id: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_id': new ObjectID(id)}).limit(1).next();
@@ -51,6 +62,16 @@ export class UserDao {
                 callback();
             });
         });
+    }
+
+    createGroup(g:Group, callback: () => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').insertOne(g).then(() => {
+                db.close();
+                callback();
+            });
+        });
+
     }
 
     deleteUser(name: string, callback: () => any) {
@@ -96,4 +117,7 @@ export class UserDao {
             });
         });
     }
+
+
+
 }
