@@ -78,7 +78,6 @@ var UserManager = (function () {
     UserManager.prototype.removeUserFromOrganisation = function (oName, uId, callback) {
         var _this = this;
         this.userIdInOrganisation(oName, uId, function (userAlreadyInOrganisation) {
-            console.log("User in organisation? " + userAlreadyInOrganisation);
             if (!userAlreadyInOrganisation) {
                 callback(false);
             }
