@@ -1,6 +1,5 @@
 import {ThemeDao} from "../dao/themeDao";
 import {Theme} from "../model/theme";
-
 export class ThemeManager {
 
     private _dao:ThemeDao;

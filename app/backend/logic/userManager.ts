@@ -69,6 +69,7 @@ export class UserManager {
     }
 
     addToOrganisation(oName: string, uId: string, callback: (o: Organisation) => any) {
+        console.log("adding user to organisation");
         this.userIdInOrganisation(oName, uId, (alreadyInOrganisation: boolean) => {
             if (alreadyInOrganisation) {
                 callback(null);
@@ -84,6 +85,7 @@ export class UserManager {
      * Returns false if the user doesn't exist or when the user couldn't be deleted.
      */
     removeUserFromOrganisation(oName: string, uId: string, callback: (b: boolean) => any) {
+        console.log("remove user from organisation");
         this.userIdInOrganisation(oName, uId, (userAlreadyInOrganisation: boolean) => {
             if (!userAlreadyInOrganisation) {
                 callback(false);
@@ -110,12 +112,22 @@ export class UserManager {
     }
 
     userIdInOrganisation(oName: string, uId: string, callback: (b: boolean) => any) {
+        console.log("I got called!");
         this.getOrganisation(oName, (o: Organisation) => {
-            /*var userInOrganisation = o._organisators.filter((value) => {
-                return value.localeCompare(uId) == 0;
-            }).length == 1;
-            console.log("User in organisation? " + userInOrganisation);
-            callback(userInOrganisation);*/
+            if (o != null) {
+                for (var index in o._organisators) {
+                    /*console.log(o._organisators[index].toString());
+                     console.log(o._organisators[index].toString().length);
+                     console.log(uId.toString());
+                     console.log(uId.toString().length);*/
+                    if (o._organisators[index].toString() == uId.toString()){
+                        console.log("returning true for " + uId);
+                        callback(true);
+                        return;
+                    }
+                }
+            }
+            console.log("returning false for " + uId);
             callback(false);
         });
     }
