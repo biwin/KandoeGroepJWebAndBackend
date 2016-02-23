@@ -207,6 +207,9 @@ describe('UserManager', () => {
      });
      });*/
 
+
+
+
     //Group-testen
     //todo testjes bij steken
     describe('addUserToGroup', () => {

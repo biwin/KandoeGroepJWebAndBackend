@@ -83,6 +83,7 @@ var UserManager = (function () {
     };
     UserManager.prototype.addToOrganisation = function (oName, uId, callback) {
         var _this = this;
+        console.log("adding user to organisation");
         this.userIdInOrganisation(oName, uId, function (alreadyInOrganisation) {
             if (alreadyInOrganisation) {
                 callback(null);
@@ -112,8 +113,8 @@ var UserManager = (function () {
      */
     UserManager.prototype.removeUserFromOrganisation = function (oName, uId, callback) {
         var _this = this;
+        console.log("remove user from organisation");
         this.userIdInOrganisation(oName, uId, function (userAlreadyInOrganisation) {
-            console.log("User in organisation? " + userAlreadyInOrganisation);
             if (!userAlreadyInOrganisation) {
                 callback(false);
             }
@@ -142,12 +143,22 @@ var UserManager = (function () {
         });
     };
     UserManager.prototype.userIdInOrganisation = function (oName, uId, callback) {
+        console.log("I got called!");
         this.getOrganisation(oName, function (o) {
-            /*var userInOrganisation = o._organisators.filter((value) => {
-                return value.localeCompare(uId) == 0;
-            }).length == 1;
-            console.log("User in organisation? " + userInOrganisation);
-            callback(userInOrganisation);*/
+            if (o != null) {
+                for (var index in o._organisators) {
+                    /*console.log(o._organisators[index].toString());
+                     console.log(o._organisators[index].toString().length);
+                     console.log(uId.toString());
+                     console.log(uId.toString().length);*/
+                    if (o._organisators[index].toString() == uId.toString()) {
+                        console.log("returning true for " + uId);
+                        callback(true);
+                        return;
+                    }
+                }
+            }
+            console.log("returning false for " + uId);
             callback(false);
         });
     };
