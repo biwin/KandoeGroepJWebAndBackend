@@ -8,7 +8,7 @@ import {TagInput} from "../general/tagInput";
     selector: 'theme-form',
     template: `
     <div class="row container">
-    <h5>Create Theme</h5>
+    <h5>Nieuw Thema</h5>
     <form (submit)="OnSubmit()" class="col s12">
       <div class="row">
         <div class="input-field col s6">

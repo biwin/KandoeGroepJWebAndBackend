@@ -6,6 +6,8 @@ import {ThemeManager} from "../app/backend/logic/themeManager";
 import {Theme} from "../app/backend/model/theme";
 import {UserManager} from "../app/backend/logic/userManager";
 import {User} from "../app/backend/model/user";
+import {Card} from "../app/backend/model/card";
+import any = jasmine.any;
 
 var themeManager: ThemeManager;
 var userManager: UserManager;
@@ -19,7 +21,7 @@ before(function(done: any) {
     });
     userManager.clearDatabase(() => {
         if (++completion == 2) done();
-    })
+    });
 });
 
 describe('ThemeManager', () => {
@@ -52,8 +54,16 @@ describe('ThemeManager', () => {
     });
 
     describe('AddCard', () => {
-        it('Card msut be added to a theme', function(done: any){
-            this.timeout()
+        var card:Card
+        before(function(done: any){
+            card = new Card ('Cafe de vissers', 't1235')
+        });
+        it('Card must be added to a theme', function(done: any){
+            this.timeout();
+            themeManager.createCard(card, (c:Card) => {
+                assert.notEqual(card._id, null);
+              done();
+            });
         });
     });
 

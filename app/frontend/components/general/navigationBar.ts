@@ -14,6 +14,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
             <ul id="slide-out" class="side-nav fixed">
                 <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>
                 <li><a [routerLink]="['CreateTheme']">Create thema</a></li>
+                <li><a [routerLink]="['CreateSession']">Create Session</a></li>
             </ul>
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
        </div>
@@ -26,7 +27,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 export class NavigationBar implements AfterViewInit {
     ngAfterViewInit() {
         $(".button-collapse").sideNav({
-            menuWidth: 300
+            menuWidth: 240
         });
     }
 }
