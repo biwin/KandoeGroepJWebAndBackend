@@ -2,6 +2,7 @@ import {Component} from "angular2/core";
 import {Theme} from "../../../backend/model/theme";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {FORM_DIRECTIVES} from "angular2/common";
+import {TagInput} from "../general/tagInput";
 
 @Component({
     selector: 'theme-form',
@@ -22,16 +23,13 @@ import {FORM_DIRECTIVES} from "angular2/common";
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s12">
-          <input id="tags" type="text">
-          <label for="tags">Tags</label>
-        </div>
+        <tags [title]="'Tags (end each tag with a semicolon)'" [tagArray]="theme._tags"></tags>
       </div>
       <button type="submit" class="waves-effect waves-light btn red"><i class="material-icons center">add</i></button>
     </form>
   </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput]
 })
 
 export class ThemeForm {
@@ -39,6 +37,7 @@ export class ThemeForm {
     private OnSubmit(){
         this.theme._organisatorIds = ["CURRENT_USER_ID"]
         //TODO: call backend
-        alert(this.theme._name + "  " + this.theme._description)
+        alert(this.theme._name + "  " + this.theme._description);
+        alert(this.theme._tags);
     }
 }

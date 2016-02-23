@@ -24,6 +24,8 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 })
 export class NavigationBar implements AfterViewInit {
     ngAfterViewInit() {
-        $(".button-collapse").sideNav();
+        $(".button-collapse").sideNav({
+            menuWidth: 300
+        });
     }
 }

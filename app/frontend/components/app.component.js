@@ -19,7 +19,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: '<navigation-bar></navigation-bar><router-outlet></router-outlet><footer></footer>',
+            template: "\n    <navigation-bar></navigation-bar>\n    <div class=\"content\">\n        <router-outlet></router-outlet>\n    </div>\n    <pagefooter></pagefooter>",
             directives: [navigationBar_1.NavigationBar, footer_1.Footer, router_1.ROUTER_DIRECTIVES, router_1.RouterOutlet]
         }),
         router_1.RouteConfig([

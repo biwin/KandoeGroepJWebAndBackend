@@ -7,7 +7,12 @@ import {ThemeOverview} from "./theme/themeOverview";
 
 @Component({
     selector: 'my-app',
-    template: '<navigation-bar></navigation-bar><router-outlet></router-outlet><footer></footer>',
+    template: `
+    <navigation-bar></navigation-bar>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+    <pagefooter></pagefooter>`,
     directives: [NavigationBar, Footer, ROUTER_DIRECTIVES, RouterOutlet]
 })
 @RouteConfig([
