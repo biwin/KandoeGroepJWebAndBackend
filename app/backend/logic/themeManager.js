@@ -27,6 +27,9 @@ var ThemeManager = (function () {
             callback(t != null);
         });
     };
+    ThemeManager.prototype.createCard = function (card, callback) {
+        this._dao.createCard(card, callback);
+    };
     return ThemeManager;
 })();
 exports.ThemeManager = ThemeManager;

@@ -7,6 +7,9 @@ import {Db} from "mongodb";
 import {CursorResult} from "mongodb";
 import {Organisation} from "../model/organisation";
 import {Theme} from "../model/theme";
+import {Card} from "../model/card";
+import {MongoError} from "mongodb";
+import {InsertOneWriteOpResult} from "mongodb";
 
 export class ThemeDao {
 
@@ -38,6 +41,16 @@ export class ThemeDao {
             db.collection('themes').find({'_name': name}).limit(1).next().then((cursor:CursorResult) => {
                 db.close();
                 callback(cursor);
+            });
+        });
+    }
+
+    createCard(card:Card, callback:(c:Card) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+            db.collection('cards').insertOne(card, (err:MongoError, result:InsertOneWriteOpResult) => {
+                card._id = result.insertedId.toString();
+                db.close();
+                callback(card);
             });
         });
     }

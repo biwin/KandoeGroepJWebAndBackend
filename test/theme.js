@@ -5,6 +5,7 @@ var themeManager_1 = require("../app/backend/logic/themeManager");
 var theme_1 = require("../app/backend/model/theme");
 var userManager_1 = require("../app/backend/logic/userManager");
 var user_1 = require("../app/backend/model/user");
+var card_1 = require("../app/backend/model/card");
 var themeManager;
 var userManager;
 before(function (done) {
@@ -50,8 +51,16 @@ describe('ThemeManager', function () {
         });
     });
     describe('AddCard', function () {
-        it('Card msut be added to a theme', function (done) {
+        var card;
+        before(function (done) {
+            card = new card_1.Card('Cafe de vissers', 't1235');
+        });
+        it('Card must be added to a theme', function (done) {
             this.timeout();
+            themeManager.createCard(card, function (c) {
+                assert.notEqual(card._id, null);
+                done();
+            });
         });
     });
 });

@@ -1,5 +1,6 @@
 import {ThemeDao} from "../dao/themeDao";
 import {Theme} from "../model/theme";
+import {Card} from "../model/card";
 export class ThemeManager {
 
     private _dao:ThemeDao;
@@ -32,5 +33,9 @@ export class ThemeManager {
         this.getTheme(name, (t: Theme) => {
             callback(t != null);
         });
+    }
+
+    createCard(card:Card, callback: (c:Card) => any) {
+        this._dao.createCard(card, callback);
     }
 }

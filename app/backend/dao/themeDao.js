@@ -28,6 +28,15 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.createCard = function (card, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('cards').insertOne(card, function (err, result) {
+                card._id = result.insertedId.toString();
+                db.close();
+                callback(card);
+            });
+        });
+    };
     return ThemeDao;
 })();
 exports.ThemeDao = ThemeDao;
