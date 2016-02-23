@@ -28,7 +28,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.readGroupByName = function (gName, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
-            return db.collection('users').find({ '_name': name }).limit(1).next();
+            return db.collection('groups').find({ '_name': name }).limit(1).next();
         }).then(function (cursor) {
             callback(cursor);
         });
@@ -58,9 +58,10 @@ var UserDao = (function () {
     };
     UserDao.prototype.createGroup = function (g, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('groups').insertOne(g).then(function () {
+            db.collection('groups').insertOne(g, function (error, result) {
+                g._id = result.insertedId;
                 db.close();
-                callback();
+                callback(g);
             });
         });
     };
@@ -107,9 +108,9 @@ var UserDao = (function () {
     };
     UserDao.prototype.deleteUserFromOrganisation = function (oName, uId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').updateOne({ '_name': oName }, { $pull: { '_organisators': uId } }).then(function () {
+            db.collection('organisations').updateOne({ '_name': oName }, { $pull: { '_organisators': uId } }).then(function (error, result) {
                 db.close();
-                callback();
+                callback(result.modifiedCount == 1);
             });
         });
     };
@@ -121,9 +122,9 @@ var UserDao = (function () {
             });
         });
     };
-    UserDao.prototype.readIsUserInGroup = function (gName, uId, callback) {
+    UserDao.prototype.readIsUserInGroup = function (gId, uId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('groups').find({ '_name': gName, '_users': { '$in': [uId] } }).limit(1).next().then(function (g) {
+            db.collection('groups').find({ '_id': gId, '_users': { '$in': [uId] } }).limit(1).next().then(function (g) {
                 callback(g != null);
             });
         });
@@ -132,7 +133,7 @@ var UserDao = (function () {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').updateOne({ '_id': oId }, { $pull: { '_groups': gId } }).then(function () {
                 db.close();
-                callback;
+                callback();
             });
         });
     };
@@ -164,6 +165,14 @@ var UserDao = (function () {
             db.collection('organisations').deleteOne({ '_id': id }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.addGroupToOrganisation = function (gId, oId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').updateOne({ '_id': oId }, { $push: { '_groups': gId } }, function (err, result) {
+                db.close();
+                callback();
             });
         });
     };

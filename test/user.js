@@ -260,7 +260,7 @@ describe('UserManager', function () {
                     if (++steps == 3)
                         done();
                 });
-                userManager.deleteOrganisationById(organisation._id, function () {
+                userManager.removeOrganisationById(organisation._id, function () {
                     if (++steps == 3)
                         done();
                 });
@@ -312,7 +312,7 @@ describe('UserManager', function () {
                     if (++steps == 2)
                         done();
                 });
-                userManager.deleteOrganisationById(organisation._id, function () {
+                userManager.removeOrganisationById(organisation._id, function () {
                     if (++steps == 2)
                         done();
                 });
@@ -323,13 +323,15 @@ describe('UserManager', function () {
         });
     }); //check
     describe('removeUserFromOrganisation', function () {
-        var michael;
+        var user = new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin');
+        var organisation = new organisation_1.Organisation('Organisation', [user._id]);
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerUser(new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin'), function (u) {
-                    michael = u;
-                    userManager.addToOrganisation('OrganisationName', michael._id, function () {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    userManager.createOrganisation(organisation, function (o) {
+                        organisation = o;
                         done();
                     });
                 });
@@ -340,7 +342,7 @@ describe('UserManager', function () {
         });
         it('Remove user from organisation, should return true since user was in organisation', function (done) {
             this.timeout(0);
-            userManager.removeUserFromOrganisation('OrganisationName', michael._id, function (b) {
+            userManager.removeUserFromOrganisationById(organisation._id, user._id, function (b) {
                 try {
                     assert.equal(b, true);
                     done();
@@ -350,19 +352,35 @@ describe('UserManager', function () {
                 }
             });
         });
-    });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                userManager.removeOrganisationById(organisation._id, function () {
+                    userManager.deleteUserById(user._id, function () {
+                        done();
+                    });
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    }); //check
     describe('addUserToGroup', function () {
-        var jan;
-        var group;
+        var jan = new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin');
+        var organisation = new organisation_1.Organisation('Organisation', [jan._id]);
+        var group = new group_1.Group(organisation._name, 'Group', 'Description');
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerUser(new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin'), function (u) {
+                userManager.registerUser(jan, function (u) {
                     jan = u;
-                    var organisation = new organisation_1.Organisation('Organisation');
-                    userManager.registerGroup(new group_1.Group(organisation._name, 'Group', 'Description'), function (g) {
-                        group = g;
-                        done();
+                    userManager.createOrganisation(organisation, function (o) {
+                        organisation = o;
+                        userManager.registerGroup(group, function (g) {
+                            group = g;
+                            done();
+                        });
                     });
                 });
             }
@@ -372,7 +390,7 @@ describe('UserManager', function () {
         });
         it('Add user to group', function (done) {
             this.timeout(0);
-            userManager.addToGroup(jan._id, group._name, function (g) {
+            userManager.addToGroupById(jan._id, group._id, function (g) {
                 try {
                     assert.equal((group._users.indexOf(jan._id) > -1), true);
                     done();
@@ -382,7 +400,16 @@ describe('UserManager', function () {
                 }
             });
         });
-    });
+        after(function (done) {
+            userManager.deleteUserById(jan._id, function () {
+                userManager.removeGroupById(group._id, function () {
+                    userManager.removeOrganisationById(organisation._id, function () {
+                        done();
+                    });
+                });
+            });
+        });
+    }); // check
     describe('removeUserFromGroupById', function () {
         var jan;
         var group;
@@ -394,7 +421,7 @@ describe('UserManager', function () {
                     userManager.registerGroup(new group_1.Group('Organisatie', 'Group', 'Description'), function (g) {
                         group = g;
                     });
-                    userManager.addToGroup(jan._id, group._name, function () {
+                    userManager.addToGroupById(jan._id, group._name, function () {
                         done();
                     });
                 });
@@ -523,7 +550,7 @@ describe('UserManager', function () {
         });
         it('Remove group and reference in organisation', function (done) {
             this.timeout(0);
-            userManager.removeGroup(group._id, function (b) {
+            userManager.removeGroupById(group._id, function (b) {
                 try {
                     var inOrg = organisation.groups.indexOf(group._id) > -1;
                     assert.equal(b, false);

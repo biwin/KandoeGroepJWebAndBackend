@@ -7,6 +7,7 @@ import {User} from "../app/backend/model/user";
 import {Organisation} from "../app/backend/model/organisation";
 import {ObjectID} from "mongodb";
 import {Group} from "../app/backend/model/group";
+import e = require("express");
 
 var userManager: UserManager;
 
@@ -251,7 +252,7 @@ describe('UserManager', () => {
                 userManager.deleteUserById(rob._id, () => {
                     if (++steps == 3) done();
                 });
-                userManager.deleteOrganisationById(organisation._id, () => {
+                userManager.removeOrganisationById(organisation._id, () => {
                     if (++steps == 3) done();
                 })
             } catch (e) {
@@ -297,7 +298,7 @@ describe('UserManager', () => {
                 userManager.deleteUserById(jan._id, () => {
                     if (++steps == 2) done();
                 });
-                userManager.deleteOrganisationById(organisation._id, () => {
+                userManager.removeOrganisationById(organisation._id, () => {
                     if (++steps == 2) done();
                 });
             } catch (e) {
@@ -307,13 +308,15 @@ describe('UserManager', () => {
     }); //check
 
     describe('removeUserFromOrganisation', () => {
-        var michael: User;
+        var user: User = new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin');
+        var organisation: Organisation = new Organisation('Organisation' ,[user._id]);
         before(function (done:any) {
             this.timeout(0);
             try {
-                userManager.registerUser(new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin'), (u:User) => {
-                    michael = u;
-                    userManager.addToOrganisation('OrganisationName', michael._id, () => {
+                userManager.registerUser(user, (u:User) => {
+                    user = u;
+                    userManager.createOrganisation(organisation, (o: Organisation) => {
+                        organisation = o;
                         done();
                     });
                 });
@@ -323,7 +326,7 @@ describe('UserManager', () => {
         });
         it('Remove user from organisation, should return true since user was in organisation', function (done:any) {
             this.timeout(0);
-            userManager.removeUserFromOrganisation('OrganisationName', michael._id, (b:boolean) => {
+            userManager.removeUserFromOrganisationById(organisation._id, user._id, (b:boolean) => {
                 try {
                     assert.equal(b, true);
                     done();
@@ -332,21 +335,37 @@ describe('UserManager', () => {
                 }
             });
         });
-    });
+        after( function (done: any) {
+            this.timeout(0);
+            try {
+                userManager.removeOrganisationById(organisation._id, () => {
+                    userManager.deleteUserById(user._id, () => {
+                       done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+    }); //check
 
     describe('addUserToGroup', () => {
-        var jan:User;
-        var group:Group;
+        var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin');
+        var organisation:Organisation = new Organisation('Organisation', [jan._id]);
+        var group:Group = new Group(organisation._name, 'Group', 'Description');
         before(function (done:any) {
             this.timeout(0);
             try {
-                userManager.registerUser(new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin'), (u:User) => {
+                userManager.registerUser(jan, (u:User) => {
                     jan = u;
-                    var organisation = new Organisation('Organisation');
-                    userManager.registerGroup(new Group(organisation._name,'Group', 'Description'),  (g:Group) => {
-                        group = g;
-                        done();
+                    userManager.createOrganisation(organisation, (o:Organisation) => {
+                        organisation = o;
+                        userManager.registerGroup(group, (g:Group) => {
+                            group = g;
+                            done();
+                        });
                     });
+
                 });
 
             } catch (e) {
@@ -356,7 +375,7 @@ describe('UserManager', () => {
         });
         it('Add user to group', function (done:any) {
             this.timeout(0);
-            userManager.addToGroup(jan._id, group._name, (g:Group) => {
+            userManager.addToGroupById(jan._id, group._id, (g:Group) => {
                 try {
                     assert.equal((group._users.indexOf(jan._id) > -1), true);
                     done();
@@ -366,7 +385,17 @@ describe('UserManager', () => {
                 }
             });
         });
-    });
+        after(function (done:any) {
+            userManager.deleteUserById(jan._id, () => {
+                userManager.removeGroupById(group._id, () => {
+                    userManager.removeOrganisationById(organisation._id, () => {
+                        done();
+                    });
+                });
+            });
+        });
+    }); // check
+
 
     describe('removeUserFromGroupById', () => {
         var jan:User;
@@ -379,7 +408,7 @@ describe('UserManager', () => {
                     userManager.registerGroup(new Group('Organisatie', 'Group', 'Description'), (g:Group) => {
                         group = g;
                     });
-                    userManager.addToGroup(jan._id, group._name, () => {
+                    userManager.addToGroupById(jan._id, group._name, () => {
                         done();
                     });
 
@@ -516,7 +545,7 @@ describe('UserManager', () => {
         });
         it('Remove group and reference in organisation', function(done: any) {
             this.timeout(0);
-            userManager.removeGroup(group._id, (b: boolean) => {
+            userManager.removeGroupById(group._id, (b: boolean) => {
                 try {
                     var inOrg = organisation.groups.indexOf(group._id) > -1;
                     assert.equal(b, false);
