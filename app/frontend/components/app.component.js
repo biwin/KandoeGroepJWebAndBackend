@@ -13,6 +13,7 @@ var themeForm_1 = require('./theme/themeForm');
 var footer_1 = require('./general/footer');
 var router_1 = require("angular2/router");
 var themeOverview_1 = require("./theme/themeOverview");
+var circleSessionForm_1 = require("./circleSession/circleSessionForm");
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -24,7 +25,8 @@ var AppComponent = (function () {
         }),
         router_1.RouteConfig([
             { path: '/create', as: 'CreateTheme', component: themeForm_1.ThemeForm },
-            { path: '/themes', as: 'ThemeOverview', component: themeOverview_1.ThemeOverview }
+            { path: '/themes', as: 'ThemeOverview', component: themeOverview_1.ThemeOverview },
+            { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm }
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);

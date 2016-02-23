@@ -4,6 +4,7 @@ import {ThemeForm} from './theme/themeForm';
 import {Footer} from './general/footer';
 import {RouterOutlet, RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 import {ThemeOverview} from "./theme/themeOverview";
+import {CircleSessionForm} from "./circleSession/circleSessionForm";
 
 @Component({
     selector: 'my-app',
@@ -17,7 +18,8 @@ import {ThemeOverview} from "./theme/themeOverview";
 })
 @RouteConfig([
     {path: '/create', as: 'CreateTheme', component: ThemeForm},
-    {path: '/themes', as: 'ThemeOverview', component: ThemeOverview}
+    {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
+    {path: '/createSession', as: 'CreateSession', component: CircleSessionForm}
 ])
 export class AppComponent {
 }

@@ -1,9 +1,29 @@
 .content, nav {
-    padding-left: 300px;
+    padding-left: 240px;
 }
 
 @media only screen and (max-width: 992px) {
     .content, nav {
         padding-left:0;
     }
+}
+
+.content .picker__date-display {
+    background-color: #2196F3 !important;
+}
+
+.content .picker__weekday-display, .content .picker__day--selected {
+    background-color: #1e88e5 !important;
+}
+
+.content .picker__day.picker__day--today {
+    color:#2196F3 !important;
+}
+
+.content .picker__day--today.picker__day--selected {
+    color: white !important;
+}
+
+.content .picker__close, .content .picker__today {
+    color: #2196F3 !important;
 }
