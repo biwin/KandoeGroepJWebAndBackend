@@ -62,21 +62,7 @@ describe('UserManager', () => {
         });
     });
 
-    describe('getGroupByName', () => {
-        var group: Group;
-        before(function (done:any) {
-            this.timeout(0);
 
-            try {
-                userManager.registerGroup(new Group('Organisation', 'Group', 'Descript'), (g: Group) => {
-                    group = g;
-                });
-            } catch (e) {
-                done(e);
-            }
-        });
-
-    });
 
     describe('getUserById', () => {
         it('Read existing user, should return the user', function (done:any) {
@@ -223,6 +209,7 @@ describe('UserManager', () => {
      });*/
 
     //Group-testen
+    //todo testjes bij steken
     describe('addUserToGroup', () => {
         var jan:User;
         var group:Group;
@@ -256,7 +243,8 @@ describe('UserManager', () => {
             });
         });
     });
-    describe('removeUserFromGroup', () => {
+
+    describe('removeUserFromGroupById', () => {
         var jan:User;
         var group:Group;
         before(function (done:any) {
@@ -280,9 +268,9 @@ describe('UserManager', () => {
         });
         it('Add user to group', function (done:any) {
             this.timeout(0);
-            userManager.removeFromGroup(jan._id, group._name, (g:Group) => {
+            userManager.removeUserFromGroupById(jan._id, group._id, (g:Group) => {
                 try {
-                    assert.equal((group._users.indexOf(jan._id) > -1), true);
+                    assert.equal((group._users.indexOf(jan._id) > -1), false);
                     done();
                 }
                 catch (e) {
@@ -290,6 +278,58 @@ describe('UserManager', () => {
                 }
             });
         });
+    });
+
+    describe('getGroupByName', () => {
+        var group: Group;
+        before(function (done:any) {
+            this.timeout(0);
+
+            try {
+                userManager.registerGroup(new Group('Organisation', 'Group', 'Descript'), (g: Group) => {
+                    group = g;
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done:any) {
+            userManager.getGroupByName(group._name, (g: Group) => {
+                try {
+                    assert.equal(group._name, g._name);
+                    done();
+                } catch (e) {
+                    return done(e);
+                }
+            });
+        });
+
+    });
+
+    describe('getGroupById', () => {
+        var group: Group;
+        before(function (done:any) {
+            this.timeout(0);
+
+            try {
+                userManager.registerGroup(new Group('Organisation', 'Group', 'Descript'), (g: Group) => {
+                    group = g;
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done:any) {
+            userManager.getGroupByName(group._id, (g: Group) => {
+                try {
+                    assert.equal(group._id, g._id);
+                    done();
+                } catch (e) {
+                    return done(e);
+                }
+            });
+        });
+
     });
 
     describe('createGroupInOrganisation', () => {
@@ -333,7 +373,38 @@ describe('UserManager', () => {
         });
     });
 
+    describe('deleteGroup', () => {
+        var group:Group;
+        var organisation = new Organisation('Organisation');
+        before(function (done:any) {
+            this.timeout(0);
+            try {
 
+                userManager.registerGroup(new Group(organisation._name,'Group', 'Description'),  (g:Group) => {
+                    group = g;
+                    done();
+                });
+
+            } catch (e) {
+                done(e);
+            }
+
+        });
+        it('Remove group and reference in organisation', function(done: any) {
+            this.timeout(0);
+            userManager.removeGroup(group._id, (b: boolean) => {
+                try {
+                    var inOrg = organisation.groups.indexOf(group._id) > -1;
+                    assert.equal(b, false);
+                    assert.equal(inOrg, false);
+                    done();
+
+                } catch(e) {
+                    done(e);
+                }
+            });
+        });
+    });
 
 });
 

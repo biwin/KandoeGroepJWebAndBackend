@@ -56,20 +56,6 @@ describe('UserManager', function () {
             });
         });
     });
-    describe('getGroupByName', function () {
-        var group;
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerGroup(new group_1.Group('Organisation', 'Group', 'Descript'), function (g) {
-                    group = g;
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    });
     describe('getUserById', function () {
         it('Read existing user, should return the user', function (done) {
             userManager.getUserById(userId, function (u) {
@@ -218,6 +204,7 @@ describe('UserManager', function () {
      });
      });*/
     //Group-testen
+    //todo testjes bij steken
     describe('addUserToGroup', function () {
         var jan;
         var group;
@@ -250,7 +237,7 @@ describe('UserManager', function () {
             });
         });
     });
-    describe('removeUserFromGroup', function () {
+    describe('removeUserFromGroupById', function () {
         var jan;
         var group;
         before(function (done) {
@@ -272,13 +259,63 @@ describe('UserManager', function () {
         });
         it('Add user to group', function (done) {
             this.timeout(0);
-            userManager.removeFromGroup(jan._id, group._name, function (g) {
+            userManager.removeUserFromGroupById(jan._id, group._id, function (g) {
                 try {
-                    assert.equal((group._users.indexOf(jan._id) > -1), true);
+                    assert.equal((group._users.indexOf(jan._id) > -1), false);
                     done();
                 }
                 catch (e) {
                     done(e);
+                }
+            });
+        });
+    });
+    describe('getGroupByName', function () {
+        var group;
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerGroup(new group_1.Group('Organisation', 'Group', 'Descript'), function (g) {
+                    group = g;
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done) {
+            userManager.getGroupByName(group._name, function (g) {
+                try {
+                    assert.equal(group._name, g._name);
+                    done();
+                }
+                catch (e) {
+                    return done(e);
+                }
+            });
+        });
+    });
+    describe('getGroupById', function () {
+        var group;
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerGroup(new group_1.Group('Organisation', 'Group', 'Descript'), function (g) {
+                    group = g;
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done) {
+            userManager.getGroupByName(group._id, function (g) {
+                try {
+                    assert.equal(group._id, g._id);
+                    done();
+                }
+                catch (e) {
+                    return done(e);
                 }
             });
         });
@@ -321,6 +358,36 @@ describe('UserManager', function () {
             else {
                 throw new Error('user not in organiation');
             }
+        });
+    });
+    describe('deleteGroup', function () {
+        var group;
+        var organisation = new organisation_1.Organisation('Organisation');
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerGroup(new group_1.Group(organisation._name, 'Group', 'Description'), function (g) {
+                    group = g;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Remove group and reference in organisation', function (done) {
+            this.timeout(0);
+            userManager.removeGroup(group._id, function (b) {
+                try {
+                    var inOrg = organisation.groups.indexOf(group._id) > -1;
+                    assert.equal(b, false);
+                    assert.equal(inOrg, false);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
         });
     });
 });

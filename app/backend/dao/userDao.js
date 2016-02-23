@@ -26,7 +26,7 @@ var UserDao = (function () {
             callback(cursor);
         });
     };
-    UserDao.prototype.readGroup = function (gName, callback) {
+    UserDao.prototype.readGroupByName = function (gName, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('users').find({ '_name': name }).limit(1).next();
         }).then(function (cursor) {
@@ -36,6 +36,13 @@ var UserDao = (function () {
     UserDao.prototype.readUserById = function (id, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('users').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
+        }).then(function (cursor) {
+            callback(cursor);
+        });
+    };
+    UserDao.prototype.readGroupById = function (id, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('groups').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
         }).then(function (cursor) {
             callback(cursor);
         });
@@ -59,6 +66,7 @@ var UserDao = (function () {
     UserDao.prototype.deleteUser = function (name, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').deleteOne({ '_name': name }, function () {
+                db.close();
                 callback();
             });
         });
@@ -90,6 +98,45 @@ var UserDao = (function () {
     UserDao.prototype.deleteUserFromOrganisation = function (oName, uId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').updateOne({ '_name': oName }, { $pull: { '_organisators': uId } }).then(function () {
+                db.close();
+                callback();
+            });
+        });
+    };
+    UserDao.prototype.addToGroup = function (uId, gName, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').updateOne({ '_name': gName }, { $push: { '_users': uId } }).then(function () {
+                db.close();
+                callback();
+            });
+        });
+    };
+    UserDao.prototype.readIsUserInGroup = function (gName, uId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').find({ '_name': gName, '_users': { '$in': [uId] } }).limit(1).next().then(function (g) {
+                callback(g != null);
+            });
+        });
+    };
+    UserDao.prototype.deleteGroupFromOrganisation = function (gId, oId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').updateOne({ '_id': oId }, { $pull: { '_groups': gId } }).then(function () {
+                db.close();
+                callback;
+            });
+        });
+    };
+    UserDao.prototype.deleteGroup = function (_id, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').deleteOne({ '_id': _id }, function () {
+                db.close();
+                callback(true); //todo Drivers OK & N
+            });
+        });
+    };
+    UserDao.prototype.deleteUserFromGroup = function (_uId, _gId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').updateOne({ '_id': _gId }, { $pull: { '_users': _uId } }).then(function () {
                 db.close();
                 callback();
             });

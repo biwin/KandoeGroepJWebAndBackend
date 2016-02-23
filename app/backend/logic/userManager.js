@@ -60,7 +60,7 @@ var UserManager = (function () {
         this._dao.readUserById(id, callback);
     };
     UserManager.prototype.getGroup = function (gName, callback) {
-        this._dao.readGroup(gName, callback);
+        this._dao.readGroupByName(gName, callback);
     };
     UserManager.prototype.getGroupById = function (id, callback) {
         this._dao.readGroupById(id, callback);
@@ -132,7 +132,7 @@ var UserManager = (function () {
         });
     };
     UserManager.prototype.groupExists = function (name, callback) {
-        this._dao.readGroup(name, function (g) {
+        this._dao.readGroupByName(name, function (g) {
             callback(g != null);
         });
     };
@@ -149,6 +149,46 @@ var UserManager = (function () {
             console.log("User in organisation? " + userInOrganisation);
             callback(userInOrganisation);*/
             callback(false);
+        });
+    };
+    UserManager.prototype.userIdInGroup = function (gName, uId, callback) {
+        /*this._dao.readGroupByName(gName, (g: Group) => {
+            this._dao.readUserById(uId, (u: User) => {
+                if (g._users.indexOf(u._id) > -1) {
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+            });
+
+        });*/
+        this._dao.readIsUserInGroup(gName, uId, function (inGroup) {
+            callback(inGroup);
+        });
+    };
+    UserManager.prototype.getGroupByName = function (gName, callback) {
+        this._dao.readGroupByName(gName, callback);
+    };
+    UserManager.prototype.removeGroup = function (_id, callback) {
+        var _this = this;
+        this._dao.readGroupById(_id, function (g) {
+            _this.getOrganisation(g._organisationId, function (o) {
+                _this._dao.deleteGroupFromOrganisation(g._id, o._id, function () {
+                    _this._dao.deleteGroup(g._id, function (b) {
+                        callback(b);
+                    });
+                });
+            });
+        });
+    };
+    UserManager.prototype.removeUserFromGroupById = function (_uId, _gId, callback) {
+        var _this = this;
+        this._dao.readUserById(_uId, function (u) {
+            _this._dao.readGroupById(_gId, function (g) {
+                _this._dao.deleteUserFromGroup(u._id, g._id, function () {
+                });
+            });
         });
     };
     return UserManager;

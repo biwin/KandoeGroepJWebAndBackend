@@ -1,7 +1,7 @@
 import {Group} from "./group";
 export class Organisation {
 
-    private _id: string;
+    public _id: string;
     private _groups: Group[];
     constructor(public _name: string, public _organisators?: string[]) {
 

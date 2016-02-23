@@ -71,7 +71,7 @@ export class UserManager {
     }
 
     getGroup(gName:string, callback: (g:Group) => any) {
-        this._dao.readGroup(gName, callback);
+        this._dao.readGroupByName(gName, callback);
 
     }
 
@@ -108,7 +108,7 @@ export class UserManager {
         });
     }
 
-    addToGroup(uId:String, gName:String, callback: (g: Group) => any) {
+    addToGroup(uId:string, gName:string, callback: (g: Group) => any) {
         this.userIdInGroup(gName, uId, (alreadyInGroup: boolean) => {
             if (alreadyInGroup) {
                 callback(null);
@@ -147,7 +147,7 @@ export class UserManager {
     }
 
     groupExists(name: string, callback: (b: boolean) => any) {
-        this._dao.readGroup(name, (g: Group) => {
+        this._dao.readGroupByName(name, (g: Group) => {
             callback(g != null);
         });
     }
@@ -169,6 +169,54 @@ export class UserManager {
         });
     }
 
+    private userIdInGroup(gName:string, uId:string, callback: (b: boolean) => any) {
+
+        /*this._dao.readGroupByName(gName, (g: Group) => {
+            this._dao.readUserById(uId, (u: User) => {
+                if (g._users.indexOf(u._id) > -1) {
+                    callback(true);
+                }
+                else {
+                    callback(false);
+                }
+            });
+
+        });*/
+
+        this._dao.readIsUserInGroup(gName, uId, (inGroup: boolean) => {
+            callback(inGroup);
+        });
+
+    }
+
+    getGroupByName(gName: string, callback: (g:Group) => any) {
+        this._dao.readGroupByName(gName, callback);
+    }
+
+    removeGroup(_id:string, callback: (b: boolean) => any) {
+        this._dao.readGroupById(_id, (g: Group) => {
+            this.getOrganisation(g._organisationId, (o:Organisation) => {
+                this._dao.deleteGroupFromOrganisation(g._id, o._id, () => {
+                    this._dao.deleteGroup(g._id, (b: boolean) => {
+                        callback(b);
+                    })
+                });
+
+            });
+
+        });
+
+    }
 
 
+    removeUserFromGroupById(_uId:string, _gId:string, callback: (b: boolean) => any) {
+        this._dao.readUserById(_uId, (u: User) => {
+            this._dao.readGroupById(_gId, (g: Group) => {
+                this._dao.deleteUserFromGroup(u._id, g._id, () => {
+
+                });
+            });
+        });
+
+    }
 }
