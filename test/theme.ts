@@ -51,4 +51,11 @@ describe('ThemeManager', () => {
         });
     });
 
+    describe('AddCard', () => {
+        it('Card msut be added to a theme', function(done: any){
+            this.timeout()
+        });
+    });
+
 });
+

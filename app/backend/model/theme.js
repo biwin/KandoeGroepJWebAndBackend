@@ -6,6 +6,9 @@ var Theme = (function () {
         this._tags = _tags;
         this._subThemes = _subThemes;
     }
+    Theme.empty = function () {
+        return new Theme("", "", [], [], []);
+    };
     return Theme;
 })();
 exports.Theme = Theme;

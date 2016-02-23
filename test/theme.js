@@ -49,5 +49,10 @@ describe('ThemeManager', function () {
             });
         });
     });
+    describe('AddCard', function () {
+        it('Card msut be added to a theme', function (done) {
+            this.timeout();
+        });
+    });
 });
 //# sourceMappingURL=theme.js.map

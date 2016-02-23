@@ -184,7 +184,6 @@ describe('UserManager', () => {
             this.timeout(0);
             userManager.removeUserFromOrganisation('OrganisationName', michael._id, (b:boolean) => {
                 try {
-                    console.log('Michael id2: ' + michael._id);
                     assert.equal(b, true);
                     done();
                 } catch (e) {

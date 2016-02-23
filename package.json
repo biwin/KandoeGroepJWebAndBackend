@@ -1,21 +1,19 @@
 {
-  "name": "OpenShift-Sample-App",
+  "name": "Kandoe",
   "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "description": "",
   "keywords": [
-    "OpenShift",
-    "Node.js",
-    "application",
-    "openshift"
+    "Kandoe",
+    "Decisionmaking"
   ],
   "scripts": {
     "start": "node server.js",
     "test": "mocha --recursive -R xunit test/ > test-reports.xml"
   },
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://www.openshift.com/"
+    "name": "Groep J",
+    "email": "",
+    "url": ""
   },
   "homepage": "http://www.openshift.com/",
   "repository": {
@@ -28,6 +26,7 @@
   },
   "dependencies": {
     "angular2": "2.0.0-beta.3",
+    "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",

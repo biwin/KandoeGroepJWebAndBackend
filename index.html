@@ -1,26 +1,39 @@
 <html>
 <head>
-    <title>Angular 2</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <title>KanDoe</title>
+    <!-- Angular imports -->
     <script src="../static/es6-shim/es6-shim.min.js"></script>
     <script src="../static/systemjs/dist/system-polyfills.js"></script>
     <script src="../static/angular2/bundles/angular2-polyfills.js"></script>
     <script src="../static/systemjs/dist/system.src.js"></script>
     <script src="../static/rxjs/bundles/Rx.js"></script>
     <script src="../static/angular2/bundles/angular2.dev.js"></script>
+    <script src="../static/angular2/bundles/http.dev.js"></script>
+    <script src="../static/angular2/bundles/router.dev.js"></script>
 
-    <link href="../static/materialize-css/css/ghpages-materialize.css" rel="stylesheet" />
+    <!-- Materialize CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../static/materialize-css/dist/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <link href="../app/frontend/css/Kandoe.css" rel="stylesheet"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <script>
         System.config({packages: {app: {defaultExtension: 'js'}}});
         System.import('app/frontend/components/main').then(null, console.error.bind(console));
     </script>
-
 </head>
 
 <body>
-    <my-app></my-app>
-</body>
 
+    <my-app></my-app>
+
+    <!-- Materialize SCRIPT -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="../static/materialize-css/bin/materialize.js"></script>
+    <script src="../static/materialize-css/js/init.js"></script>
+    <script src="../static/materialize-css/js/sideNav.js"></script>
+</body>
 </html>
