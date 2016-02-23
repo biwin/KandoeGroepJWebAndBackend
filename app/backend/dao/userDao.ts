@@ -8,7 +8,8 @@ import {CursorResult} from "mongodb";
 import {Organisation} from "../model/organisation";
 import {ObjectID} from "mongodb";
 import {Group} from "../model/group";
-import any = jasmine.any;
+import {MongoError} from "mongodb";
+import {Collection} from "mongodb";
 
 export class UserDao {
 
@@ -19,7 +20,7 @@ export class UserDao {
     }
 
     clearDatabase(callback: () => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             var completed: number = 0;
             db.collection('users').deleteMany({}, () => {
                 if (++completed == 2) callback();
@@ -64,11 +65,12 @@ export class UserDao {
     }
 
 
-    createUser(u: User, callback: () => any) {
+    createUser(u: User, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').insertOne(u).then(() => {
+            db.collection('users').insertOne(u, (error: MongoError, result) => {
+                u._id = result.insertedId;
                 db.close();
-                callback();
+                callback(u);
             });
         });
     }
@@ -83,20 +85,30 @@ export class UserDao {
 
     }
 
-    deleteUser(name: string, callback: () => any) {
+    deleteUser(name: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').deleteOne({'_name': name}, () => {
+            db.collection('users').deleteOne({'_name': name}, (err: MongoError, result) => {
                 db.close();
-                callback();
+                callback(result.deletedCount == 1);
             });
         });
     }
 
-    createOrganisation(o: Organisation, callback: () => any) {
+    deleteUserById(id: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').insertOne(o).then(() => {
+            db.collection('users').deleteOne({'_id': id}, (err: MongoError, result) => {
                 db.close();
-                callback();
+                callback(result.deletedCount == 1);
+            });
+        });
+    }
+
+    createOrganisation(o: Organisation, callback: (organisation: Organisation) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').insertOne(o, (error: MongoError, result) => {
+                o._id = result.insertedId;
+                db.close();
+                callback(o);
             });
         });
     }
@@ -175,5 +187,22 @@ export class UserDao {
             });
         });
 
+    }
+
+    readAllUsers(callback: (users:User[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({}).toArray((err, documents) => {
+                callback(documents);
+            });
+        });
+    }
+
+    deleteOrganisationById(id: String, callback: (b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').deleteOne({'_id': id}, (err: MongoError, result) => {
+                db.close();
+                callback(result.deletedCount == 1);
+            });
+        });
     }
 }
