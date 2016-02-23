@@ -485,6 +485,8 @@ describe('UserManager', () => {
 
     });
 
+
+
     describe('createGroupInOrganisation', () => {
         var jan:User;
         var organisatie:Organisation;
