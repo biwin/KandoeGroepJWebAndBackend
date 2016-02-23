@@ -19,9 +19,7 @@ export class UserManager {
     registerUser(user: User, callback: (u: User) => any) {
         this.userExists(user._name, (taken) => {
             if (!taken) {
-                this._dao.createUser(user, () => {
-                    this.getUser(user._name, callback);
-                });
+                this._dao.createUser(user, callback);
             } else {
                 callback(null);
             }
@@ -53,11 +51,17 @@ export class UserManager {
             if (!exists) {
                 callback(false);
             } else {
-                this._dao.deleteUser(name, () => {
-                    this.getUser(name, (u: User) => {
-                        callback(u == null);
-                    });
-                });
+                this._dao.deleteUser(name, callback);
+            }
+        });
+    }
+
+    deleteUserById(id: string, callback: (b: boolean) => any) {
+        this.userExistsById(id, (exists: boolean) => {
+            if (!exists) {
+                callback(false);
+            } else {
+                this._dao.deleteUserById(id, callback);
             }
         });
     }
@@ -85,9 +89,7 @@ export class UserManager {
             if (exists) {
                 callback(null);
             } else {
-                this._dao.createOrganisation(organisation, () => {
-                    this.getOrganisation(organisation._name, callback);
-                });
+                this._dao.createOrganisation(organisation, callback);
             }
         });
     }
@@ -143,6 +145,12 @@ export class UserManager {
 
     userExists(name: string, callback: (b: boolean) => any) {
         this._dao.readUser(name, (u: User) => {
+            callback(u != null);
+        });
+    }
+
+    userExistsById(id: string, callback: (b: boolean) => any) {
+        this._dao.readUserById(name, (u: User) => {
             callback(u != null);
         });
     }
@@ -229,5 +237,19 @@ export class UserManager {
             });
         });
 
+    }
+
+    getAllUsers(callback: (users: User[]) => any) {
+        this._dao.readAllUsers(callback);
+    }
+
+    deleteOrganisationById(id: string, callback: (b: boolean) => any) {
+        this.organisationExists(id, (exists: boolean) => {
+            if (!exists) {
+                callback(false);
+            } else {
+                this._dao.deleteOrganisationById(id, callback);
+            }
+        });
     }
 }

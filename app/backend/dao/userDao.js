@@ -7,7 +7,7 @@ var UserDao = (function () {
         this.client = new mongodb_1.MongoClient();
     }
     UserDao.prototype.clearDatabase = function (callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             var completed = 0;
             db.collection('users').deleteMany({}, function () {
                 if (++completed == 2)
@@ -49,9 +49,10 @@ var UserDao = (function () {
     };
     UserDao.prototype.createUser = function (u, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').insertOne(u).then(function () {
+            db.collection('users').insertOne(u, function (error, result) {
+                u._id = result.insertedId;
                 db.close();
-                callback();
+                callback(u);
             });
         });
     };
@@ -65,17 +66,26 @@ var UserDao = (function () {
     };
     UserDao.prototype.deleteUser = function (name, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').deleteOne({ '_name': name }, function () {
+            db.collection('users').deleteOne({ '_name': name }, function (err, result) {
                 db.close();
-                callback();
+                callback(result.deletedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.deleteUserById = function (id, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').deleteOne({ '_id': id }, function (err, result) {
+                db.close();
+                callback(result.deletedCount == 1);
             });
         });
     };
     UserDao.prototype.createOrganisation = function (o, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').insertOne(o).then(function () {
+            db.collection('organisations').insertOne(o, function (error, result) {
+                o._id = result.insertedId;
                 db.close();
-                callback();
+                callback(o);
             });
         });
     };
@@ -139,6 +149,21 @@ var UserDao = (function () {
             db.collection('groups').updateOne({ '_id': _gId }, { $pull: { '_users': _uId } }).then(function () {
                 db.close();
                 callback();
+            });
+        });
+    };
+    UserDao.prototype.readAllUsers = function (callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({}).toArray(function (err, documents) {
+                callback(documents);
+            });
+        });
+    };
+    UserDao.prototype.deleteOrganisationById = function (id, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').deleteOne({ '_id': id }, function (err, result) {
+                db.close();
+                callback(result.deletedCount == 1);
             });
         });
     };

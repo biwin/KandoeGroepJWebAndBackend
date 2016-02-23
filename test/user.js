@@ -13,77 +13,32 @@ before(function (done) {
     });
 });
 describe('UserManager', function () {
-    describe('deleteUser', function () {
-        it('Delete non-existing user, should return false', function (done) {
-            userManager.deleteUser('Jasper', function (b) {
-                try {
-                    assert.equal(b, false);
-                    done();
-                }
-                catch (e) {
-                    return done(e);
-                }
-            });
-        });
-    });
+    //region user-tests
     describe('createUser', function () {
+        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
         it('Register user, should return user from database', function (done) {
             this.timeout(0);
-            var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
             userManager.registerUser(user, function (u) {
                 try {
                     assert.equal(u._name, user._name);
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
-    });
-    var userId;
-    describe('getUserByName', function () {
-        it('Read existing user, should return the user', function (done) {
-            userManager.getUser('Jasper', function (u) {
-                try {
-                    assert.equal('Jasper', u._name);
-                    userId = u._id;
-                    done();
-                }
-                catch (e) {
-                    return done(e);
-                }
-            });
-        });
-    });
-    describe('getUserById', function () {
-        it('Read existing user, should return the user', function (done) {
-            userManager.getUserById(userId, function (u) {
-                try {
-                    assert.equal('Jasper', u._name);
-                    done();
-                }
-                catch (e) {
-                    return done(e);
-                }
-            });
-        });
-    });
-    describe('deleteUser', function () {
-        it('Delete existing user, should return true', function (done) {
+        after(function (done) {
             this.timeout(0);
-            userManager.deleteUser('Jasper', function (b) {
-                try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
-                    return done(e);
-                }
-            });
+            try {
+                userManager.deleteUser(user._name, function () { done(); });
+            }
+            catch (e) {
+                done();
+            }
         });
-    });
-    describe('getUser', function () {
+    }); //check
+    describe('getUserByName', function () {
         it('Read non-existing user, should return the null', function (done) {
             this.timeout(0);
             userManager.getUser('Jasper', function (u) {
@@ -92,24 +47,185 @@ describe('UserManager', function () {
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
-    });
+    }); //check
+    describe('getUserByName', function () {
+        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing user, should return the user', function (done) {
+            userManager.getUser(user._name, function (u) {
+                try {
+                    assert.equal(user._name, u._name);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                userManager.deleteUser(user._name, function () { done(); });
+            }
+            catch (e) {
+                done();
+            }
+        });
+    }); //check
+    describe('getAllUsers', function () {
+        var users = [new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin'),
+            new user_1.User('Jan', 'jasper.catthoor@student.kdg.be', 'password', 'admin'),
+            new user_1.User('Enio', 'jasper.catthoor@student.kdg.be', 'password', 'admin')];
+        before(function (done) {
+            this.timeout(0);
+            try {
+                var amountOfUsersRegistered = 0;
+                for (var index in users) {
+                    userManager.registerUser(users[index], function (u) {
+                        users[index] = u;
+                        if (++amountOfUsersRegistered == 3)
+                            done();
+                    });
+                }
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Read all existing users', function (done) {
+            try {
+                userManager.getAllUsers(function (userArray) {
+                    assert.equal(userArray.length == users.length, true);
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                var amountOfUsersDeleted = 0;
+                for (var index in users) {
+                    userManager.deleteUserById(users[index]._id, function () {
+                        if (++amountOfUsersDeleted == 3)
+                            done();
+                    });
+                }
+            }
+            catch (e) {
+                done();
+            }
+        });
+    }); //check
+    describe('getUserById', function () {
+        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing user, should return the user', function (done) {
+            userManager.getUserById(user._id, function (u) {
+                try {
+                    assert.equal('Jasper', u._name);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                userManager.deleteUser(user._name, function () { done(); });
+            }
+            catch (e) {
+                done();
+            }
+        });
+    }); //check
+    describe('deleteUser', function () {
+        it('Delete non-existing user, should return false', function (done) {
+            userManager.deleteUser('Jasper', function (b) {
+                try {
+                    assert.equal(b, false);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+    }); //check
+    describe('deleteUser', function () {
+        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Delete existing user, should return true', function (done) {
+            this.timeout(0);
+            userManager.deleteUser(user._name, function (b) {
+                try {
+                    assert.equal(b, true);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+    }); //check
+    //endregion
+    //region organisation-test
     describe('createOrganisation', function () {
-        var jasper;
-        var rob;
+        var jasper = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
+        var rob = new user_1.User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'admin');
+        var users = [jasper._id, rob._id];
+        var organisation = new organisation_1.Organisation('OrganisationName', users);
         before(function (done) {
             this.timeout(0);
             var users = 0;
             try {
-                userManager.registerUser(new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin'), function (u) {
+                userManager.registerUser(jasper, function (u) {
                     jasper = u;
                     if (++users == 2)
                         done();
                 });
-                userManager.registerUser(new user_1.User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'admin'), function (u) {
+                userManager.registerUser(rob, function (u) {
                     rob = u;
                     if (++users == 2)
                         done();
@@ -121,26 +237,55 @@ describe('UserManager', function () {
         });
         it('Create organisation, should return organisation from database', function (done) {
             this.timeout(0);
-            var organisation = new organisation_1.Organisation('OrganisationName', [jasper._id, rob._id]);
             userManager.createOrganisation(organisation, function (o) {
                 try {
+                    organisation = o;
                     assert.equal(organisation._name, o._name);
+                    assert.equal(organisation._organisators.length, users.length);
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
-    });
+        after(function (done) {
+            var steps = 0;
+            try {
+                userManager.deleteUserById(jasper._id, function () {
+                    if (++steps == 3)
+                        done();
+                });
+                userManager.deleteUserById(rob._id, function () {
+                    if (++steps == 3)
+                        done();
+                });
+                userManager.deleteOrganisationById(organisation._id, function () {
+                    if (++steps == 3)
+                        done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    }); //check
     describe('addUserToOrganisation', function () {
-        var jan;
+        var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
+        var organisation = new organisation_1.Organisation('OrganisationName', []);
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerUser(new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin'), function (u) {
+                var steps = 0;
+                userManager.registerUser(jan, function (u) {
                     jan = u;
-                    done();
+                    if (++steps == 2)
+                        done();
+                });
+                userManager.createOrganisation(organisation, function (o) {
+                    organisation = o;
+                    if (++steps == 2)
+                        done();
                 });
             }
             catch (e) {
@@ -149,17 +294,34 @@ describe('UserManager', function () {
         });
         it('Add user to organisation, should return organisation from database', function (done) {
             this.timeout(0);
-            userManager.addToOrganisation('OrganisationName', jan._id, function (o) {
+            userManager.addToOrganisation(organisation._name, jan._id, function (o) {
                 try {
-                    assert.equal(o._organisators.length, 3);
+                    assert.equal(o._organisators.length, 1);
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
-    });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                var steps = 0;
+                userManager.deleteUserById(jan._id, function () {
+                    if (++steps == 2)
+                        done();
+                });
+                userManager.deleteOrganisationById(organisation._id, function () {
+                    if (++steps == 2)
+                        done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    }); //check
     describe('removeUserFromOrganisation', function () {
         var michael;
         before(function (done) {
@@ -184,26 +346,11 @@ describe('UserManager', function () {
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
     });
-    /*  describe('removeUserFromOrganisation', () => {
-     it('Remove user from organisation, should return false since user was NOT in organisation', function(done: any) {
-     this.timeout(0);
-     userManager.removeUserFromOrganisation('OrganisationName', 'nonExistingUserId1234', (b: boolean) => {
-     try {
-     assert.equal(b, false);
-     done();
-     } catch(e) {
-     return done(e);
-     }
-     });
-     });
-     });*/
-    //Group-testen
-    //todo testjes bij steken
     describe('addUserToGroup', function () {
         var jan;
         var group;
@@ -289,7 +436,7 @@ describe('UserManager', function () {
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
@@ -314,7 +461,7 @@ describe('UserManager', function () {
                     done();
                 }
                 catch (e) {
-                    return done(e);
+                    done(e);
                 }
             });
         });
@@ -389,5 +536,6 @@ describe('UserManager', function () {
             });
         });
     });
+    //endregion
 });
 //# sourceMappingURL=user.js.map
