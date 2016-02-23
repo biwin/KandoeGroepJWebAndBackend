@@ -1,3 +1,4 @@
+/// <reference path="../../../../typings/jquery/jquery.d.ts" />
 import {Component, AfterViewInit} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 
