@@ -1,13 +1,17 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
+/// <reference path="../typings/express/express.d.ts" />
+
 import assert = require('assert');
-import {UserManager} from "../app/backend/logic/userManager";
-import {timeout} from "rxjs/operator/timeout";
-import {User} from "../app/backend/model/user";
-import {Organisation} from "../app/backend/model/organisation";
-import {ObjectID} from "mongodb";
-import {Group} from "../app/backend/model/group";
 import e = require("express");
+
+import {timeout} from "rxjs/operator/timeout";
+import {ObjectID} from "mongodb";
+
+import {UserManager} from "../app/backend/logic/userManager";
+import {Group} from "../app/backend/model/group";
+import {Organisation} from "../app/backend/model/organisation";
+import {User} from "../app/backend/model/user";
 
 var userManager: UserManager;
 
@@ -563,4 +567,3 @@ describe('UserManager', () => {
     //endregion
 
 });
-

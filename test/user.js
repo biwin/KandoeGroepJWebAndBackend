@@ -1,10 +1,11 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
+/// <reference path="../typings/express/express.d.ts" />
 var assert = require('assert');
 var userManager_1 = require("../app/backend/logic/userManager");
-var user_1 = require("../app/backend/model/user");
-var organisation_1 = require("../app/backend/model/organisation");
 var group_1 = require("../app/backend/model/group");
+var organisation_1 = require("../app/backend/model/organisation");
+var user_1 = require("../app/backend/model/user");
 var userManager;
 before(function (done) {
     userManager = new userManager_1.UserManager();
