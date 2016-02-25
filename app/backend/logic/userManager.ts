@@ -184,12 +184,12 @@ export class UserManager {
         console.log("I got called!");
         this.getOrganisation(oName, (o: Organisation) => {
             if (o != null) {
-                for (var index in o._organisators) {
-                    /*console.log(o._organisators[index].toString());
-                     console.log(o._organisators[index].toString().length);
+                for (var index in o._organisatorIds) {
+                    /*console.log(o._organisatorIds[index].toString());
+                     console.log(o._organisatorIds[index].toString().length);
                      console.log(uId.toString());
                      console.log(uId.toString().length);*/
-                    if (o._organisators[index].toString() == uId.toString()){
+                    if (o._organisatorIds[index].toString() == uId.toString()){
                         console.log("returning true for " + uId);
                         callback(true);
                         return;

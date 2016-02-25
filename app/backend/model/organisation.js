@@ -1,7 +1,7 @@
 var Organisation = (function () {
-    function Organisation(_name, _organisators) {
+    function Organisation(_name, _organisatorIds) {
         this._name = _name;
-        this._organisators = _organisators;
+        this._organisatorIds = _organisatorIds;
     }
     Object.defineProperty(Organisation.prototype, "groups", {
         get: function () {
