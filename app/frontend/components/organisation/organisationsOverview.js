@@ -23,7 +23,8 @@ var OrganisationsOverview = (function () {
         this.router = router;
     }
     OrganisationsOverview.prototype.onClick = function (organisationId) {
-        this.router.navigate(["/OrganisationDetail", { id: organisationId }]);
+        //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
+        this.router.navigate(["/OrganisationDetail", { id: 0 }]);
     };
     OrganisationsOverview = __decorate([
         core_1.Component({

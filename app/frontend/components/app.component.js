@@ -16,6 +16,7 @@ var themeForm_1 = require('./theme/themeForm');
 var circleSessionForm_1 = require("./circleSession/circleSessionForm");
 var organisationsOverview_1 = require("./organisation/organisationsOverview");
 var organisationForm_1 = require("./organisation/organisationForm");
+var organisationDetail_1 = require("./organisation/organisationDetail");
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -30,7 +31,8 @@ var AppComponent = (function () {
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
             { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm },
             { path: '/organisations', as: 'OrganisationsOverview', component: organisationsOverview_1.OrganisationsOverview },
-            { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm }
+            { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm },
+            { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail }
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);

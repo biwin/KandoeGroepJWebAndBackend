@@ -48,6 +48,7 @@ export class OrganisationsOverview {
     ];
 
     private onClick(organisationId: string): void {
-        this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
+        //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
+        this.router.navigate(["/OrganisationDetail", {id: 0}]);
     }
 }

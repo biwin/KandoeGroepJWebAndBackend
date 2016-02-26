@@ -8,6 +8,7 @@ import {ThemeForm} from './theme/themeForm';
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
 import {OrganisationsOverview} from "./organisation/organisationsOverview";
 import {OrganisationForm} from "./organisation/organisationForm";
+import {OrganisationDetail} from "./organisation/organisationDetail";
 
 @Component({
     selector: 'my-app',
@@ -26,7 +27,8 @@ import {OrganisationForm} from "./organisation/organisationForm";
     {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
     {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
     {path: '/organisations', as: 'OrganisationsOverview', component: OrganisationsOverview},
-    {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm}
+    {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm},
+    {path: '/organisation/:id', as: 'OrganisationDetail', component: OrganisationDetail}
 ])
 
 export class AppComponent { }
