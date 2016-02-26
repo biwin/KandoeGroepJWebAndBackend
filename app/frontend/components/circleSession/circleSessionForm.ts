@@ -63,11 +63,20 @@ import {Theme} from "../../../backend/model/theme";
     `
 })
 export class CircleSessionForm implements AfterViewInit {
-    private _groups:Group[] = [new Group("","Groep A",""), new Group("", "Groep B", ""), new Group("", "Groep C", "")];
-    private _themes:Theme[] = [new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]), new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])];
+    private _groups: Group[] = [
+        new Group("Groep A","", ""),
+        new Group("Groep B", "", ""),
+        new Group("Groep C", "", "")
+    ];
+    private _themes: Theme[] = [
+        new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),
+        new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]),
+        new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])
+    ];
 
-    ngAfterViewInit():any {
+    ngAfterViewInit(): any {
         $('select').material_select();
+
         $('.datepicker').pickadate({
             monthsFull: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
             today: 'Vandaag',

@@ -12,8 +12,16 @@ var group_1 = require("../../../backend/model/group");
 var theme_1 = require("../../../backend/model/theme");
 var CircleSessionForm = (function () {
     function CircleSessionForm() {
-        this._groups = [new group_1.Group("", "Groep A", ""), new group_1.Group("", "Groep B", ""), new group_1.Group("", "Groep C", "")];
-        this._themes = [new theme_1.Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]), new theme_1.Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]), new theme_1.Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])];
+        this._groups = [
+            new group_1.Group("Groep A", "", ""),
+            new group_1.Group("Groep B", "", ""),
+            new group_1.Group("Groep C", "", "")
+        ];
+        this._themes = [
+            new theme_1.Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),
+            new theme_1.Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]),
+            new theme_1.Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])
+        ];
     }
     CircleSessionForm.prototype.ngAfterViewInit = function () {
         $('select').material_select();
