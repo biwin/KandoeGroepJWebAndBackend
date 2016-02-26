@@ -10,6 +10,9 @@ var Organisation = (function () {
         enumerable: true,
         configurable: true
     });
+    Organisation.empty = function () {
+        return new Organisation("", []);
+    };
     return Organisation;
 })();
 exports.Organisation = Organisation;

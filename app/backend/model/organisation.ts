@@ -13,4 +13,8 @@ export class Organisation {
     get groups():Group[] {
         return this._groups;
     }
+
+    public static empty(): Organisation {
+        return new Organisation("", []);
+    }
 }
