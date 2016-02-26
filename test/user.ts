@@ -268,7 +268,7 @@ describe('UserManager', () => {
     describe('createGroupInOrganisation', () => {
         var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
         var organisation:Organisation = new Organisation('Organisatie', [jan._id]);
-        var group: Group = new Group(organisation._id, 'Group', 'Descript');
+        var group: Group = new Group('Group', 'Descript', organisation._id);
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -363,7 +363,7 @@ describe('UserManager', () => {
     describe('addUserToGroup', () => {
         var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin');
         var organisation:Organisation = new Organisation('Organisation', [jan._id]);
-        var group:Group = new Group(organisation._name, 'Group', 'Description');
+        var group:Group = new Group('Group', 'Description', organisation._name);
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -483,7 +483,7 @@ describe('UserManager', () => {
             try {
                 userManager.registerUser(new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin'), (u:User) => {
                     jan = u;
-                    userManager.registerGroup(new Group('Organisatie', 'Group', 'Description'), (g:Group) => {
+                    userManager.registerGroup(new Group('Group', 'Description', 'Organisatie'), (g:Group) => {
                         group = g;
                     });
                     userManager.addToGroupById(jan._id, group._name, () => {
@@ -521,7 +521,7 @@ describe('UserManager', () => {
     }); // check
 
     describe('getGroupByName', () => {
-        var group: Group = new Group('Organisation', 'Group', 'Descript');
+        var group: Group = new Group('Group', 'Descript', 'Organisation');
         before(function (done:any) {
             this.timeout(0);
 
@@ -553,7 +553,7 @@ describe('UserManager', () => {
     }); //check
 
     describe('getGroupById', () => {
-        var group: Group = new Group('Organisation', 'Group', 'Descript');
+        var group: Group = new Group('Group', 'Descript', 'Organisation');
         before(function (done:any) {
             this.timeout(0);
 
@@ -585,7 +585,7 @@ describe('UserManager', () => {
 
     describe('removeGroup', () => {
         var organisation = new Organisation('Organisation', []);
-        var group:Group = new Group(organisation._name,'Group', 'Description');
+        var group:Group = new Group('Group', 'Description', organisation._name);
         before(function (done:any) {
             this.timeout(0);
             try {

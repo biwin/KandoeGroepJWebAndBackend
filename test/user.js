@@ -274,7 +274,7 @@ describe('UserManager', function () {
     describe('createGroupInOrganisation', function () {
         var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
         var organisation = new organisation_1.Organisation('Organisatie', [jan._id]);
-        var group = new group_1.Group(organisation._id, 'Group', 'Descript');
+        var group = new group_1.Group('Group', 'Descript', organisation._id);
         before(function (done) {
             this.timeout(0);
             try {
@@ -376,7 +376,7 @@ describe('UserManager', function () {
     describe('addUserToGroup', function () {
         var jan = new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin');
         var organisation = new organisation_1.Organisation('Organisation', [jan._id]);
-        var group = new group_1.Group(organisation._name, 'Group', 'Description');
+        var group = new group_1.Group('Group', 'Description', organisation._name);
         before(function (done) {
             this.timeout(0);
             try {
@@ -495,7 +495,7 @@ describe('UserManager', function () {
             try {
                 userManager.registerUser(new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin'), function (u) {
                     jan = u;
-                    userManager.registerGroup(new group_1.Group('Organisatie', 'Group', 'Description'), function (g) {
+                    userManager.registerGroup(new group_1.Group('Group', 'Description', 'Organisatie'), function (g) {
                         group = g;
                     });
                     userManager.addToGroupById(jan._id, group._name, function () {
@@ -529,7 +529,7 @@ describe('UserManager', function () {
         });
     }); // check
     describe('getGroupByName', function () {
-        var group = new group_1.Group('Organisation', 'Group', 'Descript');
+        var group = new group_1.Group('Group', 'Descript', 'Organisation');
         before(function (done) {
             this.timeout(0);
             try {
@@ -560,7 +560,7 @@ describe('UserManager', function () {
         });
     }); //check
     describe('getGroupById', function () {
-        var group = new group_1.Group('Organisation', 'Group', 'Descript');
+        var group = new group_1.Group('Group', 'Descript', 'Organisation');
         before(function (done) {
             this.timeout(0);
             try {
@@ -589,7 +589,7 @@ describe('UserManager', function () {
     }); //check
     describe('removeGroup', function () {
         var organisation = new organisation_1.Organisation('Organisation', []);
-        var group = new group_1.Group(organisation._name, 'Group', 'Description');
+        var group = new group_1.Group('Group', 'Description', organisation._name);
         before(function (done) {
             this.timeout(0);
             try {
