@@ -6,7 +6,7 @@ export class Organisation {
     public _id: string;
 
     constructor(public _name: string,
-                public _organisatorIds: string[]) {
+                public _memberIds: string[]) {
 
     }
 

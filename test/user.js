@@ -242,7 +242,7 @@ describe('UserManager', function () {
                 try {
                     organisation = o;
                     assert.equal(organisation._name, o._name);
-                    assert.equal(organisation._organisatorIds.length, users.length);
+                    assert.equal(organisation._memberIds.length, users.length);
                     done();
                 }
                 catch (e) {
@@ -297,7 +297,7 @@ describe('UserManager', function () {
             this.timeout(0);
             userManager.addToOrganisation(organisation._name, jan._id, function (o) {
                 try {
-                    assert.equal(o._organisatorIds.length, 1);
+                    assert.equal(o._memberIds.length, 1);
                     done();
                 }
                 catch (e) {
@@ -516,7 +516,7 @@ describe('UserManager', function () {
         });
         it('Add group to organisation of the user', function (done) {
             this.timeout(0);
-            var userInOrg = organisatie._organisatorIds.indexOf(jan._id) > -1;
+            var userInOrg = organisatie._memberIds.indexOf(jan._id) > -1;
             if (userInOrg) {
                 var group = new group_1.Group(organisatie._name, 'Groep', 'Description');
                 userManager.registerGroup(group, function (g) {
