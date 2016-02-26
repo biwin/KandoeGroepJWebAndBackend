@@ -1,10 +1,12 @@
 import {Component} from 'angular2/core';
-import {NavigationBar} from './general/navigationBar';
-import {ThemeForm} from './theme/themeForm';
-import {Footer} from './general/footer';
 import {RouterOutlet, RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
+
+import {NavigationBar} from './general/navigationBar';
+import {Footer} from './general/footer';
 import {ThemeOverview} from "./theme/themeOverview";
+import {ThemeForm} from './theme/themeForm';
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
+import {OrganisationForm} from "./organisation/organisationForm";
 
 @Component({
     selector: 'my-app',
@@ -13,13 +15,16 @@ import {CircleSessionForm} from "./circleSession/circleSessionForm";
     <div class="content">
         <router-outlet></router-outlet>
     </div>
-    <pagefooter></pagefooter>`,
+    <pagefooter></pagefooter>
+    `,
     directives: [NavigationBar, Footer, ROUTER_DIRECTIVES, RouterOutlet]
 })
+
 @RouteConfig([
-    {path: '/create', as: 'CreateTheme', component: ThemeForm},
     {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
-    {path: '/createSession', as: 'CreateSession', component: CircleSessionForm}
+    {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
+    {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
+    {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm}
 ])
-export class AppComponent {
-}
+
+export class AppComponent { }

@@ -1,3 +1,4 @@
+/// <reference path="../../../../typings/jquery/jquery.d.ts" />
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/// <reference path="../../../../typings/jquery/jquery.d.ts" />
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var NavigationBar = (function () {
@@ -21,7 +21,7 @@ var NavigationBar = (function () {
     NavigationBar = __decorate([
         core_1.Component({
             selector: 'navigation-bar',
-            template: "\n    <nav class=\"blue\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" href=\"#!\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li><a href=\"#!\"><i class=\"material-icons\">face</i></a></li>\n            </ul>\n            <ul id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Thema overzicht</a></li>\n                <li><a [routerLink]=\"['CreateTheme']\">Create thema</a></li>\n                <li><a [routerLink]=\"['CreateSession']\">Create Session</a></li>\n            </ul>\n            <a href=\"#\" data-activates=\"slide-out\" class=\"button-collapse\"><i class=\"mdi-navigation-menu\"></i></a>\n       </div>\n    </nav>\n\n    <div></div>\n  ",
+            template: "\n    <nav class=\"blue\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" href=\"#!\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li><a href=\"#!\"><i class=\"material-icons\">face</i></a></li>\n            </ul>\n            <ul id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Thema overzicht</a></li>\n                <li><a [routerLink]=\"['CreateTheme']\">Create thema</a></li>\n                <li><a [routerLink]=\"['CreateSession']\">Create Session</a></li>\n                <li><a [routerLink]=\"['CreateOrganisation']\">Create organisatie</a></li>\n            </ul>\n            <a href=\"#\" data-activates=\"slide-out\" class=\"button-collapse\"><i class=\"mdi-navigation-menu\"></i></a>\n       </div>\n    </nav>\n\n    <div></div>\n  ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])

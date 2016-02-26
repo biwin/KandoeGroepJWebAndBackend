@@ -1,4 +1,5 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
+
 import {Component, AfterViewInit} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 
@@ -15,6 +16,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
                 <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>
                 <li><a [routerLink]="['CreateTheme']">Create thema</a></li>
                 <li><a [routerLink]="['CreateSession']">Create Session</a></li>
+                <li><a [routerLink]="['CreateOrganisation']">Create organisatie</a></li>
             </ul>
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
        </div>
@@ -24,6 +26,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
   `,
     directives: [ROUTER_DIRECTIVES]
 })
+
 export class NavigationBar implements AfterViewInit {
     ngAfterViewInit() {
         $(".button-collapse").sideNav({
