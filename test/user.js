@@ -393,7 +393,7 @@ describe('UserManager', function () {
             this.timeout(0);
             userManager.addToGroupById(jan._id, group._id, function (g) {
                 try {
-                    assert.equal((group._users.indexOf(jan._id) > -1), true);
+                    assert.equal((group._memberIds.indexOf(jan._id) > -1), true);
                     done();
                 }
                 catch (e) {
@@ -435,7 +435,7 @@ describe('UserManager', function () {
             this.timeout(0);
             userManager.removeUserFromGroupById(jan._id, group._id, function (g) {
                 try {
-                    assert.equal((group._users.indexOf(jan._id) > -1), false);
+                    assert.equal((group._memberIds.indexOf(jan._id) > -1), false);
                     done();
                 }
                 catch (e) {
