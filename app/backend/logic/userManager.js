@@ -186,7 +186,7 @@ var UserManager = (function () {
     UserManager.prototype.userIdInGroup = function (gId, uId, callback) {
         /*this._dao.readGroupByName(gName, (g: Group) => {
             this._dao.readUserById(uId, (u: User) => {
-                if (g._users.indexOf(u._id) > -1) {
+         if (g._memberIds.indexOf(u._id) > -1) {
                     callback(true);
                 }
                 else {

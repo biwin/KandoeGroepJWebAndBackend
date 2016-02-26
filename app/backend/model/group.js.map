@@ -1,1 +1,13 @@
-{"version":3,"file":"group.js","sourceRoot":"","sources":["group.ts"],"names":["Group","Group.constructor"],"mappings":"AAAA;IAGIA,eAAmBA,eAAsBA,EACtBA,KAAYA,EACZA,YAAmBA,EACnBA,UAAoBA;QAHpBC,oBAAeA,GAAfA,eAAeA,CAAOA;QACtBA,UAAKA,GAALA,KAAKA,CAAOA;QACZA,iBAAYA,GAAZA,YAAYA,CAAOA;QACnBA,eAAUA,GAAVA,UAAUA,CAAUA;IAEvCA,CAACA;IACLD,YAACA;AAADA,CAACA,AATD,IASC;AATY,aAAK,QASjB,CAAA"}
+{
+  "version": 3,
+  "file": "group.js",
+  "sourceRoot": "",
+  "sources": [
+    "group.ts"
+  ],
+  "names": [
+    "Group",
+    "Group.constructor"
+  ],
+  "mappings": "AAAA;IAGIA,eAAmBA,eAAuBA,EACvBA,KAAaA,EACbA,YAAoBA,EACpBA,UAAqBA;QAHrBC,oBAAeA,GAAfA,eAAeA,CAAQA;QACvBA,UAAKA,GAALA,KAAKA,CAAQA;QACbA,iBAAYA,GAAZA,YAAYA,CAAQA;QACpBA,eAAUA,GAAVA,UAAUA,CAAWA;IAExCA,CAACA;IACLD,YAACA;AAADA,CAACA,AATD,IASC;AATY,aAAK,QASjB,CAAA"
+}
