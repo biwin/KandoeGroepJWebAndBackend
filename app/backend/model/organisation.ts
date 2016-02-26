@@ -26,7 +26,7 @@ export class Organisation {
         return this._groups;
     }
 
-    get members():User[] {
+    get members(): User[] {
         return this._members;
     }
 
