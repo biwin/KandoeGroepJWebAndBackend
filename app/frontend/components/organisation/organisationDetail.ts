@@ -36,6 +36,29 @@ import {Organisation} from "../../../backend/model/organisation";
 
             <p *ngIf="organisation.groups.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
         </div></div>
+
+
+        <h5>Leden</h5>
+
+        <div class="card" [ngClass]="{tableCard: organisation.members.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation.members.length!=0">
+                <thead>
+                    <tr>
+                        <th data-field="name">Naam</th>
+                        <th data-field="email">E-mail adres</th>
+                        <th data-field="role">Rol</th>
+                    </tr>
+                </thead>
+
+                <tr *ngFor="#member of organisation.members" (click)="viewMember(member._id)" class="clickable">
+                    <td>{{member._name}}</td>
+                    <td>{{member._email}}</td>
+                    <td>{{member._role}}</td>
+                </tr>
+            </table>
+
+            <p *ngIf="organisation.members.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
+        </div></div>
     </div>
     `,
     directives: [NgClass]
@@ -52,5 +75,10 @@ export class OrganisationDetail {
     private viewGroup(groupId:string):void {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
         alert("viewGroup: " + groupId);
+    }
+
+    private viewMember(userId:string):void {
+        //this.router.navigate(["/UserDetail", {id: userId}]);
+        alert("viewMembers: " + userId);
     }
 }
