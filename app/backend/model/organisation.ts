@@ -2,7 +2,7 @@ import {Group} from "./group";
 import {User} from "./user";
 
 export class Organisation {
-    private _groups: Group[];
+    private _groups: string[];
     private _members: User[];
 
     public _id: string;
@@ -22,7 +22,7 @@ export class Organisation {
         }
     }
 
-    get groups(): Group[] {
+    get groups(): string[] {
         return this._groups;
     }
 
