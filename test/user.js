@@ -32,7 +32,7 @@ describe('UserManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                userManager.deleteUser(user._name, function () { done(); });
+                userManager.removeUser(user._name, function () { done(); });
             }
             catch (e) {
                 done();
@@ -81,7 +81,7 @@ describe('UserManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                userManager.deleteUser(user._name, function () { done(); });
+                userManager.removeUser(user._name, function () { done(); });
             }
             catch (e) {
                 done();
@@ -124,7 +124,7 @@ describe('UserManager', function () {
             try {
                 var amountOfUsersDeleted = 0;
                 for (var index in users) {
-                    userManager.deleteUserById(users[index]._id, function () {
+                    userManager.removeUserById(users[index]._id, function () {
                         if (++amountOfUsersDeleted == 3)
                             done();
                     });
@@ -163,16 +163,16 @@ describe('UserManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                userManager.deleteUser(user._name, function () { done(); });
+                userManager.removeUser(user._name, function () { done(); });
             }
             catch (e) {
                 done();
             }
         });
     }); //check
-    describe('deleteUser', function () {
+    describe('removeUser', function () {
         it('Delete non-existing user, should return false', function (done) {
-            userManager.deleteUser('Jasper', function (b) {
+            userManager.removeUser('Jasper', function (b) {
                 try {
                     assert.equal(b, false);
                     done();
@@ -183,7 +183,7 @@ describe('UserManager', function () {
             });
         });
     }); //check
-    describe('deleteUser', function () {
+    describe('removeUser', function () {
         var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
         before(function (done) {
             this.timeout(0);
@@ -199,7 +199,7 @@ describe('UserManager', function () {
         });
         it('Delete existing user, should return true', function (done) {
             this.timeout(0);
-            userManager.deleteUser(user._name, function (b) {
+            userManager.removeUser(user._name, function (b) {
                 try {
                     assert.equal(b, true);
                     done();
@@ -253,11 +253,11 @@ describe('UserManager', function () {
         after(function (done) {
             var steps = 0;
             try {
-                userManager.deleteUserById(jasper._id, function () {
+                userManager.removeUserById(jasper._id, function () {
                     if (++steps == 3)
                         done();
                 });
-                userManager.deleteUserById(rob._id, function () {
+                userManager.removeUserById(rob._id, function () {
                     if (++steps == 3)
                         done();
                 });
@@ -271,6 +271,56 @@ describe('UserManager', function () {
             }
         });
     }); //check
+    describe('createGroupInOrganisation', function () {
+        var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
+        var organisation = new organisation_1.Organisation('Organisatie', [jan._id]);
+        var group = new group_1.Group(organisation._id, 'Group', 'Descript');
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(jan, function (u) {
+                    jan = u;
+                    userManager.createOrganisation(organisation, function (o) {
+                        organisation = o;
+                        userManager.registerGroup(group, function (g) {
+                            group = g;
+                            done();
+                        });
+                    });
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Add group to organisation of the user', function (done) {
+            this.timeout(0);
+            var groupInOrg = organisation.groups.indexOf(group._id) > -1;
+            if (!groupInOrg) {
+                userManager.registerGroup(group, function (g) {
+                    try {
+                        assert.equal(g._id, group._id);
+                        done();
+                    }
+                    catch (e) {
+                        done(e);
+                    }
+                });
+            }
+            else {
+                throw new Error('group already in organisation');
+            }
+        });
+        after(function (done) {
+            userManager.removeUserById(jan._id, function () {
+                userManager.removeGroupById(group._id, function () {
+                    userManager.removeOrganisationById(organisation._id, function () {
+                        done();
+                    });
+                });
+            });
+        });
+    }); // check
     describe('addUserToOrganisation', function () {
         var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
         var organisation = new organisation_1.Organisation('OrganisationName', []);
@@ -295,7 +345,7 @@ describe('UserManager', function () {
         });
         it('Add user to organisation, should return organisation from database', function (done) {
             this.timeout(0);
-            userManager.addToOrganisation(organisation._name, jan._id, function (o) {
+            userManager.addToOrganisation(organisation._id, jan._id, function (o) {
                 try {
                     assert.equal(o._memberIds.length, 1);
                     done();
@@ -309,57 +359,13 @@ describe('UserManager', function () {
             this.timeout(0);
             try {
                 var steps = 0;
-                userManager.deleteUserById(jan._id, function () {
+                userManager.removeUserById(jan._id, function () {
                     if (++steps == 2)
                         done();
                 });
                 userManager.removeOrganisationById(organisation._id, function () {
                     if (++steps == 2)
                         done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    }); //check
-    describe('removeUserFromOrganisation', function () {
-        var user = new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin');
-        var organisation = new organisation_1.Organisation('Organisation', [user._id]);
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(user, function (u) {
-                    user = u;
-                    userManager.createOrganisation(organisation, function (o) {
-                        organisation = o;
-                        done();
-                    });
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Remove user from organisation, should return true since user was in organisation', function (done) {
-            this.timeout(0);
-            userManager.removeUserFromOrganisationById(organisation._id, user._id, function (b) {
-                try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeOrganisationById(organisation._id, function () {
-                    userManager.deleteUserById(user._id, function () {
-                        done();
-                    });
                 });
             }
             catch (e) {
@@ -402,7 +408,7 @@ describe('UserManager', function () {
             });
         });
         after(function (done) {
-            userManager.deleteUserById(jan._id, function () {
+            userManager.removeUserById(jan._id, function () {
                 userManager.removeGroupById(group._id, function () {
                     userManager.removeOrganisationById(organisation._id, function () {
                         done();
@@ -411,6 +417,76 @@ describe('UserManager', function () {
             });
         });
     }); // check
+    describe('removeUserFromOrganisation', function () {
+        var user = new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin');
+        var organisation = new organisation_1.Organisation('Organisation', [user._id]);
+        before(function (done) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    userManager.createOrganisation(organisation, function (o) {
+                        organisation = o;
+                        done();
+                    });
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Remove user from organisation, should return true since user was in organisation', function (done) {
+            this.timeout(0);
+            userManager.removeUserFromOrganisationById(organisation._id, user._id, function (b) {
+                try {
+                    assert.equal(b, true);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                userManager.removeOrganisationById(organisation._id, function () {
+                    userManager.removeUserById(user._id, function () {
+                        done();
+                    });
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    }); //check
+    describe('removeOrganisation', function () {
+        var organisation = new organisation_1.Organisation('Organisation', []);
+        before(function (done) {
+            try {
+                userManager.createOrganisation(organisation, function (o) {
+                    organisation = o;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it('Remove Organisation', function (done) {
+            try {
+                this.timeout(0);
+                userManager.removeOrganisationById(organisation._id, function (b) {
+                    assert.equal(b, true);
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
     describe('removeUserFromGroupById', function () {
         var jan;
         var group;
@@ -433,9 +509,9 @@ describe('UserManager', function () {
         });
         it('Add user to group', function (done) {
             this.timeout(0);
-            userManager.removeUserFromGroupById(jan._id, group._id, function (g) {
+            userManager.removeUserFromGroupById(jan._id, group._id, function (b) {
                 try {
-                    assert.equal((group._memberIds.indexOf(jan._id) > -1), false);
+                    assert.equal(b, true);
                     done();
                 }
                 catch (e) {
@@ -443,13 +519,21 @@ describe('UserManager', function () {
                 }
             });
         });
-    });
+        after(function (done) {
+            this.timeout(0);
+            userManager.removeGroupById(group._id, function () {
+                userManager.removeUser(jan._id, function () {
+                    done();
+                });
+            });
+        });
+    }); // check
     describe('getGroupByName', function () {
-        var group;
+        var group = new group_1.Group('Organisation', 'Group', 'Descript');
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerGroup(new group_1.Group('Organisation', 'Group', 'Descript'), function (g) {
+                userManager.registerGroup(group, function (g) {
                     group = g;
                 });
             }
@@ -458,32 +542,7 @@ describe('UserManager', function () {
             }
         });
         it('Read existing group, should return the group', function (done) {
-            userManager.getGroupByName(group._name, function (g) {
-                try {
-                    assert.equal(group._name, g._name);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-    });
-    describe('getGroupById', function () {
-        var group;
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerGroup(new group_1.Group('Organisation', 'Group', 'Descript'), function (g) {
-                    group = g;
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Read existing group, should return the group', function (done) {
-            userManager.getGroupByName(group._id, function (g) {
+            userManager.getGroupById(group._id, function (g) {
                 try {
                     assert.equal(group._id, g._id);
                     done();
@@ -493,56 +552,53 @@ describe('UserManager', function () {
                 }
             });
         });
-    });
-    describe('createGroupInOrganisation', function () {
-        var jan;
-        var organisatie;
+        after(function (done) {
+            this.timeout(0);
+            userManager.removeGroupById(group._id, function () {
+                done();
+            });
+        });
+    }); //check
+    describe('getGroupById', function () {
+        var group = new group_1.Group('Organisation', 'Group', 'Descript');
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerUser(new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin'), function (u) {
-                    jan = u;
-                });
-                userManager.createOrganisation(new organisation_1.Organisation('Organisatie'), function (o) {
-                    organisatie = o;
-                });
-                userManager.addToOrganisation(organisatie._name, jan._id, function () {
-                    done();
+                userManager.registerGroup(group, function (g) {
+                    group = g;
                 });
             }
             catch (e) {
                 done(e);
             }
         });
-        it('Add group to organisation of the user', function (done) {
-            this.timeout(0);
-            var userInOrg = organisatie._memberIds.indexOf(jan._id) > -1;
-            if (userInOrg) {
-                var group = new group_1.Group(organisatie._name, 'Groep', 'Description');
-                userManager.registerGroup(group, function (g) {
-                    try {
-                        assert.equal(g._name, group._name);
-                        done();
-                    }
-                    catch (e) {
-                        done(e);
-                    }
-                });
-            }
-            else {
-                throw new Error('user not in organiation');
-            }
+        it('Read existing group, should return the group', function (done) {
+            userManager.getGroupById(group._id, function (g) {
+                try {
+                    assert.equal(group._id, g._id);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
         });
-    });
-    describe('deleteGroup', function () {
-        var group;
-        var organisation = new organisation_1.Organisation('Organisation');
+        after(function (done) {
+            userManager.removeGroupById(group._id, function () { });
+        });
+    }); //check
+    describe('removeGroup', function () {
+        var organisation = new organisation_1.Organisation('Organisation', []);
+        var group = new group_1.Group(organisation._name, 'Group', 'Description');
         before(function (done) {
             this.timeout(0);
             try {
-                userManager.registerGroup(new group_1.Group(organisation._name, 'Group', 'Description'), function (g) {
-                    group = g;
-                    done();
+                userManager.createOrganisation(organisation, function (o) {
+                    organisation = o;
+                    userManager.registerGroup(group, function (g) {
+                        group = g;
+                        done();
+                    });
                 });
             }
             catch (e) {
@@ -553,14 +609,19 @@ describe('UserManager', function () {
             this.timeout(0);
             userManager.removeGroupById(group._id, function (b) {
                 try {
-                    var inOrg = organisation.groups.indexOf(group._id) > -1;
-                    assert.equal(b, false);
-                    assert.equal(inOrg, false);
+                    assert.equal(b, true);
                     done();
                 }
                 catch (e) {
                     done(e);
                 }
+            });
+        });
+        after(function (done) {
+            userManager.removeGroupById(group._id, function () {
+                userManager.removeOrganisationById(organisation._id, function () {
+                    done();
+                });
             });
         });
     });

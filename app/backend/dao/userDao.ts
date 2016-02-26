@@ -114,9 +114,17 @@ export class UserDao {
         });
     }
 
-    readOrganisation(name: string, callback: (o: Organisation) => any) {
+    readOrganisationByName(name: string, callback: (o: Organisation) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').find({'_name': name}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
+                callback(cursor);
+            })
+        });
+    }
+    readOrganisationById(oId: string, callback: (o: Organisation) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').find({'_id': oId}).limit(1).next().then((cursor: CursorResult) => {
                 db.close();
                 callback(cursor);
             })
@@ -134,7 +142,7 @@ export class UserDao {
 
     deleteUserFromOrganisation(oName: string, uId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_name': oName}, {$pull: {'_organisators': uId}}).then((error: MongoError, result) => {
+            db.collection('organisations').updateOne({'_name': oName}, {$pull: {'_organisators': uId}}, (error: MongoError, result) => {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
@@ -160,31 +168,31 @@ export class UserDao {
         });
     }
 
-    deleteGroupFromOrganisation(gId:string, oId:string, callback: () => any ) {
+    deleteGroupFromOrganisation(gId:string, oId:string, callback: (b: boolean) => any ) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': oId}, {$pull: {'_groups': gId}}).then(() => {
+            db.collection('organisations').updateOne({'_id': oId}, {$pull: {'_groups': gId}}, (error: MongoError, result) => {
                 db.close();
-                callback();
+                callback(result.modifiedCount == 1);
             })
         })
     }
 
     deleteGroup(_id:string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').deleteOne({'_id': _id}, () => {
+            db.collection('groups').deleteOne({'_id': _id}, (error: MongoError, result) => {
                 db.close();
-                callback(true); //todo Drivers OK & N
+                callback(result.deletedCount == 1)
 
             });
         });
 
     }
 
-    deleteUserFromGroup(_uId:string, _gId:string, callback: () => any) {
+    deleteUserFromGroup(_uId:string, _gId:string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').updateOne({'_id': _gId}, {$pull: {'_users': _uId}}).then(() => {
+            db.collection('groups').updateOne({'_id': _gId}, {$pull: {'_users': _uId}}, (error: MongoError, result) => {
                 db.close();
-                callback();
+                callback(result.modifiedCount == 1);
             });
         });
 
