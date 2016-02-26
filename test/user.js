@@ -1,430 +1,419 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
-var assert = require('assert');
 var userManager_1 = require("../app/backend/logic/userManager");
-var group_1 = require("../app/backend/model/group");
 var organisation_1 = require("../app/backend/model/organisation");
 var user_1 = require("../app/backend/model/user");
 var userManager;
 before(function (done) {
+    this.timeout(0);
     userManager = new userManager_1.UserManager();
     userManager.clearDatabase(function () {
         done();
     });
 });
 describe('UserManager', function () {
-    //region user-tests
-    describe('createUser', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
-        it('Register user, should return user from database', function (done) {
-            this.timeout(0);
-            userManager.registerUser(user, function (u) {
-                try {
-                    assert.equal(u._name, user._name);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeUser(user._name, function () { done(); });
-            }
-            catch (e) {
-                done();
-            }
-        });
-    }); //check
-    describe('getUserByName', function () {
-        it('Read non-existing user, should return the null', function (done) {
-            this.timeout(0);
-            userManager.getUser('Jasper', function (u) {
-                try {
-                    assert.equal(null, u);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-    }); //check
-    describe('getUserByName', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(user, function (u) {
-                    user = u;
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Read existing user, should return the user', function (done) {
-            userManager.getUser(user._name, function (u) {
-                try {
-                    assert.equal(user._name, u._name);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeUser(user._name, function () { done(); });
-            }
-            catch (e) {
-                done();
-            }
-        });
-    }); //check
-    describe('getAllUsers', function () {
-        var users = [new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin'),
-            new user_1.User('Jan', 'jasper.catthoor@student.kdg.be', 'password', 'admin'),
-            new user_1.User('Enio', 'jasper.catthoor@student.kdg.be', 'password', 'admin')];
-        before(function (done) {
-            this.timeout(0);
-            try {
-                var amountOfUsersRegistered = 0;
-                for (var index in users) {
-                    userManager.registerUser(users[index], function (u) {
-                        users[index] = u;
-                        if (++amountOfUsersRegistered == 3)
-                            done();
-                    });
-                }
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Read all existing users', function (done) {
-            try {
-                userManager.getAllUsers(function (userArray) {
-                    assert.equal(userArray.length == users.length, true);
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                var amountOfUsersDeleted = 0;
-                for (var index in users) {
-                    userManager.removeUserById(users[index]._id, function () {
-                        if (++amountOfUsersDeleted == 3)
-                            done();
-                    });
-                }
-            }
-            catch (e) {
-                done();
-            }
-        });
-    }); //check
-    describe('getUserById', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(user, function (u) {
-                    user = u;
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Read existing user, should return the user', function (done) {
-            userManager.getUserById(user._id, function (u) {
-                try {
-                    assert.equal('Jasper', u._name);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeUser(user._name, function () { done(); });
-            }
-            catch (e) {
-                done();
-            }
-        });
-    }); //check
-    describe('removeUser', function () {
-        it('Delete non-existing user, should return false', function (done) {
-            userManager.removeUser('Jasper', function (b) {
-                try {
-                    assert.equal(b, false);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-    }); //check
-    describe('removeUser', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(user, function (u) {
-                    user = u;
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Delete existing user, should return true', function (done) {
-            this.timeout(0);
-            userManager.removeUser(user._name, function (b) {
-                try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-    }); //check
-    //endregion
-    //region organisation-test
-    describe('createOrganisation', function () {
-        var jasper = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'admin');
-        var rob = new user_1.User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'admin');
-        var users = [jasper._id, rob._id];
-        var organisation = new organisation_1.Organisation('OrganisationName', users);
-        before(function (done) {
-            this.timeout(0);
-            var users = 0;
-            try {
-                userManager.registerUser(jasper, function (u) {
-                    jasper = u;
-                    if (++users == 2)
-                        done();
-                });
-                userManager.registerUser(rob, function (u) {
-                    rob = u;
-                    if (++users == 2)
-                        done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Create organisation, should return organisation from database', function (done) {
-            this.timeout(0);
-            userManager.createOrganisation(organisation, function (o) {
-                try {
-                    organisation = o;
-                    assert.equal(organisation._name, o._name);
-                    assert.equal(organisation._memberIds.length, users.length);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            var steps = 0;
-            try {
-                userManager.removeUserById(jasper._id, function () {
-                    if (++steps == 3)
-                        done();
-                });
-                userManager.removeUserById(rob._id, function () {
-                    if (++steps == 3)
-                        done();
-                });
-                userManager.removeOrganisationById(organisation._id, function () {
-                    if (++steps == 3)
-                        done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    }); //check
-    describe('createGroupInOrganisation', function () {
-        var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
-        var organisation = new organisation_1.Organisation('Organisatie', [jan._id]);
-        var group = new group_1.Group('Group', 'Descript', organisation._id);
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(jan, function (u) {
-                    jan = u;
-                    userManager.createOrganisation(organisation, function (o) {
-                        organisation = o;
-                        userManager.registerGroup(group, function (g) {
-                            group = g;
-                            done();
-                        });
-                    });
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Add group to organisation of the user', function (done) {
-            this.timeout(0);
-            var groupInOrg = organisation.groups.indexOf(group._id) > -1;
-            if (!groupInOrg) {
-                userManager.registerGroup(group, function (g) {
+    /*
+        //region user-tests
+        describe('createUser', () => {
+            var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+            it('Register user, should return user from database', function (done:any) {
+                this.timeout(0);
+                userManager.registerUser(user, (u:User) => {
                     try {
-                        assert.equal(g._id, group._id);
+                        assert.equal(u._name, user._name);
                         done();
-                    }
-                    catch (e) {
+                    } catch (e) {
                         done(e);
                     }
                 });
-            }
-            else {
-                throw new Error('group already in organisation');
+            });
+            after(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.removeUser(user._name, () => {
+                        done();
+                    });
+                } catch (e) {
+                    done();
+                }
+            });
+    
+        });
+    
+    
+        describe('getUserByName', () => {
+            it('Read non-existing user, should return the null', function (done:any) {
+                this.timeout(0);
+                userManager.getUser('Jasper', (u:User) => {
+                    try {
+                        assert.equal(null, u);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                });
+            });
+        });
+    
+    
+        describe('getUserByName', () => {
+            var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+            before(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.registerUser(user, (u:User) => {
+                        user = u;
+                        done();
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+            it('Read existing user, should return the user', function (done:any) {
+                this.timeout(0);
+                userManager.getUser(user._name, (u:User) => {
+                    try {
+                        assert.equal(user._name, u._name);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                });
+            });
+            after(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.removeUser(user._name, () => {
+                        done();
+                    });
+                } catch (e) {
+                    done();
+                }
+            });
+        });
+    
+        describe('getAllUsers', () => {
+            var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password'),
+                new User('Jan', 'jasper.catthoor@student.kdg.be', 'password'),
+                new User('Enio', 'jasper.catthoor@student.kdg.be', 'password')];
+            before(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.registerUser(users[0], (u1:User) => {
+                        users[0] = u1;
+                        userManager.registerUser(users[1], (u2:User) => {
+                            users[1] = u2;
+                            userManager.registerUser(users[2], (u3:User) => {
+                                users[2] = u3;
+                                done();
+                            });
+                        });
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+            it('Read all existing users', function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.getAllUsers((userArray:User[]) => {
+                        assert.equal(userArray.length == users.length, true);
+                        done();
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+            after(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.removeUserById(users[0]._id, () => {
+                        userManager.removeUserById(users[1]._id, () => {
+                            userManager.removeUserById(users[2]._id, () => {
+                                done();
+                            });
+                        });
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+    
+        describe('getUserById', () => {
+            var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+            before(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.registerUser(user, (u:User) => {
+                        user = u;
+                        done();
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+            it('Read existing user by id, should return the user', function (done:any) {
+                this.timeout(0);
+                userManager.getUserById(user._id, (u:User) => {
+                    try {
+                        assert.equal('Jasper', u._name);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                });
+            });
+            after(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.removeUser(user._name, () => {
+                        done();
+                    });
+                } catch (e) {
+                    done();
+                }
+            });
+        });
+    
+        describe('removeUser', () => {
+            it('Delete non-existing user, should return false', function (done:any) {
+                this.timeout(0);
+                userManager.removeUser('Jasper', (b:boolean) => {
+                    try {
+                        assert.equal(b, false);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                });
+            });
+        });
+    
+        describe('removeUser', () => {
+            var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+            before(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.registerUser(user, (u:User) => {
+                        user = u;
+                        done();
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+            it('Delete existing user, should return true', function (done:any) {
+                this.timeout(0);
+                userManager.removeUser(user._name, (b:boolean) => {
+                    try {
+                        assert.equal(b, true);
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                });
+            });
+        });
+        //endregion
+    */
+    //region organisation-test
+    /*
+    describe('createOrganisation', () => {
+        var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+        var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password');
+        var users = [jasper._id, rob._id];
+        var organisation = new Organisation('OrganisationName', users);
+        before(function (done:any) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(jasper, (j:User) => {
+                    jasper = j;
+                    userManager.registerUser(rob, (r:User) => {
+                        rob = r;
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
             }
         });
-        after(function (done) {
-            userManager.removeUserById(jan._id, function () {
-                userManager.removeGroupById(group._id, function () {
-                    userManager.removeOrganisationById(organisation._id, function () {
+        it('Create organisation, should return organisation from database', function (done:any) {
+            this.timeout(0);
+            userManager.createOrganisation(organisation, (o:Organisation) => {
+                try {
+                    organisation = o;
+                    assert.equal(organisation._name, o._name);
+                    assert.equal(organisation._members.length, users.length);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done:any) {
+            this.timeout(0);
+            try {
+                userManager.removeUserById(jasper._id, () => {
+                    userManager.removeUserById(rob._id, () => {
+                        userManager.removeOrganisationById(organisation._id, () => {
+                            done();
+                        })
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    describe('createGroupInOrganisation', () => {
+        var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
+        var organisation: Organisation = new Organisation('Organisatie', [""]);
+        var group: Group = new Group('Groupname', 'GroupDescription', "", [""]);
+        before(function (done:any) {
+            this.timeout(0);
+            try {
+                userManager.registerUser(jan, (u:User) => {
+                    jan = u;
+                    organisation._organisators.push(u._id);
+                    userManager.createOrganisation(organisation, (o: Organisation) => {
+                        organisation = o;
+                        group._organisationId = o._id;
+                        group._members.push(u._id);
+                        userManager.setUserOrganisatorOf(u._id, o._id, () => {
+                            done();
+                        });
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Add group to organisation', function (done: any) {
+            this.timeout(0);
+            try {
+                userManager.registerGroup(group, (g:Group) => {
+                    userManager.getOrganisationById(organisation._id, (o: Organisation) => {
+                        assert.equal(o._groups.map((orgGroup) => {return orgGroup.toString()}).indexOf(g._id.toString()) > -1, true);
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        after(function (done:any) {
+            this.timeout(0);
+            userManager.removeUserById(jan._id, () => {
+                userManager.removeGroupById(group._id, () => {
+                    userManager.removeOrganisationById(organisation._id, () => {
                         done();
                     });
                 });
             });
         });
-    }); // check
-    describe('addUserToOrganisation', function () {
-        var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password', 'admin');
-        var organisation = new organisation_1.Organisation('OrganisationName', []);
-        before(function (done) {
+    });
+
+    describe('addUserToOrganisation', () => {
+        var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
+        var organisation = new Organisation('OrganisationName', []);
+        before(function (done:any) {
             this.timeout(0);
             try {
-                var steps = 0;
-                userManager.registerUser(jan, function (u) {
+                userManager.registerUser(jan, (u:User) => {
                     jan = u;
-                    if (++steps == 2)
+                    userManager.createOrganisation(organisation, (o:Organisation) => {
+                        organisation = o;
                         done();
+                    });
                 });
-                userManager.createOrganisation(organisation, function (o) {
-                    organisation = o;
-                    if (++steps == 2)
-                        done();
-                });
-            }
-            catch (e) {
+            } catch (e) {
                 done(e);
             }
         });
-        it('Add user to organisation, should return organisation from database', function (done) {
+        it('Add user to organisation, should return organisation from database', function (done:any) {
             this.timeout(0);
-            userManager.addToOrganisation(organisation._id, jan._id, function (o) {
+            userManager.addToOrganisation(organisation._id, jan._id, true, (b: boolean) => {
                 try {
-                    assert.equal(o._memberIds.length, 1);
+                    assert.equal(b, true);
                     done();
-                }
-                catch (e) {
+                } catch (e) {
                     done(e);
                 }
             });
         });
-        after(function (done) {
+        after(function (done:any) {
             this.timeout(0);
             try {
-                var steps = 0;
-                userManager.removeUserById(jan._id, function () {
-                    if (++steps == 2)
+                userManager.removeUserById(jan._id, () => {
+                    userManager.removeOrganisationById(organisation._id, () => {
                         done();
+                    });
                 });
-                userManager.removeOrganisationById(organisation._id, function () {
-                    if (++steps == 2)
-                        done();
-                });
-            }
-            catch (e) {
+            } catch (e) {
                 done(e);
             }
         });
-    }); //check
-    describe('addUserToGroup', function () {
-        var jan = new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin');
-        var organisation = new organisation_1.Organisation('Organisation', [jan._id]);
-        var group = new group_1.Group('Group', 'Description', organisation._name);
-        before(function (done) {
+    });
+
+    describe('addUserToGroup', () => {
+        var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
+        var organisation:Organisation = new Organisation('Organisation', [jan._id]);
+        var group:Group = new Group('GroupName', 'GroupDescription', '', ['']);
+        before(function (done:any) {
             this.timeout(0);
             try {
-                userManager.registerUser(jan, function (u) {
+                userManager.registerUser(jan, (u:User) => {
                     jan = u;
-                    userManager.createOrganisation(organisation, function (o) {
+                    userManager.createOrganisation(organisation, (o:Organisation) => {
                         organisation = o;
-                        userManager.registerGroup(group, function (g) {
+                        group._organisationId = o._id;
+                        userManager.registerGroup(group, (g:Group) => {
                             group = g;
                             done();
                         });
                     });
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 done(e);
             }
         });
-        it('Add user to group', function (done) {
+        it('Add user to group', function (done:any) {
             this.timeout(0);
-            userManager.addToGroupById(jan._id, group._id, function (g) {
-                try {
-                    assert.equal((group._memberIds.indexOf(jan._id) > -1), true);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
+            try {
+                userManager.addToGroupById(jan._id, group._id, () => {
+                    userManager.getGroupById(group._id, (g: Group) => {
+                        assert.equal(g._members.map((member) => {return member.toString()}).indexOf(jan._id.toString()) > -1, true);
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+
         });
-        after(function (done) {
-            userManager.removeUserById(jan._id, function () {
-                userManager.removeGroupById(group._id, function () {
-                    userManager.removeOrganisationById(organisation._id, function () {
+        after(function (done:any) {
+            this.timeout(0);
+            userManager.removeUserById(jan._id, () => {
+                userManager.removeGroupById(group._id, () => {
+                    userManager.removeOrganisationById(organisation._id, () => {
                         done();
                     });
                 });
             });
         });
-    }); // check
+    });*/
     describe('removeUserFromOrganisation', function () {
-        var user = new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password', 'admin');
+        var user = new user_1.User('Michael', 'michael.deboey@student.kdg.be', 'password');
         var organisation = new organisation_1.Organisation('Organisation', [user._id]);
         before(function (done) {
             this.timeout(0);
             try {
                 userManager.registerUser(user, function (u) {
                     user = u;
+                    organisation._organisators.push(u._id);
                     userManager.createOrganisation(organisation, function (o) {
                         organisation = o;
                         done();
@@ -437,177 +426,76 @@ describe('UserManager', function () {
         });
         it('Remove user from organisation, should return true since user was in organisation', function (done) {
             this.timeout(0);
-            userManager.removeUserFromOrganisationById(organisation._id, user._id, function (b) {
-                try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeOrganisationById(organisation._id, function () {
-                    userManager.removeUserById(user._id, function () {
-                        done();
-                    });
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    }); //check
-    describe('removeOrganisation', function () {
-        var organisation = new organisation_1.Organisation('Organisation', []);
-        before(function (done) {
-            try {
-                userManager.createOrganisation(organisation, function (o) {
-                    organisation = o;
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Remove Organisation', function (done) {
-            try {
-                this.timeout(0);
-                userManager.removeOrganisationById(organisation._id, function (b) {
-                    assert.equal(b, true);
-                    done();
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    });
-    describe('removeUserFromGroupById', function () {
-        var jan;
-        var group;
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(new user_1.User('Jan', 'addusertogroup@student.kdg.be', 'password', 'admin'), function (u) {
-                    jan = u;
-                    userManager.registerGroup(new group_1.Group('Group', 'Description', 'Organisatie'), function (g) {
-                        group = g;
-                    });
-                    userManager.addToGroupById(jan._id, group._name, function () {
-                        done();
-                    });
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Add user to group', function (done) {
-            this.timeout(0);
-            userManager.removeUserFromGroupById(jan._id, group._id, function (b) {
-                try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            userManager.removeGroupById(group._id, function () {
-                userManager.removeUser(jan._id, function () {
-                    done();
-                });
-            });
-        });
-    }); // check
-    describe('getGroupByName', function () {
-        var group = new group_1.Group('Group', 'Descript', 'Organisation');
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerGroup(group, function (g) {
-                    group = g;
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Read existing group, should return the group', function (done) {
-            userManager.getGroupById(group._id, function (g) {
-                try {
-                    assert.equal(group._id, g._id);
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
-        after(function (done) {
-            this.timeout(0);
-            userManager.removeGroupById(group._id, function () {
+            userManager.removeUserFromOrganisationById(organisation._id, user._id, function () {
                 done();
             });
         });
-    }); //check
-    describe('getGroupById', function () {
-        var group = new group_1.Group('Group', 'Descript', 'Organisation');
-        before(function (done) {
+        after(function (done) {
             this.timeout(0);
+            /*  try {
+                  userManager.removeOrganisationById(organisation._id, () => {
+                      userManager.removeUserById(user._id, () => {
+                          done();
+                      });
+                  });
+              } catch (e) {
+                  done(e);
+              }*/
+            done();
+        });
+    });
+    /*
+    describe('removeOrganisation', () => {
+        var organisation:Organisation = new Organisation('Organisation', []);
+        before(function (done:any) {
             try {
-                userManager.registerGroup(group, function (g) {
-                    group = g;
+                userManager.createOrganisation(organisation, (o:Organisation) => {
+                    organisation = o;
+                    done();
                 });
-            }
-            catch (e) {
+            } catch (e) {
                 done(e);
             }
         });
-        it('Read existing group, should return the group', function (done) {
-            userManager.getGroupById(group._id, function (g) {
-                try {
-                    assert.equal(group._id, g._id);
+        it('Remove Organisation', function (done:any) {
+            try {
+                this.timeout(0);
+                userManager.removeOrganisationById(organisation._id, (b:boolean) => {
+                    assert.equal(b, true);
                     done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
+                });
+            } catch (e) {
+                done(e);
+            }
         });
-        after(function (done) {
-            userManager.removeGroupById(group._id, function () { });
-        });
-    }); //check
-    describe('removeGroup', function () {
-        var organisation = new organisation_1.Organisation('Organisation', []);
-        var group = new group_1.Group('Group', 'Description', organisation._name);
-        before(function (done) {
+    });
+
+
+    describe('removeUserFromGroupById', () => {
+        var jan:User;
+        var group:Group;
+        before(function (done:any) {
             this.timeout(0);
             try {
-                userManager.createOrganisation(organisation, function (o) {
-                    organisation = o;
-                    userManager.registerGroup(group, function (g) {
+                userManager.registerUser(new User('Jan', 'addusertogroup@student.kdg.be', 'password'), (u:User) => {
+                    jan = u;
+                    userManager.registerGroup(new Group('Organisatie', 'Group', 'Description'), (g:Group) => {
                         group = g;
+                    });
+                    userManager.addToGroupById(jan._id, group._name, () => {
                         done();
                     });
+
                 });
-            }
-            catch (e) {
+
+            } catch (e) {
                 done(e);
             }
+
         });
-        it('Remove group and reference in organisation', function (done) {
+        it('Add user to group', function (done:any) {
             this.timeout(0);
-            userManager.removeGroupById(group._id, function (b) {
+            userManager.removeUserFromGroupById(jan._id, group._id, (b:boolean) => {
                 try {
                     assert.equal(b, true);
                     done();
@@ -617,14 +505,118 @@ describe('UserManager', function () {
                 }
             });
         });
-        after(function (done) {
-            userManager.removeGroupById(group._id, function () {
-                userManager.removeOrganisationById(organisation._id, function () {
+        after(function (done:any) {
+            this.timeout(0);
+            userManager.removeGroupById(group._id, () => {
+                userManager.removeUser(jan._id, () => {
+                    done();
+                });
+            });
+
+        });
+    }); // check
+
+    describe('getGroupByName', () => {
+        var group:Group = new Group('Organisation', 'Group', 'Descript');
+        before(function (done:any) {
+            this.timeout(0);
+
+            try {
+                userManager.registerGroup(group, (g:Group) => {
+                    group = g;
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done:any) {
+            userManager.getGroupById(group._id, (g:Group) => {
+                try {
+                    assert.equal(group._id, g._id);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done:any) {
+            this.timeout(0);
+            userManager.removeGroupById(group._id, () => {
+                done();
+            });
+        });
+
+    }); //check
+
+    describe('getGroupById', () => {
+        var group:Group = new Group('Organisation', 'Group', 'Descript');
+        before(function (done:any) {
+            this.timeout(0);
+
+            try {
+                userManager.registerGroup(group, (g:Group) => {
+                    group = g;
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Read existing group, should return the group', function (done:any) {
+            userManager.getGroupById(group._id, (g:Group) => {
+                try {
+                    assert.equal(group._id, g._id);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done:any) {
+            userManager.removeGroupById(group._id, () => {
+            });
+        });
+
+    }); //check
+
+
+    describe('removeGroup', () => {
+        var organisation = new Organisation('Organisation', []);
+        var group:Group = new Group(organisation._name, 'Group', 'Description');
+        before(function (done:any) {
+            this.timeout(0);
+            try {
+                userManager.createOrganisation(organisation, (o:Organisation) => {
+                    organisation = o;
+                    userManager.registerGroup(group, (g:Group) => {
+                        group = g;
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('Remove group and reference in organisation', function (done:any) {
+            this.timeout(0);
+            userManager.removeGroupById(group._id, (b:boolean) => {
+                try {
+                    assert.equal(b, true);
+                    done();
+
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done:any) {
+            userManager.removeGroupById(group._id, () => {
+                userManager.removeOrganisationById(organisation._id, () => {
                     done();
                 });
             });
         });
     });
+    */
     //endregion
 });
 //# sourceMappingURL=user.js.map

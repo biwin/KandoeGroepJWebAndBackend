@@ -1,9 +1,9 @@
 var Group = (function () {
-    function Group(_name, _description, _organisationId, _memberIds) {
+    function Group(_name, _description, _organisationId, _members) {
         this._name = _name;
         this._description = _description;
         this._organisationId = _organisationId;
-        this._memberIds = _memberIds;
+        this._members = _members;
     }
     return Group;
 })();

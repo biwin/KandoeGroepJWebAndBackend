@@ -21,12 +21,18 @@ export class UserDao {
 
     clearDatabase(callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
-            var completed: number = 0;
             db.collection('users').deleteMany({}, () => {
-                if (++completed == 2) callback();
-            });
-            db.collection('organisations').deleteMany({}, () => {
-                if (++completed == 2) callback();
+                db.collection('organisations').deleteMany({}, () => {
+                    db.collection('cards').deleteMany({}, () => {
+                        db.collection('circlesessions').deleteMany({}, () => {
+                            db.collection('groups').deleteMany({}, () => {
+                                db.collection('themes').deleteMany({}, () => {
+                                    callback();
+                                });
+                            });
+                        });
+                    });
+                });
             });
         });
     }
@@ -39,7 +45,7 @@ export class UserDao {
         });
     }
 
-    readGroupByName(gName:string, callback: (g: Group) => any) {
+    readGroupByName(name: string, callback: (g: Group) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('groups').find({'_name': name}).limit(1).next();
         }).then((cursor:CursorResult) => {
@@ -68,6 +74,9 @@ export class UserDao {
     createUser(u: User, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('users').insertOne(u, (error: MongoError, result) => {
+                if (error != null) {
+                    console.log(error.message);
+                }
                 u._id = result.insertedId;
                 db.close();
                 callback(u);
@@ -78,6 +87,9 @@ export class UserDao {
     createGroup(g:Group, callback: (newGroup: Group) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('groups').insertOne(g, (error: MongoError, result) => {
+                if (error != null) {
+                    console.log(error.message);
+                }
                 g._id = result.insertedId;
                 db.close();
                 callback(g);
@@ -107,6 +119,9 @@ export class UserDao {
     createOrganisation(o: Organisation, callback: (organisation: Organisation) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').insertOne(o, (error: MongoError, result) => {
+                if (error != null) {
+                    console.log(error.message);
+                }
                 o._id = result.insertedId;
                 db.close();
                 callback(o);
@@ -123,19 +138,23 @@ export class UserDao {
         });
     }
     readOrganisationById(oId: string, callback: (o: Organisation) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').find({'_id': oId}).limit(1).next().then((cursor: CursorResult) => {
-                db.close();
-                callback(cursor);
-            })
-        });
+        try {
+            this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+                db.collection('organisations').find({'_id': oId}).limit(1).next().then((cursor:CursorResult) => {
+                    db.close();
+                    callback(cursor);
+                })
+            });
+        } catch(e) {
+            console.log(e);
+        }
     }
 
-    addToOrganisation(oName: string, uId: string, callback: () => any) {
+    addToOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_name': oName}, {$push: {'_organisators': uId}}).then(() => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_organisators': uId}}, (error: MongoError, result) => {
                 db.close();
-                callback();
+                callback(result.modifiedCount == 1);
             });
         });
     }
@@ -150,19 +169,25 @@ export class UserDao {
     }
 
 
-    addToGroup(uId:string, gName:string, callback: () => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-           db.collection('groups').updateOne({'_name': gName}, {$push: {'_users': uId}}).then(() => {
-               db.close();
-               callback();
-           })
+    addToGroup(uId:string, gId:string, callback: (b: boolean) => any) {
+        this.readGroupById(gId, (g1: Group) => {
+           console.log("G1: " + JSON.stringify(g1));
         });
 
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+           db.collection('groups').updateOne({'_id': gId}, {$push: {'_members': uId}}, (error: MongoError, result) => {
+               this.readGroupById(gId, (g2: Group) => {
+                   console.log("G2: " + JSON.stringify(g2));
+               });
+               db.close();
+               callback(result.modifiedCount == 1);
+           });
+        });
     }
 
     readIsUserInGroup(gId:string, uId:string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').find( {'_id': gId, '_users': {'$in': [uId]}}).limit(1).next().then((g: Group) => {
+            db.collection('groups').find( {'_id': gId, '_members': {'$in': [uId]}}).limit(1).next().then((g: Group) => {
                 callback(g != null);
             });
         });
@@ -215,11 +240,38 @@ export class UserDao {
         });
     }
 
-    addGroupToOrganisation(gId: string,oId: string, callback: () => any) {
+    addGroupToOrganisation(gId: string, oId: string, callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groups': gId}},(err: MongoError, result) => {
-               db.close();
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groups': gId}}, () => {
+                db.close();
                 callback();
+            });
+        });
+    }
+
+    addOrganisatorToOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_organisators': uId}}, (err: MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    addMemberToOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_members': uId}}, (err: MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    setUserOrganisatorOf(uId:string, oId:string, callback:(b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_id': uId}, {$push: {'_organisatorOf': oId}}, (err: MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
             });
         });
     }
