@@ -7,16 +7,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var core_1 = require("angular2/core");
 var http_1 = require("angular2/http");
+var core_2 = require("angular2/core");
+var http_2 = require("angular2/http");
+require("rxjs/add/operator/map");
 var ThemeService = (function () {
-    function ThemeService(http) {
+    function ThemeService(http, path) {
         this.http = null;
+        this.path = path;
         this.http = http;
     }
+    ThemeService.prototype.getAll = function () {
+        return this.http.get(this.path + 'themes').map(function (res) { return res.json(); });
+    };
+    ThemeService.prototype.create = function (theme) {
+        var header = new http_2.Headers();
+        header.append('Content-Type', 'application/json');
+        return this.http.post(this.path + 'themes', JSON.stringify(theme), { headers: header }).map(function (res) { return res.json(); });
+    };
     ThemeService = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http])
+        core_1.Injectable(),
+        __param(1, core_2.Inject('App.BackendPath')), 
+        __metadata('design:paramtypes', [http_1.Http, String])
     ], ThemeService);
     return ThemeService;
 })();

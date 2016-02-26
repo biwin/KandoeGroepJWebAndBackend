@@ -37,6 +37,13 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.readAllThemes = function (callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').find({}).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return ThemeDao;
 })();
 exports.ThemeDao = ThemeDao;

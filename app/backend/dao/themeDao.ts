@@ -46,11 +46,19 @@ export class ThemeDao {
     }
 
     createCard(card:Card, callback:(c:Card) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').insertOne(card, (err:MongoError, result:InsertOneWriteOpResult) => {
                 card._id = result.insertedId.toString();
                 db.close();
                 callback(card);
+            });
+        });
+    }
+
+    readAllThemes(callback:(t:Theme[]) => any):void {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('themes').find({}).toArray((err:MongoError, docs:Theme[]) => {
+                callback(docs);
             });
         });
     }

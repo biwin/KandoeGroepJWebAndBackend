@@ -3,6 +3,8 @@ import {Theme} from "../../../backend/model/theme";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {TagInput} from "../general/tagInput";
+import {ThemeService} from "../../services/themeService";
+import {Router} from "angular2/router";
 
 @Component({
     selector: 'theme-form',
@@ -35,11 +37,20 @@ import {TagInput} from "../general/tagInput";
 
 export class ThemeForm {
     theme:Theme = Theme.empty();
+    service:ThemeService;
+    router:Router;
+
+    constructor(service:ThemeService, router:Router) {
+        this.service = service;
+        this.router = router;
+    }
+
     private OnSubmit(){
         this.theme._organisatorIds = ["CURRENT_USER_ID"];
 
-        //TODO: call backend
-        alert(this.theme._name + "  " + this.theme._description);
-        alert(this.theme._tags);
+
+        this.service.create(this.theme).subscribe((t:Theme) => {
+            console.log(t);
+        });
     }
 }

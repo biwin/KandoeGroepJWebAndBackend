@@ -2,6 +2,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
     UserApi = require('./app/backend/restApi/userApi.js'),
+    CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
+    ThemeApi = require('./app/backend/restApi/themeApi.js'),
     morgan = require('morgan'),
     server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
     server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -30,4 +32,21 @@ app.get('/api/user/get', function(req, res) {
 
 app.get('/api/user/createDummy', function(req, res) {
     console.log(UserApi.UserApi.createDummyUser(res));
+});
+
+app.post('/api/circlesessions', function(req, res) {
+    CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
+});
+
+app.get('/api/themes/:name', function(req, res) {
+    var name = req.params.name;
+    ThemeApi.ThemeApi.find(name, res);
+});
+
+app.get('/api/themes', function(req, res) {
+    ThemeApi.ThemeApi.findAll(res);
+});
+
+app.post('/api/themes', function(req, res) {
+    ThemeApi.ThemeApi.create(req.body, res);
 });

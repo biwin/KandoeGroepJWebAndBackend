@@ -7,13 +7,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var theme_1 = require("../../../backend/model/theme");
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
 var themeCard_1 = require("./themeCard");
+var themeService_1 = require("../../services/themeService");
 var ThemeOverview = (function () {
-    function ThemeOverview() {
-        this.themes = [new theme_1.Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]), new theme_1.Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]), new theme_1.Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])];
+    function ThemeOverview(service) {
+        /*var a = [new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]), new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])];
+
+        a.forEach((t:Theme) => {
+            service.create(t).subscribe((th:Theme) => {
+                console.log(th);
+            })
+        });*/
+        var _this = this;
+        this.themes = [];
+        service.getAll().subscribe(function (themes) {
+            themes.forEach(function (t) { return _this.themes.push(t); });
+        });
     }
     ThemeOverview = __decorate([
         core_1.Component({
@@ -21,7 +32,7 @@ var ThemeOverview = (function () {
             template: "\n    <div class=\"row container\">\n        <theme-card *ngFor=\"#theme of themes\" [theme]=\"theme\">\n    </theme-card></div>\n    ",
             directives: [common_1.CORE_DIRECTIVES, themeCard_1.ThemeCard]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [themeService_1.ThemeService])
     ], ThemeOverview);
     return ThemeOverview;
 })();
