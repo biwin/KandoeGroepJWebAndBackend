@@ -5,7 +5,6 @@ var User = (function () {
         this._password = _password;
         this._role = _role;
     }
-
     User.empty = function () {
         return new User("", "", "", "");
     };
