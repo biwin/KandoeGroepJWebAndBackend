@@ -14,6 +14,7 @@ var footer_1 = require('./general/footer');
 var themeOverview_1 = require("./theme/themeOverview");
 var themeForm_1 = require('./theme/themeForm');
 var circleSessionForm_1 = require("./circleSession/circleSessionForm");
+var organisationsOverview_1 = require("./organisation/organisationsOverview");
 var organisationForm_1 = require("./organisation/organisationForm");
 var AppComponent = (function () {
     function AppComponent() {
@@ -28,6 +29,7 @@ var AppComponent = (function () {
             { path: '/themes', as: 'ThemeOverview', component: themeOverview_1.ThemeOverview },
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
             { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm },
+            { path: '/organisations', as: 'OrganisationsOverview', component: organisationsOverview_1.OrganisationsOverview },
             { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm }
         ]), 
         __metadata('design:paramtypes', [])

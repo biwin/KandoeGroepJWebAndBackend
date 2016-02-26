@@ -16,6 +16,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
                 <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>
                 <li><a [routerLink]="['CreateTheme']">Create thema</a></li>
                 <li><a [routerLink]="['CreateSession']">Create Session</a></li>
+                <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
                 <li><a [routerLink]="['CreateOrganisation']">Create organisatie</a></li>
             </ul>
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>

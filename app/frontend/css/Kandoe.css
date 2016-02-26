@@ -8,6 +8,19 @@
     }
 }
 
+.formCard form.col {
+    float: none;
+    margin: 0;
+}
+
+.tableCard .card-content {
+    padding-top: 0;
+}
+
+.clickable {
+    cursor: hand;
+}
+
 .content .picker__date-display {
     background-color: #2196F3 !important;
 }
@@ -26,9 +39,4 @@
 
 .content .picker__close, .content .picker__today {
     color: #2196F3 !important;
-}
-
-.formCard form.col {
-    float: none;
-    margin: 0;
 }

@@ -6,6 +6,7 @@ import {Footer} from './general/footer';
 import {ThemeOverview} from "./theme/themeOverview";
 import {ThemeForm} from './theme/themeForm';
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
+import {OrganisationsOverview} from "./organisation/organisationsOverview";
 import {OrganisationForm} from "./organisation/organisationForm";
 
 @Component({
@@ -24,6 +25,7 @@ import {OrganisationForm} from "./organisation/organisationForm";
     {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
     {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
     {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
+    {path: '/organisations', as: 'OrganisationsOverview', component: OrganisationsOverview},
     {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm}
 ])
 
