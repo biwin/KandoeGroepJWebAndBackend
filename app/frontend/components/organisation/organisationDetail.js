@@ -8,19 +8,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
+var router_1 = require("angular2/router");
 var common_1 = require("angular2/common");
 var organisation_1 = require("../../../backend/model/organisation");
 var OrganisationDetail = (function () {
-    function OrganisationDetail() {
+    function OrganisationDetail(router) {
         this.organisation = new organisation_1.Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
+        this.router = router;
     }
+    OrganisationDetail.prototype.viewGroup = function (groupId) {
+        //this.router.navigate(["/GroupDetail", {id: groupId}]);
+        alert("viewGroup: " + groupId);
+    };
     OrganisationDetail = __decorate([
         core_1.Component({
             selector: 'organisation-detail',
-            template: "\n    <div class=\"row container\">\n        <h5>{{organisation._name}}</h5>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{organisation._memberIds.length}}\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <h5>{{organisation._name}}</h5>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{organisation._memberIds.length}}\n        </div></div>\n\n\n        <h5>Groepen</h5>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisation.groups.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation.groups.length!=0\">\n                <thead>\n                    <tr>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                        <th data-field=\"description\">Beschrijving</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#group of organisation.groups\" (click)=\"viewGroup(group._id)\" class=\"clickable\">\n                    <td>{{group._name}}</td>\n                    <td>{{group._users.length}}</td>\n                    <td>{{group._description}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation.groups.length==0\">{{organisation._name}} heeft momenteel nog geen groepen.</p>\n        </div></div>\n    </div>\n    ",
             directives: [common_1.NgClass]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_1.Router])
     ], OrganisationDetail);
     return OrganisationDetail;
 })();
