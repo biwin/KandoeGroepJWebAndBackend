@@ -1,6 +1,6 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
-import assert = require('assert');
+/*import assert = require('assert');
 import {timeout} from "rxjs/operator/timeout";
 import {ThemeManager} from "../app/backend/logic/themeManager";
 import {Theme} from "../app/backend/model/theme";
@@ -69,3 +69,4 @@ describe('ThemeManager', () => {
 
 });
 
+*/

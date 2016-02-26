@@ -584,7 +584,7 @@ describe('UserManager', function () {
             });
         });
         after(function (done) {
-            userManager.removeGroupById(group._id);
+            userManager.removeGroupById(group._id, function () { });
         });
     }); //check
     describe('removeGroup', function () {

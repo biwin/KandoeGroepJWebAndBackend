@@ -1,6 +1,6 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
-import assert = require('assert');
+/*import assert = require('assert');
 import {CircleSession} from "../app/backend/model/circleSession";
 import {CircleSessionManager} from "../app/backend/logic/circleSessionManager";
 
@@ -20,4 +20,4 @@ describe('CircleSessionManager', () => {
             });
         });
     });
-});
+});*/
