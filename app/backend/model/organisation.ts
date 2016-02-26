@@ -7,10 +7,10 @@ export class Organisation {
 
     constructor(public _name: string,
                 public _memberIds: string[]) {
-
+        this._groups = [];
     }
 
-    get groups():Group[] {
+    get groups(): Group[] {
         return this._groups;
     }
 
