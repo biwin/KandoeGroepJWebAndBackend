@@ -21,7 +21,7 @@ import {Organisation} from "../../../backend/model/organisation";
 
                 <tr *ngFor="#organisation of organisations" (click)="onClick(organisation._id)" class="clickable">
                     <td>{{organisation._name}}</td>
-                    <td>{{organisation._organisatorIds.length}}</td>
+                    <td>{{organisation._memberIds.length}}</td>
                 </tr>
             </table>
 
@@ -48,6 +48,6 @@ export class OrganisationsOverview {
     ];
 
     private onClick(organisationId: string): void {
-        //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
+        this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
     }
 }
