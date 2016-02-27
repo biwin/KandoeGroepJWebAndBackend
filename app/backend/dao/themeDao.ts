@@ -64,7 +64,7 @@ export class ThemeDao {
     }
 
     readCards(themeId:string, callback:(c:Card[]) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({'_themeId': themeId}).toArray((err:MongoError, docs:Card[]) => {
                 callback(docs);
             });
