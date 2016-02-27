@@ -47,14 +47,12 @@ import {Group} from "../../../backend/model/group";
                     <tr>
                         <th data-field="name">Naam</th>
                         <th data-field="email">E-mail adres</th>
-                        <th data-field="role">Rol</th>
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of organisation._memberIds" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of organisation.members" (click)="viewMember(member._id)" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
-                    <td>{{member._role}}</td>
                 </tr>
             </table>
 
