@@ -308,7 +308,7 @@ describe('UserManager', () => {
             try {
                 userManager.registerGroup(group, (g:Group) => {
                     userManager.getOrganisationById(organisation._id, (o: Organisation) => {
-                        assert.equal(o._groups.map((orgGroup) => {return orgGroup.toString()}).indexOf(g._id.toString()) > -1, true);
+                        assert.equal(o._groupIds.map((orgGroup) => {return orgGroup.toString()}).indexOf(g._id.toString()) > -1, true);
                         done();
                     });
                 });
