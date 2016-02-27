@@ -3,6 +3,11 @@ import {Input} from "angular2/core";
 import {AfterViewInit} from "angular2/core";
 import {Group} from "../../../backend/model/group";
 import {Theme} from "../../../backend/model/theme";
+import {CircleSession} from "../../../backend/model/circleSession";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {FORM_DIRECTIVES} from "angular2/common";
+import {CircleSessionService} from "../../services/circleSessionService";
+import {Router} from "angular2/router";
 
 
 @Component({
@@ -42,7 +47,7 @@ import {Theme} from "../../../backend/model/theme";
 
     <div class="row" id="durationbox">
      <div class="input-field col s3">
-          <input id="duration" type="number" min="0" class="validate">
+          <input [(ngModel)]="circleSession._turnTimeMin" id="duration" type="number" min="0" class="validate">
           <label for="duration">Beurt duur</label>
      </div>
     </div>
@@ -52,7 +57,7 @@ import {Theme} from "../../../backend/model/theme";
     <div class="row">
     <div class="col input-field s3">
          <label for="startDate">Start datum</label>
-         <input type="date" class="datepicker" id="startDate">
+         <input [(ngModel)]="circleSession._startDate" type="date" class="datepicker" id="startDate">
     </div>
      <div class="input-field col s3">
           <input id="time" type="text" class="validate">
@@ -64,19 +69,27 @@ import {Theme} from "../../../backend/model/theme";
     </form>
     </div></div>
   </div>
-    `
+    `,
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
 })
 export class CircleSessionForm implements AfterViewInit {
+    //TODO: bind the complete form
+    circleSession:CircleSession = CircleSession.empty();
+    service:CircleSessionService;
+    router:Router;
+
     private _groups: Group[] = [
-        new Group("Groep A","", ""),
-        new Group("Groep B", "", ""),
-        new Group("Groep C", "", "")
+        new Group("Groep A","", "", [""]),
+        new Group("Groep B", "", "",[""]),
+        new Group("Groep C", "", "",[""])
     ];
     private _themes: Theme[] = [
         new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),
         new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]),
         new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])
     ];
+
+
 
     ngAfterViewInit():any {
         $('select').material_select();
@@ -91,6 +104,19 @@ export class CircleSessionForm implements AfterViewInit {
         });
         $('#realtime').change( ()=>  {
             $('#durationbox').toggleClass('hide');
+        })
+    }
+
+    constructor(service:CircleSessionService, router:Router) {
+        this.service = service;
+        this.router = router;
+    }
+
+    private OnSubmit(){
+        this.circleSession._creatorId = "CURRENT_USER_ID";
+
+        this.service.create(this.circleSession).subscribe((c:CircleSession) =>{
+            console.log(c + " created")
         })
     }
 }

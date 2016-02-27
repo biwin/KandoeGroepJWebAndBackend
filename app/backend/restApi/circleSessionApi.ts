@@ -9,4 +9,10 @@ export class CircleSessionApi {
             res.send(c);
         });
     }
+
+    public static findAll(res) {
+        CircleSessionApi.mgr.getAllCircleSessions((c:CircleSession[]) => {
+            res.send(c);
+        });
+    }
 }

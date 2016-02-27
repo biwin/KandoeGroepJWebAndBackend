@@ -16,4 +16,8 @@ export class CircleSessionManager {
             }
         });
     }
+
+    getAllCircleSessions(callback: (c:CircleSession[]) => any) {
+        this._dao.readAllCircleSessions(callback);
+    }
 }

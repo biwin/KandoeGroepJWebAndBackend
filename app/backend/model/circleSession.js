@@ -9,6 +9,9 @@ var CircleSession = (function () {
         this._endPoint = _endPoint;
         this._turnTimeMin = _turnTimeMin;
     }
+    CircleSession.empty = function () {
+        return new CircleSession("", "", "", "", false, false, null, null);
+    };
     return CircleSession;
 })();
 exports.CircleSession = CircleSession;

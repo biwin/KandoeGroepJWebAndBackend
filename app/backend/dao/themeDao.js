@@ -3,17 +3,17 @@ var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 var ThemeDao = (function () {
     function ThemeDao() {
-        this.client = new mongodb_1.MongoClient();
+        this._client = new mongodb_1.MongoClient();
     }
     ThemeDao.prototype.clearDatabase = function (callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').deleteMany({}, function () {
                 callback();
             });
         });
     };
     ThemeDao.prototype.createTheme = function (t, callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').insertOne(t).then(function () {
                 db.close();
                 callback();
@@ -21,7 +21,7 @@ var ThemeDao = (function () {
         });
     };
     ThemeDao.prototype.readTheme = function (name, callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').find({ '_name': name }).limit(1).next().then(function (cursor) {
                 db.close();
                 callback(cursor);
@@ -29,7 +29,7 @@ var ThemeDao = (function () {
         });
     };
     ThemeDao.prototype.createCard = function (card, callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cards').insertOne(card, function (err, result) {
                 card._id = result.insertedId.toString();
                 db.close();
@@ -38,7 +38,7 @@ var ThemeDao = (function () {
         });
     };
     ThemeDao.prototype.readAllThemes = function (callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').find({}).toArray(function (err, docs) {
                 callback(docs);
             });

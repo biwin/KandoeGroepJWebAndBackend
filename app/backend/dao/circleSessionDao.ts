@@ -7,6 +7,7 @@ import {CursorResult} from "mongodb";
 import {MongoError} from "mongodb";
 import {InsertOneWriteOpResult} from "mongodb";
 
+
 export class CircleSessionDao {
     private _client:MongoClient;
 
@@ -34,6 +35,14 @@ export class CircleSessionDao {
                 db.close();
                 callback(circleSession);
             });
+        });
+    }
+
+    readAllCircleSessions(callback:(c:CircleSession[]) => any):void {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+           db.collection('circlesessions').find({}).toArray((err:MongoError, docs:CircleSession[]) => {
+              callback(docs);
+           });
         });
     }
 }

@@ -26,6 +26,13 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.readAllCircleSessions = function (callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').find({}).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return CircleSessionDao;
 })();
 exports.CircleSessionDao = CircleSessionDao;

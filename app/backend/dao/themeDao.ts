@@ -13,14 +13,14 @@ import {InsertOneWriteOpResult} from "mongodb";
 
 export class ThemeDao {
 
-    private client: MongoClient;
+    private _client: MongoClient;
 
     constructor() {
-        this.client = new MongoClient();
+        this._client = new MongoClient();
     }
 
     clearDatabase(callback: () => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('themes').deleteMany({}, () => {
                 callback();
             });
@@ -28,7 +28,7 @@ export class ThemeDao {
     }
 
     createTheme(t: Theme, callback: () => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('themes').insertOne(t).then(() => {
                 db.close();
                 callback();
@@ -37,7 +37,7 @@ export class ThemeDao {
     }
 
     readTheme(name: string, callback: (t: Theme) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('themes').find({'_name': name}).limit(1).next().then((cursor:CursorResult) => {
                 db.close();
                 callback(cursor);
@@ -46,7 +46,7 @@ export class ThemeDao {
     }
 
     createCard(card:Card, callback:(c:Card) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').insertOne(card, (err:MongoError, result:InsertOneWriteOpResult) => {
                 card._id = result.insertedId.toString();
                 db.close();
@@ -56,7 +56,7 @@ export class ThemeDao {
     }
 
     readAllThemes(callback:(t:Theme[]) => any):void {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('themes').find({}).toArray((err:MongoError, docs:Theme[]) => {
                 callback(docs);
             });

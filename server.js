@@ -34,6 +34,10 @@ app.get('/api/user/createDummy', function(req, res) {
     console.log(UserApi.UserApi.createDummyUser(res));
 });
 
+app.get('/api/circlesessions', function(req, res){
+   CircleSessionApi.CircleSessionApi.findAll(res);
+});
+
 app.post('/api/circlesessions', function(req, res) {
     CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
 });

@@ -14,6 +14,9 @@ var CircleSessionManager = (function () {
             }
         });
     };
+    CircleSessionManager.prototype.getAllCircleSessions = function (callback) {
+        this._dao.readAllCircleSessions(callback);
+    };
     return CircleSessionManager;
 })();
 exports.CircleSessionManager = CircleSessionManager;
