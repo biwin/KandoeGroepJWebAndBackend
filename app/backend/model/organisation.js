@@ -5,6 +5,9 @@ var Organisation = (function () {
         this._groups = [];
         this._organisators = [];
     }
+    Organisation.empty = function () {
+        return new Organisation("", []);
+    };
     return Organisation;
 })();
 exports.Organisation = Organisation;

@@ -7,7 +7,12 @@ export class Organisation {
 
     public _id: string;
 
-    constructor(public _name: string, public _members: string[]) {
+    constructor(public _name: string,
+                public _members: string[]) {
 
+    }
+
+    public static empty(): Organisation{
+        return new Organisation("", []);
     }
 }
