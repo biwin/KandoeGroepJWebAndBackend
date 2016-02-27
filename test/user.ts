@@ -257,7 +257,7 @@ describe('UserManager', () => {
                 try {
                     organisation = o;
                     assert.equal(organisation._name, o._name);
-                    assert.equal(organisation._members.length, users.length);
+                    assert.equal(organisation._memberIds.length, users.length);
                     done();
                 } catch (e) {
                     done(e);
@@ -293,7 +293,7 @@ describe('UserManager', () => {
                     userManager.createOrganisation(organisation, (o: Organisation) => {
                         organisation = o;
                         group._organisationId = o._id;
-                        group._members.push(u._id);
+                        group._memberIds.push(u._id);
                         userManager.setUserOrganisatorOf(u._id, o._id, () => {
                             done();
                         });
@@ -397,7 +397,7 @@ describe('UserManager', () => {
             try {
                 userManager.addToGroupById(jan._id, group._id, () => {
                     userManager.getGroupById(group._id, (g: Group) => {
-                        assert.equal(g._members.map((member) => {return member.toString()}).indexOf(jan._id.toString()) > -1, true);
+                        assert.equal(g._memberIds.map((member) => {return member.toString()}).indexOf(jan._id.toString()) > -1, true);
                         done();
                     });
                 });

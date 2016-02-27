@@ -1,11 +1,11 @@
-import {UserDao} from "../dao/userDao";
-import {User} from "../model/user";
-import {Organisation} from "../model/organisation";
 import {ObjectID} from "mongodb";
+
+import {UserDao} from "../dao/userDao";
 import {Group} from "../model/group";
+import {Organisation} from "../model/organisation";
+import {User} from "../model/user";
 
 export class UserManager {
-
     private _dao: UserDao;
 
     constructor() {
@@ -171,8 +171,8 @@ export class UserManager {
     userInOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
         this.getOrganisationById(oId, (o: Organisation) => {
             if (o != null) {
-                for (var index in o._members) {
-                    if (o._members[index].toString() == uId.toString()){
+                for (var index in o._memberIds) {
+                    if (o._memberIds[index].toString() == uId.toString()){
                         callback(true);
                         return;
                     }
@@ -189,11 +189,9 @@ export class UserManager {
     }
 
     private userIdInGroup(gId:string, uId:string, callback: (b: boolean) => any) {
-
         this._dao.readIsUserInGroup(gId, uId, (inGroup: boolean) => {
             callback(inGroup);
         });
-
     }
 
     getGroupByName(gName: string, callback: (g:Group) => any) {
@@ -208,11 +206,8 @@ export class UserManager {
                         callback(br && bg);
                     })
                 });
-
             });
-
         });
-
     }
 
 

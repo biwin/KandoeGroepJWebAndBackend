@@ -1,7 +1,7 @@
 var Organisation = (function () {
-    function Organisation(_name, _members) {
+    function Organisation(_name, _memberIds) {
         this._name = _name;
-        this._members = _members;
+        this._memberIds = _memberIds;
         this._groups = [];
         this._organisators = [];
     }

@@ -157,8 +157,8 @@ var UserManager = (function () {
     UserManager.prototype.userInOrganisation = function (oId, uId, callback) {
         this.getOrganisationById(oId, function (o) {
             if (o != null) {
-                for (var index in o._members) {
-                    if (o._members[index].toString() == uId.toString()) {
+                for (var index in o._memberIds) {
+                    if (o._memberIds[index].toString() == uId.toString()) {
                         callback(true);
                         return;
                     }
