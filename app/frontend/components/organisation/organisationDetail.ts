@@ -17,8 +17,8 @@ import {Organisation} from "../../../backend/model/organisation";
 
         <h5>Groepen</h5>
 
-        <div class="card" [ngClass]="{tableCard: organisation.groups.length!=0}"><div class="card-content">
-            <table class="striped" *ngIf="organisation.groups.length!=0">
+        <div class="card" [ngClass]="{tableCard: organisation.groupIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation.groupIds.length!=0">
                 <thead>
                     <tr>
                         <th data-field="name">Naam</th>
@@ -27,14 +27,14 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#group of organisation.groups" (click)="viewGroup(group._id)" class="clickable">
+                <tr *ngFor="#group of organisation.groupIds" (click)="viewGroup(group._id)" class="clickable">
                     <td>{{group._name}}</td>
                     <td>{{group._users.length}}</td>
                     <td>{{group._description}}</td>
                 </tr>
             </table>
 
-            <p *ngIf="organisation.groups.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
+            <p *ngIf="organisation.groupIds.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
         </div></div>
 
 
