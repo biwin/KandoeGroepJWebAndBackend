@@ -1,4 +1,5 @@
 import {User} from "./user";
+import {Organisation} from "./organisation";
 
 export class Group {
     public _id: string;
@@ -26,6 +27,15 @@ export class Group {
         }
 
         return members;
+    }
+
+    get organisation(): Organisation {
+        //TODO: call backend
+        var organisation: Organisation = Organisation.empty();
+
+        organisation._name = this._organisationId;
+
+        return organisation;
     }
 
     public static empty(): Group{

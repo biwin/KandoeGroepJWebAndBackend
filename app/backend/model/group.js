@@ -1,4 +1,5 @@
 var user_1 = require("./user");
+var organisation_1 = require("./organisation");
 var Group = (function () {
     function Group(_name, _description, _organisationId, _memberIds) {
         this._name = _name;
@@ -19,6 +20,16 @@ var Group = (function () {
                 }
             }
             return members;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Group.prototype, "organisation", {
+        get: function () {
+            //TODO: call backend
+            var organisation = organisation_1.Organisation.empty();
+            organisation._name = this._organisationId;
+            return organisation;
         },
         enumerable: true,
         configurable: true
