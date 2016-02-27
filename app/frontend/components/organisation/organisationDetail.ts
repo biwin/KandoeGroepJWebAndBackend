@@ -3,7 +3,6 @@ import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {Organisation} from "../../../backend/model/organisation";
-import {Group} from "../../../backend/model/group";
 
 @Component({
     selector: 'organisation-detail',
@@ -12,7 +11,8 @@ import {Group} from "../../../backend/model/group";
         <h5>{{organisation._name}}</h5>
 
         <div class="card"><div class="card-content">
-            # leden: {{organisation._memberIds.length}}
+            <p># groepen: {{organisation._groupIds.length}}</p>
+            <p># leden: {{organisation._memberIds.length}}</p>
         </div></div>
 
 
@@ -64,19 +64,19 @@ import {Group} from "../../../backend/model/group";
 })
 
 export class OrganisationDetail {
-    private router:Router;
+    private router: Router;
     private organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
 
-    public constructor(router:Router) {
+    public constructor(router: Router) {
         this.router = router;
     }
 
-    private viewGroup(groupId:string):void {
+    private viewGroup(groupId: string):void {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
         alert("viewGroup: " + groupId);
     }
 
-    private viewMember(userId:string):void {
+    private viewMember(userId: string):void {
         //this.router.navigate(["/UserDetail", {id: userId}]);
         alert("viewMembers: " + userId);
     }
