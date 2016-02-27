@@ -289,7 +289,7 @@ describe('UserManager', () => {
             try {
                 userManager.registerUser(jan, (u:User) => {
                     jan = u;
-                    organisation._organisators.push(u._id);
+                    organisation._organisatorIds.push(u._id);
                     userManager.createOrganisation(organisation, (o: Organisation) => {
                         organisation = o;
                         group._organisationId = o._id;
@@ -426,7 +426,7 @@ describe('UserManager', () => {
             try {
                 userManager.registerUser(user, (u:User) => {
                     user = u;
-                    organisation._organisators.push(u._id);
+                    organisation._organisatorIds.push(u._id);
                     userManager.createOrganisation(organisation, (o:Organisation) => {
                         organisation = o;
                         done();

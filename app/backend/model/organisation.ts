@@ -3,7 +3,7 @@ import {User} from "./user";
 
 export class Organisation {
     public _groups: string[] = [];
-    public _organisators: string[] = [];
+    public _organisatorIds: string[] = [];
 
     public _id: string;
 

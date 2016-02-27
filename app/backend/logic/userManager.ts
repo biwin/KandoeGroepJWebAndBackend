@@ -177,8 +177,8 @@ export class UserManager {
                         return;
                     }
                 }
-                for (var index in o._organisators) {
-                    if (o._organisators[index].toString() == uId.toString()) {
+                for (var index in o._organisatorIds) {
+                    if (o._organisatorIds[index].toString() == uId.toString()) {
                         callback(true);
                         return;
                     }

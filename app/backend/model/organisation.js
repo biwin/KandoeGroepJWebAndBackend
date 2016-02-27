@@ -3,7 +3,7 @@ var Organisation = (function () {
         this._name = _name;
         this._memberIds = _memberIds;
         this._groups = [];
-        this._organisators = [];
+        this._organisatorIds = [];
     }
     Organisation.empty = function () {
         return new Organisation("", []);
