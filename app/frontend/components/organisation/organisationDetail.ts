@@ -40,8 +40,8 @@ import {Organisation} from "../../../backend/model/organisation";
 
         <h5>Leden</h5>
 
-        <div class="card" [ngClass]="{tableCard: organisation.members.length!=0}"><div class="card-content">
-            <table class="striped" *ngIf="organisation.members.length!=0">
+        <div class="card" [ngClass]="{tableCard: organisation.memberIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation.memberIds.length!=0">
                 <thead>
                     <tr>
                         <th data-field="name">Naam</th>
@@ -50,14 +50,14 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of organisation.members" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of organisation.memberIds" (click)="viewMember(member._id)" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                     <td>{{member._role}}</td>
                 </tr>
             </table>
 
-            <p *ngIf="organisation.members.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
+            <p *ngIf="organisation.memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
         </div></div>
     </div>
     `,
