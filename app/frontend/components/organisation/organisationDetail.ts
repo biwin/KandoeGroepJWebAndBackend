@@ -17,8 +17,8 @@ import {Organisation} from "../../../backend/model/organisation";
 
         <h5>Groepen</h5>
 
-        <div class="card" [ngClass]="{tableCard: organisation.groupIds.length!=0}"><div class="card-content">
-            <table class="striped" *ngIf="organisation.groupIds.length!=0">
+        <div class="card" [ngClass]="{tableCard: organisation._groupIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation._groupIds.length!=0">
                 <thead>
                     <tr>
                         <th data-field="name">Naam</th>
@@ -27,21 +27,21 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#group of organisation.groupIds" (click)="viewGroup(group._id)" class="clickable">
+                <tr *ngFor="#group of organisation._groupIds" (click)="viewGroup(group._id)" class="clickable">
                     <td>{{group._name}}</td>
-                    <td>{{group._users.length}}</td>
+                    <td>{{group._memberIds.length}}</td>
                     <td>{{group._description}}</td>
                 </tr>
             </table>
 
-            <p *ngIf="organisation.groupIds.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
+            <p *ngIf="organisation._groupIds.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
         </div></div>
 
 
         <h5>Leden</h5>
 
-        <div class="card" [ngClass]="{tableCard: organisation.memberIds.length!=0}"><div class="card-content">
-            <table class="striped" *ngIf="organisation.memberIds.length!=0">
+        <div class="card" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation._memberIds.length!=0">
                 <thead>
                     <tr>
                         <th data-field="name">Naam</th>
@@ -50,14 +50,14 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of organisation.memberIds" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of organisation._memberIds" (click)="viewMember(member._id)" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                     <td>{{member._role}}</td>
                 </tr>
             </table>
 
-            <p *ngIf="organisation.memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
+            <p *ngIf="organisation._memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
         </div></div>
     </div>
     `,
