@@ -12,6 +12,25 @@ export class Organisation {
 
     }
 
+    get groups(): Group[] {
+        //TODO: call backend
+        var groups: Group[] = [];
+
+        if(this._groupIds) {
+            for (var i = 0; i < this._groupIds.length; i++) {
+                var groupId = this._groupIds[i];
+                var newGroup: Group = Group.empty();
+
+                newGroup._name = groupId;
+                newGroup._organisationId = this._id;
+
+                groups.push(newGroup);
+            }
+        }
+
+        return groups;
+    }
+
     public static empty(): Organisation{
         return new Organisation("", []);
     }
