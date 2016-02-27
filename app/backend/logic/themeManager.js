@@ -33,6 +33,9 @@ var ThemeManager = (function () {
     ThemeManager.prototype.getAllThemes = function (callback) {
         this._dao.readAllThemes(callback);
     };
+    ThemeManager.prototype.getCards = function (themeId, callback) {
+        this._dao.readCards(themeId, callback);
+    };
     return ThemeManager;
 })();
 exports.ThemeManager = ThemeManager;

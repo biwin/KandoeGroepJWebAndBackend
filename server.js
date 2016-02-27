@@ -50,3 +50,11 @@ app.get('/api/themes', function(req, res) {
 app.post('/api/themes', function(req, res) {
     ThemeApi.ThemeApi.create(req.body, res);
 });
+
+app.get('/api/themes/:id/cards', function(req, res) {
+    ThemeApi.ThemeApi.getCards(req.params.id, res);
+});
+
+app.post('/api/themes/:id', function(req, res) {
+    ThemeApi.ThemeApi.createCard(req.body, req.params.id, res);
+});

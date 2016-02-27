@@ -44,6 +44,13 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.readCards = function (themeId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('cards').find({ '_themeId': themeId }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return ThemeDao;
 })();
 exports.ThemeDao = ThemeDao;

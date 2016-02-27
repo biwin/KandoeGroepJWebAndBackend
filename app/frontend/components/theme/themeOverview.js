@@ -15,21 +15,23 @@ var ThemeOverview = (function () {
     function ThemeOverview(service) {
         /*var a = [new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]), new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])];
 
-        a.forEach((t:Theme) => {
-            service.create(t).subscribe((th:Theme) => {
-                console.log(th);
-            })
-        });*/
+         a.forEach((t:Theme) => {
+         service.create(t).subscribe((th:Theme) => {
+         console.log(th);
+         })
+         });*/
         var _this = this;
+        this.loading = true;
         this.themes = [];
         service.getAll().subscribe(function (themes) {
             themes.forEach(function (t) { return _this.themes.push(t); });
+            _this.loading = false;
         });
     }
     ThemeOverview = __decorate([
         core_1.Component({
             selector: 'theme-overview',
-            template: "\n    <div class=\"row container\">\n        <theme-card *ngFor=\"#theme of themes\" [theme]=\"theme\">\n    </theme-card></div>\n    ",
+            template: "\n        <div class=\"container\">\n            <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <theme-card *ngFor=\"#theme of themes\" [theme]=\"theme\">\n                </theme-card>\n            </div>\n        </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES, themeCard_1.ThemeCard]
         }), 
         __metadata('design:paramtypes', [themeService_1.ThemeService])

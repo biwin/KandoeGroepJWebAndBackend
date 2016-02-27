@@ -29,6 +29,14 @@ var ThemeService = (function () {
         header.append('Content-Type', 'application/json');
         return this.http.post(this.path + 'themes', JSON.stringify(theme), { headers: header }).map(function (res) { return res.json(); });
     };
+    ThemeService.prototype.createCard = function (name, themeId) {
+        var header = new http_2.Headers();
+        header.append('Content-Type', 'application/json');
+        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({ '_name': name }), { headers: header }).map(function (res) { return res.json(); });
+    };
+    ThemeService.prototype.getCards = function (themeId) {
+        return this.http.get(this.path + 'themes/' + themeId + '/cards').map(function (res) { return res.json(); });
+    };
     ThemeService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

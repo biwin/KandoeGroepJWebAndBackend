@@ -1,7 +1,7 @@
 import {Theme} from "../../../backend/model/theme";
-import {Component} from "angular2/core";
-import {Input} from "angular2/core";
+import {Component, Input, AfterViewInit} from "angular2/core";
 import {Card} from "../../../backend/model/card";
+import {ThemeService} from "../../services/themeService";
 
 @Component({
     selector: 'theme-card',
@@ -16,18 +16,57 @@ import {Card} from "../../../backend/model/card";
         </div>
         <div class="card-reveal">
            <span class="card-title">{{theme._name}}<i class="material-icons right">close</i></span>
-             <ul class="collection">
-              <li class="collection-item" *ngFor="#card of cards">{{card._name}}</li>
-              <li class="collection-item center red"><i class="material-icons white-text">add_to_photos</i></li>
-            </ul>
+           <h5>Kaartjes</h5>
+           <div class="container">
+               <p *ngIf="cards.length == 0">Nog geen kaartjes...</p>
+               <ul class="collection" *ngIf="cards.length > 0">
+                  <li class="collection-item" *ngFor="#card of cards">{{card._name}}</li>
+                </ul>
+
+            <div class="row">
+                <div class="col s8 input-field">
+                    <label for="cardname">Nieuw</label>
+                    <input #cardname type="text" id="cardname">
+                </div>
+                <div class="col s2 margin-top">
+                    <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" href="#" class="btn-floating"><i class="material-icons">add</i></a>
+                </div>
+            </div>
+           </div>
         </div>
       </div>
       </div>
   `
 })
-export class ThemeCard {
+export class ThemeCard implements AfterViewInit {
     @Input() private theme:Theme;
-    private cards:Card[] = [new Card("a", "a"), new Card("b", "b"), new Card("c", "c")];
+    private cards:Card[] = [];
+    private cardsLoaded:boolean = false;
+
+    private service:ThemeService;
+
+    constructor(themeService:ThemeService) {
+        this.service = themeService;
+    }
+
+    addCard(input) {
+        if(input.value.trim().length > 0) {
+            this.service.createCard(input.value.trim(), this.theme._id).subscribe((c:Card) => {
+                this.cards.push(c);
+                input.value = "";
+            });
+        }
+    }
+
+
+    ngAfterViewInit() {
+        if(this.theme != undefined && !this.cardsLoaded) {
+            this.service.getCards(this.theme._id).subscribe((c:Card[]) => {
+                c.forEach((card:Card) => this.cards.push(card));
+                this.cardsLoaded = true;
+            });
+        }
+    }
 }
 
 

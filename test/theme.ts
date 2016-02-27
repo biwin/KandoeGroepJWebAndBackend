@@ -1,13 +1,12 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
-/*import assert = require('assert');
+import assert = require('assert');
 import {timeout} from "rxjs/operator/timeout";
 import {ThemeManager} from "../app/backend/logic/themeManager";
 import {Theme} from "../app/backend/model/theme";
 import {UserManager} from "../app/backend/logic/userManager";
 import {User} from "../app/backend/model/user";
 import {Card} from "../app/backend/model/card";
-import any = jasmine.any;
 
 var themeManager: ThemeManager;
 var userManager: UserManager;
@@ -54,19 +53,18 @@ describe('ThemeManager', () => {
     });
 
     describe('AddCard', () => {
-        var card:Card
+        var card:Card;
         before(function(done: any){
-            card = new Card ('Cafe de vissers', 't1235')
+            card = new Card ('Cafe de vissers', 't1235');
+            done();
         });
         it('Card must be added to a theme', function(done: any){
             this.timeout();
             themeManager.createCard(card, (c:Card) => {
-                assert.notEqual(card._id, null);
-              done();
+                assert.notEqual(c._id, null);
+                done();
             });
         });
     });
 
 });
-
-*/

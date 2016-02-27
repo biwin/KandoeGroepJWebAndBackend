@@ -42,4 +42,8 @@ export class ThemeManager {
     getAllThemes(callback: (t:Theme[]) => any) {
         this._dao.readAllThemes(callback);
     }
+
+    getCards(themeId:string, callback:(c:Card[])=>any) {
+        this._dao.readCards(themeId, callback);
+    }
 }

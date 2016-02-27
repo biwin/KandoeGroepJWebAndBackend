@@ -6,6 +6,7 @@ import {Observable} from "rxjs/Observable";
 import {Response} from "angular2/http";
 import {Headers} from "angular2/http";
 import "rxjs/add/operator/map";
+import {Card} from "../../backend/model/card";
 
 @Injectable()
 export class ThemeService {
@@ -25,5 +26,15 @@ export class ThemeService {
         var header = new Headers();
         header.append('Content-Type', 'application/json');
         return this.http.post(this.path + 'themes', JSON.stringify(theme), {headers:header}).map((res:Response) => res.json());
+    }
+
+    createCard(name:string, themeId:string):Observable<Card> {
+        var header = new Headers();
+        header.append('Content-Type', 'application/json');
+        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({'_name': name}), {headers:header}).map((res:Response) => res.json());
+    }
+
+    getCards(themeId:string):Observable<Card[]> {
+        return this.http.get(this.path + 'themes/' + themeId + '/cards').map((res:Response) => res.json());
     }
 }
