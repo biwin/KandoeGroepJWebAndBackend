@@ -1,4 +1,5 @@
 var group_1 = require("./group");
+var user_1 = require("./user");
 var Organisation = (function () {
     function Organisation(_name, _memberIds) {
         this._name = _name;
@@ -20,6 +21,23 @@ var Organisation = (function () {
                 }
             }
             return groups;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Organisation.prototype, "members", {
+        get: function () {
+            //TODO: call backend
+            var members = [];
+            if (this._memberIds) {
+                for (var i = 0; i < this._memberIds.length; i++) {
+                    var memberId = this._memberIds[i];
+                    var newUser = user_1.User.empty();
+                    newUser._name = memberId;
+                    members.push(newUser);
+                }
+            }
+            return members;
         },
         enumerable: true,
         configurable: true
