@@ -3,6 +3,7 @@ import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {Organisation} from "../../../backend/model/organisation";
+import {Group} from "../../../backend/model/group";
 
 @Component({
     selector: 'organisation-detail',
@@ -27,7 +28,7 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#group of organisation._groupIds" (click)="viewGroup(group._id)" class="clickable">
+                <tr *ngFor="#group of organisation.groups" (click)="viewGroup(group._id)" class="clickable">
                     <td>{{group._name}}</td>
                     <td>{{group._memberIds.length}}</td>
                     <td>{{group._description}}</td>
