@@ -7,4 +7,8 @@ export class Group {
                 public _memberIds: string[]) {
 
     }
+
+    public static empty(): Group{
+        return new Group("", "", "", []);
+    }
 }

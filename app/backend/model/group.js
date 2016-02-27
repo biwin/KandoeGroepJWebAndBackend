@@ -5,6 +5,9 @@ var Group = (function () {
         this._organisationId = _organisationId;
         this._memberIds = _memberIds;
     }
+    Group.empty = function () {
+        return new Group("", "", "", []);
+    };
     return Group;
 })();
 exports.Group = Group;
