@@ -3,6 +3,8 @@ import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {Organisation} from "../../../backend/model/organisation";
+import {Group} from "../../../backend/model/group";
+import {User} from "../../../backend/model/user";
 
 @Component({
     selector: 'organisation-detail',
@@ -28,7 +30,7 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#group of organisation.groups" (click)="viewGroup(group._id)" class="clickable">
+                <tr *ngFor="#group of groups" (click)="viewGroup(group._id)" class="clickable">
                     <td>{{group._name}}</td>
                     <td>{{group._memberIds.length}}</td>
                     <td>{{group._description}}</td>
@@ -50,7 +52,7 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of organisation.members" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of members" (click)="viewMember(member._id)" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -65,19 +67,26 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class OrganisationDetail {
     private router: Router;
-    private organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
+    private organisation: Organisation;
+    private groups: Group[];
+    private members: User[];
 
     public constructor(router: Router) {
         this.router = router;
+
+        this.organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
+
+        this.groups = this.organisation.groups;
+        this.members = this.organisation.members;
     }
 
-    private viewGroup(groupId: string):void {
+    private viewGroup(groupId: string): void {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
         alert("viewGroup: " + groupId);
     }
 
-    private viewMember(userId: string):void {
+    private viewMember(userId: string): void {
         //this.router.navigate(["/UserDetail", {id: userId}]);
-        alert("viewMembers: " + userId);
+        alert("viewMember: " + userId);
     }
 }
