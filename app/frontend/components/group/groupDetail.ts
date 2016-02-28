@@ -3,6 +3,7 @@ import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {Group} from "../../../backend/model/group";
+import {User} from "../../../backend/model/user";
 
 @Component({
     selector: 'group-detail',
@@ -26,7 +27,7 @@ import {Group} from "../../../backend/model/group";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of group.members" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of members" (click)="viewMember(member._id)" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -41,14 +42,24 @@ import {Group} from "../../../backend/model/group";
 
 export class GroupDetail {
     private router: Router;
-    private group = new Group("Voeding", "De groep van alle medewerkers Voeding", "Delhaize", ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]);
+    private group: Group;
+    private members: User[];
 
     public constructor(router: Router) {
         this.router = router;
+
+        this.group = new Group(
+            "Voeding",
+            "De groep van alle medewerkers Voeding",
+            "Delhaize",
+            ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]
+        );
+
+        this.members = this.group.members;
     }
 
-    private viewMember(userId: string):void {
+    private viewMember(userId: string): void {
         //this.router.navigate(["/UserDetail", {id: userId}]);
-        alert("viewMembers: " + userId);
+        alert("viewMember: " + userId);
     }
 }
