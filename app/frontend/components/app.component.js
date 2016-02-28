@@ -13,11 +13,12 @@ var navigationBar_1 = require('./general/navigationBar');
 var footer_1 = require('./general/footer');
 var themeOverview_1 = require("./theme/themeOverview");
 var themeForm_1 = require('./theme/themeForm');
+var circleSessionOverview_1 = require("./circleSession/circleSessionOverview");
 var circleSessionForm_1 = require("./circleSession/circleSessionForm");
 var organisationsOverview_1 = require("./organisation/organisationsOverview");
 var organisationForm_1 = require("./organisation/organisationForm");
 var organisationDetail_1 = require("./organisation/organisationDetail");
-var circleSessionOverview_1 = require("./circleSession/circleSessionOverview");
+var groupForm_1 = require("./group/groupForm");
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -30,11 +31,12 @@ var AppComponent = (function () {
         router_1.RouteConfig([
             { path: '/themes', as: 'ThemeOverview', component: themeOverview_1.ThemeOverview },
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
+            { path: '/circlesessions', as: 'CircleSessionOverview', component: circleSessionOverview_1.CircleSessionOverview },
             { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm },
-            { path: '/circlsessions', as: 'CircleSessionOverview', component: circleSessionOverview_1.CircleSessionOverview },
             { path: '/organisations', as: 'OrganisationsOverview', component: organisationsOverview_1.OrganisationsOverview },
             { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm },
-            { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail }
+            { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail },
+            { path: '/createGroup', as: 'CreateGroup', component: groupForm_1.GroupForm }
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
