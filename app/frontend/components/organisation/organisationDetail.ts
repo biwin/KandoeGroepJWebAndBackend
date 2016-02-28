@@ -75,6 +75,7 @@ export class OrganisationDetail {
         this.router = router;
 
         this.organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
+        this.organisation._groupIds.push("Voeding");
 
         this.groups = this.organisation.groups;
         this.members = this.organisation.members;
@@ -82,7 +83,7 @@ export class OrganisationDetail {
 
     private viewGroup(groupId: string): void {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
-        alert("viewGroup: " + groupId);
+        this.router.navigate(["/GroupDetail", {id: 0}]);
     }
 
     private viewMember(userId: string): void {

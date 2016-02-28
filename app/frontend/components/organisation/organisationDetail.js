@@ -15,12 +15,13 @@ var OrganisationDetail = (function () {
     function OrganisationDetail(router) {
         this.router = router;
         this.organisation = new organisation_1.Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
+        this.organisation._groupIds.push("Voeding");
         this.groups = this.organisation.groups;
         this.members = this.organisation.members;
     }
     OrganisationDetail.prototype.viewGroup = function (groupId) {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
-        alert("viewGroup: " + groupId);
+        this.router.navigate(["/GroupDetail", { id: 0 }]);
     };
     OrganisationDetail.prototype.viewMember = function (userId) {
         //this.router.navigate(["/UserDetail", {id: userId}]);
