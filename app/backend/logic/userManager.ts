@@ -134,6 +134,11 @@ export class UserManager {
 
     removeUserFromOrganisationById(oId: string, uId: string, callback: (b: boolean) => any) {
         this.userInOrganisation(oId, uId, (userAlreadyInOrganisation: boolean) => {
+            if (userAlreadyInOrganisation) {
+
+            } else {
+
+            }
             /*if (!userAlreadyInOrganisation) {
                 callback(false);
             } else {

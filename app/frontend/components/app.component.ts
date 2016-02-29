@@ -12,6 +12,7 @@ import {OrganisationForm} from "./organisation/organisationForm";
 import {OrganisationDetail} from "./organisation/organisationDetail";
 import {GroupForm} from "./group/groupForm";
 import {GroupDetail} from "./group/groupDetail";
+import {UserLogin} from "./user/userLogin";
 
 @Component({
     selector: 'my-app',
@@ -34,7 +35,8 @@ import {GroupDetail} from "./group/groupDetail";
     {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm},
     {path: '/organisation/:id', as: 'OrganisationDetail', component: OrganisationDetail},
     {path: '/createGroup', as: 'CreateGroup', component: GroupForm},
-    {path: '/group/:id', as: 'GroupDetail', component: GroupDetail}
+    {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
+    {path: '/loginUser', as: 'UserLogin', component: UserLogin}
 ])
 
 export class AppComponent { }

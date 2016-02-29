@@ -10,7 +10,7 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
        <div class="nav-wrapper container">
         <a id="logo-container" href="#!" class="brand-logo">KanDoe</a>
             <ul class="right">
-                <li><a href="#!"><i class="material-icons">face</i></a></li>
+                <li><a [routerLink]="['UserLogin']"><i class="material-icons">face</i></a></li>
             </ul>
             <ul id="slide-out" class="side-nav fixed">
                 <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>

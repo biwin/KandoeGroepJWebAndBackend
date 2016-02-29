@@ -125,6 +125,10 @@ var UserManager = (function () {
     };
     UserManager.prototype.removeUserFromOrganisationById = function (oId, uId, callback) {
         this.userInOrganisation(oId, uId, function (userAlreadyInOrganisation) {
+            if (userAlreadyInOrganisation) {
+            }
+            else {
+            }
             /*if (!userAlreadyInOrganisation) {
                 callback(false);
             } else {

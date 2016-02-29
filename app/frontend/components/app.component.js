@@ -20,6 +20,7 @@ var organisationForm_1 = require("./organisation/organisationForm");
 var organisationDetail_1 = require("./organisation/organisationDetail");
 var groupForm_1 = require("./group/groupForm");
 var groupDetail_1 = require("./group/groupDetail");
+var userLogin_1 = require("./user/userLogin");
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -38,7 +39,8 @@ var AppComponent = (function () {
             { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm },
             { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail },
             { path: '/createGroup', as: 'CreateGroup', component: groupForm_1.GroupForm },
-            { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail }
+            { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail },
+            { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin }
         ]), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
