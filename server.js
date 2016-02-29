@@ -1,9 +1,9 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
-    UserApi = require('./app/backend/restApi/userApi.js'),
     CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
+    UserApi = require('./app/backend/restApi/userApi.js'),
     morgan = require('morgan'),
     server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
     server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -60,4 +60,13 @@ app.get('/api/themes/:id', function(req, res){
 
 app.post('/api/themes/:id', function(req, res) {
     ThemeApi.ThemeApi.createCard(req.body, req.params.id, res);
+});
+
+app.post('/api/user/login', function(req, res) {
+    console.log(req.body.username + ": " + req.body.password);
+    UserApi.UserApi.getUser(req.body.username, req.body.password, res);
+});
+
+app.post('/api/user/register', function(req, res) {
+    UserApi.UserApi.createUser(req.body.username, "", req.body.password, res);
 });

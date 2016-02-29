@@ -8,11 +8,14 @@ var UserManager = (function () {
     };
     UserManager.prototype.registerUser = function (user, callback) {
         var _this = this;
+        console.log("hi");
         this.userExists(user._name, function (taken) {
             if (!taken) {
+                console.log("!taken");
                 _this._dao.createUser(user, callback);
             }
             else {
+                console.log("taken");
                 callback(null);
             }
         });

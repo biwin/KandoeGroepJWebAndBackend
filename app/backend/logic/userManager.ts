@@ -17,10 +17,13 @@ export class UserManager {
     }
 
     registerUser(user: User, callback: (u: User) => any) {
+        console.log("hi");
         this.userExists(user._name, (taken) => {
             if (!taken) {
+                console.log("!taken");
                 this._dao.createUser(user, callback);
             } else {
+                console.log("taken");
                 callback(null);
             }
         });

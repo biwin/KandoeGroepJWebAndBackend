@@ -1,6 +1,7 @@
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {User} from "../../../backend/model/user";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'user-login',
@@ -8,24 +9,22 @@ import {User} from "../../../backend/model/user";
     <div class="row container">
         <h5>Gebruiker log in</h5>
         <div class="card formCard"><div class="card-content">
-            <form class="col s12">
+            <form class="col s12" (ngSubmit)="onSubmit()">
                 <div class="row"><div class="input-field col s6">
-                    <input id="name" type="text" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_name" required #name="ngForm" #name>
-                        <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
-                            Name is required
-                        </div>
-                    <label>Naam</label>
+                    <input id="name" type="text" [(ngModel)]="usernameString" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_name" required #name="ngForm">
+                    <label for="name" data-error="Oops!">Gebruikersnaam</label>
                 </div></div>
 
                 <div class="row"><div class="input-field col s6">
-                    <input id="password" type="password" class="form-control" required>
-                    <label>Wachtwoord</label>
+                    <input id="password" type="password" [(ngModel)]="passwordString" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_password" required #password="ngForm">
+                    <label for="password" data-error="Oops!">Wachtwoord</label>
                 </div></div>
 
                 <div class="row">
-                    <button type="submit" class="btn waves-effect teal waves-light col s2"><p>Log in<i class="material-icons right">send</i></p></button>
-                    <button type="submit" class="btn waves-effect red waves-light col s2 offset-s1"><p>Registreer<i class="material-icons right">send</i></p></button>
+                    <button (click)="logInPressed=true" type="submit" id="loginButton" class="btn waves-effect teal waves-light col s2"><p>Log in<i class="material-icons right">send</i></p></button>
+                    <button type="submit" id="registerButton" class="btn waves-effect red waves-light col s2 offset-s1"><p>Registreer<i class="material-icons right">send</i></p></button>
                 </div>
+
             </form>
         </div></div>
     </div>
@@ -35,15 +34,28 @@ import {User} from "../../../backend/model/user";
 
 export class UserLogin {
     private router: Router;
-    private nameValid: boolean;
-    private passwordValid: boolean;
+    private usernameString: string;
+    private passwordString: string;
+    private logInPressed: boolean = false;
+    private service: UserService;
 
-    public constructor(router: Router) {
+    public constructor(router: Router, service: UserService) {
         this.router = router;
+        this.service = service;
     }
 
-    validate(test) {
-        this.nameValid = true;
-        console.log(this.nameValid);
+    onSubmit() {
+        console.log(this.logInPressed);
+        if (this.logInPressed) {
+            console.log("Logging in: " + this.usernameString + ", " + this.passwordString);
+            this.service.getUser(this.usernameString, this.passwordString).subscribe((token: string) => {
+                console.log("Login token: " + token._body);
+            });
+        } else {
+            console.log("Registering: " + this.usernameString + ", " + this.passwordString);
+            this.service.registerUser(this.usernameString, this.passwordString).subscribe((token: string) => {
+                console.log("Register token: " + token._body);
+            });
+        }
     }
 }

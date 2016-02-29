@@ -9,21 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
+var userService_1 = require("../../services/userService");
 var UserLogin = (function () {
-    function UserLogin(router) {
+    function UserLogin(router, service) {
+        this.logInPressed = false;
         this.router = router;
+        this.service = service;
     }
-    UserLogin.prototype.validate = function (test) {
-        this.nameValid = true;
-        console.log(this.nameValid);
+    UserLogin.prototype.onSubmit = function () {
+        console.log(this.logInPressed);
+        if (this.logInPressed) {
+            console.log("Logging in: " + this.usernameString + ", " + this.passwordString);
+            this.service.getUser(this.usernameString, this.passwordString).subscribe(function (token) {
+                console.log("Login token: " + token._body);
+            });
+        }
+        else {
+            console.log("Registering: " + this.usernameString + ", " + this.passwordString);
+            this.service.registerUser(this.usernameString, this.passwordString).subscribe(function (token) {
+                console.log("Register token: " + token._body);
+            });
+        }
     };
     UserLogin = __decorate([
         core_1.Component({
             selector: 'user-login',
-            template: "\n    <div class=\"row container\">\n        <h5>Gebruiker log in</h5>\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <form class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input id=\"name\" type=\"text\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_name\" required #name=\"ngForm\" #name>\n                        <div [hidden]=\"name.valid || name.pristine\" class=\"alert alert-danger\">\n                            Name is required\n                        </div>\n                    <label>Naam</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input id=\"password\" type=\"password\" class=\"form-control\" required>\n                    <label>Wachtwoord</label>\n                </div></div>\n\n                <div class=\"row\">\n                    <button type=\"submit\" class=\"btn waves-effect teal waves-light col s2\"><p>Log in<i class=\"material-icons right\">send</i></p></button>\n                    <button type=\"submit\" class=\"btn waves-effect red waves-light col s2 offset-s1\"><p>Registreer<i class=\"material-icons right\">send</i></p></button>\n                </div>\n            </form>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <h5>Gebruiker log in</h5>\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <form class=\"col s12\" (ngSubmit)=\"onSubmit()\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input id=\"name\" type=\"text\" [(ngModel)]=\"usernameString\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_name\" required #name=\"ngForm\">\n                    <label for=\"name\" data-error=\"Oops!\">Gebruikersnaam</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input id=\"password\" type=\"password\" [(ngModel)]=\"passwordString\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_password\" required #password=\"ngForm\">\n                    <label for=\"password\" data-error=\"Oops!\">Wachtwoord</label>\n                </div></div>\n\n                <div class=\"row\">\n                    <button (click)=\"logInPressed=true\" type=\"submit\" id=\"loginButton\" class=\"btn waves-effect teal waves-light col s2\"><p>Log in<i class=\"material-icons right\">send</i></p></button>\n                    <button type=\"submit\" id=\"registerButton\" class=\"btn waves-effect red waves-light col s2 offset-s1\"><p>Registreer<i class=\"material-icons right\">send</i></p></button>\n                </div>\n\n            </form>\n        </div></div>\n    </div>\n    ",
             directives: []
         }), 
-        __metadata('design:paramtypes', [router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], UserLogin);
     return UserLogin;
 })();

@@ -5,11 +5,13 @@ import {provide} from "angular2/core";
 import {LocationStrategy, HashLocationStrategy, APP_BASE_HREF, ROUTER_PRIMARY_COMPONENT, ROUTER_PROVIDERS} from "angular2/router";
 import {ThemeService} from "../services/themeService";
 import {CircleSessionService} from "../services/circleSessionService";
+import {UserService} from "../services/userService";
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,
     HTTP_PROVIDERS,
     ThemeService,
+    UserService,
     CircleSessionService,
     provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}),
     provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppComponent}),
