@@ -3,8 +3,8 @@ var card_1 = require("../model/card");
 var ThemeApi = (function () {
     function ThemeApi() {
     }
-    ThemeApi.find = function (name, res) {
-        ThemeApi.mgr.getTheme(name, function (t) {
+    ThemeApi.find = function (id, res) {
+        ThemeApi.mgr.getTheme(id, function (t) {
             res.send(t);
         });
     };

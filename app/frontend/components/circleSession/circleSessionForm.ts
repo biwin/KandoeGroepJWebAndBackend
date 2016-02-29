@@ -8,6 +8,7 @@ import {CORE_DIRECTIVES} from "angular2/common";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {Router} from "angular2/router";
+import {ThemeService} from "../../services/themeService";
 
 
 @Component({
@@ -20,27 +21,24 @@ import {Router} from "angular2/router";
         <form (submit)="OnSubmit()" class="col s12">
       <div class="row">
         <div class="input-field col s3">
-            <select>
-              <option value="" disabled selected>Groep</option>
-              <option *ngFor="#group of _groups" value="{{group._id}}">{{group._name}}</option>
-            </select>
-            <label>Groep</label>
+                    <select class="browser-default" required [(ngModel)]="circleSession._groupId" id="group">
+                        <option value="" disabled>Groep</option>
+                        <option *ngFor="#group of _groups" value="{{group._id}}">{{group._name}}</option>
+                    </select>
         </div>
-        <div class="input-field col s3">
-            <select>
-              <option value="" disabled selected>Thema</option>
-              <option *ngFor="#theme of _themes" value="{{theme._id}}">{{theme._name}}</option>
-            </select>
-            <label>Thema</label>
+       <div class="input-field col s3">
+                    <select class="browser-default" required [(ngModel)]="circleSession._themeId" id="theme">
+                        <option value="" disabled>Thema</option>
+                        <option *ngFor="#theme of _themes" value="{{theme._id}}">{{theme._name}}</option>
+                    </select>
         </div>
-
       </div>
 
       <div class="divider"></div>
 
     <div class="row margin-top">
     <div class="col s5">
-        <input type="checkbox" id="realtime" />
+        <input [(ngModel)]="circleSession._realTime" type="checkbox" id="realtime" />
         <label for="realtime">Realtime</label>
      </div>
     </div>
@@ -57,11 +55,36 @@ import {Router} from "angular2/router";
     <div class="row">
     <div class="col input-field s3">
          <label for="startDate">Start datum</label>
-         <input [(ngModel)]="circleSession._startDate" type="date" class="datepicker" id="startDate">
+         <input type="date" required class="datepicker" id="startDate">
     </div>
      <div class="input-field col s3">
-          <input id="time" type="text" class="validate">
+          <input id="time" required type="text" class="validate">
           <label for="time">Beginuur</label>
+     </div>
+    </div>
+
+          <div class="divider"></div>
+
+    <h6>Optionele intellingen</h6>
+
+    <div class="row margin-top">
+    <div class="col s5">
+        <input type="checkbox" checked id="endpoint" />
+        <label for="endpoint">Onbeperkt spel</label>
+     </div>
+    </div>
+
+    <div class="row hide" id="turnbox">
+     <div class="input-field col s3">
+          <input [(ngModel)]="circleSession._endPoint" id="duration" type="number" min="0" class="validate">
+          <label for="turns">Aantal rondes</label>
+     </div>
+    </div>
+
+    <div class="row margin-top">
+    <div class="col s5">
+        <input [(ngModel)]="circleSession._allowComment" type="checkbox" id="allowcomment"/>
+        <label for="allowcomment">Spelers kunnen commentaar geven op kaarten</label>
      </div>
     </div>
 
@@ -78,18 +101,13 @@ export class CircleSessionForm implements AfterViewInit {
     service:CircleSessionService;
     router:Router;
 
+
     private _groups: Group[] = [
         new Group("Groep A","", "", [""]),
         new Group("Groep B", "", "",[""]),
         new Group("Groep C", "", "",[""])
     ];
-    private _themes: Theme[] = [
-        new Theme("Cafe's", "Cafes die we zouden kunnen bezoeken dit weekend", ["1"], ["love", "tits", "balls"]),
-        new Theme("scholen", "scholen voor onze zoon", ["1"], ["howest", "ikleef"]),
-        new Theme("De praat paal", "waarover gaan we nu weer praten?", ["1"])
-    ];
-
-
+    private _themes: Theme[] = [];
 
     ngAfterViewInit():any {
         $('select').material_select();
@@ -100,24 +118,42 @@ export class CircleSessionForm implements AfterViewInit {
             clear:'Leeg',
             close: 'Sluit',
             selectMonths: true,
-            selectYears: 2
+            selectYears: 2,
+            format: 'dd/mm/yyyy',
+            min: Date.now()
         });
+
         $('#realtime').change( ()=>  {
             $('#durationbox').toggleClass('hide');
-        })
+        });
+
+        $('#endpoint').change( ()=>  {
+            $('#turnbox').toggleClass('hide');
+        });
     }
 
-    constructor(service:CircleSessionService, router:Router) {
+    constructor(service:CircleSessionService, themeService:ThemeService , router:Router) {
         this.service = service;
         this.router = router;
+
+        themeService.getAll().subscribe((ts:Theme[]) =>{
+            ts.forEach((t:Theme) => {
+                this._themes.push(t);
+            });
+        });
     }
 
     private OnSubmit(){
         this.circleSession._creatorId = "CURRENT_USER_ID";
 
+        if(this.circleSession._realTime)
+            this.circleSession._turnTimeMin = null;
+
+        this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
+
         this.service.create(this.circleSession).subscribe((c:CircleSession) =>{
-            console.log(c + " created")
-        })
+            this.router.navigate(['CircleSessionOverview']);
+        });
     }
 }
 

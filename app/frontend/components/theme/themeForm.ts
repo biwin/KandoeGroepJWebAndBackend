@@ -50,7 +50,7 @@ export class ThemeForm {
 
 
         this.service.create(this.theme).subscribe((t:Theme) => {
-            console.log(t);
+            this.router.navigate(['ThemeOverview']);
         });
     }
 }
