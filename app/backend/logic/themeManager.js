@@ -19,8 +19,8 @@ var ThemeManager = (function () {
             }
         });
     };
-    ThemeManager.prototype.getTheme = function (name, callback) {
-        this._dao.readTheme(name, callback);
+    ThemeManager.prototype.getTheme = function (id, callback) {
+        this._dao.readTheme(id, callback);
     };
     ThemeManager.prototype.themeExists = function (name, callback) {
         this.getTheme(name, function (t) {

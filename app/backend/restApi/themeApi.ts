@@ -4,8 +4,8 @@ import {Card} from "../model/card";
 export class ThemeApi {
     private static mgr:ThemeManager = new ThemeManager();
 
-    public static find(name:string, res) {
-        ThemeApi.mgr.getTheme(name, (t:Theme) => {
+    public static find(id:string, res) {
+        ThemeApi.mgr.getTheme(id, (t:Theme) => {
             res.send(t);
         });
     }

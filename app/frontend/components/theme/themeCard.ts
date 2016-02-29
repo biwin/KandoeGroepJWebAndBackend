@@ -7,7 +7,7 @@ import {ThemeService} from "../../services/themeService";
     selector: 'theme-card',
     template: `
     <div class="col s4">
-      <div class="card small hoverable">
+      <div class="card hoverable">
         <div class="card-content">
            <span class="card-title activator">{{theme._name}}<i class="material-icons right">filter_none</i></span>
            <p class="black-text">{{theme._description}}</p>

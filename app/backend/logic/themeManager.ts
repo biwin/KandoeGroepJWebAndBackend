@@ -25,8 +25,8 @@ export class ThemeManager {
         });
     }
 
-    getTheme(name: string, callback: (t: Theme) => any) {
-        this._dao.readTheme(name, callback);
+    getTheme(id: string, callback: (t: Theme) => any) {
+        this._dao.readTheme(id, callback);
     }
 
     themeExists(name: string, callback: (b: boolean) => any) {

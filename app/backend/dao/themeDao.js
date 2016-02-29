@@ -20,9 +20,9 @@ var ThemeDao = (function () {
             });
         });
     };
-    ThemeDao.prototype.readTheme = function (name, callback) {
+    ThemeDao.prototype.readTheme = function (id, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').find({ '_name': name }).limit(1).next().then(function (cursor) {
+            db.collection('themes').find({ '_id': id }).limit(1).next().then(function (cursor) {
                 db.close();
                 callback(cursor);
             });
