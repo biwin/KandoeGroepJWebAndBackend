@@ -24,6 +24,9 @@ var ThemeService = (function () {
     ThemeService.prototype.getAll = function () {
         return this.http.get(this.path + 'themes').map(function (res) { return res.json(); });
     };
+    ThemeService.prototype.getTheme = function (themeId) {
+        return this.http.get(this.path + 'themes/' + themeId).map(function (res) { return res.json(); });
+    };
     ThemeService.prototype.create = function (theme) {
         var header = new http_2.Headers();
         header.append('Content-Type', 'application/json');

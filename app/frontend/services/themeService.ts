@@ -22,6 +22,10 @@ export class ThemeService {
         return this.http.get(this.path + 'themes').map((res:Response) => res.json());
     }
 
+    getTheme(themeId:string):Observable<Theme>{
+        return this.http.get(this.path + 'themes/' + themeId).map((res:Response) => res.json());
+    }
+
     create(theme:Theme):Observable<Theme>{
         var header = new Headers();
         header.append('Content-Type', 'application/json');

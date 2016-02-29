@@ -58,7 +58,6 @@ export class ThemeCard implements AfterViewInit {
         }
     }
 
-
     ngAfterViewInit() {
         if(this.theme != undefined && !this.cardsLoaded) {
             this.service.getCards(this.theme._id).subscribe((c:Card[]) => {

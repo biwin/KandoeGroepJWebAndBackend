@@ -42,11 +42,6 @@ app.post('/api/circlesessions', function(req, res) {
     CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
 });
 
-app.get('/api/themes/:name', function(req, res) {
-    var name = req.params.name;
-    ThemeApi.ThemeApi.find(name, res);
-});
-
 app.get('/api/themes', function(req, res) {
     ThemeApi.ThemeApi.findAll(res);
 });
@@ -57,6 +52,10 @@ app.post('/api/themes', function(req, res) {
 
 app.get('/api/themes/:id/cards', function(req, res) {
     ThemeApi.ThemeApi.getCards(req.params.id, res);
+});
+
+app.get('/api/themes/:id', function(req, res){
+   ThemeApi.ThemeApi.find(req.params.id, res);
 });
 
 app.post('/api/themes/:id', function(req, res) {
