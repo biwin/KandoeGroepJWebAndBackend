@@ -6,13 +6,13 @@ import {CircleSession} from "../../../backend/model/circleSession";
     selector: 'circlesession-card',
     template: `
     <div class="col s4">
-      <div class="card medium hoverable">
+      <div class="card hoverable">
         <div class="card-content">
            <span class="card-title">Titel?</span>
            <p class="black-text">Group: {{circleSession._groupId}}</p>
            <p class="black-text">Theme: {{circleSession._themeId}}</p>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
-           <p class="black-text">{{circleSession._realTime}}</p>
+           <p class="black-text">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>
            <p class="black-text">Beurt duur: {{circleSession.turnTimeMin}}</p>
            <p class="black-text">Einde: {{circleSession._endPoint}}</p>
         </div>

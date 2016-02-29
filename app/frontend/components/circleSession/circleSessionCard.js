@@ -23,7 +23,7 @@ var CircleSessionCard = (function () {
     CircleSessionCard = __decorate([
         core_1.Component({
             selector: 'circlesession-card',
-            template: "\n    <div class=\"col s4\">\n      <div class=\"card medium hoverable\">\n        <div class=\"card-content\">\n           <span class=\"card-title\">Titel?</span>\n           <p class=\"black-text\">Group: {{circleSession._groupId}}</p>\n           <p class=\"black-text\">Theme: {{circleSession._themeId}}</p>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime}}</p>\n           <p class=\"black-text\">Beurt duur: {{circleSession.turnTimeMin}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint}}</p>\n        </div>\n      </div>\n      </div>\n  "
+            template: "\n    <div class=\"col s4\">\n      <div class=\"card hoverable\">\n        <div class=\"card-content\">\n           <span class=\"card-title\">Titel?</span>\n           <p class=\"black-text\">Group: {{circleSession._groupId}}</p>\n           <p class=\"black-text\">Theme: {{circleSession._themeId}}</p>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>\n           <p class=\"black-text\">Beurt duur: {{circleSession.turnTimeMin}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint}}</p>\n        </div>\n      </div>\n      </div>\n  "
         }), 
         __metadata('design:paramtypes', [])
     ], CircleSessionCard);

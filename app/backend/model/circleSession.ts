@@ -3,13 +3,15 @@ export class CircleSession {
     constructor(public _groupId:string,
                 public _themeId:string,
                 public _creatorId: string,
+                /* _startDate format: dd/mm/yyyy hh:mm */
                 public _startDate:string,
                 public _inProgress:boolean,
                 public _realTime:boolean,
                 public _endPoint:number,
+                public _allowComment:boolean,
                 public _turnTimeMin?:number) {}
 
     public static empty():CircleSession{
-        return new CircleSession("","","","",false,false,null,null);
+        return new CircleSession("","","","",false,false,null,true,null);
     }
 }

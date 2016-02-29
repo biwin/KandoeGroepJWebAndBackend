@@ -21,9 +21,10 @@ var ThemeForm = (function () {
         this.router = router;
     }
     ThemeForm.prototype.OnSubmit = function () {
+        var _this = this;
         this.theme._organisatorIds = ["CURRENT_USER_ID"];
         this.service.create(this.theme).subscribe(function (t) {
-            console.log(t);
+            _this.router.navigate(['ThemeOverview']);
         });
     };
     ThemeForm = __decorate([
