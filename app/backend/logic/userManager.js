@@ -8,20 +8,18 @@ var UserManager = (function () {
     };
     UserManager.prototype.registerUser = function (user, callback) {
         var _this = this;
-        console.log("hi");
         this.userExists(user._name, function (taken) {
             if (!taken) {
-                console.log("!taken");
                 _this._dao.createUser(user, callback);
             }
             else {
-                console.log("taken");
                 callback(null);
             }
         });
     };
     UserManager.prototype.registerGroup = function (group, callback) {
         var _this = this;
+        //add groupids to organisation
         this._dao.readOrganisationById(group._organisationId, function (o) {
             _this._dao.createGroup(group, function (newGroup) {
                 _this._dao.addGroupToOrganisation(newGroup._id, o._id, function () {

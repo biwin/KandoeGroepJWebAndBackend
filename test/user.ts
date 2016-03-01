@@ -24,7 +24,7 @@ before(function(done: any) {
 });
 
 describe('UserManager', () => {
-/*
+
     //region user-tests
     describe('createUser', () => {
         var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
@@ -228,10 +228,7 @@ describe('UserManager', () => {
         });
     });
     //endregion
-*/
 
-    //region organisation-test
-    /*
     describe('createOrganisation', () => {
         var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
         var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password');
@@ -282,8 +279,8 @@ describe('UserManager', () => {
 
     describe('createGroupInOrganisation', () => {
         var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
-        var organisation: Organisation = new Organisation('Organisatie', [""]);
-        var group: Group = new Group('Groupname', 'GroupDescription', "", [""]);
+        var organisation: Organisation = new Organisation('Organisatie', []);
+        var group: Group = new Group('Groupname', 'GroupDescription', "", []);
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -318,13 +315,17 @@ describe('UserManager', () => {
         });
         after(function (done:any) {
             this.timeout(0);
-            userManager.removeUserById(jan._id, () => {
-                userManager.removeGroupById(group._id, () => {
-                    userManager.removeOrganisationById(organisation._id, () => {
-                        done();
+            try {
+                userManager.removeUserById(jan._id, () => {
+                    userManager.removeGroupById(group._id, () => {
+                        userManager.removeOrganisationById(organisation._id, () => {
+                            done();
+                        });
                     });
                 });
-            });
+            } catch (e) {
+                done(e);
+            }
         });
     });
 
@@ -370,12 +371,14 @@ describe('UserManager', () => {
         });
     });
 
+/*
+
     describe('addUserToGroup', () => {
         var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
         var organisation:Organisation = new Organisation('Organisation', [jan._id]);
         var group:Group = new Group('GroupName', 'GroupDescription', '', ['']);
         before(function (done:any) {
-            this.timeout(0);
+            this.timeout(4000);
             try {
                 userManager.registerUser(jan, (u:User) => {
                     jan = u;
@@ -393,7 +396,7 @@ describe('UserManager', () => {
             }
         });
         it('Add user to group', function (done:any) {
-            this.timeout(0);
+            this.timeout(4000);
             try {
                 userManager.addToGroupById(jan._id, group._id, () => {
                     userManager.getGroupById(group._id, (g: Group) => {
@@ -407,16 +410,20 @@ describe('UserManager', () => {
 
         });
         after(function (done:any) {
-            this.timeout(0);
-            userManager.removeUserById(jan._id, () => {
-                userManager.removeGroupById(group._id, () => {
-                    userManager.removeOrganisationById(organisation._id, () => {
-                        done();
+            //this.timeout(0);
+            try {
+                userManager.removeUserById(jan._id, () => {
+                    userManager.removeGroupById(group._id, () => {
+                        userManager.removeOrganisationById(organisation._id, () => {
+                            done();
+                        });
                     });
                 });
-            });
+            } catch (e) {
+                done(e);
+            }
         });
-    });*/
+    });
 
     describe('removeUserFromOrganisation', () => {
         var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password');
@@ -446,7 +453,7 @@ describe('UserManager', () => {
         });
         after(function (done:any) {
             this.timeout(0);
-          /*  try {
+            try {
                 userManager.removeOrganisationById(organisation._id, () => {
                     userManager.removeUserById(user._id, () => {
                         done();
@@ -454,13 +461,13 @@ describe('UserManager', () => {
                 });
             } catch (e) {
                 done(e);
-            }*/
+            }
             done();
         });
     });
 
 
-    /*
+
     describe('removeOrganisation', () => {
         var organisation:Organisation = new Organisation('Organisation', []);
         before(function (done:any) {
@@ -530,7 +537,7 @@ describe('UserManager', () => {
             });
 
         });
-    }); // check
+    });
 
     describe('getGroupByName', () => {
         var group:Group = new Group('Organisation', 'Group', 'Descript');
@@ -562,7 +569,7 @@ describe('UserManager', () => {
             });
         });
 
-    }); //check
+    });
 
     describe('getGroupById', () => {
         var group:Group = new Group('Organisation', 'Group', 'Descript');
@@ -592,7 +599,7 @@ describe('UserManager', () => {
             });
         });
 
-    }); //check
+    });
 
 
     describe('removeGroup', () => {
@@ -633,6 +640,5 @@ describe('UserManager', () => {
         });
     });
     */
-    //endregion
 
 });

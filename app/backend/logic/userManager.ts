@@ -17,19 +17,17 @@ export class UserManager {
     }
 
     registerUser(user: User, callback: (u: User) => any) {
-        console.log("hi");
         this.userExists(user._name, (taken) => {
             if (!taken) {
-                console.log("!taken");
                 this._dao.createUser(user, callback);
             } else {
-                console.log("taken");
                 callback(null);
             }
         });
     }
 
     registerGroup(group: Group, callback: (g: Group) => any) {
+        //add groupids to organisation
         this._dao.readOrganisationById(group._organisationId, (o: Organisation) => {
             this._dao.createGroup(group, (newGroup: Group) => {
                 this._dao.addGroupToOrganisation(newGroup._id, o._id, () => {
