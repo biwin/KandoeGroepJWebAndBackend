@@ -5,33 +5,30 @@ var UserApi = (function () {
     function UserApi() {
     }
     UserApi.createUser = function (name, email, password, res) {
-        console.log("omg");
         UserApi.manager.registerUser(new user_1.User(name, "", password), function (u) {
-            console.log("registered user: " + name + ": " + password);
-            var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-            var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id })).toString('base64');
-            var signature = SHA256(header + "." + claim);
-            var token = header + "." + claim + "." + signature;
-            console.log("Registered: " + token);
-            res.send(token);
+            if (u == null) {
+                res.send("nope");
+            }
+            else {
+                var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
+                var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id })).toString('base64');
+                var signature = SHA256(header + "." + claim);
+                var token = header + "." + claim + "." + signature;
+                res.send(token);
+            }
         });
     };
     UserApi.getUser = function (username, password, res) {
-        console.log("omg2");
         UserApi.manager.getUser(username, function (u) {
-            if (u._password == password) {
-                console.log(u);
-                console.log("id: " + u._id);
+            if (u == null) {
+                res.send("nope");
+            }
+            else if (u._password == password) {
                 var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
                 var claim = new Buffer(JSON.stringify({ "name": username, "id": u._id.toString() })).toString('base64');
                 var signature = SHA256(header + "." + claim);
                 var token = header + "." + claim + "." + signature;
-                console.log("Logged in: " + token);
                 res.send(token);
-            }
-            else {
-                console.log("nope");
-                res.send("nope");
             }
         });
     };

@@ -17,6 +17,14 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
+/*app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});*/
+
 app.get('/test', function(req, res) {
     res.sendfile('index.html');
 });
@@ -63,10 +71,23 @@ app.post('/api/themes/:id', function(req, res) {
 });
 
 app.post('/api/user/login', function(req, res) {
-    console.log(req.body.username + ": " + req.body.password);
-    UserApi.UserApi.getUser(req.body.username, req.body.password, res);
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        res.send("You are already logged in");
+    } else {
+        UserApi.UserApi.getUser(req.body.username, req.body.password, res);
+    }
 });
 
 app.post('/api/user/register', function(req, res) {
-    UserApi.UserApi.createUser(req.body.username, "", req.body.password, res);
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        res.send("You are already registered");
+    } else {
+        UserApi.UserApi.createUser(req.body.username, "", req.body.password, res);
+    }
 });
+
+function isLegit(token) {
+    return true;
+}
