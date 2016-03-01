@@ -13,6 +13,7 @@ import {OrganisationDetail} from "./organisation/organisationDetail";
 import {GroupForm} from "./group/groupForm";
 import {GroupDetail} from "./group/groupDetail";
 import {UserLogin} from "./user/userLogin";
+import {CircleSessionGame} from "./circleSession/circleSessionGame";
 
 @Component({
     selector: 'my-app',
@@ -29,13 +30,18 @@ import {UserLogin} from "./user/userLogin";
 @RouteConfig([
     {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
     {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
+
     {path: '/circlesessions', as: 'CircleSessionOverview', component: CircleSessionOverview},
     {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
+    {path: '/circlesessions/:id', as: 'CircleSessionGame', component: CircleSessionGame},
+
     {path: '/organisations', as: 'OrganisationsOverview', component: OrganisationsOverview},
     {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm},
     {path: '/organisation/:id', as: 'OrganisationDetail', component: OrganisationDetail},
+
     {path: '/createGroup', as: 'CreateGroup', component: GroupForm},
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
+
     {path: '/loginUser', as: 'UserLogin', component: UserLogin}
 ])
 

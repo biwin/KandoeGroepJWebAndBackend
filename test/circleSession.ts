@@ -3,6 +3,7 @@
 import assert = require('assert');
 import {CircleSession} from "../app/backend/model/circleSession";
 import {CircleSessionManager} from "../app/backend/logic/circleSessionManager";
+import {CardPosition} from "../app/backend/model/cardPosition";
 
 var circleSessionManager:CircleSessionManager;
 
@@ -20,5 +21,16 @@ describe('CircleSessionManager', () => {
                 done();
             });
         });
+    });
+
+    describe('movecardup', () =>{
+       it('non-existent card should be created and have position 0', function(done:any) {
+           this.timeout(0);
+           circleSessionManager.cardUp("123456789","123456", "12", (cp:CardPosition) =>{
+               assert.equal(cp._position, 0);
+               assert.notEqual(cp._id, null);
+               done();
+           });
+       })
     });
 });

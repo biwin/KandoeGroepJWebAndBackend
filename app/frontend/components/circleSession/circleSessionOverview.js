@@ -15,15 +15,21 @@ var CircleSessionOverview = (function () {
     function CircleSessionOverview(service) {
         var _this = this;
         this.circleSessions = [];
+        this.loading = true;
         service.getAll().subscribe(function (circleSessions) {
-            circleSessions.forEach(function (c) { return _this.circleSessions.push(c); });
+            circleSessions.forEach(function (c, index) {
+                _this.circleSessions.push(c);
+                //TODO: fix loading
+                if (index == circleSessions.length - 1)
+                    _this.loading = false;
+            });
         });
         console.log(this.circleSessions);
     }
     CircleSessionOverview = __decorate([
         core_1.Component({
             selector: 'circlesession-overview',
-            template: "\n    <div class=\"row container\">\n        <circlesession-card *ngFor=\"#circleSession of circleSessions\" [circleSession]=\"circleSession\">\n    </circlesession-card></div>\n    ",
+            template: "\n    <div class=\"container\">\n     <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n    <div class=\"row\">\n        <circlesession-card *ngFor=\"#circleSession of circleSessions\" [circleSession]=\"circleSession\">\n    </circlesession-card></div>\n    </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES, circleSessionCard_1.CircleSessionCard]
         }), 
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService])

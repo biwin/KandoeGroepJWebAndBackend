@@ -14,25 +14,11 @@ export class ThemeManager {
     }
 
     createTheme(theme: Theme, callback: (t: Theme) => any) {
-        this.themeExists(theme._name, (exists: boolean) => {
-            if (exists) {
-                callback(null);
-            } else {
-                this._dao.createTheme(theme, () => {
-                    this.getTheme(theme._name, callback);
-                });
-            }
-        });
+        this._dao.createTheme(theme, callback);
     }
 
     getTheme(id: string, callback: (t: Theme) => any) {
         this._dao.readTheme(id, callback);
-    }
-
-    themeExists(name: string, callback: (b: boolean) => any) {
-        this.getTheme(name, (t: Theme) => {
-            callback(t != null);
-        });
     }
 
     createCard(card:Card, callback: (c:Card) => any) {

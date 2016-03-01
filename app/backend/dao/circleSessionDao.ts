@@ -6,6 +6,9 @@ import {Db} from "mongodb";
 import {CursorResult} from "mongodb";
 import {MongoError} from "mongodb";
 import {InsertOneWriteOpResult} from "mongodb";
+import {ObjectID} from "mongodb";
+import {CardPosition} from "../model/cardPosition";
+import {UpdateWriteOpResult} from "mongodb";
 
 
 export class CircleSessionDao {
@@ -38,11 +41,76 @@ export class CircleSessionDao {
         });
     }
 
-    readAllCircleSessions(callback:(c:CircleSession[]) => any):void {
+    readAllCircleSessions(callback:(c:CircleSession[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-           db.collection('circlesessions').find({}).toArray((err:MongoError, docs:CircleSession[]) => {
-              callback(docs);
-           });
+            db.collection('circlesessions').find({}).toArray((err:MongoError, docs:CircleSession[]) => {
+                callback(docs);
+            });
+        });
+    }
+
+    readCircleSession(id:string, callback:(c:CircleSession) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').find({'_id': new ObjectID(id)}).limit(1).next().then((cursor:CursorResult) => {
+                db.close();
+                callback(cursor);
+            });
+        });
+    }
+
+    cardPositionExists(sessionId:string, cardId:string, callback:(exists:boolean, position:number) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').find({
+                '_sessionId': sessionId,
+                '_cardId': cardId
+            }).limit(1).next((cursor:CursorResult) => {
+                db.close();
+                var cp:CardPosition = cursor;
+                callback(cp != null, cp._position);
+            })
+        });
+    }
+
+    updateCardPosition(sessionId:string, cardId:string, userId:string, position:number, callback:(cp:CardPosition) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').updateOne({
+                '_sessionId': sessionId,
+                '_cardId': cardId
+            }, {
+                '$set': {
+                    '_lastChanged': new Date(),
+                    '_userId': userId,
+                    '_position': position
+                }
+            }, null, (err:MongoError, result:UpdateWriteOpResult) => {
+                if(result.modifiedCount == 0) {
+                    callback(null);
+                } else {
+                    this.getCardPosition(sessionId, cardId, callback);
+                }
+            });
+        });
+    }
+
+    createCardPosition(sessionId:string, cardId:string, userId:string, callback:(cp:CardPosition) => any) {
+        var cp:CardPosition = new CardPosition(sessionId, cardId, userId, 0, new Date());
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').insertOne(cp, null, (err:MongoError, result: InsertOneWriteOpResult) => {
+                cp._id = result.insertedId.toString();
+                db.close();
+                callback(cp);
+            });
+        });
+    }
+
+    getCardPosition(sessionId:string, cardId:string, callback:(cp:CardPosition) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+            db.collection('cardpositions').find({
+                '_sessionId': sessionId,
+                '_cardId': cardId
+            }).limit(1).next((cursor:CursorResult) => {
+                callback(cursor);
+            });
         });
     }
 }

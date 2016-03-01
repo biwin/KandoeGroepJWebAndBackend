@@ -17,14 +17,16 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
-app.get('/test', function(req, res) {
-    res.sendfile('index.html');
-});
-
 var server = app.listen(server_port, server_ip_address, function() {
     console.log('Listening on port %d', server.address().port);
     console.log(__dirname);
 });
+
+app.get('/web', function(req, res) {
+    res.sendfile('index.html');
+});
+
+//region user routes
 
 app.get('/api/user/get', function(req, res) {
     console.log(UserApi.UserApi.getUser(req.query.id, res));
@@ -34,14 +36,24 @@ app.get('/api/user/createDummy', function(req, res) {
     console.log(UserApi.UserApi.createDummyUser(res));
 });
 
+//endregion
+
+//region circlesession routes
 app.get('/api/circlesessions', function(req, res){
    CircleSessionApi.CircleSessionApi.findAll(res);
+});
+
+app.get('/api/circlesessions/:id', function(req, res){
+    CircleSessionApi.CircleSessionApi.find(req.params.id, res);
 });
 
 app.post('/api/circlesessions', function(req, res) {
     CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
 });
 
+//endregion
+
+//region theme routes
 app.get('/api/themes', function(req, res) {
     ThemeApi.ThemeApi.findAll(res);
 });
@@ -61,7 +73,9 @@ app.get('/api/themes/:id', function(req, res){
 app.post('/api/themes/:id', function(req, res) {
     ThemeApi.ThemeApi.createCard(req.body, req.params.id, res);
 });
+//endregion
 
+//region auth routes
 app.post('/api/user/login', function(req, res) {
     console.log(req.body.username + ": " + req.body.password);
     UserApi.UserApi.getUser(req.body.username, req.body.password, res);
@@ -70,3 +84,4 @@ app.post('/api/user/login', function(req, res) {
 app.post('/api/user/register', function(req, res) {
     UserApi.UserApi.createUser(req.body.username, "", req.body.password, res);
 });
+//endregion

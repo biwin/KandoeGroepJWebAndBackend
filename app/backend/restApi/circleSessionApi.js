@@ -12,6 +12,16 @@ var CircleSessionApi = (function () {
             res.send(c);
         });
     };
+    CircleSessionApi.find = function (id, res) {
+        CircleSessionApi.mgr.getCircleSession(id, function (c) {
+            res.send(c);
+        });
+    };
+    CircleSessionApi.cardUp = function (sessionId, cardId, userId, res) {
+        CircleSessionApi.mgr.cardUp(sessionId, cardId, userId, function (cp) {
+            res.send(cp);
+        });
+    };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();
     return CircleSessionApi;
 })();

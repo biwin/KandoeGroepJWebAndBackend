@@ -7,25 +7,10 @@ var ThemeManager = (function () {
         this._dao.clearDatabase(callback);
     };
     ThemeManager.prototype.createTheme = function (theme, callback) {
-        var _this = this;
-        this.themeExists(theme._name, function (exists) {
-            if (exists) {
-                callback(null);
-            }
-            else {
-                _this._dao.createTheme(theme, function () {
-                    _this.getTheme(theme._name, callback);
-                });
-            }
-        });
+        this._dao.createTheme(theme, callback);
     };
     ThemeManager.prototype.getTheme = function (id, callback) {
         this._dao.readTheme(id, callback);
-    };
-    ThemeManager.prototype.themeExists = function (name, callback) {
-        this.getTheme(name, function (t) {
-            callback(t != null);
-        });
     };
     ThemeManager.prototype.createCard = function (card, callback) {
         this._dao.createCard(card, callback);

@@ -19,5 +19,15 @@ describe('CircleSessionManager', function () {
             });
         });
     });
+    describe('movecardup', function () {
+        it('non-existent card should be created and have position 0', function (done) {
+            this.timeout(0);
+            circleSessionManager.cardUp("123456789", "123456", "12", function (cp) {
+                assert.equal(cp._position, 0);
+                assert.notEqual(cp._id, null);
+                done();
+            });
+        });
+    });
 });
 //# sourceMappingURL=circleSession.js.map

@@ -29,6 +29,9 @@ var CircleSessionService = (function () {
         header.append('Content-Type', 'application/json');
         return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSession), { headers: header }).map(function (res) { return res.json(); });
     };
+    CircleSessionService.prototype.get = function (id) {
+        return this.http.get(this.path + 'circlesessions/' + id).map(function (res) { return res.json(); });
+    };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

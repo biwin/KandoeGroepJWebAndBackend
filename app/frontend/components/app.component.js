@@ -21,6 +21,7 @@ var organisationDetail_1 = require("./organisation/organisationDetail");
 var groupForm_1 = require("./group/groupForm");
 var groupDetail_1 = require("./group/groupDetail");
 var userLogin_1 = require("./user/userLogin");
+var circleSessionGame_1 = require("./circleSession/circleSessionGame");
 var AppComponent = (function () {
     function AppComponent() {
     }
@@ -35,6 +36,7 @@ var AppComponent = (function () {
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
             { path: '/circlesessions', as: 'CircleSessionOverview', component: circleSessionOverview_1.CircleSessionOverview },
             { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm },
+            { path: '/circlesessions/:id', as: 'CircleSessionGame', component: circleSessionGame_1.CircleSessionGame },
             { path: '/organisations', as: 'OrganisationsOverview', component: organisationsOverview_1.OrganisationsOverview },
             { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm },
             { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail },

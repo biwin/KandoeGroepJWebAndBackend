@@ -10,6 +10,7 @@ import {Theme} from "../model/theme";
 import {Card} from "../model/card";
 import {MongoError} from "mongodb";
 import {InsertOneWriteOpResult} from "mongodb";
+import {ObjectID} from "mongodb";
 
 export class ThemeDao {
 
@@ -27,18 +28,19 @@ export class ThemeDao {
         });
     }
 
-    createTheme(t: Theme, callback: () => any) {
+    createTheme(t: Theme, callback: (theme:Theme) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('themes').insertOne(t).then(() => {
+            db.collection('themes').insertOne(t, (err:MongoError, result:InsertOneWriteOpResult) => {
+                t._id = result.insertedId.toString();
                 db.close();
-                callback();
+                callback(t);
             });
         });
     }
 
     readTheme(id: string, callback: (t: Theme) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('themes').find({'_id': id}).limit(1).next().then((cursor:CursorResult) => {
+            db.collection('themes').find({'_id': new ObjectID(id)}).limit(1).next().then((cursor:CursorResult) => {
                 db.close();
                 callback(cursor);
             });
