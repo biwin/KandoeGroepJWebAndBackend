@@ -31,7 +31,7 @@ export class Organisation {
         return groups;
     }
 
-    get members(): User[] {
+    public getMembers(): User[] {
         //TODO: call backend
         var members: User[] = [];
 

@@ -78,7 +78,7 @@ export class OrganisationDetail {
         this.organisation._groupIds.push("Voeding");
 
         this.groups = this.organisation.getGroups();
-        this.members = this.organisation.members;
+        this.members = this.organisation.getMembers();
     }
 
     private viewGroup(groupId: string): void {

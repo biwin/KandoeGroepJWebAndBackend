@@ -17,7 +17,7 @@ var OrganisationDetail = (function () {
         this.organisation = new organisation_1.Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
         this.organisation._groupIds.push("Voeding");
         this.groups = this.organisation.getGroups();
-        this.members = this.organisation.members;
+        this.members = this.organisation.getMembers();
     }
     OrganisationDetail.prototype.viewGroup = function (groupId) {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
