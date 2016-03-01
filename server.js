@@ -72,7 +72,6 @@ app.post('/api/themes/:id', function(req, res) {
 
 app.post('/api/user/login', function(req, res) {
     var token = req.header('Bearer');
-    console.log("t: " + token);
     if (token != null && token != "") {
         res.send("You are already logged in");
     } else {

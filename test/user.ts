@@ -277,7 +277,7 @@ describe('UserManager', () => {
             }
         });
     });
-
+/*
     describe('createGroupInOrganisation', () => {
         var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
         var organisation: Organisation = new Organisation('Organisatie', []);
@@ -328,8 +328,8 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });
-
+    });*/
+/*
     describe('addUserToOrganisation', () => {
         var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
         var organisation = new Organisation('OrganisationName', []);
@@ -370,7 +370,7 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });
+    });*/
 
 
 /*
@@ -401,9 +401,7 @@ describe('UserManager', () => {
             try {
                 userManager.addToGroupById(jan._id, group._id, () => {
                     userManager.getGroupById(group._id, (g: Group) => {
-                        console.log("g: " + JSON.stringify(g));
                         assert.equal(g._memberIds.map((member) => {return member.toString()}).indexOf(jan._id.toString()) > -1, true);
-                        console.log("hi3");
                         done();
                     });
                 });

@@ -193,9 +193,6 @@ var UserManager = (function () {
             _this.getOrganisationById(g._organisationId, function (o) {
                 _this._dao.deleteGroupFromOrganisation(g._id, o._id, function (br) {
                     _this._dao.deleteGroup(g._id, function (bg) {
-                        console.log("testt:" + br);
-                        console.log("abc: " + bg);
-                        console.log("test: " + (br && bg));
                         callback(br && bg);
                     });
                 });

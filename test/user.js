@@ -329,50 +329,49 @@ describe('UserManager', function () {
             }
         });
     });
-    describe('addUserToOrganisation', function () {
-        var jan = new user_1.User('Jan', 'jan.somers@student.kdg.be', 'password');
-        var organisation = new organisation_1.Organisation('OrganisationName', []);
-        before(function (done) {
-            this.timeout(0);
-            try {
-                userManager.registerUser(jan, function (u) {
-                    jan = u;
-                    userManager.createOrganisation(organisation, function (o) {
-                        organisation = o;
-                        done();
-                    });
-                });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it('Add user to organisation, should return organisation from database', function (done) {
-            this.timeout(0);
-            userManager.addToOrganisation(organisation._id, jan._id, true, function (b) {
+     * /;
+    /*
+        describe('addUserToOrganisation', () => {
+            var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
+            var organisation = new Organisation('OrganisationName', []);
+            before(function (done:any) {
+                this.timeout(0);
                 try {
-                    assert.equal(b, true);
-                    done();
-                }
-                catch (e) {
+                    userManager.registerUser(jan, (u:User) => {
+                        jan = u;
+                        userManager.createOrganisation(organisation, (o:Organisation) => {
+                            organisation = o;
+                            done();
+                        });
+                    });
+                } catch (e) {
                     done(e);
                 }
             });
-        });
-        after(function (done) {
-            this.timeout(0);
-            try {
-                userManager.removeUserById(jan._id, function () {
-                    userManager.removeOrganisationById(organisation._id, function () {
+            it('Add user to organisation, should return organisation from database', function (done:any) {
+                this.timeout(0);
+                userManager.addToOrganisation(organisation._id, jan._id, true, (b: boolean) => {
+                    try {
+                        assert.equal(b, true);
                         done();
-                    });
+                    } catch (e) {
+                        done(e);
+                    }
                 });
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    });
+            });
+            after(function (done:any) {
+                this.timeout(0);
+                try {
+                    userManager.removeUserById(jan._id, () => {
+                        userManager.removeOrganisationById(organisation._id, () => {
+                            done();
+                        });
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });*/
     /*
         describe('addUserToGroup', () => {
             var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
@@ -401,9 +400,7 @@ describe('UserManager', function () {
                 try {
                     userManager.addToGroupById(jan._id, group._id, () => {
                         userManager.getGroupById(group._id, (g: Group) => {
-                            console.log("g: " + JSON.stringify(g));
                             assert.equal(g._memberIds.map((member) => {return member.toString()}).indexOf(jan._id.toString()) > -1, true);
-                            console.log("hi3");
                             done();
                         });
                     });
