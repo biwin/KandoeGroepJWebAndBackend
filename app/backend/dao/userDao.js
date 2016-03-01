@@ -25,9 +25,9 @@ var UserDao = (function () {
     };
     UserDao.prototype.readUser = function (name, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
-            return db.collection('users').find({ '_name': name }).limit(1).next();
-        }).then(function (cursor) {
-            callback(cursor);
+            return db.collection('users').find({ '_name': name }).limit(1).next().then(function (cursor) {
+                callback(cursor);
+            });
         });
     };
     UserDao.prototype.readGroupByName = function (name, callback) {
@@ -141,15 +141,8 @@ var UserDao = (function () {
         });
     };
     UserDao.prototype.addToGroup = function (uId, gId, callback) {
-        var _this = this;
-        this.readGroupById(gId, function (g1) {
-            console.log("G1: " + JSON.stringify(g1));
-        });
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').updateOne({ '_id': gId }, { $push: { '_members': uId } }, function (error, result) {
-                _this.readGroupById(gId, function (g2) {
-                    console.log("G2: " + JSON.stringify(g2));
-                });
                 db.close();
                 callback(result.modifiedCount == 1);
             });

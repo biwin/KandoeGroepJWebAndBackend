@@ -16,18 +16,20 @@ var UserLogin = (function () {
         this.router = router;
         this.service = service;
     }
+    UserLogin.prototype.isLoggedIn = function () {
+        var token = localStorage.getItem('token');
+        return token != null && token != "";
+    };
     UserLogin.prototype.onSubmit = function () {
-        console.log(this.logInPressed);
         if (this.logInPressed) {
-            console.log("Logging in: " + this.usernameString + ", " + this.passwordString);
             this.service.getUser(this.usernameString, this.passwordString).subscribe(function (token) {
-                console.log("Login token: " + token._body);
+                localStorage.setItem('token', token._body);
             });
+            this.logInPressed = false;
         }
         else {
-            console.log("Registering: " + this.usernameString + ", " + this.passwordString);
             this.service.registerUser(this.usernameString, this.passwordString).subscribe(function (token) {
-                console.log("Register token: " + token._body);
+                localStorage.setItem('token', token._body);
             });
         }
     };

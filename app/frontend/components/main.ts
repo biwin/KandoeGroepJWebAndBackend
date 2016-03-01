@@ -6,12 +6,14 @@ import {LocationStrategy, HashLocationStrategy, APP_BASE_HREF, ROUTER_PRIMARY_CO
 import {ThemeService} from "../services/themeService";
 import {CircleSessionService} from "../services/circleSessionService";
 import {UserService} from "../services/userService";
+import {HttpWrapperService} from "../services/httpWrapperService";
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,
     HTTP_PROVIDERS,
     ThemeService,
     UserService,
+    HttpWrapperService,
     CircleSessionService,
     provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}),
     provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppComponent}),

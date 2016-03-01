@@ -39,9 +39,9 @@ export class UserDao {
 
     readUser(name: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
-            return db.collection('users').find({'_name': name}).limit(1).next();
-        }).then((cursor: CursorResult) => {
-            callback(cursor);
+            return db.collection('users').find({'_name': name}).limit(1).next().then((cursor:CursorResult) => {
+                callback(cursor);
+            });
         });
     }
 
@@ -170,15 +170,8 @@ export class UserDao {
 
 
     addToGroup(uId:string, gId:string, callback: (b: boolean) => any) {
-        this.readGroupById(gId, (g1: Group) => {
-           console.log("G1: " + JSON.stringify(g1));
-        });
-
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
            db.collection('groups').updateOne({'_id': gId}, {$push: {'_members': uId}}, (error: MongoError, result) => {
-               this.readGroupById(gId, (g2: Group) => {
-                   console.log("G2: " + JSON.stringify(g2));
-               });
                db.close();
                callback(result.modifiedCount == 1);
            });

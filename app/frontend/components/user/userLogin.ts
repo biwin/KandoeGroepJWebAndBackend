@@ -39,22 +39,25 @@ export class UserLogin {
     private logInPressed: boolean = false;
     private service: UserService;
 
+    isLoggedIn(): boolean {
+        var token: string = localStorage.getItem('token');
+        return token != null && token != "";
+    }
+
     public constructor(router: Router, service: UserService) {
         this.router = router;
         this.service = service;
     }
 
     onSubmit() {
-        console.log(this.logInPressed);
         if (this.logInPressed) {
-            console.log("Logging in: " + this.usernameString + ", " + this.passwordString);
             this.service.getUser(this.usernameString, this.passwordString).subscribe((token: string) => {
-                console.log("Login token: " + token._body);
+                localStorage.setItem('token', token._body);
             });
+            this.logInPressed = false;
         } else {
-            console.log("Registering: " + this.usernameString + ", " + this.passwordString);
             this.service.registerUser(this.usernameString, this.passwordString).subscribe((token: string) => {
-                console.log("Register token: " + token._body);
+                localStorage.setItem('token', token._body);
             });
         }
     }
