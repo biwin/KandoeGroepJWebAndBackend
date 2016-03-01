@@ -29,7 +29,7 @@ export class Group {
         return members;
     }
 
-    get organisation(): Organisation {
+    public getOrganisation(): Organisation {
         //TODO: call backend
         var organisation: Organisation = Organisation.empty();
 

@@ -20,16 +20,12 @@ var Group = (function () {
         }
         return members;
     };
-    Object.defineProperty(Group.prototype, "organisation", {
-        get: function () {
-            //TODO: call backend
-            var organisation = organisation_1.Organisation.empty();
-            organisation._name = this._organisationId;
-            return organisation;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    Group.prototype.getOrganisation = function () {
+        //TODO: call backend
+        var organisation = organisation_1.Organisation.empty();
+        organisation._name = this._organisationId;
+        return organisation;
+    };
     Group.empty = function () {
         return new Group("", "", "", []);
     };
