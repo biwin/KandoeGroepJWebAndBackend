@@ -276,7 +276,7 @@ describe('UserManager', () => {
             }
         });
     });
-/*
+
     describe('createGroupInOrganisation', () => {
         var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
         var organisation: Organisation = new Organisation('Organisatie', []);
@@ -371,7 +371,7 @@ describe('UserManager', () => {
         });
     });
 
-
+/*
 
     describe('addUserToGroup', () => {
         var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
