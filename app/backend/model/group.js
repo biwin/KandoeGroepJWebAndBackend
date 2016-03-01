@@ -7,33 +7,25 @@ var Group = (function () {
         this._organisationId = _organisationId;
         this._memberIds = _memberIds;
     }
-    Object.defineProperty(Group.prototype, "members", {
-        get: function () {
-            //TODO: call backend
-            var members = [];
-            if (this._memberIds) {
-                for (var i = 0; i < this._memberIds.length; i++) {
-                    var memberId = this._memberIds[i];
-                    var newUser = user_1.User.empty();
-                    newUser._name = memberId;
-                    members.push(newUser);
-                }
+    Group.prototype.getMembers = function () {
+        //TODO: call backend
+        var members = [];
+        if (this._memberIds) {
+            for (var i = 0; i < this._memberIds.length; i++) {
+                var memberId = this._memberIds[i];
+                var newUser = user_1.User.empty();
+                newUser._name = memberId;
+                members.push(newUser);
             }
-            return members;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Group.prototype, "organisation", {
-        get: function () {
-            //TODO: call backend
-            var organisation = organisation_1.Organisation.empty();
-            organisation._name = this._organisationId;
-            return organisation;
-        },
-        enumerable: true,
-        configurable: true
-    });
+        }
+        return members;
+    };
+    Group.prototype.getOrganisation = function () {
+        //TODO: call backend
+        var organisation = organisation_1.Organisation.empty();
+        organisation._name = this._organisationId;
+        return organisation;
+    };
     Group.empty = function () {
         return new Group("", "", "", []);
     };

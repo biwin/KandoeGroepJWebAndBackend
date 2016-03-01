@@ -11,7 +11,7 @@ export class Group {
 
     }
 
-    get members(): User[] {
+    public getMembers(): User[] {
         //TODO: call backend
         var members: User[] = [];
 
@@ -29,7 +29,7 @@ export class Group {
         return members;
     }
 
-    get organisation(): Organisation {
+    public getOrganisation(): Organisation {
         //TODO: call backend
         var organisation: Organisation = Organisation.empty();
 

@@ -9,7 +9,7 @@ import {User} from "../../../backend/model/user";
     selector: 'group-detail',
     template: `
     <div class="row container">
-        <h5>{{group._name}} [{{group.organisation._name}}]</h5>
+        <h5>{{group._name}} [{{group.getOrganisation()._name}}]</h5>
 
         <div class="card"><div class="card-content">
             # leden: {{group._memberIds.length}}
@@ -33,7 +33,7 @@ import {User} from "../../../backend/model/user";
                 </tr>
             </table>
 
-            <p *ngIf="group._memberIds.length==0">De groep "{{group._name}}" van organisatie "{{group.organisation._name}}" heeft momenteel nog geen leden.</p>
+            <p *ngIf="group._memberIds.length==0">De groep "{{group._name}}" van organisatie "{{group.getOrganisation()._name}}" heeft momenteel nog geen leden.</p>
         </div></div>
     </div>
     `,
@@ -55,7 +55,7 @@ export class GroupDetail {
             ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]
         );
 
-        this.members = this.group.members;
+        this.members = this.group.getMembers();
     }
 
     private viewMember(userId: string): void {
