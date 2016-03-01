@@ -209,9 +209,6 @@ export class UserManager {
             this.getOrganisationById(g._organisationId, (o:Organisation) => {
                 this._dao.deleteGroupFromOrganisation(g._id, o._id, (br: boolean) => {
                     this._dao.deleteGroup(g._id, (bg: boolean) => {
-                        console.log("testt:" + br);
-                        console.log("abc: " + bg);
-                        console.log("test: " + (br && bg));
                         callback(br && bg);
                     })
                 });
