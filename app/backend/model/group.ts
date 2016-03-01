@@ -11,7 +11,7 @@ export class Group {
 
     }
 
-    get members(): User[] {
+    public getMembers(): User[] {
         //TODO: call backend
         var members: User[] = [];
 

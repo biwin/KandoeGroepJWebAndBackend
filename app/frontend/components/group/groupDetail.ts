@@ -55,7 +55,7 @@ export class GroupDetail {
             ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]
         );
 
-        this.members = this.group.members;
+        this.members = this.group.getMembers();
     }
 
     private viewMember(userId: string): void {

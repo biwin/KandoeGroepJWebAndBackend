@@ -15,7 +15,7 @@ var GroupDetail = (function () {
     function GroupDetail(router) {
         this.router = router;
         this.group = new group_1.Group("Voeding", "De groep van alle medewerkers Voeding", "Delhaize", ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]);
-        this.members = this.group.members;
+        this.members = this.group.getMembers();
     }
     GroupDetail.prototype.viewMember = function (userId) {
         //this.router.navigate(["/UserDetail", {id: userId}]);
