@@ -27,6 +27,7 @@ export class UserManager {
     }
 
     registerGroup(group: Group, callback: (g: Group) => any) {
+        //add groupids to organisation
         this._dao.readOrganisationById(group._organisationId, (o: Organisation) => {
             this._dao.createGroup(group, (newGroup: Group) => {
                 this._dao.addGroupToOrganisation(newGroup._id, o._id, () => {
@@ -208,6 +209,9 @@ export class UserManager {
             this.getOrganisationById(g._organisationId, (o:Organisation) => {
                 this._dao.deleteGroupFromOrganisation(g._id, o._id, (br: boolean) => {
                     this._dao.deleteGroup(g._id, (bg: boolean) => {
+                        console.log("testt:" + br);
+                        console.log("abc: " + bg);
+                        console.log("test: " + (br && bg));
                         callback(br && bg);
                     })
                 });

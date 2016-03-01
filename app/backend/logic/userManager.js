@@ -19,6 +19,7 @@ var UserManager = (function () {
     };
     UserManager.prototype.registerGroup = function (group, callback) {
         var _this = this;
+        //add groupids to organisation
         this._dao.readOrganisationById(group._organisationId, function (o) {
             _this._dao.createGroup(group, function (newGroup) {
                 _this._dao.addGroupToOrganisation(newGroup._id, o._id, function () {
@@ -192,6 +193,9 @@ var UserManager = (function () {
             _this.getOrganisationById(g._organisationId, function (o) {
                 _this._dao.deleteGroupFromOrganisation(g._id, o._id, function (br) {
                     _this._dao.deleteGroup(g._id, function (bg) {
+                        console.log("testt:" + br);
+                        console.log("abc: " + bg);
+                        console.log("test: " + (br && bg));
                         callback(br && bg);
                     });
                 });
