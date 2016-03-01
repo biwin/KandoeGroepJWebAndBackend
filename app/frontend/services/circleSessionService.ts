@@ -26,5 +26,9 @@ export class CircleSessionService {
         header.append('Content-Type', 'application/json');
         return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSession), {headers:header}).map((res:Response) => res.json());
     }
+
+    get(id:string):Observable<CircleSession>{
+        return this.http.get(this.path + 'circlesessions/' + id).map((res:Response) => res.json());
+    }
 }
 

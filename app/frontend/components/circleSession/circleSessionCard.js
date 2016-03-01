@@ -12,11 +12,13 @@ var core_2 = require("angular2/core");
 var circleSession_1 = require("../../../backend/model/circleSession");
 var themeService_1 = require("../../services/themeService");
 var theme_1 = require("../../../backend/model/theme");
+var router_1 = require("angular2/router");
 var CircleSessionCard = (function () {
-    function CircleSessionCard(themeService) {
+    function CircleSessionCard(themeService, router) {
         this.theme = theme_1.Theme.empty();
         this.themeLoaded = false;
         this.service = themeService;
+        this.router = router;
     }
     CircleSessionCard.prototype.ngAfterViewInit = function () {
         var _this = this;
@@ -27,6 +29,9 @@ var CircleSessionCard = (function () {
             });
         }
     };
+    CircleSessionCard.prototype.openCard = function () {
+        this.router.navigate(['/CircleSessionGame', { id: this.circleSession._id }]);
+    };
     __decorate([
         core_2.Input(), 
         __metadata('design:type', circleSession_1.CircleSession)
@@ -34,9 +39,9 @@ var CircleSessionCard = (function () {
     CircleSessionCard = __decorate([
         core_1.Component({
             selector: 'circlesession-card',
-            template: "\n    <div class=\"col s4\">\n      <div class=\"card hoverable\">\n        <div class=\"card-content\">\n           <span class=\"card-title\">Titel?</span>\n           <p class=\"black-text\">Group: {{circleSession._groupId}}</p>\n           <p class=\"black-text\">Theme: {{theme._name}}</p>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>\n           <p class=\"black-text\">Beurt duur: {{circleSession.turnTimeMin}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint}}</p>\n        </div>\n      </div>\n      </div>\n  "
+            template: "\n    <div class=\"col s4\">\n      <div (click)=\"openCard()\" class=\"card hoverable\">\n        <div class=\"card-content\">\n           <span class=\"card-title\">{{circleSession._groupId}} - {{theme._name}}</span>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>\n           <p class=\"black-text\">Beurt duur: {{circleSession.turnTimeMin}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint}}</p>\n        </div>\n      </div>\n      </div>\n  "
         }), 
-        __metadata('design:paramtypes', [themeService_1.ThemeService])
+        __metadata('design:paramtypes', [themeService_1.ThemeService, router_1.Router])
     ], CircleSessionCard);
     return CircleSessionCard;
 })();
