@@ -26,7 +26,7 @@ before(function(done: any) {
 describe('UserManager', () => {
 
     //region user-tests
-    /*describe('createUser', () => {
+    describe('createUser', () => {
         var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
         it('Register user, should return user from database', function (done:any) {
             this.timeout(0);
@@ -228,10 +228,8 @@ describe('UserManager', () => {
         });
     });
     //endregion
-*/
 
     //region organisation-test
-    /*
     describe('createOrganisation', () => {
         var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
         var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password');
@@ -279,8 +277,7 @@ describe('UserManager', () => {
             }
         });
     });
-*/
-    /*
+
     describe('createGroupInOrganisation', () => {
         var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
         var organisation: Organisation = new Organisation('Organisatie', []);
@@ -332,9 +329,7 @@ describe('UserManager', () => {
             }
         });
     });
-*/
 
-/*
     describe('addUserToOrganisation', () => {
         var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
         var organisation = new Organisation('OrganisationName', []);
@@ -376,9 +371,9 @@ describe('UserManager', () => {
             }
         });
     });
-*/
 
 
+/*
     describe('addUserToGroup', () => {
         var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
         var organisation:Organisation = new Organisation('Organisation', [jan._id]);
@@ -431,7 +426,7 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });
+    });*/
 
   /*  describe('removeUserFromOrganisation', () => {
         var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password');
