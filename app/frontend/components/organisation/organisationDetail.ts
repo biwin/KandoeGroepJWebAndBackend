@@ -77,7 +77,7 @@ export class OrganisationDetail {
         this.organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
         this.organisation._groupIds.push("Voeding");
 
-        this.groups = this.organisation.groups;
+        this.groups = this.organisation.getGroups();
         this.members = this.organisation.members;
     }
 

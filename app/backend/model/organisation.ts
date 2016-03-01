@@ -12,7 +12,7 @@ export class Organisation {
 
     }
 
-    get groups(): Group[] {
+    public getGroups(): Group[] {
         //TODO: call backend
         var groups: Group[] = [];
 

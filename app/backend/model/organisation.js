@@ -7,24 +7,20 @@ var Organisation = (function () {
         this._groupIds = [];
         this._organisatorIds = [];
     }
-    Object.defineProperty(Organisation.prototype, "groups", {
-        get: function () {
-            //TODO: call backend
-            var groups = [];
-            if (this._groupIds) {
-                for (var i = 0; i < this._groupIds.length; i++) {
-                    var groupId = this._groupIds[i];
-                    var newGroup = group_1.Group.empty();
-                    newGroup._name = groupId;
-                    newGroup._organisationId = this._id;
-                    groups.push(newGroup);
-                }
+    Organisation.prototype.getGroups = function () {
+        //TODO: call backend
+        var groups = [];
+        if (this._groupIds) {
+            for (var i = 0; i < this._groupIds.length; i++) {
+                var groupId = this._groupIds[i];
+                var newGroup = group_1.Group.empty();
+                newGroup._name = groupId;
+                newGroup._organisationId = this._id;
+                groups.push(newGroup);
             }
-            return groups;
-        },
-        enumerable: true,
-        configurable: true
-    });
+        }
+        return groups;
+    };
     Object.defineProperty(Organisation.prototype, "members", {
         get: function () {
             //TODO: call backend
