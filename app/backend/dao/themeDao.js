@@ -30,6 +30,14 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.deleteThemeById = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').deleteOne({ '_id': organisationId }, function (err, result) {
+                db.close();
+                callback(result.deletedCount == 1);
+            });
+        });
+    };
     ThemeDao.prototype.createCard = function (card, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cards').insertOne(card, function (err, result) {

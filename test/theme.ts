@@ -1,10 +1,9 @@
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/*import assert = require('assert');
-import {timeout} from "rxjs/operator/timeout";
+import assert = require('assert');
+
 import {ThemeManager} from "../app/backend/logic/themeManager";
-import {Theme} from "../app/backend/model/theme";
 import {UserManager} from "../app/backend/logic/userManager";
+
+import {Theme} from "../app/backend/model/theme";
 import {User} from "../app/backend/model/user";
 import {Card} from "../app/backend/model/card";
 
@@ -14,22 +13,19 @@ var userManager: UserManager;
 before(function(done: any) {
     themeManager = new ThemeManager();
     userManager = new UserManager();
-    var completion: number = 0;
-    themeManager.clearDatabase(() => {
-        if (++completion == 2) done();
-    });
-    userManager.clearDatabase(() => {
-        if (++completion == 2) done();
-    });
+
+    done();
 });
 
 describe('ThemeManager', () => {
-
     describe('createTheme', () => {
         var user: User;
+        var theme: Theme;
+
         before(function(done: any) {
             this.timeout(0);
-            userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password', 'admin'), (u: User) => {
+
+            userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password'), (u: User) => {
                 try {
                     user = u;
                     done();
@@ -38,33 +34,52 @@ describe('ThemeManager', () => {
                 }
             });
         });
+
         it('Create theme, should return theme from database', function(done: any) {
             this.timeout(0);
-            var theme = new Theme('First', 'This is a sample theme', [user._id]);
+
+            theme = new Theme('first', 'This is a sample theme', [user._id]);
             themeManager.createTheme(theme, (t: Theme) => {
                 try {
                     assert.equal(theme._name, t._name);
+
                     done();
                 } catch(e) {
-                    return done(e);
+                    done(e);
                 }
             });
+        });
+
+        after(function (done:any) {
+            this.timeout(0);
+
+            try {
+                userManager.removeUserById(user._id, () => {
+                    themeManager.removeThemeById(theme._id, () => {
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
         });
     });
 
     describe('AddCard', () => {
         var card:Card;
+
         before(function(done: any){
             card = new Card ('Cafe de vissers', 't1235');
             done();
         });
+
         it('Card must be added to a theme', function(done: any){
-            this.timeout();
+            this.timeout(0);
+
             themeManager.createCard(card, (c:Card) => {
                 assert.notEqual(c._id, null);
                 done();
             });
         });
     });
-
-});*/
+});

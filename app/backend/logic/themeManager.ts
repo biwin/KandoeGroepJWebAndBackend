@@ -1,8 +1,8 @@
 import {ThemeDao} from "../dao/themeDao";
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
-export class ThemeManager {
 
+export class ThemeManager {
     private _dao:ThemeDao;
 
     constructor() {
@@ -19,6 +19,10 @@ export class ThemeManager {
 
     getTheme(id: string, callback: (t: Theme) => any) {
         this._dao.readTheme(id, callback);
+    }
+
+    removeThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteThemeById(themeId, callback);
     }
 
     createCard(card:Card, callback: (c:Card) => any) {

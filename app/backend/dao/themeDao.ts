@@ -47,6 +47,16 @@ export class ThemeDao {
         });
     }
 
+    deleteThemeById(organisationId: String, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('themes').deleteOne({'_id': organisationId}, (err: MongoError, result) => {
+                db.close();
+
+                callback(result.deletedCount == 1);
+            });
+        });
+    }
+
     createCard(card:Card, callback:(c:Card) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').insertOne(card, (err:MongoError, result:InsertOneWriteOpResult) => {
