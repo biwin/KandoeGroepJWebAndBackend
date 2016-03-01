@@ -15,6 +15,11 @@ export class UserService {
         this.http = http;
     }
 
+    isLoggedIn(): boolean {
+        var token: string = localStorage.getItem('token');
+        return token != null && token != "";
+    }
+
     getUser(name: string, password: string): Observable<Response> {
         return this.http.post(this.path + 'user/login', JSON.stringify({'username': name, 'password': password}), true, false, true);
     }

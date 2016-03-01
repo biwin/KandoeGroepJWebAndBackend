@@ -10,8 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
+var userService_1 = require("../../services/userService");
 var NavigationBar = (function () {
-    function NavigationBar() {
+    function NavigationBar(service) {
+        this.service = service;
     }
     NavigationBar.prototype.ngAfterViewInit = function () {
         $(".button-collapse").sideNav({
@@ -21,10 +23,10 @@ var NavigationBar = (function () {
     NavigationBar = __decorate([
         core_1.Component({
             selector: 'navigation-bar',
-            template: "\n    <nav class=\"blue\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" href=\"#!\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li><a [routerLink]=\"['UserLogin']\"><i class=\"material-icons\">face</i></a></li>\n            </ul>\n            <ul id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Thema overzicht</a></li>\n                <li><a [routerLink]=\"['CreateTheme']\">Create thema</a></li>\n                <li><a [routerLink]=\"['CreateSession']\">Create Session</a></li>\n                <li><a [routerLink]=\"['CircleSessionOverview']\">Session overzicht</a></li>\n                <li><a [routerLink]=\"['OrganisationsOverview']\">Mijn organisaties</a></li>\n                <li><a [routerLink]=\"['CreateOrganisation']\">Create organisatie</a></li>\n            </ul>\n            <a href=\"#\" data-activates=\"slide-out\" class=\"button-collapse\"><i class=\"mdi-navigation-menu\"></i></a>\n       </div>\n    </nav>\n\n    <div></div>\n  ",
+            template: "\n    <nav class=\"blue\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" href=\"#!\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li><a [routerLink]=\"['UserLogin']\"><i class=\"material-icons\">face</i></a></li>\n            </ul>\n            <ul *ngIf=\"service.isLoggedIn()\" id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Thema overzicht</a></li>\n                <li><a [routerLink]=\"['CreateTheme']\">Nieuw thema</a></li>\n                <li><a [routerLink]=\"['CreateSession']\">Nieuwe sessie</a></li>\n                <li><a [routerLink]=\"['CircleSessionOverview']\">Sessie overzicht</a></li>\n                <li><a [routerLink]=\"['OrganisationsOverview']\">Mijn organisaties</a></li>\n                <li><a [routerLink]=\"['CreateOrganisation']\">Nieuwe organisatie</a></li>\n            </ul>\n            <a href=\"#\" data-activates=\"slide-out\" class=\"button-collapse\"><i class=\"mdi-navigation-menu\"></i></a>\n       </div>\n    </nav>\n\n    <div></div>\n  ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [userService_1.UserService])
     ], NavigationBar);
     return NavigationBar;
 })();
