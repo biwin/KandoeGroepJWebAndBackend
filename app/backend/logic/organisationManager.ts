@@ -20,7 +20,9 @@ export class OrganisationManager {
     }
 
     private organisationExists(organisationName: string, callback: (exists: boolean) => any) {
-
+        this._dao.readOrganisationByName(organisationName, (organisation: Organisation) => {
+            callback(organisation != null);
+        });
     }
 
     getOrganisationById(organisationId: string, callback: (organisation: Organisation) => any) {

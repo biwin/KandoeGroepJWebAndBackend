@@ -3,6 +3,8 @@ var OrganisationDao = (function () {
     }
     OrganisationDao.prototype.createOrganisation = function (organisation, callback) {
     };
+    OrganisationDao.prototype.readOrganisationByName = function (organisationName, callback) {
+    };
     return OrganisationDao;
 })();
 exports.OrganisationDao = OrganisationDao;
