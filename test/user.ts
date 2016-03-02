@@ -24,10 +24,10 @@ before(function(done: any) {
 });
 
 describe('UserManager', () => {
-
+/*
     //region user-tests
     describe('createUser', () => {
-        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         it('Register user, should return user from database', function (done:any) {
             this.timeout(0);
             userManager.registerUser(user, (u:User) => {
@@ -69,7 +69,7 @@ describe('UserManager', () => {
 
 
     describe('getUserByName', () => {
-        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -105,9 +105,9 @@ describe('UserManager', () => {
     });
 
     describe('getAllUsers', () => {
-        var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password'),
-            new User('Jan', 'jasper.catthoor@student.kdg.be', 'password'),
-            new User('Enio', 'jasper.catthoor@student.kdg.be', 'password')];
+        var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
+            new User('Jan', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
+            new User('Enio', 'jasper.catthoor@student.kdg.be', 'password', 'web')];
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -153,7 +153,7 @@ describe('UserManager', () => {
     });
 
     describe('getUserById', () => {
-        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -203,7 +203,7 @@ describe('UserManager', () => {
     });
 
     describe('removeUser', () => {
-        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
+        var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -230,8 +230,8 @@ describe('UserManager', () => {
     //endregion
 
     describe('createOrganisation', () => {
-        var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password');
-        var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password');
+        var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
+        var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'web');
         var users = [jasper._id, rob._id];
         var organisation = new Organisation('OrganisationName', users);
         before(function (done:any) {
@@ -278,7 +278,7 @@ describe('UserManager', () => {
     });
 
     describe('createGroupInOrganisation', () => {
-        var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
+        var jan: User = new User('Jan', 'jan.somers@student.kdg.be', 'password', 'web');
         var organisation: Organisation = new Organisation('Organisatie', []);
         var group: Group = new Group('Groupname', 'GroupDescription', "", []);
         before(function (done:any) {
@@ -330,7 +330,7 @@ describe('UserManager', () => {
     });
 
     describe('addUserToOrganisation', () => {
-        var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password');
+        var jan:User = new User('Jan', 'jan.somers@student.kdg.be', 'password', 'web');
         var organisation = new Organisation('OrganisationName', []);
         before(function (done:any) {
             this.timeout(0);
@@ -371,17 +371,16 @@ describe('UserManager', () => {
         });
     });
 
-/*
-
     describe('addUserToGroup', () => {
-        var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password');
-        var organisation:Organisation = new Organisation('Organisation', [jan._id]);
-        var group:Group = new Group('GroupName', 'GroupDescription', '', ['']);
+        var jan:User = new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'web');
+        var organisation:Organisation = new Organisation('Organisation', []);
+        var group:Group = new Group('GroupName', 'GroupDescription', '', []);
         before(function (done:any) {
             this.timeout(4000);
             try {
                 userManager.registerUser(jan, (u:User) => {
                     jan = u;
+                    organisation._memberIds.push(jan._id);
                     userManager.createOrganisation(organisation, (o:Organisation) => {
                         organisation = o;
                         group._organisationId = o._id;
@@ -410,7 +409,7 @@ describe('UserManager', () => {
 
         });
         after(function (done:any) {
-            //this.timeout(0);
+            this.timeout(5000);
             try {
                 userManager.removeUserById(jan._id, () => {
                     userManager.removeGroupById(group._id, () => {
@@ -423,10 +422,14 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });
+    });*/
 
+
+
+
+/*
     describe('removeUserFromOrganisation', () => {
-        var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password');
+        var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'web');
         var organisation:Organisation = new Organisation('Organisation', [user._id]);
         before(function (done:any) {
             this.timeout(0);
@@ -500,7 +503,7 @@ describe('UserManager', () => {
         before(function (done:any) {
             this.timeout(0);
             try {
-                userManager.registerUser(new User('Jan', 'addusertogroup@student.kdg.be', 'password'), (u:User) => {
+                userManager.registerUser(new User('Jan', 'addusertogroup@student.kdg.be', 'password', 'web'), (u:User) => {
                     jan = u;
                     userManager.registerGroup(new Group('Organisatie', 'Group', 'Description'), (g:Group) => {
                         group = g;

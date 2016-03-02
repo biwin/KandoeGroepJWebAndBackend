@@ -24,7 +24,11 @@ export class UserService {
         return this.http.post(this.path + 'user/login', JSON.stringify({'username': name, 'password': password}), true, false, true);
     }
 
-    registerUser(name: string, password: string): Observable<Response> {
-        return this.http.post(this.path + 'user/register', JSON.stringify({'username': name, 'password': password}), true, false, true);
+    registerUser(name: string, password: string, email: string, registrar: string): Observable<Response> {
+        return this.http.post(this.path + 'user/register', JSON.stringify({'username': name, 'password': password, 'email': email, 'registrar': registrar}), true, false, true);
+    }
+
+    loginUserFacebook(id: number, name: string): Observable<Response> {
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'name': name, 'facebookId': id, 'registrar': 'facebook'}), true, false, true);
     }
 }

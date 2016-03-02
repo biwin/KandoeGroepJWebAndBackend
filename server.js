@@ -30,8 +30,8 @@ var server = app.listen(server_port, server_ip_address, function() {
     console.log(__dirname);
 });
 
-app.get('/web', function(req, res) {
-    res.sendfile('index.html');
+app.get('/', function(req, res) {
+    res.sendfile('static/html/index.html');
 });
 
 //region user routes
@@ -98,12 +98,22 @@ app.post('/api/user/register', function(req, res) {
     if (token != null && token != "") {
         res.send("You are already registered");
     } else {
-        UserApi.UserApi.createUser(req.body.username, "", req.body.password, res);
+        UserApi.UserApi.createUser(req.body.username, req.body.email, req.body.password, req.body.registrar, res);
     }
 });
 
-function isLegit(token) {
-    return true;
-}
+app.post('/api/user/login-facebook', function(req, res) {
+    console.log("hi");
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        res.send("You are already logged in");
+    } else {
+        UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.name, req.body.registrar, res);
+    }
+});
+
+app.get('*', function(req, res) {
+    res.sendfile("static/html/index.html");
+});
 
 //endregion

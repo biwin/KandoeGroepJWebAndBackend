@@ -22,8 +22,13 @@ var groupForm_1 = require("./group/groupForm");
 var groupDetail_1 = require("./group/groupDetail");
 var userLogin_1 = require("./user/userLogin");
 var circleSessionGame_1 = require("./circleSession/circleSessionGame");
+var profile_1 = require("./user/profile");
+var homePage_1 = require("./general/homePage");
+var router_2 = require("angular2/router");
 var AppComponent = (function () {
-    function AppComponent() {
+    function AppComponent(router) {
+        this.router = router;
+        this.router.navigate(['Home']);
     }
     AppComponent = __decorate([
         core_1.Component({
@@ -32,6 +37,7 @@ var AppComponent = (function () {
             directives: [navigationBar_1.NavigationBar, footer_1.Footer, router_1.ROUTER_DIRECTIVES, router_1.RouterOutlet]
         }),
         router_1.RouteConfig([
+            { path: '/hello', as: 'Home', component: homePage_1.HomePage },
             { path: '/themes', as: 'ThemeOverview', component: themeOverview_1.ThemeOverview },
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
             { path: '/circlesessions', as: 'CircleSessionOverview', component: circleSessionOverview_1.CircleSessionOverview },
@@ -42,9 +48,10 @@ var AppComponent = (function () {
             { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail },
             { path: '/createGroup', as: 'CreateGroup', component: groupForm_1.GroupForm },
             { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail },
-            { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin }
+            { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin },
+            { path: '/profile', as: 'Profile', component: profile_1.Profile }
         ]), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_2.Router])
     ], AppComponent);
     return AppComponent;
 })();

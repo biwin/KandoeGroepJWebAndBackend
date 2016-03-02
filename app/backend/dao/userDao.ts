@@ -45,6 +45,14 @@ export class UserDao {
         });
     }
 
+    readFacebookUser(facebookId: number, callback: (u: User) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_facebookId': facebookId}).limit(1).next().then((cursor:CursorResult) => {
+                callback(cursor);
+            });
+        });
+    }
+
     readGroupByName(name: string, callback: (g: Group) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('groups').find({'_name': name}).limit(1).next();

@@ -68,6 +68,16 @@ export class UserManager {
         this._dao.readUserById(id, callback);
     }
 
+    getFacebookUser(facebookId: number, callback: (u: User) => any) {
+        this._dao.readFacebookUser(facebookId, callback);
+    }
+
+    facebookUserExists(facebookId: number, callback: (exists: boolean) => any) {
+        this._dao.readFacebookUser(facebookId, (u: User) => {
+            callback(u != null);
+        });
+    }
+
     getGroup(gName:string, callback: (g:Group) => any) {
         this._dao.readGroupByName(gName, callback);
 
@@ -76,7 +86,6 @@ export class UserManager {
     getGroupById(id: string, callback: (g:Group) => any) {
         this._dao.readGroupById(id, callback);
     }
-
 
     createOrganisation(organisation: Organisation, callback: (o: Organisation) => any) {
         this.organisationExists(organisation._id, (exists) => {
@@ -237,4 +246,5 @@ export class UserManager {
     setUserOrganisatorOf(uId: string, oId: string, callback:(b: boolean) => any) {
         this._dao.setUserOrganisatorOf(uId, oId, callback);
     }
+
 }

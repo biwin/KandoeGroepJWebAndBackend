@@ -59,6 +59,14 @@ var UserManager = (function () {
     UserManager.prototype.getUserById = function (id, callback) {
         this._dao.readUserById(id, callback);
     };
+    UserManager.prototype.getFacebookUser = function (facebookId, callback) {
+        this._dao.readFacebookUser(facebookId, callback);
+    };
+    UserManager.prototype.facebookUserExists = function (facebookId, callback) {
+        this._dao.readFacebookUser(facebookId, function (u) {
+            callback(u != null);
+        });
+    };
     UserManager.prototype.getGroup = function (gName, callback) {
         this._dao.readGroupByName(gName, callback);
     };

@@ -26,8 +26,11 @@ var UserService = (function () {
     UserService.prototype.getUser = function (name, password) {
         return this.http.post(this.path + 'user/login', JSON.stringify({ 'username': name, 'password': password }), true, false, true);
     };
-    UserService.prototype.registerUser = function (name, password) {
-        return this.http.post(this.path + 'user/register', JSON.stringify({ 'username': name, 'password': password }), true, false, true);
+    UserService.prototype.registerUser = function (name, password, email, registrar) {
+        return this.http.post(this.path + 'user/register', JSON.stringify({ 'username': name, 'password': password, 'email': email, 'registrar': registrar }), true, false, true);
+    };
+    UserService.prototype.loginUserFacebook = function (id, name) {
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ 'name': name, 'facebookId': id, 'registrar': 'facebook' }), true, false, true);
     };
     UserService = __decorate([
         core_1.Injectable(),

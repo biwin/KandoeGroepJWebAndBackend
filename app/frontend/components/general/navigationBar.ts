@@ -9,9 +9,14 @@ import {UserService} from "../../services/userService";
     template: `
     <nav class="blue" role="navigation">
        <div class="nav-wrapper container">
-        <a id="logo-container" href="#!" class="brand-logo">KanDoe</a>
+        <a id="logo-container" [routerLink]="['Home']" class="brand-logo">KanDoe</a>
             <ul class="right">
-                <li><a [routerLink]="['UserLogin']"><i class="material-icons">face</i></a></li>
+                <li>
+                    <a [routerLink]="service.isLoggedIn() ? ['Profile'] : ['UserLogin']">
+                            <i style="display: inline; vertical-align: middle;" class="material-icons">face</i>
+                            <p style="display: inline;">{{getUserName()}}</p>
+                    </a>
+                </li>
             </ul>
             <ul *ngIf="service.isLoggedIn()" id="slide-out" class="side-nav fixed">
                 <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>
@@ -34,6 +39,14 @@ export class NavigationBar implements AfterViewInit {
 
     constructor(private service: UserService) {
 
+    }
+
+    getUserName() : string {
+        var token = localStorage.getItem('token');
+        if (token == null || token == "") return "";
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        return JSON.parse(payloadDecoded).name;
     }
 
     ngAfterViewInit() {

@@ -30,6 +30,13 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.readFacebookUser = function (facebookId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('users').find({ '_facebookId': facebookId }).limit(1).next().then(function (cursor) {
+                callback(cursor);
+            });
+        });
+    };
     UserDao.prototype.readGroupByName = function (name, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('groups').find({ '_name': name }).limit(1).next();

@@ -14,6 +14,9 @@ import {GroupForm} from "./group/groupForm";
 import {GroupDetail} from "./group/groupDetail";
 import {UserLogin} from "./user/userLogin";
 import {CircleSessionGame} from "./circleSession/circleSessionGame";
+import {Profile} from "./user/profile";
+import {HomePage} from "./general/homePage";
+import {Router} from "angular2/router";
 
 @Component({
     selector: 'my-app',
@@ -28,6 +31,8 @@ import {CircleSessionGame} from "./circleSession/circleSessionGame";
 })
 
 @RouteConfig([
+    {path: '/hello', as: 'Home', component: HomePage},
+
     {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
     {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
 
@@ -42,7 +47,13 @@ import {CircleSessionGame} from "./circleSession/circleSessionGame";
     {path: '/createGroup', as: 'CreateGroup', component: GroupForm},
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
 
-    {path: '/loginUser', as: 'UserLogin', component: UserLogin}
+    {path: '/loginUser', as: 'UserLogin', component: UserLogin},
+    {path: '/profile', as: 'Profile', component: Profile}
 ])
 
-export class AppComponent { }
+export class AppComponent {
+
+    constructor(private router: Router) {
+        this.router.navigate(['Home']);
+    }
+}
