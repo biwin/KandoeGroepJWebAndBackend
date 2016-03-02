@@ -8,7 +8,7 @@ var User = (function () {
         this._memberOf = [];
     }
     User.empty = function () {
-        return new User("", "", "");
+        return new User("", "", "", "");
     };
     return User;
 })();

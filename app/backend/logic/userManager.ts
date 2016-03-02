@@ -17,7 +17,7 @@ export class UserManager {
     }
 
     registerUser(user: User, callback: (u: User) => any) {
-        this.userExists(user._name, (taken) => {
+        this.userEmailExists(user._email, (taken) => {
             if (!taken) {
                 this._dao.createUser(user, callback);
             } else {
@@ -167,6 +167,12 @@ export class UserManager {
 
     userExistsById(id: string, callback: (b: boolean) => any) {
         this._dao.readUserById(id, (u: User) => {
+            callback(u != null);
+        });
+    }
+
+    userEmailExists(email: string, callback: (b: boolean) => any) {
+        this._dao.readUserByEmail(email, (u: User) => {
             callback(u != null);
         });
     }

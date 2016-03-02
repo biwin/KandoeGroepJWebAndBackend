@@ -8,7 +8,7 @@ var UserManager = (function () {
     };
     UserManager.prototype.registerUser = function (user, callback) {
         var _this = this;
-        this.userExists(user._name, function (taken) {
+        this.userEmailExists(user._email, function (taken) {
             if (!taken) {
                 _this._dao.createUser(user, callback);
             }
@@ -154,6 +154,11 @@ var UserManager = (function () {
     };
     UserManager.prototype.userExistsById = function (id, callback) {
         this._dao.readUserById(id, function (u) {
+            callback(u != null);
+        });
+    };
+    UserManager.prototype.userEmailExists = function (email, callback) {
+        this._dao.readUserByEmail(email, function (u) {
             callback(u != null);
         });
     };

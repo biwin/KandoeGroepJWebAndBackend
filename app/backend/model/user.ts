@@ -9,6 +9,6 @@ export class User {
     }
 
     public static empty(): User{
-        return new User("", "", "");
+        return new User("", "", "", "");
     }
 }

@@ -20,12 +20,15 @@ var UserApi = (function () {
     };
     UserApi.getUser = function (username, password, res) {
         UserApi.manager.getUser(username, function (u) {
-            if (u == null) {
+            if (u == null || u._password != password) {
                 res.send("nope");
             }
-            else if (u._password == password) {
+            else {
                 var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                var claim = new Buffer(JSON.stringify({ "name": username, "id": u._id.toString() })).toString('base64');
+                var claim = new Buffer(JSON.stringify({
+                    "name": username,
+                    "id": u._id.toString()
+                })).toString('base64');
                 var signature = SHA256(header + "." + claim);
                 var token = header + "." + claim + "." + signature;
                 res.send(token);
@@ -41,8 +44,14 @@ var UserApi = (function () {
                         res.send("nope");
                     }
                     else {
-                        var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                        var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id.toString() })).toString('base64');
+                        var header = new Buffer(JSON.stringify({
+                            "typ": "JWT",
+                            "alg": "HS256"
+                        })).toString('base64');
+                        var claim = new Buffer(JSON.stringify({
+                            "name": name,
+                            "id": u._id.toString()
+                        })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;
                         res.send(token);
@@ -58,7 +67,10 @@ var UserApi = (function () {
                         res.send("nope");
                     }
                     else {
-                        var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
+                        var header = new Buffer(JSON.stringify({
+                            "typ": "JWT",
+                            "alg": "HS256"
+                        })).toString('base64');
                         var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;

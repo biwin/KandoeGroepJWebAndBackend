@@ -18,13 +18,18 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
-/*app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+app.use(function (req, res, next) {
+    verifyToken(req, res);
     next();
-});*/
+});
+
+function verifyToken(req, res) {
+    console.log("hi: " + JSON.stringify(req.headers));
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        console.log("bye: " + token);
+    }
+}
 
 var server = app.listen(server_port, server_ip_address, function() {
     console.log('Listening on port %d', server.address().port);
@@ -110,13 +115,16 @@ app.post('/api/user/register', function(req, res) {
 });
 
 app.post('/api/user/login-facebook', function(req, res) {
-    console.log("hi");
     var token = req.header('Bearer');
     if (token != null && token != "") {
         res.send("You are already logged in");
     } else {
         UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.name, req.body.registrar, res);
     }
+});
+
+app.post('/api/user/forgot-password', function(req, res) {
+
 });
 
 app.get('*', function(req, res) {

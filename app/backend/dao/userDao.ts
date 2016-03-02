@@ -70,6 +70,14 @@ export class UserDao {
         });
     }
 
+    readUserByEmail(email: string, callback: (u: User) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_email': email}).limit(1).next().then((cursor: CursorResult) => {
+                callback(cursor);
+            });
+        });
+    }
+
     readGroupById(id:string, callback: (g: Group) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('groups').find({'_id': new ObjectID(id)}).limit(1).next();

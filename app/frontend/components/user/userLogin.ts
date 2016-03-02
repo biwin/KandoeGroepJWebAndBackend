@@ -19,12 +19,14 @@ import {NgIf} from "angular2/common";
                     <label for="name" data-error="Oops!">Gebruikersnaam</label>
                 </div></div>
 
-
-
-
                 <div class="row"><div class="input-field col s6">
                     <input id="password" type="password" [(ngModel)]="passwordString" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_password" required #password="ngForm">
                     <label for="password" data-error="Oops!">Wachtwoord</label>
+                </div></div>
+
+                <div class="row"><div class="input-field col s6">
+                    <input id="email" type="email" [(ngModel)]="emailString" class="form-control validate" ngControl="_email" #email="ngForm">
+                    <label for="email" data-error="Oops!">Email</label>
                 </div></div>
 
                 <div class="row"><div class="col s6">
@@ -66,6 +68,7 @@ export class UserLogin {
     private router: Router;
     private usernameString: string;
     private passwordString: string;
+    private emailString: string;
     private button: string;
     private service: UserService;
     private errorInfo: string;
@@ -73,7 +76,6 @@ export class UserLogin {
     public constructor(router: Router, service: UserService) {
         this.router = router;
         this.service = service;
-
     }
 
     getFacebookData(callback: (id: number, name: string) => any) {
@@ -113,12 +115,16 @@ export class UserLogin {
                 }
             });
         } else if (this.button == "register") {
-            this.service.registerUser(this.usernameString, this.passwordString, "email", "web").subscribe((token: string) => {
-                if (token != null && token != "") {
-                    if (token._body == "nope") this.errorInfo = "Gebruikersnaam is reeds in gebruik";
-                    else {
-                        localStorage.setItem('token', token._body);
-                        this.router.navigate(['Profile']);
+            this.service.registerUser(this.usernameString, this.passwordString, this.emailString, "web").subscribe((token: string) => {
+                if (this.emailString == null || this.emailString == "") {
+                    this.errorInfo = "Voor te registreren dient u een email adres mee te geven"
+                } else {
+                    if (token != null && token != "") {
+                        if (token._body == "nope") this.errorInfo = "Email is reeds in gebruik";
+                        else {
+                            localStorage.setItem('token', token._body);
+                            this.router.navigate(['Profile']);
+                        }
                     }
                 }
             });

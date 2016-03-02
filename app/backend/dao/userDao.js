@@ -51,6 +51,13 @@ var UserDao = (function () {
             callback(cursor);
         });
     };
+    UserDao.prototype.readUserByEmail = function (email, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('users').find({ '_email': email }).limit(1).next().then(function (cursor) {
+                callback(cursor);
+            });
+        });
+    };
     UserDao.prototype.readGroupById = function (id, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('groups').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
