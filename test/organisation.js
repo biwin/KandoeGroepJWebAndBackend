@@ -36,5 +36,43 @@ describe("OrganisationManager", function () {
             }
         });
     });
+    describe("createOrganisationTwice", function () {
+        var organisation;
+        before(function (done) {
+            organisationManager.createOrganisation(new organisation_1.Organisation("Delhaize", []), function (o) {
+                try {
+                    organisation = o;
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        it("Create organisation with the same name, should return null from database", function (done) {
+            this.timeout(0);
+            var organisation2 = new organisation_1.Organisation("Delhaize", []);
+            organisationManager.createOrganisation(organisation2, function (o) {
+                try {
+                    assert.equal(o, null);
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                organisationManager.removeOrganisationById(organisation._id, function () {
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
 });
 //# sourceMappingURL=organisation.js.map
