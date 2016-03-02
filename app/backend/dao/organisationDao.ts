@@ -48,4 +48,14 @@ export class OrganisationDao {
             });
         });
     }
+
+    deleteOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').deleteOne({'_id': organisationId}, (err: MongoError, result) => {
+                db.close();
+
+                callback(result.deletedCount == 1);
+            });
+        });
+    }
 }

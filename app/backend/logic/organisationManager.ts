@@ -30,6 +30,6 @@ export class OrganisationManager {
     }
 
     removeOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
-
+        this._dao.deleteOrganisationById(organisationId, callback);
     }
 }

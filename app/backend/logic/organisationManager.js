@@ -23,6 +23,7 @@ var OrganisationManager = (function () {
         this._dao.getOrganisationById(organisationId, callback);
     };
     OrganisationManager.prototype.removeOrganisationById = function (organisationId, callback) {
+        this._dao.deleteOrganisationById(organisationId, callback);
     };
     return OrganisationManager;
 })();

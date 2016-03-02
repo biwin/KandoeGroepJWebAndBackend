@@ -33,6 +33,14 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.deleteOrganisationById = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').deleteOne({ '_id': organisationId }, function (err, result) {
+                db.close();
+                callback(result.deletedCount == 1);
+            });
+        });
+    };
     return OrganisationDao;
 })();
 exports.OrganisationDao = OrganisationDao;
