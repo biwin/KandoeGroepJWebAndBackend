@@ -18,6 +18,12 @@ var OrganisationDao = (function () {
         });
     };
     OrganisationDao.prototype.readOrganisationByName = function (organisationName, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').find({ '_name': organisationName }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
+        });
     };
     return OrganisationDao;
 })();
