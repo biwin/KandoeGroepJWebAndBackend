@@ -25,6 +25,14 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.getOrganisationById = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').find({ '_id': organisationId }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
+        });
+    };
     return OrganisationDao;
 })();
 exports.OrganisationDao = OrganisationDao;

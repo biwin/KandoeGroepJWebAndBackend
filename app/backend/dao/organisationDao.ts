@@ -38,4 +38,14 @@ export class OrganisationDao {
             });
         });
     }
+
+    getOrganisationById(organisationId: string, callback: (organisation: Organisation) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').find({'_id': organisationId}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
+
+                callback(cursor);
+            });
+        });
+    }
 }

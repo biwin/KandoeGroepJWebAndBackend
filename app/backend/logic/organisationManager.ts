@@ -26,7 +26,7 @@ export class OrganisationManager {
     }
 
     getOrganisationById(organisationId: string, callback: (organisation: Organisation) => any) {
-
+        this._dao.getOrganisationById(organisationId, callback);
     }
 
     removeOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
