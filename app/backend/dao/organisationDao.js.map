@@ -1,0 +1,1 @@
+{"version":3,"file":"organisationDao.js","sourceRoot":"","sources":["organisationDao.ts"],"names":["OrganisationDao","OrganisationDao.constructor","OrganisationDao.createOrganisation"],"mappings":"AAEA;IAAAA;IAIAC,CAACA;IAHGD,4CAAkBA,GAAlBA,UAAmBA,YAA0BA,EAAEA,QAAgDA;IAE/FE,CAACA;IACLF,sBAACA;AAADA,CAACA,AAJD,IAIC;AAJY,uBAAe,kBAI3B,CAAA"}
