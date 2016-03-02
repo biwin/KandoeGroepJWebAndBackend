@@ -15,7 +15,7 @@ var OrganisationManager = (function () {
         });
     };
     OrganisationManager.prototype.organisationExists = function (organisationName, callback) {
-        this._dao.readOrganisationByName(organisationName, function (organisation) {
+        this._dao.getOrganisationByName(organisationName, function (organisation) {
             callback(organisation != null);
         });
     };
