@@ -26,6 +26,8 @@ describe("OrganisationManager", () => {
                     organisationManager.getOrganisationById(o._id, (newOrganisation: Organisation) => {
                         assert.equal(organisation._name, newOrganisation._name);
 
+                        organisation = o;
+
                         done();
                     });
                 } catch(e) {

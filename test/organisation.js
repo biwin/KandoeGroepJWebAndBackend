@@ -16,6 +16,7 @@ describe("OrganisationManager", function () {
                 try {
                     organisationManager.getOrganisationById(o._id, function (newOrganisation) {
                         assert.equal(organisation._name, newOrganisation._name);
+                        organisation = o;
                         done();
                     });
                 }
