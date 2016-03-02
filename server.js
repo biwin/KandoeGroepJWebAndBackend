@@ -2,6 +2,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
     CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
+    OrganisationAPI = require("./app/backend/restApi/organisationAPI.js"),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
     UserApi = require('./app/backend/restApi/userApi.js'),
     morgan = require('morgan'),
@@ -35,7 +36,6 @@ app.get('/', function(req, res) {
 });
 
 //region user routes
-
 app.get('/api/user/get', function(req, res) {
     console.log(UserApi.UserApi.getUser(req.query.id, res));
 });
@@ -43,7 +43,6 @@ app.get('/api/user/get', function(req, res) {
 app.get('/api/user/createDummy', function(req, res) {
     console.log(UserApi.UserApi.createDummyUser(res));
 });
-
 //endregion
 
 //region circlesession routes
@@ -58,8 +57,16 @@ app.get('/api/circlesessions/:id', function(req, res){
 app.post('/api/circlesessions', function(req, res) {
     CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
 });
-
 //endregion
+
+//region organisation routes
+app.get("/api/organisations/:id", function(req, res) {
+    OrganisationAPI.OrganisationAPI.find(req.params.id, res);
+});
+
+app.post("/api/organisations", function(req, res) {
+    OrganisationAPI.OrganisationAPI.create(req.body, res);
+});
 
 //region theme routes
 app.get('/api/themes', function(req, res) {

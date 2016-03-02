@@ -1,7 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
-var mongodb_2 = require("mongodb");
 var ThemeDao = (function () {
     function ThemeDao() {
         this._client = new mongodb_1.MongoClient();
@@ -24,15 +23,15 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.readTheme = function (id, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next().then(function (cursor) {
+            db.collection('themes').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next().then(function (cursor) {
                 db.close();
                 callback(cursor);
             });
         });
     };
-    ThemeDao.prototype.deleteThemeById = function (organisationId, callback) {
+    ThemeDao.prototype.deleteThemeById = function (themeId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').deleteOne({ '_id': organisationId }, function (err, result) {
+            db.collection('themes').deleteOne({ '_id': themeId }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });
