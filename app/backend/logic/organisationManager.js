@@ -3,6 +3,8 @@ var OrganisationManager = (function () {
     }
     OrganisationManager.prototype.createOrganisation = function (organisation, callback) {
     };
+    OrganisationManager.prototype.organisationExists = function (organisationName, callback) {
+    };
     OrganisationManager.prototype.getOrganisationById = function (organisationId, callback) {
     };
     OrganisationManager.prototype.removeOrganisationById = function (organisationId, callback) {

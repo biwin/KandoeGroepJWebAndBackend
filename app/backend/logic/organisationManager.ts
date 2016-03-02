@@ -5,6 +5,10 @@ export class OrganisationManager {
 
     }
 
+    private organisationExists(organisationName: string, callback: (exists: boolean) => any) {
+
+    }
+
     getOrganisationById(organisationId: string, callback: (organisation: Organisation) => any) {
 
     }
