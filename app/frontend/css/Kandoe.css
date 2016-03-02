@@ -49,9 +49,16 @@
 
 }
 
-div.kandoeCircle {
-    height: 60%;
-    background: url('/app/frontend/images/gameBoard.png') no-repeat;
-    background-size: auto 100%;
-    background-position: 50%;
+svg circle.kandoeRing {
+    stroke: #2196F3;
+    fill: #2196F3;
+    fill-opacity: 0;
+}
+
+svg circle.kandoeRing.inner {
+    fill-opacity: 1;
+}
+
+svg circle.highlight {
+    fill: yellow !important;
 }
