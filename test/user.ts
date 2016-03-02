@@ -1,7 +1,7 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
-
+/*
 import assert = require('assert');
 import e = require("express");
 
@@ -24,7 +24,6 @@ before(function(done: any) {
 });
 
 describe('UserManager', () => {
-/*
     //region user-tests
     describe('createUser', () => {
         var user = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
@@ -422,12 +421,12 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });*/
+    });
 
 
 
 
-/*
+
     describe('removeUserFromOrganisation', () => {
         var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'web');
         var organisation:Organisation = new Organisation('Organisation', [user._id]);
@@ -642,6 +641,6 @@ describe('UserManager', () => {
             });
         });
     });
-    */
 
-});
+
+});*/
