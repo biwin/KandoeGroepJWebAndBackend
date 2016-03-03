@@ -19,7 +19,7 @@ var OrganisationDao = (function () {
     };
     OrganisationDao.prototype.getOrganisationByName = function (organisationName, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').find({ '_name': organisationName }).limit(1).next().then(function (cursor) {
+            db.collection('organisations').find({ '_name': new mongodb_1.ObjectID(organisationName) }).limit(1).next().then(function (cursor) {
                 db.close();
                 callback(cursor);
             });

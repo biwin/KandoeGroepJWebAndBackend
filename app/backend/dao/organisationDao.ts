@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError, CursorResult} from "mongodb";
+import {MongoClient, Db, MongoError, ObjectID, CursorResult} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
 
@@ -31,7 +31,7 @@ export class OrganisationDao {
 
     getOrganisationByName(organisationName: string, callback: (organisation: Organisation) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').find({'_name': organisationName}).limit(1).next().then((cursor: CursorResult) => {
+            db.collection('organisations').find({'_name': new ObjectID(organisationName)}).limit(1).next().then((cursor: CursorResult) => {
                 db.close();
 
                 callback(cursor);
