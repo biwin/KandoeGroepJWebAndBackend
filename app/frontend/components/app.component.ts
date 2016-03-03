@@ -1,23 +1,26 @@
 import {Component} from 'angular2/core';
-import {RouterOutlet, RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
+import {RouterOutlet, RouteConfig, ROUTER_DIRECTIVES, Router} from "angular2/router";
 
 import {NavigationBar} from './general/navigationBar';
 import {Footer} from './general/footer';
+import {HomePage} from "./general/homePage";
+
 import {ThemeOverview} from "./theme/themeOverview";
 import {ThemeForm} from './theme/themeForm';
+
 import {CircleSessionOverview} from "./circleSession/circleSessionOverview";
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
+import {CircleSessionGame} from "./circleSession/circleSessionGame";
+
 import {OrganisationsOverview} from "./organisation/organisationsOverview";
 import {OrganisationForm} from "./organisation/organisationForm";
 import {OrganisationDetail} from "./organisation/organisationDetail";
+
 import {GroupForm} from "./group/groupForm";
 import {GroupDetail} from "./group/groupDetail";
+
 import {UserLogin} from "./user/userLogin";
-import {CircleSessionGame} from "./circleSession/circleSessionGame";
 import {Profile} from "./user/profile";
-import {HomePage} from "./general/homePage";
-import {Router} from "angular2/router";
-import {Redirect} from "angular2/router";
 import {UserService} from "../services/userService";
 
 @Component({
@@ -54,8 +57,8 @@ import {UserService} from "../services/userService";
 ])
 
 export class AppComponent {
-
     constructor(private router: Router, userService: UserService) {
+        this.router.navigate(['Home']);
         this.router.subscribe((url) => {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
                 this.router.navigate(['Hello']);

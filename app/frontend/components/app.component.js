@@ -11,25 +11,25 @@ var core_1 = require('angular2/core');
 var router_1 = require("angular2/router");
 var navigationBar_1 = require('./general/navigationBar');
 var footer_1 = require('./general/footer');
+var homePage_1 = require("./general/homePage");
 var themeOverview_1 = require("./theme/themeOverview");
 var themeForm_1 = require('./theme/themeForm');
 var circleSessionOverview_1 = require("./circleSession/circleSessionOverview");
 var circleSessionForm_1 = require("./circleSession/circleSessionForm");
+var circleSessionGame_1 = require("./circleSession/circleSessionGame");
 var organisationsOverview_1 = require("./organisation/organisationsOverview");
 var organisationForm_1 = require("./organisation/organisationForm");
 var organisationDetail_1 = require("./organisation/organisationDetail");
 var groupForm_1 = require("./group/groupForm");
 var groupDetail_1 = require("./group/groupDetail");
 var userLogin_1 = require("./user/userLogin");
-var circleSessionGame_1 = require("./circleSession/circleSessionGame");
 var profile_1 = require("./user/profile");
-var homePage_1 = require("./general/homePage");
-var router_2 = require("angular2/router");
 var userService_1 = require("../services/userService");
 var AppComponent = (function () {
     function AppComponent(router, userService) {
         var _this = this;
         this.router = router;
+        this.router.navigate(['Home']);
         this.router.subscribe(function (url) {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
                 _this.router.navigate(['Hello']);
@@ -57,7 +57,7 @@ var AppComponent = (function () {
             { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin },
             { path: '/profile', as: 'Profile', component: profile_1.Profile }
         ]), 
-        __metadata('design:paramtypes', [router_2.Router, userService_1.UserService])
+        __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], AppComponent);
     return AppComponent;
 })();
