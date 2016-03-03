@@ -14,6 +14,14 @@ app.use(bodyParser.json());
 
 app.use(morgan('dev'));
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
 app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
