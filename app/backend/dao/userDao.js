@@ -240,6 +240,14 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.changeUsernameByEmail = function (email, newName, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateOne({ '_email': email }, { $set: { '_name': newName } }, function (err, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     return UserDao;
 })();
 exports.UserDao = UserDao;

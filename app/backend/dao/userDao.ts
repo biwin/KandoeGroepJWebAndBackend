@@ -284,4 +284,13 @@ export class UserDao {
             });
         });
     }
+
+    changeUsernameByEmail(email: string, newName: string, callback: (b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName}}, (err: MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
 }

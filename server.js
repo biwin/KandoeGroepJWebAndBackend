@@ -18,19 +18,6 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
-app.use(function (req, res, next) {
-    verifyToken(req, res);
-    next();
-});
-
-function verifyToken(req, res) {
-    console.log("hi: " + JSON.stringify(req.headers));
-    var token = req.header('Bearer');
-    if (token != null && token != "") {
-        console.log("bye: " + token);
-    }
-}
-
 var server = app.listen(server_port, server_ip_address, function() {
     console.log('Listening on port %d', server.address().port);
     console.log(__dirname);
@@ -101,7 +88,7 @@ app.post('/api/user/login', function(req, res) {
     if (token != null && token != "") {
         res.send("You are already logged in");
     } else {
-        UserApi.UserApi.getUser(req.body.username, req.body.password, res);
+        UserApi.UserApi.getUser(req.body.email, req.body.password, res);
     }
 });
 
@@ -115,16 +102,16 @@ app.post('/api/user/register', function(req, res) {
 });
 
 app.post('/api/user/login-facebook', function(req, res) {
-    var token = req.header('Bearer');
-    if (token != null && token != "") {
-        res.send("You are already logged in");
-    } else {
-        UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.name, req.body.registrar, res);
-    }
+    UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.name, req.body.registrar, res);
 });
 
-app.post('/api/user/forgot-password', function(req, res) {
-
+app.post('/api/user/change-username', function(req, res) {
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        UserApi.UserApi.changeUsername(token, req.body.username, res);
+    } else {
+        res.send("You are not logged in");
+    }
 });
 
 app.get('*', function(req, res) {

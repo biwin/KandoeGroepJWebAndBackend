@@ -68,6 +68,10 @@ export class UserManager {
         this._dao.readUserById(id, callback);
     }
 
+    getUserByEmail(email: string, callback: (u: User) => any) {
+        this._dao.readUserByEmail(email, callback);
+    }
+
     getFacebookUser(facebookId: number, callback: (u: User) => any) {
         this._dao.readFacebookUser(facebookId, callback);
     }
@@ -253,4 +257,13 @@ export class UserManager {
         this._dao.setUserOrganisatorOf(uId, oId, callback);
     }
 
+    changeUsernameByEmail(email: string, newName: string, callback: (u: User) => any) {
+        this._dao.changeUsernameByEmail(email, newName, (success: boolean) => {
+            if (success) {
+                this._dao.readUserByEmail(email, callback);
+            } else {
+                callback(null);
+            }
+        });
+    }
 }

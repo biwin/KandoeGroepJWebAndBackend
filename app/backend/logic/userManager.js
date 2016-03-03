@@ -59,6 +59,9 @@ var UserManager = (function () {
     UserManager.prototype.getUserById = function (id, callback) {
         this._dao.readUserById(id, callback);
     };
+    UserManager.prototype.getUserByEmail = function (email, callback) {
+        this._dao.readUserByEmail(email, callback);
+    };
     UserManager.prototype.getFacebookUser = function (facebookId, callback) {
         this._dao.readFacebookUser(facebookId, callback);
     };
@@ -228,6 +231,17 @@ var UserManager = (function () {
     };
     UserManager.prototype.setUserOrganisatorOf = function (uId, oId, callback) {
         this._dao.setUserOrganisatorOf(uId, oId, callback);
+    };
+    UserManager.prototype.changeUsernameByEmail = function (email, newName, callback) {
+        var _this = this;
+        this._dao.changeUsernameByEmail(email, newName, function (success) {
+            if (success) {
+                _this._dao.readUserByEmail(email, callback);
+            }
+            else {
+                callback(null);
+            }
+        });
     };
     return UserManager;
 })();

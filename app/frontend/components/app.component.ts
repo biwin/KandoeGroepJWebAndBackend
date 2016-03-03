@@ -17,6 +17,8 @@ import {CircleSessionGame} from "./circleSession/circleSessionGame";
 import {Profile} from "./user/profile";
 import {HomePage} from "./general/homePage";
 import {Router} from "angular2/router";
+import {Redirect} from "angular2/router";
+import {UserService} from "../services/userService";
 
 @Component({
     selector: 'my-app',
@@ -53,7 +55,12 @@ import {Router} from "angular2/router";
 
 export class AppComponent {
 
-    constructor(private router: Router) {
+    constructor(private router: Router, userService: UserService) {
         this.router.navigate(['Home']);
+        this.router.subscribe((url) => {
+            if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
+                this.router.navigate(['Hello']);
+            }
+        });
     }
 }
