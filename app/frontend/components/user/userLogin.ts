@@ -124,7 +124,6 @@ export class UserLogin {
 
     onLogoutSubmit() {
         localStorage.removeItem('token');
-        console.log("Removed token!");
     }
 
     getToken() {

@@ -50,7 +50,7 @@ export class GroupForm implements AfterViewInit {
     ];
 
     public constructor(routeParam: RouteParams) {
-        console.log(routeParam.params["organisationId"]);
+//        console.log(routeParam.params["organisationId"]);
 
         for (var i = 0; i < this.organisations.length; i++) {
             var organisation: Organisation = this.organisations[i];

@@ -24,7 +24,7 @@ var CircleSessionOverview = (function () {
                     _this.loading = false;
             });
         });
-        console.log(this.circleSessions);
+        //console.log(this.circleSessions);
     }
     CircleSessionOverview = __decorate([
         core_1.Component({

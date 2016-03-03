@@ -14,6 +14,7 @@ var group_1 = require("../../../backend/model/group");
 var organisation_1 = require("../../../backend/model/organisation");
 var GroupForm = (function () {
     function GroupForm(routeParam) {
+        //        console.log(routeParam.params["organisationId"]);
         this.group = group_1.Group.empty();
         this.organisations = [
             new organisation_1.Organisation("Delhaize", ["Michaël", "Jan"]),
@@ -22,7 +23,6 @@ var GroupForm = (function () {
             new organisation_1.Organisation("Aldi", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël"]),
             new organisation_1.Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
         ];
-        console.log(routeParam.params["organisationId"]);
         for (var i = 0; i < this.organisations.length; i++) {
             var organisation = this.organisations[i];
             organisation._id = organisation._name;

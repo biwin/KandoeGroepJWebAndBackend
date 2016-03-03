@@ -72,7 +72,6 @@ var UserLogin = (function () {
     };
     UserLogin.prototype.onLogoutSubmit = function () {
         localStorage.removeItem('token');
-        console.log("Removed token!");
     };
     UserLogin.prototype.getToken = function () {
         return localStorage.getItem('token');

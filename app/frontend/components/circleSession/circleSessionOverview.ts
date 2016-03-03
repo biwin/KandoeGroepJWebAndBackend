@@ -44,6 +44,6 @@ export class CircleSessionOverview {
                     this.loading = false;
             });
         });
-        console.log(this.circleSessions);
+        //console.log(this.circleSessions);
     }
 }

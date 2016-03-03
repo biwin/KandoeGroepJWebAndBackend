@@ -22,10 +22,8 @@ export class UserApi {
 
     public static changeUsername(token, newName: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
-            console.log("valid?: " + valid);
             if (valid) {
                 UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, (u:User) => {
-                    console.log("Did it work? : " + u);
                     if (u == null) res.send("nope");
                     else res.send(UserApi.generateTokenForUser(u));
                 });
@@ -43,7 +41,6 @@ export class UserApi {
         var encClaim = parts[1];
         var encSignature = parts[2];
         var isLegit = (SHA256(encHeader + "." + encClaim) == encSignature);
-        console.log("isLegit?? : " + isLegit + ": " + JSON.stringify(new Buffer(encClaim, 'base64').toString('ascii')));
         callback(isLegit, isLegit ? JSON.parse(new Buffer(encClaim, 'base64').toString('ascii')) : null);
     }
 
@@ -67,7 +64,6 @@ export class UserApi {
     public static getFacebookUser(id:number, name:string, registrar:string, res) {
         UserApi.manager.facebookUserExists(id, (exists:boolean) => {
             if (exists) {
-                console.log("exists: " + name + ": " + id);
                 UserApi.manager.getFacebookUser(id, (u:User) => {
                     if (u == null) {
                         res.send("nope");
@@ -86,7 +82,6 @@ export class UserApi {
                     }
                 });
             } else {
-                console.log("!exists: " + name + ": " + id);
                 var user:User = new User(name, "", "", registrar);
                 user._facebookId = id;
                 UserApi.manager.registerUser(user, (u:User) => {

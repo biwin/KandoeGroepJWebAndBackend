@@ -20,10 +20,8 @@ var UserApi = (function () {
     };
     UserApi.changeUsername = function (token, newName, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
-            console.log("valid?: " + valid);
             if (valid) {
                 UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, function (u) {
-                    console.log("Did it work? : " + u);
                     if (u == null)
                         res.send("nope");
                     else
@@ -49,7 +47,6 @@ var UserApi = (function () {
         var encClaim = parts[1];
         var encSignature = parts[2];
         var isLegit = (SHA256(encHeader + "." + encClaim) == encSignature);
-        console.log("isLegit?? : " + isLegit + ": " + JSON.stringify(new Buffer(encClaim, 'base64').toString('ascii')));
         callback(isLegit, isLegit ? JSON.parse(new Buffer(encClaim, 'base64').toString('ascii')) : null);
     };
     UserApi.getUser = function (email, password, res) {
@@ -71,7 +68,6 @@ var UserApi = (function () {
     UserApi.getFacebookUser = function (id, name, registrar, res) {
         UserApi.manager.facebookUserExists(id, function (exists) {
             if (exists) {
-                console.log("exists: " + name + ": " + id);
                 UserApi.manager.getFacebookUser(id, function (u) {
                     if (u == null) {
                         res.send("nope");
@@ -92,7 +88,6 @@ var UserApi = (function () {
                 });
             }
             else {
-                console.log("!exists: " + name + ": " + id);
                 var user = new user_1.User(name, "", "", registrar);
                 user._facebookId = id;
                 UserApi.manager.registerUser(user, function (u) {
