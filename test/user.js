@@ -643,5 +643,5 @@ describe('UserManager', () => {
     });
 
 
-});*/ 
+}); 
 //# sourceMappingURL=user.js.map

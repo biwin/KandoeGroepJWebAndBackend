@@ -1,7 +1,7 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
-/*
+
 import assert = require('assert');
 import e = require("express");
 
@@ -102,7 +102,7 @@ describe('UserManager', () => {
             }
         });
     });
-
+/*
     describe('getAllUsers', () => {
         var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
             new User('Jan', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
@@ -641,6 +641,6 @@ describe('UserManager', () => {
             });
         });
     });
+*/
 
-
-});*/
+});
