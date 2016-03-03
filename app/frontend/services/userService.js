@@ -18,20 +18,31 @@ var UserService = (function () {
     function UserService(router, http, path) {
         this.router = router;
         this.http = null;
+        this.subscribers = [];
         this.path = path;
         this.http = http;
     }
+    UserService.prototype.subscribeMe = function (subscriber) {
+        this.subscribers.push(subscriber);
+    };
+    UserService.prototype.notifyLoggedIn = function () {
+        for (var index in this.subscribers)
+            this.subscribers[index].notifyLoggedIn();
+    };
+    UserService.prototype.notifyLoggedOut = function () {
+        for (var index in this.subscribers)
+            this.subscribers[index].notifyLoggedOut();
+    };
+    UserService.prototype.notifyUsernameUpdated = function () {
+        for (var index in this.subscribers)
+            this.subscribers[index].notifyUsernameUpdated();
+    };
     UserService.prototype.isLoggedIn = function () {
         var token = localStorage.getItem('token');
         return token != null && token != "";
     };
     UserService.prototype.changeUsername = function (newName) {
-        var token = localStorage.getItem('token');
-        var payloadEncoded = token.split('.')[1];
-        var payloadDecoded = atob(payloadEncoded);
-        var facebookId = JSON.parse(payloadDecoded).facebookId;
-        var type = JSON.parse(payloadDecoded).type;
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({ 'type': type, 'facebookId': facebookId, 'username': newName }), true, false, true);
+        return this.http.post(this.path + 'user/change-username', JSON.stringify({ 'username': newName }), true, false, true);
     };
     UserService.prototype.getUser = function (email, password) {
         return this.http.post(this.path + 'user/login', JSON.stringify({ 'email': email, 'password': password }), true, false, false);
@@ -39,8 +50,19 @@ var UserService = (function () {
     UserService.prototype.registerUser = function (name, password, email, registrar) {
         return this.http.post(this.path + 'user/register', JSON.stringify({ 'username': name, 'password': password, 'email': email, 'registrar': registrar }), true, false, false);
     };
-    UserService.prototype.loginUserFacebook = function (id, name) {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ 'name': name, 'facebookId': id, 'registrar': 'facebook' }), true, false, false);
+    UserService.prototype.loginUserFacebook = function (id, name, email, pictureSmall, pictureLarge) {
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ 'name': name, 'email': email, 'facebookId': id, 'pictureSmall': pictureSmall, 'pictureLarge': pictureLarge, 'registrar': 'facebook' }), true, false, false);
+    };
+    UserService.prototype.getUserPicture = function (type) {
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({ 'type': type }), true, false, true);
+    };
+    UserService.prototype.getUsername = function (callback) {
+        var token = localStorage.getItem('token');
+        if (token == null || token == "")
+            callback("");
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        callback(JSON.parse(payloadDecoded).name);
     };
     UserService = __decorate([
         core_1.Injectable(),

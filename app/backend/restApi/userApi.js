@@ -18,11 +18,19 @@ var UserApi = (function () {
             }
         });
     };
-    UserApi.changeUsername = function (token, type, facebookId, newName, res) {
+    UserApi.getPicture = function (token, type, res) {
+        UserApi.isTokenValid(token, function (valid, decodedClaim) {
+            if (valid)
+                UserApi.manager.getUserById(decodedClaim.id, function (u) { return res.send(type == 'small' ? u._pictureSmall : u._pictureLarge); });
+            else
+                res.send("nope");
+        });
+    };
+    UserApi.changeUsername = function (token, newName, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid) {
-                if (type == 'facebook') {
-                    UserApi.manager.changeUsernameByFacebookId(facebookId, newName, function (u) {
+                if (decodedClaim.type == 'facebook') {
+                    UserApi.manager.changeUsernameByFacebookId(decodedClaim.facebookId, newName, function (u) {
                         if (u == null)
                             res.send("nope");
                         else
@@ -75,7 +83,7 @@ var UserApi = (function () {
         var signature = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
     };
-    UserApi.getFacebookUser = function (facebookId, name, registrar, res) {
+    UserApi.getFacebookUser = function (facebookId, email, pictureSmall, pictureLarge, name, registrar, res) {
         UserApi.manager.facebookUserExists(facebookId, function (exists) {
             if (exists) {
                 UserApi.manager.getFacebookUser(facebookId, function (u) {
@@ -92,8 +100,10 @@ var UserApi = (function () {
                 });
             }
             else {
-                var user = new user_1.User(name, "", "", registrar);
+                var user = new user_1.User(name, email, "", registrar);
                 user._facebookId = facebookId;
+                user._pictureSmall = pictureSmall;
+                user._pictureLarge = pictureLarge;
                 UserApi.manager.registerUser(user, function (u) {
                     if (u == null) {
                         res.send("nope");

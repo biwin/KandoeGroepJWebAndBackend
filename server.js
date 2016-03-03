@@ -110,14 +110,22 @@ app.post('/api/user/register', function(req, res) {
 });
 
 app.post('/api/user/login-facebook', function(req, res) {
-    UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.name, req.body.registrar, res);
+    UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.email, req.body.pictureSmall, req.body.pictureLarge, req.body.name, req.body.registrar, res);
 });
 
 app.post('/api/user/change-username', function(req, res) {
-    console.log("Change request for: " + req.body.username + ": " + req.body.type + ": " + req.body.facebookId);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        UserApi.UserApi.changeUsername(token, req.body.type, req.body.facebookId, req.body.username, res);
+        UserApi.UserApi.changeUsername(token, req.body.username, res);
+    } else {
+        res.send("You are not logged in");
+    }
+});
+
+app.post('/api/user/get-picture', function(req, res) {
+    var token = req.header('Bearer');
+    if (token != null && token != "") {
+        UserApi.UserApi.getPicture(token, req.body.type, res);
     } else {
         res.send("You are not logged in");
     }

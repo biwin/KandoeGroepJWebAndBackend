@@ -267,7 +267,7 @@ export class UserManager {
         });
     }
 
-    changeUsernameByFacebookId(facebookId: number, newName: string, callback: (u: User) => any) {
+    changeUsernameByFacebookId(facebookId: string, newName: string, callback: (u: User) => any) {
         this._dao.changeUsernameByFacebookId(facebookId, newName, (success: boolean) => {
             if (success) {
                 this._dao.readUserByFacebookId(facebookId, callback);

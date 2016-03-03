@@ -3,6 +3,7 @@
 import {Component, AfterViewInit} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 import {UserService} from "../../services/userService";
+import {Response} from "angular2/http";
 
 @Component({
     selector: 'navigation-bar',
@@ -13,8 +14,9 @@ import {UserService} from "../../services/userService";
             <ul class="right">
                 <li>
                     <a [routerLink]="service.isLoggedIn() ? ['Profile'] : ['UserLogin']">
-                            <i style="display: inline; vertical-align: middle;" class="material-icons">face</i>
-                            <p style="display: inline;">{{getUserName()}}</p>
+                            <i *ngIf="imageSource == null || imageSource == ''" style="display: inline; vertical-align: middle;" class="material-icons">face</i>
+                            <img *ngIf="imageSource != null && imageSource != ''" style="display: inline; vertical-align: middle;" src="{{imageSource}}"/>
+                            <p style="display: inline;">{{usernameString}}</p>
                     </a>
                 </li>
             </ul>
@@ -36,22 +38,38 @@ import {UserService} from "../../services/userService";
 })
 
 export class NavigationBar implements AfterViewInit {
+    private imageSource: string;
+    private usernameString: string;
 
     constructor(private service: UserService) {
-
+        service.subscribeMe(this);
+        if (this.service.isLoggedIn()) {
+            this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
+            this.service.getUsername((name: string) => this.usernameString = name);
+        } else {
+            this.usernameString = "Gast";
+        }
     }
 
-    getUserName() : string {
-        var token = localStorage.getItem('token');
-        if (token == null || token == "") return "";
-        var payloadEncoded = token.split('.')[1];
-        var payloadDecoded = atob(payloadEncoded);
-        return JSON.parse(payloadDecoded).name;
+    notifyLoggedIn() {
+        this.getUserName();
+        this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
+    }
+
+    notifyLoggedOut() {
+        this.imageSource = null;
+        this.usernameString = "Gast";
+    }
+
+    notifyUsernameUpdated() {
+        this.service.getUsername((name: string) => this.usernameString = name);
+    }
+
+    getUserName() {
+        this.service.getUsername((name: string) => this.usernameString = name);
     }
 
     ngAfterViewInit() {
-        $(".button-collapse").sideNav({
-            menuWidth: 240
-        });
+        $(".button-collapse").sideNav({menuWidth: 240});
     }
 }

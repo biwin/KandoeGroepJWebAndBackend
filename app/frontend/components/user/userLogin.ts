@@ -1,11 +1,12 @@
 /// <reference path="../../../../typings/facebook.d.ts" />
 
-import {Component} from "angular2/core";
+import {Component, Output} from "angular2/core";
 import {Router} from "angular2/router";
 import {User} from "../../../backend/model/user";
 import {UserService} from "../../services/userService";
 import {NgIf} from "angular2/common";
 import {CircleSessionForm} from "../circleSession/circleSessionForm";
+import {Response} from "angular2/http";
 
 @Component({
     selector: 'user-login',
@@ -73,50 +74,50 @@ export class UserLogin {
         this.service = service;
     }
 
-    getFacebookData(callback: (id: number, name: string) => any) {
-        FB.api('/me', function(res) {callback(res.id, res.name)});
+    getFacebookStandardData(callback: (id: string, name: string, email: string, pictureSmall: string, pictureLarge: string) => any) {
+        FB.api('/me?fields=email,name,picture.type(small)', function(res1) {
+            FB.api('/me?fields=picture.type(large)', function(res2) {
+                callback(res1.id, res1.name, res1.email, res1.picture.data.url, res2.picture.data.url);
+            });
+        });
     }
 
     facebookLogin() {
-        FB.login((response) => {
-            if (response.authResponse) {
-                this.getFacebookData((id, name) => {
-                    this.service.loginUserFacebook(id, name).subscribe((token: string) => {
-                        if (token != null && token != "") {
-                            if (token._body == "nope") this.errorInfo = "Error";
-                            else {
-                                console.log(token);
-                                localStorage.setItem('token', token._body);
-                                this.router.navigate(['Profile']);
-                            }
+        FB.login((res) => {
+            if (res.authResponse) {
+                this.getFacebookStandardData((id, name, email, pictureSmall, pictureLarge) => {
+                    this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe((token: Response) => {
+                        if (token != null) {
+                            if (token.text() == "nope") this.errorInfo = "Error";
+                            else this.setLoggedIn(token);
                         }
                     });
                 });
             } else {
                 alert('User cancelled login or did not fully authorize.');
             }
-        }, {scope: 'public_profile,email'})
+        }, {scope: 'public_profile'})
+    }
+
+    setLoggedIn(token) {
+        localStorage.setItem('token', token.text());
+        this.router.navigate(['Profile']);
+        this.service.notifyLoggedIn();
     }
 
     onLoginSubmit() {
         if (this.button == "login") {
-            this.service.getUser(this.emailString, this.passwordString).subscribe((token: string) => {
-                if (token != null && token != "") {
-                    if (token._body == "nope") this.errorInfo = "Incorrecte login informatie";
-                    else {
-                        localStorage.setItem('token', token._body);
-                        this.router.navigate(['Profile']);
-                    }
+            this.service.getUser(this.emailString, this.passwordString).subscribe((token: Response) => {
+                if (token != null) {
+                    if (token.text() == "nope") this.errorInfo = "Incorrecte login informatie";
+                    else this.setLoggedIn(token);
                 }
             });
         } else if (this.button == "register") {
-            this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe((token: string) => {
-                if (token != null && token != "") {
-                    if (token._body == "nope") this.errorInfo = "Email is reeds in gebruik";
-                    else {
-                        localStorage.setItem('token', token._body);
-                        this.router.navigate(['Profile']);
-                    }
+            this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe((token: Response) => {
+                if (token != null) {
+                    if (token.text() == "nope") this.errorInfo = "Email is reeds in gebruik";
+                    else this.setLoggedIn(token);
                 }
             });
         }

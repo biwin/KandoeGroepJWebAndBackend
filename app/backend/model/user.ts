@@ -3,6 +3,8 @@ export class User {
     public _organisatorOf: string[] = [];
     public _memberOf: string[] = [];
     public _facebookId: number;
+    public _pictureSmall: string;
+    public _pictureLarge: string;
 
     constructor(public _name: string, public _email: string, public _password: string, public _registrar: string) {
 

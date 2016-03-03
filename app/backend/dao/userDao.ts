@@ -78,7 +78,7 @@ export class UserDao {
         });
     }
 
-    readUserByFacebookId(facebookId: number, callback: (u: User) => any) {
+    readUserByFacebookId(facebookId: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_facebookId': facebookId}).limit(1).next().then((cursor: CursorResult) => {
                 callback(cursor);
@@ -302,7 +302,7 @@ export class UserDao {
         });
     }
 
-    changeUsernameByFacebookId(facebookId: number, newName: string, callback: (b: boolean) => any) {
+    changeUsernameByFacebookId(facebookId: string, newName: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName}}, (err: MongoError, result) => {
                 db.close();

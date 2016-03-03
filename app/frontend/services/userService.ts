@@ -10,10 +10,27 @@ import {Router} from "angular2/router";
 export class UserService {
     private http: HttpWrapperService = null;
     private path: string;
+    private subscribers: any[] = [];
 
     constructor(private router: Router, http: HttpWrapperService, @Inject('App.BackendPath') path: string) {
         this.path = path;
         this.http = http;
+    }
+
+    subscribeMe(subscriber) {
+        this.subscribers.push(subscriber);
+    }
+
+    notifyLoggedIn() {
+        for (var index in this.subscribers) this.subscribers[index].notifyLoggedIn();
+    }
+
+    notifyLoggedOut() {
+        for (var index in this.subscribers) this.subscribers[index].notifyLoggedOut();
+    }
+
+    notifyUsernameUpdated() {
+        for (var index in this.subscribers) this.subscribers[index].notifyUsernameUpdated();
     }
 
     isLoggedIn(): boolean {
@@ -22,12 +39,7 @@ export class UserService {
     }
 
     changeUsername(newName: string) {
-        var token = localStorage.getItem('token');
-        var payloadEncoded = token.split('.')[1];
-        var payloadDecoded = atob(payloadEncoded);
-        var facebookId: number = JSON.parse(payloadDecoded).facebookId;
-        var type: string = JSON.parse(payloadDecoded).type;
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({'type': type, 'facebookId': facebookId, 'username': newName}), true, false, true);
+        return this.http.post(this.path + 'user/change-username', JSON.stringify({'username': newName}), true, false, true);
     }
 
     getUser(email: string, password: string): Observable<Response> {
@@ -38,7 +50,19 @@ export class UserService {
         return this.http.post(this.path + 'user/register', JSON.stringify({'username': name, 'password': password, 'email': email, 'registrar': registrar}), true, false, false);
     }
 
-    loginUserFacebook(id: number, name: string): Observable<Response> {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'name': name, 'facebookId': id, 'registrar': 'facebook'}), true, false, false);
+    loginUserFacebook(id: string, name: string, email: string, pictureSmall: string, pictureLarge: string): Observable<Response> {
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'name': name, 'email': email, 'facebookId': id, 'pictureSmall': pictureSmall, 'pictureLarge': pictureLarge, 'registrar': 'facebook'}), true, false, false);
+    }
+
+    getUserPicture(type: string) {
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({'type': type}), true, false, true);
+    }
+
+    getUsername(callback: (name: string) => any) {
+        var token = localStorage.getItem('token');
+        if (token == null || token == "") callback("");
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        callback(JSON.parse(payloadDecoded).name);
     }
 }

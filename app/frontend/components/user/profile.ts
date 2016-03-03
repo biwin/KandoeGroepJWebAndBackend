@@ -2,6 +2,8 @@ import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {UserService} from "../../services/userService";
 import {NgIf} from "angular2/common";
+import Request = Express.Request;
+import {Response} from "angular2/http";
 
 @Component({
     selector: 'profile',
@@ -11,9 +13,11 @@ import {NgIf} from "angular2/common";
             <div class="card formCard">
                 <div class="card-content">
                     <form *ngIf="service.isLoggedIn()" class="col s12" (ngSubmit)="onChangeDetailsSubmit()">
+                        <img src="{{imageSource}}" />
+
                         <div class="row"><div class="input-field col s6">
-                            <input id="username" type="text" [(ngModel)]="usernameString" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_username" required #username="ngForm">
-                            <label for="username" data-error="Oops!">Gebruikersnaam</label>
+                            <input id="username" [(ngModel)]="usernameString" type="text" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_username" required #username="ngForm">
+                            <label for="username" [class.active]="usernameString" data-error="Oops!">Gebruikersnaam</label>
                         </div></div>
 
                         <div class="row">
@@ -34,29 +38,33 @@ import {NgIf} from "angular2/common";
 export class Profile {
     private router: Router;
     private usernameString: string;
+    private imageSource: string;
 
     public constructor(router: Router, private service: UserService) {
         this.router = router;
         var token = localStorage.getItem('token');
         if (token == null || token == "") {
             this.router.navigate(['UserLogin']);
+        } else {
+            service.getUsername((name: string) => this.usernameString = name);
+            service.getUserPicture('large').subscribe((url: Response) => this.imageSource = url.text());
         }
     }
 
     onChangeDetailsSubmit() {
-        this.service.changeUsername(this.usernameString).subscribe((token: string) => {
-            if (token != null && token != "") {
-                if (token._body == "nope") this.errorInfo = "Email is reeds in gebruik";
-                else {
-                    localStorage.setItem('token', token._body);
-                    this.router.navigate(['Profile']);
+        this.service.changeUsername(this.usernameString).subscribe((token: Response) => {
+            if (token != null) {
+                if (token.text() != "nope") {
+                    localStorage.setItem('token', token.text());
+                    this.service.notifyUsernameUpdated();
                 }
             }
-        });;
+        });
     }
 
     logout() {
         localStorage.removeItem('token');
         this.router.navigate(['UserLogin']);
+        this.service.notifyLoggedOut();
     }
 }

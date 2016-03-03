@@ -7,7 +7,7 @@ export class UserApi {
     private static manager:UserManager = new UserManager();
 
     public static createUser(name:string, email:string, password:string, registrar:string, res) {
-        UserApi.manager.registerUser(new User(name, email, password, registrar), (u:User) => {
+        UserApi.manager.registerUser(new User(name, email, password, registrar), (u: User) => {
             if (u == null) {
                 res.send("nope");
             } else {
@@ -20,11 +20,18 @@ export class UserApi {
         });
     }
 
-    public static changeUsername(token, type: string, facebookId: number, newName: string, res) {
+    public static getPicture(token, type: string, res) {
+        UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
+            if (valid) UserApi.manager.getUserById(decodedClaim.id, (u: User) => res.send(type == 'small' ? u._pictureSmall : u._pictureLarge));
+            else res.send("nope");
+        });
+    }
+
+    public static changeUsername(token, newName: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
             if (valid) {
-                if (type == 'facebook') {
-                    UserApi.manager.changeUsernameByFacebookId(facebookId, newName, (u: User) => {
+                if (decodedClaim.type == 'facebook') {
+                    UserApi.manager.changeUsernameByFacebookId(decodedClaim.facebookId, newName, (u: User) => {
                         if (u == null) res.send("nope");
                         else res.send(UserApi.generateTokenForUser(u, "facebook"));
                     });
@@ -68,8 +75,8 @@ export class UserApi {
         return header + "." + claim + "." + signature;
     }
 
-    public static getFacebookUser(facebookId: number, name: string, registrar: string, res) {
-        UserApi.manager.facebookUserExists(facebookId, (exists:boolean) => {
+    public static getFacebookUser(facebookId: number, email: string, pictureSmall: string, pictureLarge: string, name: string, registrar: string, res) {
+        UserApi.manager.facebookUserExists(facebookId, (exists: boolean) => {
             if (exists) {
                 UserApi.manager.getFacebookUser(facebookId, (u: User) => {
                     if (u == null) {
@@ -83,8 +90,10 @@ export class UserApi {
                     }
                 });
             } else {
-                var user:User = new User(name, "", "", registrar);
+                var user: User = new User(name, email, "", registrar);
                 user._facebookId = facebookId;
+                user._pictureSmall = pictureSmall;
+                user._pictureLarge = pictureLarge;
                 UserApi.manager.registerUser(user, (u: User) => {
                     if (u == null) {
                         res.send("nope");
