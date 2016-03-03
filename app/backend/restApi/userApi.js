@@ -26,19 +26,19 @@ var UserApi = (function () {
                 res.send("nope");
         });
     };
-    UserApi.changeUsername = function (token, newName, res) {
+    UserApi.changeProfile = function (token, newName, newSmallPicture, newLargePicture, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid) {
                 if (decodedClaim.type == 'facebook') {
-                    UserApi.manager.changeUsernameByFacebookId(decodedClaim.facebookId, newName, function (u) {
+                    UserApi.manager.changeProfileByFacebookId(decodedClaim.facebookId, newName, newSmallPicture, newLargePicture, function (u) {
                         if (u == null)
                             res.send("nope");
                         else
-                            res.send(UserApi.generateTokenForUser(u, "facebook"));
+                            res.send(UserApi.generateTokenForUser(u, "facebook", u._facebookId));
                     });
                 }
                 else {
-                    UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, function (u) {
+                    UserApi.manager.changeProfileByEmail(decodedClaim.email, newName, newSmallPicture, newLargePicture, function (u) {
                         if (u == null)
                             res.send("nope");
                         else
@@ -77,9 +77,12 @@ var UserApi = (function () {
             }
         });
     };
-    UserApi.generateTokenForUser = function (u, type) {
+    UserApi.generateTokenForUser = function (u, type, facebookId) {
         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-        var claim = new Buffer(JSON.stringify({ "type": type, "name": u._name, "email": u._email, "id": u._id.toString() })).toString('base64');
+        var claimObject = { "type": type, "name": u._name, "email": u._email, "id": u._id.toString() };
+        if (facebookId)
+            claimObject.facebookId = facebookId;
+        var claim = new Buffer(JSON.stringify(claimObject)).toString('base64');
         var signature = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
     };

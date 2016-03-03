@@ -33,16 +33,16 @@ var UserService = (function () {
         for (var index in this.subscribers)
             this.subscribers[index].notifyLoggedOut();
     };
-    UserService.prototype.notifyUsernameUpdated = function () {
+    UserService.prototype.notifyProfileUpdated = function () {
         for (var index in this.subscribers)
-            this.subscribers[index].notifyUsernameUpdated();
+            this.subscribers[index].notifyProfileUpdated();
     };
     UserService.prototype.isLoggedIn = function () {
         var token = localStorage.getItem('token');
         return token != null && token != "";
     };
-    UserService.prototype.changeUsername = function (newName) {
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({ 'username': newName }), true, false, true);
+    UserService.prototype.changeProfile = function (newName, newSmallPictureLink, newLargePictureLink) {
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({ 'username': newName, 'smallPicture': newSmallPictureLink, 'largePicture': newLargePictureLink }), true, false, true);
     };
     UserService.prototype.getUser = function (email, password) {
         return this.http.post(this.path + 'user/login', JSON.stringify({ 'email': email, 'password': password }), true, false, false);
@@ -63,6 +63,14 @@ var UserService = (function () {
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         callback(JSON.parse(payloadDecoded).name);
+    };
+    UserService.prototype.getImageLinks = function (callback) {
+        var _this = this;
+        this.getUserPicture('small').subscribe(function (res1) {
+            _this.getUserPicture('large').subscribe(function (res2) {
+                callback(res1.text(), res2.text());
+            });
+        });
     };
     UserService = __decorate([
         core_1.Injectable(),

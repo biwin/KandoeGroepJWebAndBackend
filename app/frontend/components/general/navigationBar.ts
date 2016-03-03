@@ -15,7 +15,7 @@ import {Response} from "angular2/http";
                 <li>
                     <a [routerLink]="service.isLoggedIn() ? ['Profile'] : ['UserLogin']">
                             <i *ngIf="imageSource == null || imageSource == ''" style="display: inline; vertical-align: middle;" class="material-icons">face</i>
-                            <img *ngIf="imageSource != null && imageSource != ''" style="display: inline; vertical-align: middle;" src="{{imageSource}}"/>
+                            <img *ngIf="imageSource != null && imageSource != ''" style="display: inline; vertical-align: middle; max-width: 50px; max-height: 50px;" src="{{imageSource}}"/>
                             <p style="display: inline;">{{usernameString}}</p>
                     </a>
                 </li>
@@ -61,8 +61,9 @@ export class NavigationBar implements AfterViewInit {
         this.usernameString = "Gast";
     }
 
-    notifyUsernameUpdated() {
+    notifyProfileUpdated() {
         this.service.getUsername((name: string) => this.usernameString = name);
+        this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
     }
 
     getUserName() {

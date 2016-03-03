@@ -232,9 +232,9 @@ var UserManager = (function () {
     UserManager.prototype.setUserOrganisatorOf = function (uId, oId, callback) {
         this._dao.setUserOrganisatorOf(uId, oId, callback);
     };
-    UserManager.prototype.changeUsernameByEmail = function (email, newName, callback) {
+    UserManager.prototype.changeProfileByEmail = function (email, newName, newSmallPicture, newLargePicture, callback) {
         var _this = this;
-        this._dao.changeUsernameByEmail(email, newName, function (success) {
+        this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, function (success) {
             if (success) {
                 _this._dao.readUserByEmail(email, callback);
             }
@@ -243,9 +243,9 @@ var UserManager = (function () {
             }
         });
     };
-    UserManager.prototype.changeUsernameByFacebookId = function (facebookId, newName, callback) {
+    UserManager.prototype.changeProfileByFacebookId = function (facebookId, newName, newSmallPicture, newLargePicture, callback) {
         var _this = this;
-        this._dao.changeUsernameByFacebookId(facebookId, newName, function (success) {
+        this._dao.changeProfileByFacebookId(facebookId, newName, newSmallPicture, newLargePicture, function (success) {
             if (success) {
                 _this._dao.readUserByFacebookId(facebookId, callback);
             }

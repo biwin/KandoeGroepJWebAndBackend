@@ -2,7 +2,7 @@ export class User {
     public _id: string;
     public _organisatorOf: string[] = [];
     public _memberOf: string[] = [];
-    public _facebookId: number;
+    public _facebookId: string;
     public _pictureSmall: string;
     public _pictureLarge: string;
 

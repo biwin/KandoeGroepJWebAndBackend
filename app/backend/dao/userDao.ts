@@ -293,20 +293,20 @@ export class UserDao {
         });
     }
 
-    changeUsernameByEmail(email: string, newName: string, callback: (b: boolean) => any) {
+    changeProfileByEmail(email: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName}}, (err: MongoError, result) => {
+            db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result) => {
                 db.close();
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount >= 1);
             });
         });
     }
 
-    changeUsernameByFacebookId(facebookId: string, newName: string, callback: (b: boolean) => any) {
+    changeProfileByFacebookId(facebookId: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName}}, (err: MongoError, result) => {
+            db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result) => {
                 db.close();
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount >= 1);
             });
         });
     }

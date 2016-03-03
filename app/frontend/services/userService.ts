@@ -29,8 +29,8 @@ export class UserService {
         for (var index in this.subscribers) this.subscribers[index].notifyLoggedOut();
     }
 
-    notifyUsernameUpdated() {
-        for (var index in this.subscribers) this.subscribers[index].notifyUsernameUpdated();
+    notifyProfileUpdated() {
+        for (var index in this.subscribers) this.subscribers[index].notifyProfileUpdated();
     }
 
     isLoggedIn(): boolean {
@@ -38,8 +38,8 @@ export class UserService {
         return token != null && token != "";
     }
 
-    changeUsername(newName: string) {
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({'username': newName}), true, false, true);
+    changeProfile(newName: string, newSmallPictureLink: string, newLargePictureLink: string) {
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({'username': newName, 'smallPicture': newSmallPictureLink, 'largePicture': newLargePictureLink}), true, false, true);
     }
 
     getUser(email: string, password: string): Observable<Response> {
@@ -64,5 +64,13 @@ export class UserService {
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         callback(JSON.parse(payloadDecoded).name);
+    }
+
+    getImageLinks(callback: (smallImageLink: string, largeImageLink: string) => any) {
+        this.getUserPicture('small').subscribe((res1: Response) => {
+            this.getUserPicture('large').subscribe((res2: Response) => {
+                callback(res1.text(), res2.text());
+            });
+        });
     }
 }

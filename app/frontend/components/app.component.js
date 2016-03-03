@@ -30,7 +30,6 @@ var AppComponent = (function () {
     function AppComponent(router, userService) {
         var _this = this;
         this.router = router;
-        this.router.navigate(['Home']);
         this.router.subscribe(function (url) {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
                 _this.router.navigate(['Hello']);

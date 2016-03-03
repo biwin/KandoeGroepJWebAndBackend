@@ -257,8 +257,8 @@ export class UserManager {
         this._dao.setUserOrganisatorOf(uId, oId, callback);
     }
 
-    changeUsernameByEmail(email: string, newName: string, callback: (u: User) => any) {
-        this._dao.changeUsernameByEmail(email, newName, (success: boolean) => {
+    changeProfileByEmail(email: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (u: User) => any) {
+        this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, (success: boolean) => {
             if (success) {
                 this._dao.readUserByEmail(email, callback);
             } else {
@@ -267,8 +267,8 @@ export class UserManager {
         });
     }
 
-    changeUsernameByFacebookId(facebookId: string, newName: string, callback: (u: User) => any) {
-        this._dao.changeUsernameByFacebookId(facebookId, newName, (success: boolean) => {
+    changeProfileByFacebookId(facebookId: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (u: User) => any) {
+        this._dao.changeProfileByFacebookId(facebookId, newName, newSmallPicture, newLargePicture, (success: boolean) => {
             if (success) {
                 this._dao.readUserByFacebookId(facebookId, callback);
             } else {

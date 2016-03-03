@@ -247,19 +247,19 @@ var UserDao = (function () {
             });
         });
     };
-    UserDao.prototype.changeUsernameByEmail = function (email, newName, callback) {
+    UserDao.prototype.changeProfileByEmail = function (email, newName, newSmallPicture, newLargePicture, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').updateOne({ '_email': email }, { $set: { '_name': newName } }, function (err, result) {
+            db.collection('users').updateOne({ '_email': email }, { $set: { '_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture } }, function (err, result) {
                 db.close();
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount >= 1);
             });
         });
     };
-    UserDao.prototype.changeUsernameByFacebookId = function (facebookId, newName, callback) {
+    UserDao.prototype.changeProfileByFacebookId = function (facebookId, newName, newSmallPicture, newLargePicture, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').updateOne({ '_facebookId': facebookId }, { $set: { '_name': newName } }, function (err, result) {
+            db.collection('users').updateOne({ '_facebookId': facebookId }, { $set: { '_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture } }, function (err, result) {
                 db.close();
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount >= 1);
             });
         });
     };

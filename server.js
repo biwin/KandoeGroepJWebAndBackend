@@ -113,10 +113,10 @@ app.post('/api/user/login-facebook', function(req, res) {
     UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.email, req.body.pictureSmall, req.body.pictureLarge, req.body.name, req.body.registrar, res);
 });
 
-app.post('/api/user/change-username', function(req, res) {
+app.post('/api/user/change-profile', function(req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        UserApi.UserApi.changeUsername(token, req.body.username, res);
+        UserApi.UserApi.changeProfile(token, req.body.username, req.body.smallPicture, req.body.largePicture, res);
     } else {
         res.send("You are not logged in");
     }

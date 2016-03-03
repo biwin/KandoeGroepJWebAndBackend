@@ -4,7 +4,7 @@ var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
 
-    private static manager:UserManager = new UserManager();
+    private static manager: UserManager = new UserManager();
 
     public static createUser(name:string, email:string, password:string, registrar:string, res) {
         UserApi.manager.registerUser(new User(name, email, password, registrar), (u: User) => {
@@ -27,16 +27,16 @@ export class UserApi {
         });
     }
 
-    public static changeUsername(token, newName: string, res) {
+    public static changeProfile(token, newName: string, newSmallPicture: string, newLargePicture: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
             if (valid) {
                 if (decodedClaim.type == 'facebook') {
-                    UserApi.manager.changeUsernameByFacebookId(decodedClaim.facebookId, newName, (u: User) => {
+                    UserApi.manager.changeProfileByFacebookId(decodedClaim.facebookId, newName, newSmallPicture, newLargePicture, (u: User) => {
                         if (u == null) res.send("nope");
-                        else res.send(UserApi.generateTokenForUser(u, "facebook"));
+                        else res.send(UserApi.generateTokenForUser(u, "facebook", u._facebookId));
                     });
                 } else {
-                    UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, (u: User) => {
+                    UserApi.manager.changeProfileByEmail(decodedClaim.email, newName, newSmallPicture, newLargePicture, (u: User) => {
                         if (u == null) res.send("nope");
                         else res.send(UserApi.generateTokenForUser(u, "web"));
                     });
@@ -68,9 +68,11 @@ export class UserApi {
         });
     }
 
-    private static generateTokenForUser(u: User, type: string) {
+    private static generateTokenForUser(u: User, type: string, facebookId?: string) {
         var header: string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
-        var claim: string = new Buffer(JSON.stringify({"type": type, "name": u._name, "email": u._email, "id": u._id.toString()})).toString('base64');
+        var claimObject: any = {"type": type, "name": u._name, "email": u._email, "id": u._id.toString()};
+        if (facebookId) claimObject.facebookId = facebookId;
+        var claim: string = new Buffer(JSON.stringify(claimObject)).toString('base64');
         var signature: string = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
     }
