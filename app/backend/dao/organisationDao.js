@@ -13,7 +13,6 @@ var OrganisationDao = (function () {
                 }
                 organisation._id = result.insertedId;
                 db.close();
-                gfg;
                 callback(organisation);
             });
         });

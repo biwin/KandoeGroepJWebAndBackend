@@ -26,7 +26,12 @@ var UserService = (function () {
         return token != null && token != "";
     };
     UserService.prototype.changeUsername = function (newName) {
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({ 'username': newName }), true, false, true);
+        var token = localStorage.getItem('token');
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        var facebookId = JSON.parse(payloadDecoded).facebookId;
+        var type = JSON.parse(payloadDecoded).type;
+        return this.http.post(this.path + 'user/change-username', JSON.stringify({ 'type': type, 'facebookId': facebookId, 'username': newName }), true, false, true);
     };
     UserService.prototype.getUser = function (email, password) {
         return this.http.post(this.path + 'user/login', JSON.stringify({ 'email': email, 'password': password }), true, false, false);

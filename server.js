@@ -106,9 +106,10 @@ app.post('/api/user/login-facebook', function(req, res) {
 });
 
 app.post('/api/user/change-username', function(req, res) {
+    console.log("Change request for: " + req.body.username + ": " + req.body.type + ": " + req.body.facebookId);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        UserApi.UserApi.changeUsername(token, req.body.username, res);
+        UserApi.UserApi.changeUsername(token, req.body.type, req.body.facebookId, req.body.username, res);
     } else {
         res.send("You are not logged in");
     }

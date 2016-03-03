@@ -243,6 +243,17 @@ var UserManager = (function () {
             }
         });
     };
+    UserManager.prototype.changeUsernameByFacebookId = function (facebookId, newName, callback) {
+        var _this = this;
+        this._dao.changeUsernameByFacebookId(facebookId, newName, function (success) {
+            if (success) {
+                _this._dao.readUserByFacebookId(facebookId, callback);
+            }
+            else {
+                callback(null);
+            }
+        });
+    };
     return UserManager;
 })();
 exports.UserManager = UserManager;

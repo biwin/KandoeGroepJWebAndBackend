@@ -78,6 +78,14 @@ export class UserDao {
         });
     }
 
+    readUserByFacebookId(facebookId: number, callback: (u: User) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_facebookId': facebookId}).limit(1).next().then((cursor: CursorResult) => {
+                callback(cursor);
+            });
+        });
+    }
+
     readGroupById(id:string, callback: (g: Group) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('groups').find({'_id': new ObjectID(id)}).limit(1).next();
@@ -288,6 +296,15 @@ export class UserDao {
     changeUsernameByEmail(email: string, newName: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName}}, (err: MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    changeUsernameByFacebookId(facebookId: number, newName: string, callback: (b: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName}}, (err: MongoError, result) => {
                 db.close();
                 callback(result.modifiedCount == 1);
             });

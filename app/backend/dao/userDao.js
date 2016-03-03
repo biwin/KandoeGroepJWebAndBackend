@@ -58,6 +58,13 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.readUserByFacebookId = function (facebookId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('users').find({ '_facebookId': facebookId }).limit(1).next().then(function (cursor) {
+                callback(cursor);
+            });
+        });
+    };
     UserDao.prototype.readGroupById = function (id, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('groups').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
@@ -243,6 +250,14 @@ var UserDao = (function () {
     UserDao.prototype.changeUsernameByEmail = function (email, newName, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').updateOne({ '_email': email }, { $set: { '_name': newName } }, function (err, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.changeUsernameByFacebookId = function (facebookId, newName, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateOne({ '_facebookId': facebookId }, { $set: { '_name': newName } }, function (err, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
             });

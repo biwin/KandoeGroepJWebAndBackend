@@ -11,22 +11,32 @@ var UserApi = (function () {
             }
             else {
                 var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id, "email": email })).toString('base64');
+                var claim = new Buffer(JSON.stringify({ "type": "web", "name": name, "id": u._id, "email": email })).toString('base64');
                 var signature = SHA256(header + "." + claim);
                 var token = header + "." + claim + "." + signature;
                 res.send(token);
             }
         });
     };
-    UserApi.changeUsername = function (token, newName, res) {
+    UserApi.changeUsername = function (token, type, facebookId, newName, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid) {
-                UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, function (u) {
-                    if (u == null)
-                        res.send("nope");
-                    else
-                        res.send(UserApi.generateTokenForUser(u));
-                });
+                if (type == 'facebook') {
+                    UserApi.manager.changeUsernameByFacebookId(facebookId, newName, function (u) {
+                        if (u == null)
+                            res.send("nope");
+                        else
+                            res.send(UserApi.generateTokenForUser(u, "facebook"));
+                    });
+                }
+                else {
+                    UserApi.manager.changeUsernameByEmail(decodedClaim.email, newName, function (u) {
+                        if (u == null)
+                            res.send("nope");
+                        else
+                            res.send(UserApi.generateTokenForUser(u, "web"));
+                    });
+                }
             }
             else {
                 res.send("nope");
@@ -55,32 +65,26 @@ var UserApi = (function () {
                 res.send("nope");
             }
             else {
-                res.send(UserApi.generateTokenForUser(u));
+                res.send(UserApi.generateTokenForUser(u, "web"));
             }
         });
     };
-    UserApi.generateTokenForUser = function (u) {
+    UserApi.generateTokenForUser = function (u, type) {
         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-        var claim = new Buffer(JSON.stringify({ "name": u._name, "email": u._email, "id": u._id.toString() })).toString('base64');
+        var claim = new Buffer(JSON.stringify({ "type": type, "name": u._name, "email": u._email, "id": u._id.toString() })).toString('base64');
         var signature = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
     };
-    UserApi.getFacebookUser = function (id, name, registrar, res) {
-        UserApi.manager.facebookUserExists(id, function (exists) {
+    UserApi.getFacebookUser = function (facebookId, name, registrar, res) {
+        UserApi.manager.facebookUserExists(facebookId, function (exists) {
             if (exists) {
-                UserApi.manager.getFacebookUser(id, function (u) {
+                UserApi.manager.getFacebookUser(facebookId, function (u) {
                     if (u == null) {
                         res.send("nope");
                     }
                     else {
-                        var header = new Buffer(JSON.stringify({
-                            "typ": "JWT",
-                            "alg": "HS256"
-                        })).toString('base64');
-                        var claim = new Buffer(JSON.stringify({
-                            "name": name,
-                            "id": u._id.toString()
-                        })).toString('base64');
+                        var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
+                        var claim = new Buffer(JSON.stringify({ "facebookId": facebookId, "type": "facebook", "name": u._name, "id": u._id.toString() })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;
                         res.send(token);
@@ -89,17 +93,14 @@ var UserApi = (function () {
             }
             else {
                 var user = new user_1.User(name, "", "", registrar);
-                user._facebookId = id;
+                user._facebookId = facebookId;
                 UserApi.manager.registerUser(user, function (u) {
                     if (u == null) {
                         res.send("nope");
                     }
                     else {
-                        var header = new Buffer(JSON.stringify({
-                            "typ": "JWT",
-                            "alg": "HS256"
-                        })).toString('base64');
-                        var claim = new Buffer(JSON.stringify({ "name": name, "id": u._id })).toString('base64');
+                        var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
+                        var claim = new Buffer(JSON.stringify({ "facebookId": facebookId, "type": "facebook", "name": name, "id": u._id })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;
                         res.send(token);

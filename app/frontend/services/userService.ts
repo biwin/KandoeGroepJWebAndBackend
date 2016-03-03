@@ -22,7 +22,12 @@ export class UserService {
     }
 
     changeUsername(newName: string) {
-        return this.http.post(this.path + 'user/change-username', JSON.stringify({'username': newName}), true, false, true);
+        var token = localStorage.getItem('token');
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        var facebookId: number = JSON.parse(payloadDecoded).facebookId;
+        var type: string = JSON.parse(payloadDecoded).type;
+        return this.http.post(this.path + 'user/change-username', JSON.stringify({'type': type, 'facebookId': facebookId, 'username': newName}), true, false, true);
     }
 
     getUser(email: string, password: string): Observable<Response> {
