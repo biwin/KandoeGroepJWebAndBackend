@@ -15,7 +15,8 @@ bootstrap(AppComponent, [
     UserService,
     HttpWrapperService,
     CircleSessionService,
-    provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}),
+    //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}),
+    provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}),
     provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppComponent}),
     provide(APP_BASE_HREF, {useValue: '/'}),
     provide(LocationStrategy, {useClass: HashLocationStrategy})

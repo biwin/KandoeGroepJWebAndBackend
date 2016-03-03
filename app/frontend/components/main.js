@@ -14,7 +14,8 @@ browser_1.bootstrap(app_component_1.AppComponent, [
     userService_1.UserService,
     httpWrapperService_1.HttpWrapperService,
     circleSessionService_1.CircleSessionService,
-    core_1.provide('App.BackendPath', { useValue: 'http://localhost:8080/api/' }),
+    //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}),
+    core_1.provide('App.BackendPath', { useValue: 'http://kandoe.be/api/' }),
     core_1.provide(router_1.ROUTER_PRIMARY_COMPONENT, { useValue: app_component_1.AppComponent }),
     core_1.provide(router_1.APP_BASE_HREF, { useValue: '/' }),
     core_1.provide(router_1.LocationStrategy, { useClass: router_1.HashLocationStrategy })
