@@ -30,6 +30,6 @@ export class GroupManager {
     }
 
     removeGroupById(groupId: string, callback: (deleted: boolean) => any) {
-
+        this._dao.deleteGroupById(groupId, callback);
     }
 }

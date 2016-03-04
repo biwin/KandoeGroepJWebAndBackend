@@ -48,4 +48,14 @@ export class GroupDao {
             });
         });
     }
+
+    deleteGroupById(groupId: string, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').deleteOne({'_id': groupId}, (err: MongoError, result) => {
+                db.close();
+
+                callback(result.deletedCount == 1);
+            });
+        });
+    }
 }

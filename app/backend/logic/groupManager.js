@@ -23,6 +23,7 @@ var GroupManager = (function () {
         this._dao.getGroupById(groupId, callback);
     };
     GroupManager.prototype.removeGroupById = function (groupId, callback) {
+        this._dao.deleteGroupById(groupId, callback);
     };
     return GroupManager;
 })();
