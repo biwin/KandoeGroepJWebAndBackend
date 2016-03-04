@@ -1,8 +1,32 @@
+/// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+
+import {MongoClient, Db, MongoError} from "mongodb";
+
+import {DaoConstants} from "./daoConstants";
+
 import {Group} from "../model/group";
 
 export class GroupDao {
-    createGroup(group: Group, callback: (newOrganisation: Group) => any) {
+    private _client: MongoClient;
 
+    constructor() {
+        this._client = new MongoClient();
+    }
+
+    createGroup(group: Group, callback: (newGroup: Group) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').insertOne(group, (error: MongoError, result) => {
+                if (error != null) {
+                    console.log(error.message);
+                }
+
+                group._id = result.insertedId;
+
+                db.close();
+
+                callback(group);
+            });
+        });
     }
 
     getGroupByNameAndOrganisationId(groupName: string, organisationId: string, callback: (group: Group) => any) {
