@@ -2,6 +2,7 @@ import {Component, AfterViewInit} from "angular2/core";
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
 import {Router, RouteParams} from "angular2/router";
 
+import {GroupService} from "../../services/groupService";
 import {UserService} from "../../services/userService";
 
 import {Group} from "../../../backend/model/group";
@@ -43,6 +44,7 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class GroupForm implements AfterViewInit {
     router: Router;
+    groupService: GroupService;
     userService: UserService;
     private group: Group = Group.empty();
 
@@ -54,8 +56,9 @@ export class GroupForm implements AfterViewInit {
         new Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
     ];
 
-    public constructor(router: Router, routeParam: RouteParams, userService: UserService) {
+    public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
         this.router = router;
+        this.groupService = groupService;
         this.userService = userService;
 
         for (var i = 0; i < this.organisations.length; i++) {
@@ -76,8 +79,9 @@ export class GroupForm implements AfterViewInit {
             this.group._memberIds.push(userId);
         });
 
-        //TODO: call backend
-        alert(this.group._name + "  " + this.group._description + " " + this.organisations[this.group._organisationId]._name + "  " + this.group._memberIds.length);
+        this.groupService.createGroup(this.group).subscribe((g: Group) => {
+            this.router.navigate(["/GroupDetail", {id: g._id}]);
+        });
     }
 
     ngAfterViewInit(): any {
