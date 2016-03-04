@@ -49,4 +49,47 @@ describe("GroupManager", () => {
             }
         });
     });
+
+    describe("createGroupTwice", () => {
+        var group: Group;
+
+        before(function (done: any) {
+            groupManager.createGroup(new Group("Voeding", "Ploeg voeding", "Delhaize", []), (g: Group) => {
+                try {
+                    group = g;
+
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            });
+        });
+
+        it("Create group with the same name in the same organisation, should return null from database", function(done: any) {
+            this.timeout(0);
+
+            var group2 = new Group("Voeding", "Ploeg voeding", "Delhaize", []);
+            groupManager.createGroup(group2, (g: Group) => {
+                try {
+                    assert.equal(g, null);
+
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            });
+        });
+
+        after(function (done: any) {
+            this.timeout(0);
+
+            try {
+                groupManager.removeGroupById(group._id, () => {
+                    done();
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
 });
