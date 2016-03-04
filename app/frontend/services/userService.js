@@ -64,6 +64,14 @@ var UserService = (function () {
         var payloadDecoded = atob(payloadEncoded);
         callback(JSON.parse(payloadDecoded).name);
     };
+    UserService.prototype.getUserId = function (callback) {
+        var token = localStorage.getItem('token');
+        if (token == null || token == "")
+            callback("");
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        callback(JSON.parse(payloadDecoded).id);
+    };
     UserService.prototype.getImageLinks = function (callback) {
         var _this = this;
         this.getUserPicture('small').subscribe(function (res1) {

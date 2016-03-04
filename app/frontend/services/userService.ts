@@ -66,6 +66,14 @@ export class UserService {
         callback(JSON.parse(payloadDecoded).name);
     }
 
+    getUserId(callback: (name: string) => any) {
+        var token = localStorage.getItem('token');
+        if (token == null || token == "") callback("");
+        var payloadEncoded = token.split('.')[1];
+        var payloadDecoded = atob(payloadEncoded);
+        callback(JSON.parse(payloadDecoded).id);
+    }
+
     getImageLinks(callback: (smallImageLink: string, largeImageLink: string) => any) {
         this.getUserPicture('small').subscribe((res1: Response) => {
             this.getUserPicture('large').subscribe((res2: Response) => {
