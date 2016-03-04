@@ -10,7 +10,15 @@ import {User} from "../../../backend/model/user";
     selector: 'organisation-detail',
     template: `
     <div class="row container">
-        <h5>{{organisation._name}}</h5>
+        <div id="organisationHeader">
+            <h5>{{organisation._name}}</h5>
+
+            <div id="organisationMenu">
+                <a class="btn-floating waves-effect waves-light red"(click)="edit()" title="Bewerk organisatie">
+                    <i class="material-icons">mode_edit</i>
+                </a>
+            </div>
+        </div>
 
         <div class="card"><div class="card-content">
             <p># groepen: {{organisation._groupIds.length}}</p>
@@ -22,7 +30,7 @@ import {User} from "../../../backend/model/user";
             <h5>Groepen</h5>
 
             <div id="groupsMenu">
-                <a class="btn-floating btn-large waves-effect waves-light red"(click)="addGroup()" title="Voeg groep toe">
+                <a class="btn-floating waves-effect waves-light red"(click)="addGroup()" title="Voeg groep toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -53,7 +61,7 @@ import {User} from "../../../backend/model/user";
             <h5>Leden</h5>
 
             <div id="membersMenu">
-                <a class="btn-floating btn-large waves-effect waves-light red"(click)="addMember()" title="Voeg lid toe">
+                <a class="btn-floating waves-effect waves-light red"(click)="addMember()" title="Voeg lid toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -97,7 +105,14 @@ export class OrganisationDetail {
         this.members = this.organisation.getMembers();
     }
 
-    //TODO: styling van addGroup-button
+    //TODO: styling van edit button
+    //TODO: uitwerking edit methode
+    private edit(): void {
+        //this.router.navigate(["/EditOrganisation", {id: this.organisation._id}]);
+        alert("Edit");
+    }
+
+    //TODO: styling van addGroup button
     private addGroup(): void {
         //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
         this.router.navigate(["/CreateGroup", {organisationId: "Albert Hein"}]);
