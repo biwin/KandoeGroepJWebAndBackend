@@ -18,6 +18,12 @@ var GroupDao = (function () {
         });
     };
     GroupDao.prototype.getGroupByNameAndOrganisationId = function (groupName, organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').find({ '_name': groupName, '_organisationId': organisationId }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
+        });
     };
     return GroupDao;
 })();

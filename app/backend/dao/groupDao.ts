@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError} from "mongodb";
+import {MongoClient, Db, MongoError, CursorResult} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
 
@@ -30,6 +30,12 @@ export class GroupDao {
     }
 
     getGroupByNameAndOrganisationId(groupName: string, organisationId: string, callback: (group: Group) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').find({'_name': groupName,'_organisationId': organisationId}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
 
+                callback(cursor);
+            });
+        });
     }
 }
