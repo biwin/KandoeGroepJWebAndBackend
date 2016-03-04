@@ -1,0 +1,1 @@
+{"version":3,"file":"groupDao.js","sourceRoot":"","sources":["groupDao.ts"],"names":["GroupDao","GroupDao.constructor","GroupDao.createGroup"],"mappings":"AAEA;IAAAA;IAIAC,CAACA;IAHGD,8BAAWA,GAAXA,UAAYA,KAAYA,EAAEA,QAAyCA;IAEnEE,CAACA;IACLF,eAACA;AAADA,CAACA,AAJD,IAIC;AAJY,gBAAQ,WAIpB,CAAA"}
