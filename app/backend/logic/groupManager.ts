@@ -26,7 +26,7 @@ export class GroupManager {
     }
 
     getGroupById(groupId: string, callback: (group: Group) => any) {
-
+        this._dao.getGroupById(groupId, callback);
     }
 
     removeGroupById(groupId: string, callback: (deleted: boolean) => any) {

@@ -25,6 +25,14 @@ var GroupDao = (function () {
             });
         });
     };
+    GroupDao.prototype.getGroupById = function (groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').find({ '_id': new mongodb_1.ObjectID(groupId) }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
+        });
+    };
     return GroupDao;
 })();
 exports.GroupDao = GroupDao;
