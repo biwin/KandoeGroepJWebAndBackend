@@ -3,6 +3,7 @@ import {Http, Headers, Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
 
 import {Organisation} from "../../backend/model/organisation";
+import {Group} from "../../backend/model/group";
 
 @Injectable()
 export class OrganisationService {
@@ -20,5 +21,13 @@ export class OrganisationService {
         header.append("Content-Type", "application/json");
 
         return this.http.post(this.path + "organisations/", JSON.stringify(organisation), {headers: header}).map((res: Response) => res.json());
+    }
+
+    getGroupsOfOrganisationById(organisationId: string): Observable<Group[]> {
+        var header = new Headers();
+
+        header.append("Content-Type", "application/json");
+
+        return this.http.get(this.path + "organisations/" + organisationId + "/groups").map((res: Response) => res.json());
     }
 }
