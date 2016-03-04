@@ -48,6 +48,13 @@ var GroupDao = (function () {
             });
         });
     };
+    GroupDao.prototype.getGroupsOfUserById = function (userId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').find({ '_memberIds': { '$in': [userId] } }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return GroupDao;
 })();
 exports.GroupDao = GroupDao;

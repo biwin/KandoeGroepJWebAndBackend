@@ -28,6 +28,9 @@ var GroupManager = (function () {
     GroupManager.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);
     };
+    GroupManager.prototype.getGroupsOfUserById = function (userId, callback) {
+        this._dao.getGroupsOfUserById(userId, callback);
+    };
     return GroupManager;
 })();
 exports.GroupManager = GroupManager;

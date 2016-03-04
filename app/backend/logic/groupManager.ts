@@ -36,4 +36,8 @@ export class GroupManager {
     getGroupsOfOrganisationById(organisationId: string, callback: (groups: Group[]) => any) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);
     }
+
+    getGroupsOfUserById(userId:string, callback:(groups:Group[]) => any) {
+        this._dao.getGroupsOfUserById(userId, callback);
+    }
 }
