@@ -66,4 +66,12 @@ export class GroupDao {
             });
         });
     }
+
+    getGroupsOfUserById(userId:string,callback:(groups: Group[]) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').find({'_memberIds': { '$in': [userId]}}).toArray((err: MongoError, docs: Group[]) => {
+                callback(docs);
+            });
+        });
+    }
 }

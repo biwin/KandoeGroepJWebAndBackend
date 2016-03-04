@@ -1,5 +1,6 @@
 import {UserManager} from "../logic/userManager";
 import {User} from "../model/user";
+import {GroupAPI} from "./groupAPI";
 var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
@@ -109,5 +110,9 @@ export class UserApi {
                 });
             }
         });
+    }
+
+    public static getGroups(userId:string, res){
+        GroupAPI.getGroupsOfUserById(userId, res);
     }
 }

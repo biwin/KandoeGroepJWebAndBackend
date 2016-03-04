@@ -17,6 +17,11 @@ var GroupAPI = (function () {
             res.send(groups);
         });
     };
+    GroupAPI.getGroupsOfUserById = function (userId, res) {
+        this.mgr.getGroupsOfUserById(userId, function (groups) {
+            res.send(groups);
+        });
+    };
     GroupAPI.mgr = new groupManager_1.GroupManager();
     return GroupAPI;
 })();

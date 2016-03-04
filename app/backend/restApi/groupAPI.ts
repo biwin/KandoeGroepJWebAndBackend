@@ -22,4 +22,10 @@ export class GroupAPI {
             res.send(groups);
         });
     }
+
+    public static getGroupsOfUserById(userId:string, res) {
+        this.mgr.getGroupsOfUserById(userId, (groups:Group[]) =>{
+            res.send(groups);
+        });
+    }
 }
