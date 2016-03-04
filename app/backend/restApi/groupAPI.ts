@@ -16,4 +16,10 @@ export class GroupAPI {
             res.send(group);
         });
     }
+
+    public static getGroupsOfOrganisationById(organisationId: string, res) {
+        this.mgr.getGroupsOfOrganisationById(organisationId, (groups: Group[]) => {
+            res.send(groups);
+        });
+    }
 }
