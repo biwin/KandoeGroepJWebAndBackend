@@ -1,6 +1,8 @@
 import {Component, AfterViewInit} from "angular2/core";
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
-import {RouteParams} from "angular2/router";
+import {Router, RouteParams} from "angular2/router";
+
+import {UserService} from "../../services/userService";
 
 import {Group} from "../../../backend/model/group";
 import {Organisation} from "../../../backend/model/organisation";
@@ -40,7 +42,10 @@ import {Organisation} from "../../../backend/model/organisation";
 })
 
 export class GroupForm implements AfterViewInit {
+    router: Router;
+    userService: UserService;
     private group: Group = Group.empty();
+
     private organisations: Organisation[] = [
         new Organisation("Delhaize", ["Michaël", "Jan"]),
         new Organisation("Colruyt", ["Michaël"]),
@@ -49,8 +54,9 @@ export class GroupForm implements AfterViewInit {
         new Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
     ];
 
-    public constructor(routeParam: RouteParams) {
-//        console.log(routeParam.params["organisationId"]);
+    public constructor(router: Router, routeParam: RouteParams, userService: UserService) {
+        this.router = router;
+        this.userService = userService;
 
         for (var i = 0; i < this.organisations.length; i++) {
             var organisation: Organisation = this.organisations[i];
@@ -63,11 +69,12 @@ export class GroupForm implements AfterViewInit {
         } else {
             this.group._organisationId = "";
         }
-
     }
 
     private OnSubmit() {
-        this.group._memberIds.push("CURRENT_USER_ID");
+        this.userService.getUserId((userId: string) => {
+            this.group._memberIds.push(userId);
+        });
 
         //TODO: call backend
         alert(this.group._name + "  " + this.group._description + " " + this.organisations[this.group._organisationId]._name + "  " + this.group._memberIds.length);
