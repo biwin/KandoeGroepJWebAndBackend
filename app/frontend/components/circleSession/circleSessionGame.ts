@@ -29,7 +29,7 @@ import {CardPosition} from "../../../backend/model/cardPosition";
                     <circle *ngFor="#bol of pst; #i = index"
                             [id]="bol._cardId"
                             [attr.r]="35" [attr.fill]="hoveredCardId === bol._cardId ? constants.HOVERED_COLOR : constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
-                            [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)" stroke-width="2" [attr.stroke]="constants.CARD_STROKE_COLOR"/>
+                            [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
                 </svg>
             </div>
         </div>

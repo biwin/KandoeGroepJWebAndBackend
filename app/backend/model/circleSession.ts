@@ -1,6 +1,7 @@
 export class CircleSession {
     public _id:string;
     constructor(public _groupId:string,
+                public _userIds:string[],
                 public _themeId:string,
                 public _creatorId: string,
                 /* _startDate format: dd/mm/yyyy hh:mm */
@@ -12,6 +13,6 @@ export class CircleSession {
                 public _turnTimeMin?:number) {}
 
     public static empty():CircleSession{
-        return new CircleSession("","","","",false,false,null,true,null);
+        return new CircleSession("",[] , "","","",false,false,null,true,null);
     }
 }
