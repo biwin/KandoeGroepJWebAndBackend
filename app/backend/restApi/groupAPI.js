@@ -12,6 +12,11 @@ var GroupAPI = (function () {
             res.send(group);
         });
     };
+    GroupAPI.getGroupsOfOrganisationById = function (organisationId, res) {
+        this.mgr.getGroupsOfOrganisationById(organisationId, function (groups) {
+            res.send(groups);
+        });
+    };
     GroupAPI.mgr = new groupManager_1.GroupManager();
     return GroupAPI;
 })();

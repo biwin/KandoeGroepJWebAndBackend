@@ -68,6 +68,10 @@ app.get("/api/organisations/:id", function(req, res) {
 app.post("/api/organisations", function(req, res) {
     OrganisationAPI.OrganisationAPI.create(req.body, res);
 });
+
+app.get("/api/organisations/:id/groups", function(req, res) {
+    OrganisationAPI.OrganisationAPI.getGroups(req.params.id, res);
+});
 //endregion
 
 //region group routes

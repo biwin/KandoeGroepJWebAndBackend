@@ -58,4 +58,12 @@ export class GroupDao {
             });
         });
     }
+
+    getGroupsOfOrganisationById(organisationId: string, callback:(groups: Group[]) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').find({'_organisationId': organisationId}).toArray((err: MongoError, docs: Group[]) => {
+                callback(docs);
+            });
+        });
+    }
 }
