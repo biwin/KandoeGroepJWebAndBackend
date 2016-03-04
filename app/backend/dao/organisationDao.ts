@@ -31,7 +31,7 @@ export class OrganisationDao {
 
     getOrganisationByName(organisationName: string, callback: (organisation: Organisation) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').find({'_name': new ObjectID(organisationName)}).limit(1).next().then((cursor: CursorResult) => {
+            db.collection('organisations').find({'_name': organisationName}).limit(1).next().then((cursor: CursorResult) => {
                 db.close();
 
                 callback(cursor);
@@ -41,7 +41,7 @@ export class OrganisationDao {
 
     getOrganisationById(organisationId: string, callback: (organisation: Organisation) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').find({'_id': organisationId}).limit(1).next().then((cursor: CursorResult) => {
+            db.collection('organisations').find({'_id': new ObjectID(organisationId)}).limit(1).next().then((cursor: CursorResult) => {
                 db.close();
 
                 callback(cursor);
