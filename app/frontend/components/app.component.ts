@@ -58,7 +58,6 @@ import {UserService} from "../services/userService";
 
 export class AppComponent {
     constructor(private router: Router, userService: UserService) {
-        this.router.navigate(['Home']);
         this.router.subscribe((url) => {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
                 this.router.navigate(['Hello']);

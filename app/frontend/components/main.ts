@@ -6,6 +6,7 @@ import {LocationStrategy, HashLocationStrategy, APP_BASE_HREF, ROUTER_PRIMARY_CO
 import {AppComponent} from './app.component';
 
 import {CircleSessionService} from "../services/circleSessionService";
+import {GroupService} from "../services/groupService";
 import {HttpWrapperService} from "../services/httpWrapperService";
 import {OrganisationService} from "../services/organisationService";
 import {ThemeService} from "../services/themeService";
@@ -16,13 +17,14 @@ bootstrap(AppComponent, [
     HTTP_PROVIDERS,
 
     CircleSessionService,
+    GroupService,
     HttpWrapperService,
     OrganisationService,
     ThemeService,
     UserService,
 
-    //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
-    provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
+    provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
+    //provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
     provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppComponent}),
     provide(APP_BASE_HREF, {useValue: '/'}),
     provide(LocationStrategy, {useClass: HashLocationStrategy})
