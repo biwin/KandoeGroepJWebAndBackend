@@ -1,9 +1,8 @@
-/*import assert = require('assert');
+import assert = require('assert');
 
 import {OrganisationManager} from "../app/backend/logic/organisationManager";
 
 import {Organisation} from "../app/backend/model/organisation";
-import {User} from "../app/backend/model/user";
 
 var organisationManager: OrganisationManager;
 
@@ -91,4 +90,4 @@ describe("OrganisationManager", () => {
             }
         });
     });
-});*/
+});
