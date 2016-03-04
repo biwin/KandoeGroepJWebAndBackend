@@ -20,7 +20,9 @@ export class GroupManager {
     }
 
     private groupExists(groupName: string, organisationId: string, callback: (exists: boolean) => any) {
-
+        this._dao.getGroupByNameAndOrganisationId(groupName, organisationId, (group: Group) => {
+            callback(group != null);
+        });
     }
 
     getGroupById(groupId: string, callback: (group: Group) => any) {

@@ -15,6 +15,9 @@ var GroupManager = (function () {
         });
     };
     GroupManager.prototype.groupExists = function (groupName, organisationId, callback) {
+        this._dao.getGroupByNameAndOrganisationId(groupName, organisationId, function (group) {
+            callback(group != null);
+        });
     };
     GroupManager.prototype.getGroupById = function (groupId, callback) {
     };

@@ -3,6 +3,8 @@ var GroupDao = (function () {
     }
     GroupDao.prototype.createGroup = function (group, callback) {
     };
+    GroupDao.prototype.getGroupByNameAndOrganisationId = function (groupName, organisationId, callback) {
+    };
     return GroupDao;
 })();
 exports.GroupDao = GroupDao;
