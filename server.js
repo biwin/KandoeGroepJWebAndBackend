@@ -2,6 +2,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
     CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
+    GroupAPI = require("./app/backend/restApi/groupAPI.js"),
     OrganisationAPI = require("./app/backend/restApi/organisationAPI.js"),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
     UserApi = require('./app/backend/restApi/userApi.js'),
@@ -67,6 +68,17 @@ app.get("/api/organisations/:id", function(req, res) {
 app.post("/api/organisations", function(req, res) {
     OrganisationAPI.OrganisationAPI.create(req.body, res);
 });
+//endregion
+
+//region group routes
+app.get("/api/groups/:id", function(req, res) {
+    GroupAPI.GroupAPI.find(req.params.id, res);
+});
+
+app.post("/api/groups", function(req, res) {
+    GroupAPI.GroupAPI.create(req.body, res);
+});
+//endregion
 
 //region theme routes
 app.get('/api/themes', function(req, res) {
