@@ -18,7 +18,15 @@ import {User} from "../../../backend/model/user";
         </div></div>
 
 
-        <h5>Groepen</h5>
+        <div id="groupsHeader">
+            <h5>Groepen</h5>
+
+            <div id="groupsMenu">
+                <a class="btn-floating btn-large waves-effect waves-light red"(click)="addGroup()" title="Voeg groep toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
 
         <div class="card" [ngClass]="{tableCard: organisation._groupIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisation._groupIds.length!=0">
@@ -41,7 +49,15 @@ import {User} from "../../../backend/model/user";
         </div></div>
 
 
-        <h5>Leden</h5>
+        <div id="membersHeader">
+            <h5>Leden</h5>
+
+            <div id="membersMenu">
+                <a class="btn-floating btn-large waves-effect waves-light red"(click)="addMember()" title="Voeg lid toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
 
         <div class="card" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisation._memberIds.length!=0">
@@ -81,11 +97,25 @@ export class OrganisationDetail {
         this.members = this.organisation.getMembers();
     }
 
+    //TODO: styling van addGroup-button
+    private addGroup(): void {
+        //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
+        this.router.navigate(["/CreateGroup", {organisationId: "Albert Hein"}]);
+    }
+
     private viewGroup(groupId: string): void {
         //this.router.navigate(["/GroupDetail", {id: groupId}]);
         this.router.navigate(["/GroupDetail", {id: 0}]);
     }
 
+    //TODO: styling van addMember button
+    //TODO: uitwerking addMember methode
+    private addMember(): void {
+        //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
+        alert("addMember");
+    }
+
+    //TODO: uitwerking viewMember methode
     private viewMember(userId: string): void {
         //this.router.navigate(["/UserDetail", {id: userId}]);
         alert("viewMember: " + userId);
