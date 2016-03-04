@@ -5,6 +5,10 @@ export class GroupManager {
 
     }
 
+    private groupExists(groupName: string, organisationId: string, callback: (exists: boolean) => any) {
+
+    }
+
     getGroupById(groupId: string, callback: (group: Group) => any) {
 
     }

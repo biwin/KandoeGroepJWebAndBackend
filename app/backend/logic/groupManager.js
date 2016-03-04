@@ -3,6 +3,8 @@ var GroupManager = (function () {
     }
     GroupManager.prototype.createGroup = function (group, callback) {
     };
+    GroupManager.prototype.groupExists = function (groupName, organisationId, callback) {
+    };
     GroupManager.prototype.getGroupById = function (groupId, callback) {
     };
     GroupManager.prototype.removeGroupById = function (groupId, callback) {
