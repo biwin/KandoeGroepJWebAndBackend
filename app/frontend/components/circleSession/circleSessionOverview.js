@@ -17,14 +17,9 @@ var CircleSessionOverview = (function () {
         this.circleSessions = [];
         this.loading = true;
         service.getAll().subscribe(function (circleSessions) {
-            circleSessions.forEach(function (c, index) {
-                _this.circleSessions.push(c);
-                //TODO: fix loading
-                if (index == circleSessions.length - 1)
-                    _this.loading = false;
-            });
+            _this.circleSessions = circleSessions;
+            _this.loading = false;
         });
-        //console.log(this.circleSessions);
     }
     CircleSessionOverview = __decorate([
         core_1.Component({

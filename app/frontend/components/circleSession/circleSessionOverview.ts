@@ -37,13 +37,8 @@ export class CircleSessionOverview {
 
     constructor(service:CircleSessionService) {
         service.getAll().subscribe((circleSessions:CircleSession[]) => {
-            circleSessions.forEach((c:CircleSession, index:number) => {
-                this.circleSessions.push(c);
-                //TODO: fix loading
-                if(index == circleSessions.length - 1)
-                    this.loading = false;
-            });
+            this.circleSessions = circleSessions;
+            this.loading = false;
         });
-        //console.log(this.circleSessions);
     }
 }
