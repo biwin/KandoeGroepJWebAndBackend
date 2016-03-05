@@ -113,4 +113,12 @@ export class CircleSessionDao {
             });
         });
     }
+
+    getCircleSessionsOfUserById(userId:string, callback:(circleSessions:CircleSession[]) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('circlesessions').find({'_userIds': {'$in': [userId]}}).toArray((err: MongoError, docs: CircleSession[])=>{
+               callback(docs);
+            });
+        })
+    }
 }

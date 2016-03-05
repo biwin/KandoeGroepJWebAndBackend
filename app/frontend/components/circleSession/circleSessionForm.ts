@@ -106,7 +106,7 @@ export class CircleSessionForm implements AfterViewInit {
     router:Router;
 
 
-    private _userId:string;
+    private _currentUserId:string;
     private _groups: Group[] = [];
     private _themes: Theme[] = [];
 
@@ -137,11 +137,11 @@ export class CircleSessionForm implements AfterViewInit {
         this.service = service;
         this.router = router;
         userService.getUserId((u:string) => {
-            this._userId = u;
+            this._currentUserId = u;
             var organisationId = routeParam.params["organisationId"];
 
             if(organisationId == null){
-                userService.getAllGroupsOfUser(this._userId).subscribe((grs:Group[]) => {
+                userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
                     this._groups = grs;
                 });
             }else{
@@ -158,7 +158,7 @@ export class CircleSessionForm implements AfterViewInit {
     }
 
     private OnSubmit(){
-        this.circleSession._creatorId = this._userId;
+        this.circleSession._creatorId = this._currentUserId;
 
         if(this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;

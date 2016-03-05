@@ -1,6 +1,7 @@
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
 var groupAPI_1 = require("./groupAPI");
+var circleSessionApi_1 = require("./circleSessionApi");
 var SHA256 = require("crypto-js/sha256");
 var UserApi = (function () {
     function UserApi() {
@@ -125,6 +126,9 @@ var UserApi = (function () {
     };
     UserApi.getGroups = function (userId, res) {
         groupAPI_1.GroupAPI.getGroupsOfUserById(userId, res);
+    };
+    UserApi.getCircleSessions = function (userId, res) {
+        circleSessionApi_1.CircleSessionApi.getCircleSessionsOfUserById(userId, res);
     };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;

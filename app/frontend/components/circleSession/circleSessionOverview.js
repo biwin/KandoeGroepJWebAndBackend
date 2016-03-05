@@ -11,14 +11,17 @@ var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
 var circleSessionService_1 = require("../../services/circleSessionService");
 var circleSessionCard_1 = require("./circleSessionCard");
+var userService_1 = require("../../services/userService");
 var CircleSessionOverview = (function () {
-    function CircleSessionOverview(service) {
+    function CircleSessionOverview(service, userService) {
         var _this = this;
         this.circleSessions = [];
-        this.loading = true;
-        service.getAll().subscribe(function (circleSessions) {
-            _this.circleSessions = circleSessions;
-            _this.loading = false;
+        this.loading = false;
+        userService.getUserId(function (u) {
+            _this._currentUserId = u;
+            userService.getCircleSessionsOfUserById(_this._currentUserId).subscribe(function (circleSessions) {
+                _this.circleSessions = circleSessions;
+            });
         });
     }
     CircleSessionOverview = __decorate([
@@ -27,7 +30,7 @@ var CircleSessionOverview = (function () {
             template: "\n    <div class=\"container\">\n     <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n    <div class=\"row\">\n        <circlesession-card *ngFor=\"#circleSession of circleSessions\" [circleSession]=\"circleSession\">\n    </circlesession-card></div>\n    </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES, circleSessionCard_1.CircleSessionCard]
         }), 
-        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService])
+        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, userService_1.UserService])
     ], CircleSessionOverview);
     return CircleSessionOverview;
 })();

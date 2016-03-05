@@ -48,6 +48,10 @@ app.get('/api/user/createDummy', function(req, res) {
 app.get('/api/user/:id/groups', function(req,res){
     UserApi.UserApi.getGroups(req.params.id, res);
 });
+
+app.get('/api/user/:id/circlesessions', function(req,res){
+    UserApi.UserApi.getCircleSessions(req.params.id, res);
+});
 //endregion
 
 //region circlesession routes

@@ -22,6 +22,11 @@ var CircleSessionApi = (function () {
             res.send(cp);
         });
     };
+    CircleSessionApi.getCircleSessionsOfUserById = function (userId, res) {
+        this.mgr.getCircleSessionsOfUserById(userId, function (circleSessions) {
+            res.send(circleSessions);
+        });
+    };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();
     return CircleSessionApi;
 })();

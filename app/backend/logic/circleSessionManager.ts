@@ -60,4 +60,8 @@ export class CircleSessionManager {
             }
         })
     }
+
+    getCircleSessionsOfUserById(userId:string, callback: (circleSessions:CircleSession[])=> any){
+        this._dao.getCircleSessionsOfUserById(userId, callback);
+    }
 }

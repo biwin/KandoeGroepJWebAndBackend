@@ -55,6 +55,9 @@ var CircleSessionManager = (function () {
             }
         });
     };
+    CircleSessionManager.prototype.getCircleSessionsOfUserById = function (userId, callback) {
+        this._dao.getCircleSessionsOfUserById(userId, callback);
+    };
     return CircleSessionManager;
 })();
 exports.CircleSessionManager = CircleSessionManager;

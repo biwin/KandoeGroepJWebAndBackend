@@ -1,6 +1,7 @@
 import {UserManager} from "../logic/userManager";
 import {User} from "../model/user";
 import {GroupAPI} from "./groupAPI";
+import {CircleSessionApi} from "./circleSessionApi";
 var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
@@ -114,5 +115,9 @@ export class UserApi {
 
     public static getGroups(userId:string, res){
         GroupAPI.getGroupsOfUserById(userId, res);
+    }
+
+    public static getCircleSessions(userId:string, res){
+        CircleSessionApi.getCircleSessionsOfUserById(userId, res);
     }
 }

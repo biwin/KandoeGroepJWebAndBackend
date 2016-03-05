@@ -26,10 +26,10 @@ var CircleSessionForm = (function () {
         this.service = service;
         this.router = router;
         userService.getUserId(function (u) {
-            _this._userId = u;
+            _this._currentUserId = u;
             var organisationId = routeParam.params["organisationId"];
             if (organisationId == null) {
-                userService.getAllGroupsOfUser(_this._userId).subscribe(function (grs) {
+                userService.getAllGroupsOfUser(_this._currentUserId).subscribe(function (grs) {
                     _this._groups = grs;
                 });
             }
@@ -64,7 +64,7 @@ var CircleSessionForm = (function () {
     };
     CircleSessionForm.prototype.OnSubmit = function () {
         var _this = this;
-        this.circleSession._creatorId = this._userId;
+        this.circleSession._creatorId = this._currentUserId;
         if (this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
