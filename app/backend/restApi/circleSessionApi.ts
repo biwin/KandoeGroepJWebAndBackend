@@ -26,6 +26,12 @@ export class CircleSessionApi {
     public static cardUp(sessionId:string, cardId:string, userId:string, res){
         CircleSessionApi.mgr.cardUp(sessionId, cardId, userId, (cp:CardPosition) => {
             res.send(cp);
-        })
+        });
+    }
+
+    static getCircleSessionsOfUserById(userId:string, res) {
+        this.mgr.getCircleSessionsOfUserById(userId, (circleSessions:CircleSession[]) =>{
+           res.send(circleSessions);
+        });
     }
 }

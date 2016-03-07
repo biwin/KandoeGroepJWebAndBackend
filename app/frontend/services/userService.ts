@@ -5,6 +5,8 @@ import {User} from "../../backend/model/user";
 import {Headers, Response} from "angular2/http";
 import {HttpWrapperService} from "./httpWrapperService";
 import {Router} from "angular2/router";
+import {Group} from "../../backend/model/group";
+import {CircleSession} from "../../backend/model/circleSession";
 
 @Injectable()
 export class UserService {
@@ -80,5 +82,13 @@ export class UserService {
                 callback(res1.text(), res2.text());
             });
         });
+    }
+
+    getAllGroupsOfUser(_userId:string): Observable<Group> {
+        return this.http.get(this.path + 'user/' + _userId +'/groups').map((res: Response) => res.json());
+    }
+
+    getCircleSessionsOfUserById(_userId:string):Observable<CircleSession[]> {
+        return this.http.get(this.path + 'user/' + _userId + '/circlesessions').map((res:Response) => res.json());
     }
 }

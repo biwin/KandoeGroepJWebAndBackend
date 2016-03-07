@@ -31,6 +31,9 @@ var GroupManager = (function () {
     GroupManager.prototype.getGroupsOfUserById = function (userId, callback) {
         this._dao.getGroupsOfUserById(userId, callback);
     };
+    GroupManager.prototype.getUserIdsInGroup = function (groupId, callback) {
+        this._dao.getUserIdsInGroup(groupId, callback);
+    };
     return GroupManager;
 })();
 exports.GroupManager = GroupManager;

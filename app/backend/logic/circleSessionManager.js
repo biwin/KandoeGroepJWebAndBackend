@@ -1,4 +1,5 @@
 var circleSessionDao_1 = require("../dao/circleSessionDao");
+var groupManager_1 = require("./groupManager");
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();
@@ -10,7 +11,16 @@ var CircleSessionManager = (function () {
                 callback(null);
             }
             else {
-                _this._dao.createCircleSession(circleSession, callback);
+                var gMgr = new groupManager_1.GroupManager();
+                gMgr.getUserIdsInGroup(circleSession._groupId, function (users) {
+                    var changed = 0;
+                    users.forEach(function (u) {
+                        circleSession._userIds.push(u);
+                        if (++changed == users.length) {
+                            _this._dao.createCircleSession(circleSession, callback);
+                        }
+                    });
+                });
             }
         });
     };
@@ -44,6 +54,9 @@ var CircleSessionManager = (function () {
                 _this._dao.createCardPosition(sessionId, cardId, userId, callback);
             }
         });
+    };
+    CircleSessionManager.prototype.getCircleSessionsOfUserById = function (userId, callback) {
+        this._dao.getCircleSessionsOfUserById(userId, callback);
     };
     return CircleSessionManager;
 })();

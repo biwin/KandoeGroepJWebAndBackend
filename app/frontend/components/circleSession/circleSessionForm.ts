@@ -1,15 +1,20 @@
 import {Component} from "angular2/core";
 import {Input} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {FORM_DIRECTIVES} from "angular2/common";
 import {AfterViewInit} from "angular2/core";
+
 import {Group} from "../../../backend/model/group";
 import {Theme} from "../../../backend/model/theme";
 import {CircleSession} from "../../../backend/model/circleSession";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {FORM_DIRECTIVES} from "angular2/common";
-import {CircleSessionService} from "../../services/circleSessionService";
-import {Router} from "angular2/router";
-import {ThemeService} from "../../services/themeService";
 
+import {Router} from "angular2/router";
+import {RouteParams} from "angular2/router";
+
+import {ThemeService} from "../../services/themeService";
+import {CircleSessionService} from "../../services/circleSessionService";
+import {OrganisationService} from "../../services/organisationService";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'circlesession-form',
@@ -96,17 +101,13 @@ import {ThemeService} from "../../services/themeService";
     directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
 })
 export class CircleSessionForm implements AfterViewInit {
-    //TODO: bind the complete form
     circleSession:CircleSession = CircleSession.empty();
     service:CircleSessionService;
     router:Router;
 
 
-    private _groups: Group[] = [
-        new Group("Groep A","", "", [""]),
-        new Group("Groep B", "", "",[""]),
-        new Group("Groep C", "", "",[""])
-    ];
+    private _currentUserId:string;
+    private _groups: Group[] = [];
     private _themes: Theme[] = [];
 
     ngAfterViewInit():any {
@@ -132,19 +133,32 @@ export class CircleSessionForm implements AfterViewInit {
         });
     }
 
-    constructor(service:CircleSessionService, themeService:ThemeService , router:Router) {
+    constructor(service:CircleSessionService, themeService:ThemeService, organisationService:OrganisationService, userService:UserService, router:Router, routeParam:RouteParams) {
         this.service = service;
         this.router = router;
+        userService.getUserId((u:string) => {
+            this._currentUserId = u;
+            var organisationId = routeParam.params["organisationId"];
+
+            if(organisationId == null){
+                userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
+                    this._groups = grs;
+                });
+            }else{
+                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((grs:Group[]) => {
+                    this._groups = grs;
+                });
+            }
+        });
+
 
         themeService.getAll().subscribe((ts:Theme[]) =>{
-            ts.forEach((t:Theme) => {
-                this._themes.push(t);
-            });
+            this._themes = ts;
         });
     }
 
     private OnSubmit(){
-        this.circleSession._creatorId = "CURRENT_USER_ID";
+        this.circleSession._creatorId = this._currentUserId;
 
         if(this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;

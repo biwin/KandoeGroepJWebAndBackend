@@ -4,6 +4,8 @@ import {CircleSession} from "../../../backend/model/circleSession";
 import {ThemeService} from "../../services/themeService";
 import {Theme} from "../../../backend/model/theme";
 import {Router} from "angular2/router";
+import {Group} from "../../../backend/model/group";
+import {GroupService} from "../../services/groupService";
 
 @Component({
     selector: 'circlesession-card',
@@ -11,11 +13,11 @@ import {Router} from "angular2/router";
     <div class="col s4">
       <div (click)="openCard()" class="card hoverable">
         <div class="card-content">
-           <span class="card-title">{{circleSession._groupId}} - {{theme._name}}</span>
+           <span class="card-title">{{group._name}} - {{theme._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
            <p class="black-text">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>
-           <p class="black-text">Beurt duur: {{circleSession.turnTimeMin}}</p>
-           <p class="black-text">Einde: {{circleSession._endPoint}}</p>
+           <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>
+           <p class="black-text">{{circleSession._allowComment ? 'Commentaar toegelaten op kaarten' : 'Commentaar niet mogelijk op kaarten'}}</p>
         </div>
       </div>
       </div>
@@ -24,22 +26,31 @@ import {Router} from "angular2/router";
 
 export class CircleSessionCard {
     @Input() private circleSession:CircleSession;
-    private service:ThemeService;
+
+    private themeService:ThemeService;
+    private groupService: GroupService;
+
     private theme:Theme = Theme.empty();
+    private group:Group = Group.empty();
+
     private themeLoaded:boolean = false;
     private router:Router;
 
-    constructor(themeService:ThemeService, router:Router){
-        this.service = themeService;
+    constructor(themeService:ThemeService, groupService:GroupService, router:Router){
+        this.themeService = themeService;
+        this.groupService = groupService;
         this.router = router;
     }
 
     ngAfterViewInit() {
         if(this.circleSession != undefined && !this.themeLoaded) {
-            this.service.getTheme(this.circleSession._themeId).subscribe((t:Theme) =>{
+            this.themeService.getTheme(this.circleSession._themeId).subscribe((t:Theme) =>{
                 this.theme = t;
                 this.themeLoaded = true;
             });
+            this.groupService.getGroup(this.circleSession._groupId).subscribe((g:Group) =>{
+                this.group = g;
+            })
         }
     }
 

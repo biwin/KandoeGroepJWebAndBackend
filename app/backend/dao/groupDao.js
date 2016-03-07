@@ -55,6 +55,13 @@ var GroupDao = (function () {
             });
         });
     };
+    GroupDao.prototype.getUserIdsInGroup = function (groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').find({ '_id': new mongodb_1.ObjectID(groupId) }).project({ '_memberIds': 1, '_id': 0 }).limit(1).next(function (err, doc) {
+                callback(doc._memberIds);
+            });
+        });
+    };
     return GroupDao;
 })();
 exports.GroupDao = GroupDao;

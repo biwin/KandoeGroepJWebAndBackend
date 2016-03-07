@@ -1,6 +1,7 @@
 import {CircleSession} from "../model/circleSession";
 import {CircleSessionDao} from "../dao/circleSessionDao";
 import {CardPosition} from "../model/cardPosition";
+import {GroupManager} from "./groupManager";
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 
@@ -13,7 +14,17 @@ export class CircleSessionManager {
             if(exists) {
                 callback(null);
             } else {
-                this._dao.createCircleSession(circleSession, callback);
+                var gMgr:GroupManager = new GroupManager();
+
+                gMgr.getUserIdsInGroup(circleSession._groupId, (users:string[]) => {
+                    var changed:number = 0;
+                    users.forEach((u:string) => {
+                        circleSession._userIds.push(u);
+                        if(++changed == users.length) {
+                            this._dao.createCircleSession(circleSession, callback);
+                        }
+                    });
+                });
             }
         });
     }
@@ -48,5 +59,9 @@ export class CircleSessionManager {
                 this._dao.createCardPosition(sessionId, cardId, userId, callback);
             }
         })
+    }
+
+    getCircleSessionsOfUserById(userId:string, callback: (circleSessions:CircleSession[])=> any){
+        this._dao.getCircleSessionsOfUserById(userId, callback);
     }
 }

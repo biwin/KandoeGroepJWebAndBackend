@@ -4,6 +4,7 @@ import {Inject} from "angular2/core";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'circlesession-overview',
@@ -32,18 +33,16 @@ import {CircleSessionCard} from "./circleSessionCard";
 
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
-    private loading:boolean = true;
+    private _currentUserId:string;
+    private loading:boolean = false;
 
 
-    constructor(service:CircleSessionService) {
-        service.getAll().subscribe((circleSessions:CircleSession[]) => {
-            circleSessions.forEach((c:CircleSession, index:number) => {
-                this.circleSessions.push(c);
-                //TODO: fix loading
-                if(index == circleSessions.length - 1)
-                    this.loading = false;
+    constructor(service:CircleSessionService, userService:UserService) {
+        userService.getUserId((u:string)=>{
+           this._currentUserId = u;
+            userService.getCircleSessionsOfUserById(this._currentUserId).subscribe((circleSessions:CircleSession[]) =>{
+                this.circleSessions = circleSessions;
             });
         });
-        //console.log(this.circleSessions);
     }
 }

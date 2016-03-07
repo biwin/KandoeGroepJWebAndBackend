@@ -74,4 +74,12 @@ export class GroupDao {
             });
         });
     }
+
+    getUserIdsInGroup(groupId:string, callback:(users:string[]) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+            db.collection('groups').find({'_id': new ObjectID(groupId)}).project({'_memberIds': 1, '_id': 0}).limit(1).next((err:MongoError, doc: Group) => {
+                callback(doc._memberIds);
+            });
+        });
+    }
 }

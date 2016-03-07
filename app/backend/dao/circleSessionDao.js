@@ -97,6 +97,13 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.getCircleSessionsOfUserById = function (userId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').find({ '_userIds': { '$in': [userId] } }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return CircleSessionDao;
 })();
 exports.CircleSessionDao = CircleSessionDao;

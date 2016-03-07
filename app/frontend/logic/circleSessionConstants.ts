@@ -3,45 +3,31 @@ export class CircleSessionConstants {
     private _colors:string[] = [];
 
     constructor() {
-        // deep - purple
-        /*this._colors.push("#ede7f6");
-        this._colors.push("#d1c4e9");
-        this._colors.push("#b39ddb");
-        this._colors.push("#9575cd");
-        this._colors.push("#7e57c2");
-        this._colors.push("#673ab7");
-        this._colors.push("#5e35b1");
-        this._colors.push("#512da8");
-        this._colors.push("#4527a0");
-        this._colors.push("#311b92");
-        this._colors.push("#b388ff");
-        this._colors.push("#7c4dff");
-        this._colors.push("#651fff");
-        this._colors.push("#6200ea");*/
-
-        // indigo
-        this._colors.push("#e8eaf6");
-        this._colors.push("#c5cae9");
-        this._colors.push("#9fa8da");
-        this._colors.push("#7986cb");
-        this._colors.push("#5c6bc0");
-        this._colors.push("#3f51b5");
-        this._colors.push("#3949ab");
-        this._colors.push("#303f9f");
-        this._colors.push("#283593");
-        this._colors.push("#1a237e");
-        this._colors.push("#8c9eff");
-        this._colors.push("#536dfe");
+        this._colors.push("#f44336");
+        this._colors.push("#E91E63");
+        this._colors.push("#9C27B0");
+        this._colors.push("#673AB7");
+        this._colors.push("#3F51B5");
+        this._colors.push("#004D40");
+        this._colors.push("#BDBDBD");
+        this._colors.push("#00BCD4");
+        this._colors.push("#009688");
+        this._colors.push("#4CAF50");
+        this._colors.push("#8BC34A");
+        this._colors.push("#CDDC39");
         this._colors.push("#3d5afe");
-        this._colors.push("#304ffe");
+        this._colors.push("#FFEB3B");
+        this._colors.push("#FFC107");
+        this._colors.push("#FF9800");
+        this._colors.push("#FF5722");
+        this._colors.push("#795548");
+        this._colors.push("#9E9E9E");
+        this._colors.push("#607D8B");
+        this._colors.push("#DD2C00");
     }
 
     public CardColor(i:number): string {
         return this._colors[i % this._colors.length];
-    }
-
-    public get CARD_STROKE_COLOR():string {
-        return this._colors[this._colors.length - 1];
     }
 
     public get HOVERED_COLOR(): string {
