@@ -10,11 +10,11 @@ import {Card} from "../../../backend/model/card";
     selector: 'circlesession-card',
     template: `
         <div class="col s3">
-      <div class="card hoverable" [style.background]="color" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+      <div class="card hoverable small" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="card-content container">
             <div class="row">
                 <div class="col s12 center">
-                  <a class="btn-floating btn waves-effect waves-light blue"><i class="material-icons">arrow_upward</i></a>
+                  <a class="btn-floating btn waves-effect waves-light" [style.background]="color"><i class="material-icons">arrow_upward</i></a>
                 </div>
             </div>
             <div class="row">

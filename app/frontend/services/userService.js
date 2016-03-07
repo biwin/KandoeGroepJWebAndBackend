@@ -86,6 +86,9 @@ var UserService = (function () {
     UserService.prototype.getCircleSessionsOfUserById = function (_userId) {
         return this.http.get(this.path + 'user/' + _userId + '/circlesessions').map(function (res) { return res.json(); });
     };
+    UserService.prototype.getUsers = function (userIds) {
+        return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
+    };
     UserService = __decorate([
         core_1.Injectable(),
         __param(2, core_2.Inject('App.BackendPath')), 

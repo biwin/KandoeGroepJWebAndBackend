@@ -263,6 +263,14 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.getUsers = function (ids, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({ '_id': { '$in': ids } }).toArray(function (err, result) {
+                db.close();
+                callback(result);
+            });
+        });
+    };
     return UserDao;
 })();
 exports.UserDao = UserDao;

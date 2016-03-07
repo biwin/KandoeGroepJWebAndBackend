@@ -36,7 +36,7 @@ var CircleSessionCardDetail = (function () {
     CircleSessionCardDetail = __decorate([
         core_1.Component({
             selector: 'circlesession-card',
-            template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable\" [style.background]=\"color\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content container\">\n            <div class=\"row\">\n                <div class=\"col s12 center\">\n                  <a class=\"btn-floating btn waves-effect waves-light blue\"><i class=\"material-icons\">arrow_upward</i></a>\n                </div>\n            </div>\n            <div class=\"row\">\n                <div class=\"col s12 center\">\n                    {{card._name}}\n                </div>\n            </div>\n        </div>\n      </div>\n      </div>\n\n    ",
+            template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable small\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content container\">\n            <div class=\"row\">\n                <div class=\"col s12 center\">\n                  <a class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\"><i class=\"material-icons\">arrow_upward</i></a>\n                </div>\n            </div>\n            <div class=\"row\">\n                <div class=\"col s12 center\">\n                    {{card._name}}\n                </div>\n            </div>\n        </div>\n      </div>\n      </div>\n\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])

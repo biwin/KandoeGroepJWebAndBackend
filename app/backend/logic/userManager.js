@@ -1,3 +1,4 @@
+var mongodb_1 = require("mongodb");
 var userDao_1 = require("../dao/userDao");
 var UserManager = (function () {
     function UserManager() {
@@ -253,6 +254,9 @@ var UserManager = (function () {
                 callback(null);
             }
         });
+    };
+    UserManager.prototype.getUsers = function (userIds, callback) {
+        this._dao.getUsers(userIds.map(function (s) { return new mongodb_1.ObjectID(s); }), callback);
     };
     return UserManager;
 })();

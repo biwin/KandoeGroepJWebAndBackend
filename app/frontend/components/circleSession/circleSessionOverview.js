@@ -16,11 +16,12 @@ var CircleSessionOverview = (function () {
     function CircleSessionOverview(service, userService) {
         var _this = this;
         this.circleSessions = [];
-        this.loading = false;
+        this.loading = true;
         userService.getUserId(function (u) {
             _this._currentUserId = u;
             userService.getCircleSessionsOfUserById(_this._currentUserId).subscribe(function (circleSessions) {
                 _this.circleSessions = circleSessions;
+                _this.loading = false;
             });
         });
     }

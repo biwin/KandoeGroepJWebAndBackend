@@ -310,4 +310,13 @@ export class UserDao {
             });
         });
     }
+
+    getUsers(ids:ObjectID[], callback:(us:User[])=>any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('users').find({'_id': {'$in': ids}}).toArray((err:MongoError, result:User[]) => {
+                db.close();
+                callback(result);
+            });
+        });
+    }
 }

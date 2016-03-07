@@ -2,6 +2,22 @@
     padding-left: 240px;
 }
 
+nav {
+    z-index: 1;
+}
+
+.padding-right-users {
+    padding-right: 240px;
+}
+
+.user-sidenav {
+    z-index: -1;
+}
+
+.users-heading {
+    height: 64px;
+}
+
 @media only screen and (max-width: 992px) {
     .content, nav {
         padding-left:0;

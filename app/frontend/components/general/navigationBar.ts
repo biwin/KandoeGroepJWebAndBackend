@@ -28,11 +28,9 @@ import {Response} from "angular2/http";
                 <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
                 <li><a [routerLink]="['CreateOrganisation']">Nieuwe organisatie</a></li>
             </ul>
-            <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+            <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
        </div>
     </nav>
-
-    <div></div>
   `,
     directives: [ROUTER_DIRECTIVES]
 })
@@ -71,6 +69,6 @@ export class NavigationBar implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        $(".button-collapse").sideNav({menuWidth: 240});
+        $("#main-nav-toggle").sideNav({menuWidth: 240});
     }
 }

@@ -120,4 +120,10 @@ export class UserApi {
     public static getCircleSessions(userId:string, res){
         CircleSessionApi.getCircleSessionsOfUserById(userId, res);
     }
+
+    public static getUsers(userIds:string[], res) {
+        UserApi.manager.getUsers(userIds, (us:User[]) => {
+            res.send(us);
+        })
+    }
 }

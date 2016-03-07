@@ -18,7 +18,7 @@ var HttpWrapperService = (function () {
         this.path = path;
         this.http = http;
     }
-    HttpWrapperService.prototype.get = function (url, isJson, needsJson, token, needsToken, options) {
+    HttpWrapperService.prototype.get = function (url, isJson, needsJson, needsToken, options) {
         if (options == null) {
             options = new http_1.RequestOptions();
             options.headers = new http_1.Headers();
@@ -27,7 +27,9 @@ var HttpWrapperService = (function () {
             options.headers.append('Content-Type', 'application/json');
         if (needsToken)
             options.headers.append('Bearer', localStorage.getItem('token'));
-        return this.http.get(url, options).map(function (res) { return needsJson ? res.json() : res; });
+        return this.http.get(url, options).map(function (res) {
+            return needsJson ? res.json() : res;
+        });
     };
     HttpWrapperService.prototype.post = function (url, body, isJson, needsJson, needsToken, options) {
         if (options == null) {

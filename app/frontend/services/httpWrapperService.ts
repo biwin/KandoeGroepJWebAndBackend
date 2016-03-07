@@ -14,14 +14,16 @@ export class HttpWrapperService {
         this.http = http;
     }
 
-    get<T>(url: string, isJson: boolean, needsJson: boolean,  token: string, needsToken: boolean, options?: RequestOptionsArgs): Observable<T> {
+    get<T>(url: string, isJson: boolean, needsJson: boolean, needsToken: boolean, options?: RequestOptionsArgs): Observable<T> {
         if (options == null) {
             options = new RequestOptions();
             options.headers = new Headers();
         }
         if (isJson) options.headers.append('Content-Type', 'application/json');
         if (needsToken) options.headers.append('Bearer', localStorage.getItem('token'));
-        return this.http.get(url, options).map((res: Response) => needsJson ? res.json() : res);
+        return this.http.get(url, options).map((res: Response) => {
+            return needsJson ? res.json() : res;
+        } );
     }
 
     post<T>(url: string, body: string, isJson: boolean, needsJson: boolean, needsToken: boolean, options?: RequestOptionsArgs): Observable<T> {

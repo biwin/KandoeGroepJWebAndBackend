@@ -9,11 +9,14 @@ import {ThemeService} from "../../services/themeService";
 import {CircleSessionCardDetail} from "./circleSessionCardDetail";
 import {CircleSessionConstants} from "./../../logic/circleSessionConstants";
 import {CardPosition} from "../../../backend/model/cardPosition";
+import {CircleSessionUserList} from "./circleSessionUserList";
+import {User} from "../../../backend/model/user";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'circlesession-game',
     template: `
-    <div class="container">
+    <div class="container padding-right-users">
         <div class="row margin-top">
             <div class="col s8 offset-s2">
                 <svg [attr.viewBox]="constants.VIEWBOX">
@@ -37,9 +40,11 @@ import {CardPosition} from "../../../backend/model/cardPosition";
         <div class="row">
             <circlesession-card *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)"></circlesession-card>
         </div>
+
+        <user-list [users]="circleSession._userIds"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail]
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList]
 })
 
 export class CircleSessionGame {
@@ -50,11 +55,12 @@ export class CircleSessionGame {
     private id:string;
     private hoveredCardId:string = "";
 
-    constructor(service:CircleSessionService,themeService:ThemeService ,route:RouteParams) {
+    constructor(service:CircleSessionService,themeService:ThemeService, route:RouteParams) {
         this.id = route.get('id');
 
         service.get(this.id).subscribe((circleSession:CircleSession) => {
             this.circleSession = circleSession;
+
             themeService.getCards(circleSession._themeId).subscribe((cs:Card[]) => {
                 cs.forEach((c:Card) => {
                     this.cards.push(c);

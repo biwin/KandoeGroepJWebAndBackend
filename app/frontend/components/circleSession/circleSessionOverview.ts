@@ -34,7 +34,7 @@ import {UserService} from "../../services/userService";
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
     private _currentUserId:string;
-    private loading:boolean = false;
+    private loading:boolean = true;
 
 
     constructor(service:CircleSessionService, userService:UserService) {
@@ -42,6 +42,7 @@ export class CircleSessionOverview {
            this._currentUserId = u;
             userService.getCircleSessionsOfUserById(this._currentUserId).subscribe((circleSessions:CircleSession[]) =>{
                 this.circleSessions = circleSessions;
+                this.loading = false;
             });
         });
     }

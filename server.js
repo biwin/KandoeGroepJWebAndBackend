@@ -38,11 +38,11 @@ app.get('/', function(req, res) {
 
 //region user routes
 app.get('/api/user/get', function(req, res) {
-    console.log(UserApi.UserApi.getUser(req.query.id, res));
+    UserApi.UserApi.getUser(req.query.id, res);
 });
 
-app.get('/api/user/createDummy', function(req, res) {
-    console.log(UserApi.UserApi.createDummyUser(res));
+app.get('/api/user/bulk/:array', function(req, res) {
+    UserApi.UserApi.getUsers(JSON.parse(decodeURI(req.params.array)), res);
 });
 
 app.get('/api/user/:id/groups', function(req,res){

@@ -130,6 +130,11 @@ var UserApi = (function () {
     UserApi.getCircleSessions = function (userId, res) {
         circleSessionApi_1.CircleSessionApi.getCircleSessionsOfUserById(userId, res);
     };
+    UserApi.getUsers = function (userIds, res) {
+        UserApi.manager.getUsers(userIds, function (us) {
+            res.send(us);
+        });
+    };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;
 })();
