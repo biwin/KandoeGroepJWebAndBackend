@@ -17,6 +17,9 @@ import {UserService} from "../../services/userService";
     selector: 'circlesession-game',
     template: `
     <div class="container padding-right-users">
+        <div class="row">
+            <h3 class="center-align">{{circleSession._name}}</h3>
+        </div>
         <div class="row margin-top">
             <div class="col s8 offset-s2">
                 <svg [attr.viewBox]="constants.VIEWBOX">
