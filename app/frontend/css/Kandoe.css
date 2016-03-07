@@ -22,6 +22,10 @@ nav {
     .content, nav {
         padding-left:0;
     }
+
+    .padding-right-users {
+        padding-right: 0;
+    }
 }
 
 .formCard form.col {
@@ -77,4 +81,38 @@ svg circle.kandoeRing.inner {
 
 svg circle.highlight {
     fill: yellow !important;
+}
+
+.thCard {
+    height: 100px;
+    position:relative;
+}
+
+.thCard .btn-floating {
+    position: absolute;
+    top: 5px;
+    left:5px;
+}
+
+.thCard .card-content {
+    height:100%;
+    padding: 35px;
+}
+
+.hoveredBall {
+    animation: flashingBall;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+
+@keyframes flashingBall {
+    0% {
+        r: 35;
+    }
+    50% {
+        r: 50;
+    }
+    100% {
+        r: 35;
+    }
 }

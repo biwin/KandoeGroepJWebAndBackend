@@ -10,18 +10,10 @@ import {Card} from "../../../backend/model/card";
     selector: 'circlesession-card',
     template: `
         <div class="col s3">
-      <div class="card hoverable small" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-        <div class="card-content container">
-            <div class="row">
-                <div class="col s12 center">
-                  <a class="btn-floating btn waves-effect waves-light" [style.background]="color"><i class="material-icons">arrow_upward</i></a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 center">
-                    {{card._name}}
-                </div>
-            </div>
+      <div class="card hoverable thCard" [attr.title]="card._name" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+        <div class="card-content valign-wrapper">
+            <a class="btn-floating btn waves-effect waves-light" [style.background]="color"><i class="material-icons">arrow_upward</i></a>
+            <span class="valign center-block center-align">{{card._name}}</span>
         </div>
       </div>
       </div>
