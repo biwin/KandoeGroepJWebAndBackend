@@ -5,6 +5,7 @@ import {Router} from "angular2/router";
 import {OrganisationService} from "../../services/organisationService";
 
 import {Organisation} from "../../../backend/model/organisation";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'organisation-form',
@@ -29,20 +30,23 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class OrganisationForm {
     router: Router;
-    service: OrganisationService;
+    organisationService: OrganisationService;
+    userService: UserService;
     organisation: Organisation = Organisation.empty();
 
-    constructor(router: Router, service: OrganisationService) {
+    constructor(router: Router, organisationService: OrganisationService, userService: UserService) {
         this.router = router;
-        this.service = service;
+        this.organisationService = organisationService;
+        this.userService = userService;
     }
 
     private OnSubmit(){
-        //TODO: set correct userID
-        this.organisation._organisatorIds.push("CURRENT_USER_ID");
+        this.userService.getUserId((userId: string) => {
+            this.organisation._organisatorIds.push(userId);
 
-        this.service.createOrganisation(this.organisation).subscribe((o: Organisation) => {
-            this.router.navigate(["/OrganisationDetail", {id: o._id}]);
+            this.organisationService.createOrganisation(this.organisation).subscribe((o: Organisation) => {
+                this.router.navigate(["/OrganisationDetail", {id: o._id}]);
+            });
         });
     }
 }
