@@ -13,7 +13,7 @@ import {GroupService} from "../../services/groupService";
     <div class="col s4">
       <div (click)="openCard()" class="card hoverable">
         <div class="card-content">
-           <span class="card-title">{{group._name}} - {{theme._name}}</span>
+           <span class="card-title">{{circleSession._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
            <p class="black-text">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>
            <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>
@@ -27,31 +27,10 @@ import {GroupService} from "../../services/groupService";
 export class CircleSessionCard {
     @Input() private circleSession:CircleSession;
 
-    private themeService:ThemeService;
-    private groupService: GroupService;
-
-    private theme:Theme = Theme.empty();
-    private group:Group = Group.empty();
-
-    private themeLoaded:boolean = false;
     private router:Router;
 
-    constructor(themeService:ThemeService, groupService:GroupService, router:Router){
-        this.themeService = themeService;
-        this.groupService = groupService;
+    constructor(router:Router){
         this.router = router;
-    }
-
-    ngAfterViewInit() {
-        if(this.circleSession != undefined && !this.themeLoaded) {
-            this.themeService.getTheme(this.circleSession._themeId).subscribe((t:Theme) =>{
-                this.theme = t;
-                this.themeLoaded = true;
-            });
-            this.groupService.getGroup(this.circleSession._groupId).subscribe((g:Group) =>{
-                this.group = g;
-            })
-        }
     }
 
     openCard() {

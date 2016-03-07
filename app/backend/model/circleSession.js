@@ -1,10 +1,13 @@
 var CircleSession = (function () {
-    function CircleSession(_groupId, _userIds, _themeId, _creatorId, 
+    function CircleSession(_groupId, _userIds, _themeId, 
+        /* _name format: "GroupName - ThemeName" */
+        _name, _creatorId, 
         /* _startDate format: dd/mm/yyyy hh:mm */
         _startDate, _inProgress, _realTime, _endPoint, _allowComment, _turnTimeMin) {
         this._groupId = _groupId;
         this._userIds = _userIds;
         this._themeId = _themeId;
+        this._name = _name;
         this._creatorId = _creatorId;
         this._startDate = _startDate;
         this._inProgress = _inProgress;
@@ -14,7 +17,7 @@ var CircleSession = (function () {
         this._turnTimeMin = _turnTimeMin;
     }
     CircleSession.empty = function () {
-        return new CircleSession("", [], "", "", "", false, false, null, true, null);
+        return new CircleSession("", [], "", "", "", "", false, false, null, true, null);
     };
     return CircleSession;
 })();

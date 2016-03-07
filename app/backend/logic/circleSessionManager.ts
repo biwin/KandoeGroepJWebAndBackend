@@ -2,6 +2,9 @@ import {CircleSession} from "../model/circleSession";
 import {CircleSessionDao} from "../dao/circleSessionDao";
 import {CardPosition} from "../model/cardPosition";
 import {GroupManager} from "./groupManager";
+import {ThemeManager} from "./themeManager";
+import {Theme} from "../model/theme";
+import {Group} from "../model/group";
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 
@@ -14,15 +17,24 @@ export class CircleSessionManager {
             if(exists) {
                 callback(null);
             } else {
+                var tMgr:ThemeManager = new ThemeManager();
                 var gMgr:GroupManager = new GroupManager();
 
-                gMgr.getUserIdsInGroup(circleSession._groupId, (users:string[]) => {
-                    var changed:number = 0;
-                    users.forEach((u:string) => {
-                        circleSession._userIds.push(u);
-                        if(++changed == users.length) {
-                            this._dao.createCircleSession(circleSession, callback);
-                        }
+                gMgr.getGroupById(circleSession._groupId, (g:Group) => {
+                    circleSession._name = g._name + " - ";
+
+                    tMgr.getTheme(circleSession._themeId, (t:Theme) =>{
+                        circleSession._name += t._name
+
+                        gMgr.getUserIdsInGroup(circleSession._groupId, (users:string[]) => {
+                            var changed:number = 0;
+                            users.forEach((u:string) => {
+                                circleSession._userIds.push(u);
+                                if(++changed == users.length) {
+                                    this._dao.createCircleSession(circleSession, callback);
+                                }
+                            });
+                        });
                     });
                 });
             }

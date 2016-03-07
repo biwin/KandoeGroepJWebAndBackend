@@ -1,5 +1,6 @@
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var groupManager_1 = require("./groupManager");
+var themeManager_1 = require("./themeManager");
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();
@@ -11,14 +12,21 @@ var CircleSessionManager = (function () {
                 callback(null);
             }
             else {
+                var tMgr = new themeManager_1.ThemeManager();
                 var gMgr = new groupManager_1.GroupManager();
-                gMgr.getUserIdsInGroup(circleSession._groupId, function (users) {
-                    var changed = 0;
-                    users.forEach(function (u) {
-                        circleSession._userIds.push(u);
-                        if (++changed == users.length) {
-                            _this._dao.createCircleSession(circleSession, callback);
-                        }
+                gMgr.getGroupById(circleSession._groupId, function (g) {
+                    circleSession._name = g._name + " - ";
+                    tMgr.getTheme(circleSession._themeId, function (t) {
+                        circleSession._name += t._name;
+                        gMgr.getUserIdsInGroup(circleSession._groupId, function (users) {
+                            var changed = 0;
+                            users.forEach(function (u) {
+                                circleSession._userIds.push(u);
+                                if (++changed == users.length) {
+                                    _this._dao.createCircleSession(circleSession, callback);
+                                }
+                            });
+                        });
                     });
                 });
             }
