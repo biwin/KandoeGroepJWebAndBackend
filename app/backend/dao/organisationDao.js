@@ -11,7 +11,7 @@ var OrganisationDao = (function () {
                 if (error != null) {
                     console.log(error.message);
                 }
-                organisation._id = result.insertedId;
+                organisation._id = result.insertedId.toString();
                 db.close();
                 callback(organisation);
             });
@@ -35,9 +35,17 @@ var OrganisationDao = (function () {
     };
     OrganisationDao.prototype.deleteOrganisationById = function (organisationId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').deleteOne({ '_id': organisationId }, function (err, result) {
+            db.collection('organisations').deleteOne({ '_id': new mongodb_1.ObjectID(organisationId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
+            });
+        });
+    };
+    OrganisationDao.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $push: { '_groupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
             });
         });
     };

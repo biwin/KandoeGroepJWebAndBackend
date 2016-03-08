@@ -11,6 +11,7 @@ import {HttpWrapperService} from "../services/httpWrapperService";
 import {OrganisationService} from "../services/organisationService";
 import {ThemeService} from "../services/themeService";
 import {UserService} from "../services/userService";
+import {SocketService} from "../services/socketService";
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,
@@ -22,6 +23,7 @@ bootstrap(AppComponent, [
     OrganisationService,
     ThemeService,
     UserService,
+    SocketService,
 
     provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
     //provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION

@@ -20,7 +20,7 @@ export class GroupDao {
                     console.log(error.message);
                 }
 
-                group._id = result.insertedId;
+                group._id = result.insertedId.toString();
 
                 db.close();
 
@@ -51,7 +51,7 @@ export class GroupDao {
 
     deleteGroupById(groupId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').deleteOne({'_id': groupId}, (err: MongoError, result) => {
+            db.collection('groups').deleteOne({'_id': new ObjectID(groupId)}, (err: MongoError, result) => {
                 db.close();
 
                 callback(result.deletedCount == 1);

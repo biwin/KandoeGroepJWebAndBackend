@@ -16,7 +16,7 @@ import {UserService} from "../../services/userService";
 @Component({
     selector: 'circlesession-game',
     template: `
-    <div class="container padding-right-users">
+    <div class="padding-right-users">
         <div class="row">
             <h3 class="center-align">{{circleSession._name}}</h3>
         </div>
@@ -33,8 +33,9 @@ import {UserService} from "../../services/userService";
 
                     <!-- circle voorbeelden vervangen door cardposition -->
                     <circle *ngFor="#bol of pst; #i = index"
+                            [class.hoveredBall]="hoveredCardId === bol._cardId"
                             [id]="bol._cardId"
-                            [attr.r]="35" [attr.fill]="hoveredCardId === bol._cardId ? constants.HOVERED_COLOR : constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
+                            [attr.r]="35" [attr.fill]="constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
                             [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
                 </svg>
             </div>

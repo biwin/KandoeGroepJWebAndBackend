@@ -9,6 +9,7 @@ var httpWrapperService_1 = require("../services/httpWrapperService");
 var organisationService_1 = require("../services/organisationService");
 var themeService_1 = require("../services/themeService");
 var userService_1 = require("../services/userService");
+var socketService_1 = require("../services/socketService");
 browser_1.bootstrap(app_component_1.AppComponent, [
     router_1.ROUTER_PROVIDERS,
     http_1.HTTP_PROVIDERS,
@@ -18,6 +19,7 @@ browser_1.bootstrap(app_component_1.AppComponent, [
     organisationService_1.OrganisationService,
     themeService_1.ThemeService,
     userService_1.UserService,
+    socketService_1.SocketService,
     core_1.provide('App.BackendPath', { useValue: 'http://localhost:8080/api/' }),
     //provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
     core_1.provide(router_1.ROUTER_PRIMARY_COMPONENT, { useValue: app_component_1.AppComponent }),
