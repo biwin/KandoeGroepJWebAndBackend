@@ -46,7 +46,11 @@ describe("GroupManager", () => {
 
                         group = g;
 
-                        done();
+                        organisationManager.getOrganisationById(organisation._id, (newOrganisation: Organisation) => {
+                            assert.ok(newOrganisation._groupIds.indexOf(group._id) > -1);
+
+                            done();
+                        });
                     });
                 } catch(e) {
                     done(e);

@@ -32,7 +32,10 @@ describe("GroupManager", function () {
                         assert.equal(group._description, newGroup._description);
                         assert.equal(group._organisationId, newGroup._organisationId);
                         group = g;
-                        done();
+                        organisationManager.getOrganisationById(organisation._id, function (newOrganisation) {
+                            assert.ok(newOrganisation._groupIds.indexOf(group._id) > -1);
+                            done();
+                        });
                     });
                 }
                 catch (e) {
