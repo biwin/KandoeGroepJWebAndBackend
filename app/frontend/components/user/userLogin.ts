@@ -7,6 +7,7 @@ import {UserService} from "../../services/userService";
 import {NgIf} from "angular2/common";
 import {CircleSessionForm} from "../circleSession/circleSessionForm";
 import {Response} from "angular2/http";
+import {OnChanges} from "angular2/core";
 
 @Component({
     selector: 'user-login',

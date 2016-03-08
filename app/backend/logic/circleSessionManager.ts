@@ -76,4 +76,8 @@ export class CircleSessionManager {
     getCircleSessionsOfUserById(userId:string, callback: (circleSessions:CircleSession[])=> any){
         this._dao.getCircleSessionsOfUserById(userId, callback);
     }
+
+    removeCircleSessionById(circleSessionId:string, callback: (b:boolean) => any) {
+        this._dao.deleteCircleSessionById(circleSessionId, callback);
+    }
 }

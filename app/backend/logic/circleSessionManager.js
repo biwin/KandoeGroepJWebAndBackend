@@ -66,6 +66,9 @@ var CircleSessionManager = (function () {
     CircleSessionManager.prototype.getCircleSessionsOfUserById = function (userId, callback) {
         this._dao.getCircleSessionsOfUserById(userId, callback);
     };
+    CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
+        this._dao.deleteCircleSessionById(circleSessionId, callback);
+    };
     return CircleSessionManager;
 })();
 exports.CircleSessionManager = CircleSessionManager;

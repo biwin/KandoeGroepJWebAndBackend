@@ -2,3 +2,5 @@
 test-reports.xml
 npm-debug.log
 selenium-server-standalone-2.52.0.jar
+chromedriver.exe
+selenium-debug.log

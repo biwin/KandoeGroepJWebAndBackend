@@ -2,7 +2,7 @@
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
 
-import assert = require('assert');
+/*import assert = require('assert');
 import e = require("express");
 
 import {timeout} from "rxjs/operator/timeout";
@@ -18,9 +18,6 @@ var userManager:UserManager;
 before(function(done: any) {
     this.timeout(0);
     userManager = new UserManager();
-    userManager.clearDatabase(() => {
-        done();
-    });
 });
 
 describe('UserManager', () => {
@@ -50,8 +47,9 @@ describe('UserManager', () => {
         });
 
     });
+});*/
 
-
+/*
     describe('getUserByName', () => {
         it('Read non-existing user, should return the null', function (done:any) {
             this.timeout(0);
@@ -101,7 +99,7 @@ describe('UserManager', () => {
                 done();
             }
         });
-    });
+    });*/
 /*
     describe('getAllUsers', () => {
         var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
@@ -643,4 +641,5 @@ describe('UserManager', () => {
     });
 */
 
-});
+/*
+});*/

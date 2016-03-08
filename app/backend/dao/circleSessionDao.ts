@@ -9,6 +9,7 @@ import {InsertOneWriteOpResult} from "mongodb";
 import {ObjectID} from "mongodb";
 import {CardPosition} from "../model/cardPosition";
 import {UpdateWriteOpResult} from "mongodb";
+import {DeleteWriteOpResultObject} from "mongodb";
 
 
 export class CircleSessionDao {
@@ -120,5 +121,14 @@ export class CircleSessionDao {
                callback(docs);
             });
         })
+    }
+
+    deleteCircleSessionById(circleSessionId:string, callback:(deleted:boolean)=> any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
+           db.collection('circlesessions').deleteOne({'_id': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
+               db.close();
+                callback(result.deletedCount == 1);
+            });
+        });
     }
 }

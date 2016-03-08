@@ -6,6 +6,7 @@ import {DaoConstants} from "./daoConstants";
 
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
+import {DeleteWriteOpResultObject} from "mongodb";
 
 export class ThemeDao {
     private _client: MongoClient;
@@ -43,7 +44,7 @@ export class ThemeDao {
 
     deleteThemeById(themeId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('themes').deleteOne({'_id': themeId}, (err: MongoError, result) => {
+            db.collection('themes').deleteOne({'_id': themeId}, (err: MongoError, result:DeleteWriteOpResultObject) => {
                 db.close();
 
                 callback(result.deletedCount == 1);

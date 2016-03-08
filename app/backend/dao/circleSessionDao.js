@@ -104,6 +104,14 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.deleteCircleSessionById = function (circleSessionId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').deleteOne({ '_id': circleSessionId }, function (err, result) {
+                db.close();
+                callback(result.deletedCount == 1);
+            });
+        });
+    };
     return CircleSessionDao;
 })();
 exports.CircleSessionDao = CircleSessionDao;
