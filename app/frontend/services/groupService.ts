@@ -22,7 +22,11 @@ export class GroupService {
         return this.http.post(this.path + "groups/", JSON.stringify(group), {headers: header}).map((res: Response) => res.json());
     }
 
-    getGroup(id:string):Observable<Group>{
-        return this.http.get(this.path + 'groups/' + id).map((res:Response) => res.json());
+    getGroupById(groupId: string): Observable<Group> {
+        var header = new Headers();
+
+        header.append("Content-Type", "application/json");
+
+        return this.http.get(this.path + "groups/" + groupId).map((res: Response) => res.json());
     }
 }
