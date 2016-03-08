@@ -52,6 +52,8 @@ describe("OrganisationManager", () => {
         var organisation: Organisation;
 
         before(function (done: any) {
+            this.timeout(0);
+
             organisationManager.createOrganisation(new Organisation("Delhaize", []), (o: Organisation) => {
                 try {
                     organisation = o;

@@ -20,7 +20,7 @@ export class OrganisationDao {
                     console.log(error.message);
                 }
 
-                organisation._id = result.insertedId;
+                organisation._id = result.insertedId.toString();
 
                 db.close();
 
@@ -51,11 +51,21 @@ export class OrganisationDao {
 
     deleteOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').deleteOne({'_id': organisationId}, (err: MongoError, result) => {
+            db.collection('organisations').deleteOne({'_id': new ObjectID(organisationId)}, (err: MongoError, result) => {
                 db.close();
 
                 callback(result.deletedCount == 1);
             });
         });
+    }
+
+    addGroupIdToOrganisationById(groupId: string, organisationId, callback: (added: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_groupIds': groupId}}, (error: MongoError, result) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            })
+        })
     }
 }
