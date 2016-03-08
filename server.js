@@ -1,6 +1,12 @@
 var express = require('express'),
-    bodyParser = require('body-parser'),
     app = express(),
+    http = require('http').Server(app),
+    io = require('socket.io')(http);
+
+
+//var express = require('express'),
+var bodyParser = require('body-parser'),
+  //  app = express(),
     CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
     GroupAPI = require("./app/backend/restApi/groupAPI.js"),
     OrganisationAPI = require("./app/backend/restApi/organisationAPI.js"),
@@ -13,7 +19,7 @@ var express = require('express'),
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,10 +33,10 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
-var server = app.listen(server_port, server_ip_address, function() {
-    console.log('Listening on port %d', server.address().port);
-    console.log(__dirname);
-});
+//var server = app.listen(server_port, server_ip_address, function() {
+  //  console.log('Listening on port %d', server.address().port);
+    //console.log(__dirname);
+//});
 
 app.get('/', function(req, res) {
     res.sendfile('static/html/index.html');
@@ -158,5 +164,20 @@ app.post('/api/user/get-picture', function(req, res) {
 app.get('*', function(req, res) {
     res.sendfile("static/html/index.html");
 });
-
 //endregion
+
+io.on('connection', function(socket) {
+    socket.on('join session', function(message) {
+        var object = JSON.parse(message);
+        var sessionId = object.sessionId;
+        socket.join("kandoe-" + sessionId);
+    });
+    socket.on('send message', function(message) {
+        var roomName = Object.keys(socket.rooms).filter(function(room) { return room.startsWith('kandoe-')})[0];
+        io.to(roomName).emit('send message', message);
+    });
+});
+
+http.listen(server_port, server_ip_address, function() {
+    console.log("Started listening on port 8080!");
+});

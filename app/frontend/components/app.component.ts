@@ -23,6 +23,9 @@ import {UserLogin} from "./user/userLogin";
 import {Profile} from "./user/profile";
 import {UserService} from "../services/userService";
 
+import {NgZone} from "angular2/core";
+import {ChatboxComponent} from "./chat/chatComponent";
+
 @Component({
     selector: 'my-app',
     template: `
@@ -53,14 +56,17 @@ import {UserService} from "../services/userService";
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
 
     {path: '/loginUser', as: 'UserLogin', component: UserLogin},
-    {path: '/profile', as: 'Profile', component: Profile}
+    {path: '/profile', as: 'Profile', component: Profile},
+
+    {path: '/chat', as: 'Chatbox', component: ChatboxComponent}
 ])
 
 export class AppComponent {
+
     constructor(private router: Router, userService: UserService) {
         this.router.subscribe((url) => {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
-                this.router.navigate(['Hello']);
+                this.router.navigate(['Home']);
             }
         });
     }
