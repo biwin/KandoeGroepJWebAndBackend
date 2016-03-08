@@ -26,6 +26,7 @@ var OrganisationManager = (function () {
         this._dao.deleteOrganisationById(organisationId, callback);
     };
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
+        this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     };
     return OrganisationManager;
 })();

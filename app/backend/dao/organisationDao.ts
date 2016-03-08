@@ -58,4 +58,14 @@ export class OrganisationDao {
             });
         });
     }
+
+    addGroupIdToOrganisationById(groupId: string, organisationId, callback: (added: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_groupIds': groupId}}, (error: MongoError, result) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            })
+        })
+    }
 }

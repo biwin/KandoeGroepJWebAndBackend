@@ -41,6 +41,14 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $push: { '_groupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     return OrganisationDao;
 })();
 exports.OrganisationDao = OrganisationDao;
