@@ -42,6 +42,7 @@ describe("GroupManager", function () {
     describe("createGroupTwice", function () {
         var group;
         before(function (done) {
+            this.timeout(0);
             groupManager.createGroup(new group_1.Group("Voeding", "Ploeg voeding", "Delhaize", []), function (g) {
                 try {
                     group = g;

@@ -54,6 +54,8 @@ describe("GroupManager", () => {
         var group: Group;
 
         before(function (done: any) {
+            this.timeout(0);
+
             groupManager.createGroup(new Group("Voeding", "Ploeg voeding", "Delhaize", []), (g: Group) => {
                 try {
                     group = g;
