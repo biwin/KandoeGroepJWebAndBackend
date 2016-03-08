@@ -1,8 +1,11 @@
 var CardPosition = (function () {
-    function CardPosition(_sessionId, _cardId, _userId, _position, _lastChanged) {
+    function CardPosition(_sessionId, _cardId, _userId, _userHistory, 
+        /* 0 is in the game but not on the board. 1-5 are the rings (5 = the inner ring = end)  */
+        _position, _lastChanged) {
         this._sessionId = _sessionId;
         this._cardId = _cardId;
         this._userId = _userId;
+        this._userHistory = _userHistory;
         this._position = _position;
         this._lastChanged = _lastChanged;
     }
