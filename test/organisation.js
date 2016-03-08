@@ -40,6 +40,7 @@ describe("OrganisationManager", function () {
     describe("createOrganisationTwice", function () {
         var organisation;
         before(function (done) {
+            this.timeout(0);
             organisationManager.createOrganisation(new organisation_1.Organisation("Delhaize", []), function (o) {
                 try {
                     organisation = o;
