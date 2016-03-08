@@ -11,7 +11,7 @@ var OrganisationDao = (function () {
                 if (error != null) {
                     console.log(error.message);
                 }
-                organisation._id = result.insertedId;
+                organisation._id = result.insertedId.toString();
                 db.close();
                 callback(organisation);
             });

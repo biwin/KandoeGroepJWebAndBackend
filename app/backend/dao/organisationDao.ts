@@ -20,7 +20,7 @@ export class OrganisationDao {
                     console.log(error.message);
                 }
 
-                organisation._id = result.insertedId;
+                organisation._id = result.insertedId.toString();
 
                 db.close();
 
