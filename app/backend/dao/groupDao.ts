@@ -20,7 +20,7 @@ export class GroupDao {
                     console.log(error.message);
                 }
 
-                group._id = result.insertedId;
+                group._id = result.insertedId.toString();
 
                 db.close();
 
