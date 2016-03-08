@@ -25,13 +25,14 @@ var groupDetail_1 = require("./group/groupDetail");
 var userLogin_1 = require("./user/userLogin");
 var profile_1 = require("./user/profile");
 var userService_1 = require("../services/userService");
+var chatComponent_1 = require("./chat/chatComponent");
 var AppComponent = (function () {
     function AppComponent(router, userService) {
         var _this = this;
         this.router = router;
         this.router.subscribe(function (url) {
             if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
-                _this.router.navigate(['Hello']);
+                _this.router.navigate(['Home']);
             }
         });
     }
@@ -54,7 +55,8 @@ var AppComponent = (function () {
             { path: '/createGroup', as: 'CreateGroup', component: groupForm_1.GroupForm },
             { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail },
             { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin },
-            { path: '/profile', as: 'Profile', component: profile_1.Profile }
+            { path: '/profile', as: 'Profile', component: profile_1.Profile },
+            { path: '/chat', as: 'Chatbox', component: chatComponent_1.ChatboxComponent }
         ]), 
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], AppComponent);

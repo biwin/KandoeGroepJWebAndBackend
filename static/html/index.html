@@ -2,6 +2,7 @@
 <head>
     <title>KanDoe</title>
     <!-- Angular imports -->
+    <script>document.write('<base href="' + document.location + '" />');</script>
     <script src="../static/es6-shim/es6-shim.min.js"></script>
     <script src="../static/systemjs/dist/system-polyfills.js"></script>
     <script src="../static/angular2/bundles/angular2-polyfills.js"></script>
@@ -10,6 +11,8 @@
     <script src="../static/angular2/bundles/angular2.dev.js"></script>
     <script src="../static/angular2/bundles/http.dev.js"></script>
     <script src="../static/angular2/bundles/router.dev.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>var socket = io();</script>
 
     <script>window.fbAsyncInit = function() {FB.init({appId: '1042721982454370', cookie: true, xfbml: true, version: 'v2.5'});};</script>
     <script src="https://connect.facebook.net/nl_BE/all.js"></script>
