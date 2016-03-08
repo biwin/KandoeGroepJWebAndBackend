@@ -35,7 +35,7 @@ var GroupDao = (function () {
     };
     GroupDao.prototype.deleteGroupById = function (groupId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('groups').deleteOne({ '_id': groupId }, function (err, result) {
+            db.collection('groups').deleteOne({ '_id': new mongodb_1.ObjectID(groupId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });
