@@ -40,6 +40,12 @@ var ThemeService = (function () {
     ThemeService.prototype.getCards = function (themeId) {
         return this.http.get(this.path + 'themes/' + themeId + '/cards').map(function (res) { return res.json(); });
     };
+    ThemeService.prototype.unlinkCard = function (themeId, cardId) {
+        return this.http.delete(this.path + 'themes/' + themeId + '/cards/' + cardId).map(function (res) { return res.status == 200; });
+    };
+    ThemeService.prototype.deleteTheme = function (id) {
+        return this.http.delete(this.path + 'themes/' + id).map(function (res) { return res.status == 200; });
+    };
     ThemeService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

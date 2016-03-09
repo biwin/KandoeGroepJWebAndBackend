@@ -31,7 +31,7 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.deleteThemeById = function (themeId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').deleteOne({ '_id': themeId }, function (err, result) {
+            db.collection('themes').deleteOne({ '_id': new mongodb_1.ObjectID(themeId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });

@@ -1,13 +1,9 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError, CursorResult, InsertOneWriteOpResult, ObjectID} from "mongodb";
-
+import {MongoClient, Db, MongoError, CursorResult, InsertOneWriteOpResult, ObjectID, DeleteWriteOpResultObject, UpdateWriteOpResult} from "mongodb";
 import {DaoConstants} from "./daoConstants";
-
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
-import {DeleteWriteOpResultObject} from "mongodb";
-import {UpdateWriteOpResult} from "mongodb";
 
 export class ThemeDao {
     private _client: MongoClient;
@@ -45,9 +41,8 @@ export class ThemeDao {
 
     deleteThemeById(themeId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('themes').deleteOne({'_id': themeId}, (err: MongoError, result:DeleteWriteOpResultObject) => {
+            db.collection('themes').deleteOne({'_id': new ObjectID(themeId)}, (err: MongoError, result:DeleteWriteOpResultObject) => {
                 db.close();
-
                 callback(result.deletedCount == 1);
             });
         });

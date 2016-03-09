@@ -36,7 +36,7 @@ var ThemeApi = (function () {
                 });
             }
             else {
-                res.sendStatus(404);
+                res.status(404).send("Theme not found");
             }
         });
     };
@@ -45,7 +45,7 @@ var ThemeApi = (function () {
     * */
     ThemeApi.deleteCardFromTheme = function (themeId, cardId, res) {
         ThemeApi.mgr.removeCardFromTheme(themeId, cardId, function (b) {
-            res.sendStatus(b ? 200 : 404);
+            res.status(b ? 200 : 404).send(b);
         });
     };
     ThemeApi.mgr = new themeManager_1.ThemeManager();

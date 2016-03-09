@@ -7,3 +7,5 @@
 /// <reference path="mime/mime.d.ts" />
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="jquery/jquery.d.ts" />
+/// <reference path="materialize-css/materialize-css.d.ts" />
+/// <reference path="pickadate/pickadate.d.ts" />

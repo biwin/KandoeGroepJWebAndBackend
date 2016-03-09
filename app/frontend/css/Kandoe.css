@@ -116,3 +116,11 @@ svg circle.highlight {
         r: 35;
     }
 }
+
+.card.small .card-content {
+    max-height: 300px;
+}
+
+.full-width {
+    width: 100%;
+}

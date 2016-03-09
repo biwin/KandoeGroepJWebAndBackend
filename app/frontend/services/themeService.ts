@@ -41,4 +41,12 @@ export class ThemeService {
     getCards(themeId:string):Observable<Card[]> {
         return this.http.get(this.path + 'themes/' + themeId + '/cards').map((res:Response) => res.json());
     }
+
+    unlinkCard(themeId:string, cardId:string):Observable<boolean> {
+        return this.http.delete(this.path + 'themes/' + themeId + '/cards/' + cardId).map((res:Response) => res.status == 200);
+    }
+
+    deleteTheme(id:string):Observable<boolean> {
+        return this.http.delete(this.path + 'themes/' + id).map((res:Response) => res.status == 200);
+    }
 }

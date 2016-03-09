@@ -41,7 +41,7 @@ export class ThemeApi {
                     res.send({'deletedCards': amount});
                 });
             } else {
-                res.sendStatus(404);
+                res.status(404).send("Theme not found");
             }
         });
     }
@@ -51,7 +51,7 @@ export class ThemeApi {
     * */
     public static deleteCardFromTheme(themeId:string, cardId:string, res) {
         ThemeApi.mgr.removeCardFromTheme(themeId, cardId, (b:boolean) => {
-            res.sendStatus(b ? 200 : 404);
+            res.status(b ? 200 : 404).send(b);
         });
     }
 }

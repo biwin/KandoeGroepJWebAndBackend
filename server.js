@@ -33,11 +33,6 @@ app.use('/static', express.static('node_modules'));
 app.use('/app/frontend/', express.static('app/frontend/'));
 app.use('/app/backend/model', express.static('app/backend/model'));
 
-//var server = app.listen(server_port, server_ip_address, function() {
-  //  console.log('Listening on port %d', server.address().port);
-    //console.log(__dirname);
-//});
-
 app.get('/', function(req, res) {
     res.sendfile('static/html/index.html');
 });
