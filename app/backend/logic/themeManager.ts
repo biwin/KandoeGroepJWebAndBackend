@@ -36,4 +36,12 @@ export class ThemeManager {
     getCards(themeId:string, callback:(c:Card[])=>any) {
         this._dao.readCards(themeId, callback);
     }
+
+    removeCardFromTheme(themeId:string, cardId:string, callback:(b:boolean) => any) {
+        this._dao.clearThemeIdOfCard(themeId, cardId, callback);
+    }
+
+    deleteCardsFromTheme(themeId:string, callback:(amount:number) => any) {
+        this._dao.removeCardsFromTheme(themeId, callback);
+    }
 }

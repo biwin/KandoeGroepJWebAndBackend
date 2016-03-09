@@ -118,6 +118,14 @@ app.get('/api/themes/:id', function(req, res){
 app.post('/api/themes/:id', function(req, res) {
     ThemeApi.ThemeApi.createCard(req.body, req.params.id, res);
 });
+
+app.delete('/api/themes/:id', function(req, res) {
+    ThemeApi.ThemeApi.deleteThemeWithCards(req.params.id, res);
+});
+
+app.delete('/api/themes/:id/cards/:cid', function(req, res) {
+    ThemeApi.ThemeApi.deleteCardFromTheme(req.params.id, req.params.cid, res);
+});
 //endregion
 
 //region auth routes

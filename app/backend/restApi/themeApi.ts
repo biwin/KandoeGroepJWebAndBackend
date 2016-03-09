@@ -33,4 +33,25 @@ export class ThemeApi {
             res.send(c);
         });
     }
+
+    public static deleteThemeWithCards(themeId:string, res) {
+        ThemeApi.mgr.removeThemeById(themeId, (b: boolean) => {
+            if(b) {
+                ThemeApi.mgr.deleteCardsFromTheme(themeId, (amount:number) => {
+                    res.send({'deletedCards': amount});
+                });
+            } else {
+                res.sendStatus(404);
+            }
+        });
+    }
+
+    /*
+    * Unlink card from theme, but don't really delete it, so that it won't ghost out in an existing circlesession
+    * */
+    public static deleteCardFromTheme(themeId:string, cardId:string, res) {
+        ThemeApi.mgr.removeCardFromTheme(themeId, cardId, (b:boolean) => {
+            res.sendStatus(b ? 200 : 404);
+        });
+    }
 }

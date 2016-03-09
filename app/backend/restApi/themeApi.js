@@ -28,6 +28,26 @@ var ThemeApi = (function () {
             res.send(c);
         });
     };
+    ThemeApi.deleteThemeWithCards = function (themeId, res) {
+        ThemeApi.mgr.removeThemeById(themeId, function (b) {
+            if (b) {
+                ThemeApi.mgr.deleteCardsFromTheme(themeId, function (amount) {
+                    res.send({ 'deletedCards': amount });
+                });
+            }
+            else {
+                res.sendStatus(404);
+            }
+        });
+    };
+    /*
+    * Unlink card from theme, but don't really delete it, so that it won't ghost out in an existing circlesession
+    * */
+    ThemeApi.deleteCardFromTheme = function (themeId, cardId, res) {
+        ThemeApi.mgr.removeCardFromTheme(themeId, cardId, function (b) {
+            res.sendStatus(b ? 200 : 404);
+        });
+    };
     ThemeApi.mgr = new themeManager_1.ThemeManager();
     return ThemeApi;
 })();

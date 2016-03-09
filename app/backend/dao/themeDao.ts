@@ -7,6 +7,7 @@ import {DaoConstants} from "./daoConstants";
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
 import {DeleteWriteOpResultObject} from "mongodb";
+import {UpdateWriteOpResult} from "mongodb";
 
 export class ThemeDao {
     private _client: MongoClient;
@@ -74,6 +75,22 @@ export class ThemeDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({'_themeId': themeId}).toArray((err:MongoError, docs:Card[]) => {
                 callback(docs);
+            });
+        });
+    }
+
+    clearThemeIdOfCard(themeId:string, cardId:string, callback:(b:boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cards').updateOne({'_themeId': themeId, '_id': new ObjectID(cardId)}, {'_themeId': null}, (err:MongoError, res:UpdateWriteOpResult) => {
+                callback(res.modifiedCount == 1);
+            });
+        });
+    }
+
+    removeCardsFromTheme(themeId:string, callback:(amount:number) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cards').deleteMany({'_themeId': themeId}, (err:MongoError, res:DeleteWriteOpResultObject) => {
+                callback(res.deletedCount);
             });
         });
     }

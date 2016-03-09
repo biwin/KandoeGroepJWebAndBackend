@@ -24,6 +24,12 @@ var ThemeManager = (function () {
     ThemeManager.prototype.getCards = function (themeId, callback) {
         this._dao.readCards(themeId, callback);
     };
+    ThemeManager.prototype.removeCardFromTheme = function (themeId, cardId, callback) {
+        this._dao.clearThemeIdOfCard(themeId, cardId, callback);
+    };
+    ThemeManager.prototype.deleteCardsFromTheme = function (themeId, callback) {
+        this._dao.removeCardsFromTheme(themeId, callback);
+    };
     return ThemeManager;
 })();
 exports.ThemeManager = ThemeManager;
