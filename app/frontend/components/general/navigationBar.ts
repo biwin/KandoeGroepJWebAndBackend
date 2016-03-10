@@ -28,7 +28,9 @@ import {Response} from "angular2/http";
                 <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
                 <li><a [routerLink]="['CreateOrganisation']">Nieuwe organisatie</a></li>
             </ul>
-            <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+            <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse">
+                <i class="material-icons">menu</i>
+            </a>
        </div>
     </nav>
   `,

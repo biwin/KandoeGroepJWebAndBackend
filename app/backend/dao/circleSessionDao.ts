@@ -27,7 +27,7 @@ export class CircleSessionDao {
                 '_groupId': circleSession._groupId,
                 '_themeId': circleSession._themeId,
                 '_startDate': circleSession._startDate
-            }).limit(1).next((cursor:CursorResult) => {
+            }).limit(1).next((error: MongoError, cursor:CursorResult) => {
                 db.close();
                 callback(cursor != null);
             });
@@ -54,7 +54,7 @@ export class CircleSessionDao {
 
     readCircleSession(id:string, callback:(c:CircleSession) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('circlesessions').find({'_id': new ObjectID(id)}).limit(1).next().then((cursor:CursorResult) => {
+            db.collection('circlesessions').find({'_id': new ObjectID(id)}).limit(1).next((err:MongoError, cursor:CursorResult) => {
                 db.close();
                 callback(cursor);
             });
@@ -63,14 +63,10 @@ export class CircleSessionDao {
 
     cardPositionExists(sessionId:string, cardId:string, callback:(exists:boolean, position:number) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('cardpositions').find({
-                '_sessionId': sessionId,
-                '_cardId': cardId
-            }).limit(1).next((cursor:CursorResult) => {
-                db.close();
+            db.collection('cardpositions').find({'_sessionId': sessionId, '_cardId':cardId}).limit(1).next((err:MongoError, cursor:CursorResult) => {
                 var cp:CardPosition = cursor;
-                callback(cp != null, cp == null ? -1 : cp._position);
-            })
+                callback(cp !== null, cp == null ? -1 : cp._position);
+            });
         });
     }
 
@@ -111,7 +107,7 @@ export class CircleSessionDao {
             db.collection('cardpositions').find({
                 '_sessionId': sessionId,
                 '_cardId': cardId
-            }).limit(1).next((cursor:CursorResult) => {
+            }).limit(1).next((err:MongoError, cursor:CursorResult) => {
                 callback(cursor);
             });
         });

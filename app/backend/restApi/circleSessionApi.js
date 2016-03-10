@@ -3,18 +3,18 @@ var userApi_1 = require("./userApi");
 var CircleSessionApi = (function () {
     function CircleSessionApi() {
     }
-    CircleSessionApi.createCircleSession = function (circleSessionCreateWrapper, res) {
-        CircleSessionApi.mgr.createCircleSession(circleSessionCreateWrapper, function (c) {
+    CircleSessionApi.createCircleSession = function (req, res) {
+        CircleSessionApi.mgr.createCircleSession(req.body, function (c) {
             res.send(c);
         });
     };
-    CircleSessionApi.findAll = function (res) {
+    CircleSessionApi.findAll = function (req, res) {
         CircleSessionApi.mgr.getAllCircleSessions(function (c) {
             res.send(c);
         });
     };
-    CircleSessionApi.find = function (id, res) {
-        CircleSessionApi.mgr.getCircleSession(id, function (c) {
+    CircleSessionApi.find = function (req, res) {
+        CircleSessionApi.mgr.getCircleSession(req.params.id, function (c) {
             res.send(c);
         });
     };
@@ -23,13 +23,13 @@ var CircleSessionApi = (function () {
             res.send(cp);
         });
     };
-    CircleSessionApi.getCircleSessionsOfUserById = function (userId, res) {
-        CircleSessionApi.mgr.getCircleSessionsOfUserById(userId, function (circleSessions) {
+    CircleSessionApi.getCircleSessionsOfUserById = function (req, res) {
+        CircleSessionApi.mgr.getCircleSessionsOfUserById(req.params.id, function (circleSessions) {
             res.send(circleSessions);
         });
     };
-    CircleSessionApi.getCircleSessionCards = function (circleSessionId, res) {
-        CircleSessionApi.mgr.getCircleSessionCards(circleSessionId, function (wrappers) {
+    CircleSessionApi.getCircleSessionCards = function (req, res) {
+        CircleSessionApi.mgr.getCircleSessionCards(req.params.id, function (wrappers) {
             res.send(wrappers);
         });
     };

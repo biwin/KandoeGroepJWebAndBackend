@@ -70,7 +70,9 @@ var CircleSessionForm = (function () {
         if (this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
+        console.log('going to post');
         this.service.create(this.circleSession, this.emailadresses).subscribe(function (c) {
+            console.log('going to navigate');
             _this.router.navigate(['CircleSessionOverview']);
         });
     };

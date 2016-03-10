@@ -9,20 +9,20 @@ import {UserApi} from "./userApi";
 export class CircleSessionApi {
     private static mgr:CircleSessionManager = new CircleSessionManager();
 
-    public static createCircleSession(circleSessionCreateWrapper:CircleSessionCreateWrapper, res) {
-        CircleSessionApi.mgr.createCircleSession(circleSessionCreateWrapper, (c:CircleSession) => {
+    public static createCircleSession(req:Request, res:Response) {
+        CircleSessionApi.mgr.createCircleSession(req.body, (c:CircleSession) => {
             res.send(c);
         });
     }
 
-    public static findAll(res) {
+    public static findAll(req:Request, res:Response) {
         CircleSessionApi.mgr.getAllCircleSessions((c:CircleSession[]) => {
             res.send(c);
         });
     }
 
-    public static find(id:string,res) {
-        CircleSessionApi.mgr.getCircleSession(id, (c:CircleSession) => {
+    public static find(req:Request,res:Response) {
+        CircleSessionApi.mgr.getCircleSession(req.params.id, (c:CircleSession) => {
             res.send(c);
         });
     }
@@ -33,14 +33,14 @@ export class CircleSessionApi {
         });
     }
 
-    static getCircleSessionsOfUserById(userId:string, res) {
-        CircleSessionApi.mgr.getCircleSessionsOfUserById(userId, (circleSessions:CircleSession[]) =>{
+    static getCircleSessionsOfUserById(req:Request, res:Response) {
+        CircleSessionApi.mgr.getCircleSessionsOfUserById(req.params.id, (circleSessions:CircleSession[]) =>{
            res.send(circleSessions);
         });
     }
 
-    public static getCircleSessionCards(circleSessionId:string, res) {
-        CircleSessionApi.mgr.getCircleSessionCards(circleSessionId, (wrappers:CircleSessionCardWrapper[]) => {
+    public static getCircleSessionCards(req:Request, res:Response) {
+        CircleSessionApi.mgr.getCircleSessionCards(req.params.id, (wrappers:CircleSessionCardWrapper[]) => {
             res.send(wrappers);
         });
     }

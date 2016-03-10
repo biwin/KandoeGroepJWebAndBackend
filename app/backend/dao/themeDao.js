@@ -7,7 +7,7 @@ var ThemeDao = (function () {
     }
     ThemeDao.prototype.clearDatabase = function (callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').deleteMany({}, function () {
+            db.collection('themes').deleteMany({}, function (err, res) {
                 callback();
             });
         });
@@ -23,7 +23,7 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.readTheme = function (id, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next().then(function (cursor) {
+            db.collection('themes').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next(function (err, cursor) {
                 db.close();
                 callback(cursor);
             });
@@ -56,7 +56,11 @@ var ThemeDao = (function () {
     ThemeDao.prototype.readCards = function (themeId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cards').find({ '_themeId': themeId }).toArray(function (err, docs) {
-                callback(docs);
+                var nDocs = docs.map(function (d) {
+                    d._id = d._id.toHexString();
+                    return d;
+                });
+                callback(nDocs);
             });
         });
     };

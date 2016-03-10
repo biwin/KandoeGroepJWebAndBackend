@@ -17,8 +17,8 @@ var GroupAPI = (function () {
             res.send(groups);
         });
     };
-    GroupAPI.getGroupsOfUserById = function (userId, res) {
-        this.mgr.getGroupsOfUserById(userId, function (groups) {
+    GroupAPI.getGroupsOfUserById = function (req, res) {
+        this.mgr.getGroupsOfUserById(req.params.id, function (groups) {
             res.send(groups);
         });
     };

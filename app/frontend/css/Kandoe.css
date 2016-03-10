@@ -127,3 +127,8 @@ svg circle.kandoeRing.inner {
 .full-width {
     width: 100%;
 }
+
+#sessionPreGameSave {
+    bottom: 20px !important;
+    right: 270px !important;
+}

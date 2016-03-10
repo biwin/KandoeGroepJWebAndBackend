@@ -12,19 +12,18 @@ import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCard
     selector: 'pregame',
     template: `
         <div class="row container">
-              <div class="fixed-action-btn" style="bottom: 64px; right: 15%;">
+              <div class="fixed-action-btn" id="sessionPreGameSave">
                 <a (click)="submitCards()" class="btn-floating btn-large red">
                   <i class="large material-icons">arrow_forward</i>
                 </a>
                 <ul>
-                <!-- TODO: test unselect all -->
-                  <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+                  <li><a (click)="clear()" class="btn-floating orange tooltipped" data-tooltip="Opnieuw" data-delay="50" data-position="left"><i class="material-icons">undo</i></a></li>
                 </ul>
               </div>
 
 
             <h5 class="center-align">Kies de kaarten die belangrijk zijn voor jou!</h5>
-            <div class="col s12 m3" *ngFor="#card of cards">
+            <div class="col s12 m4" *ngFor="#card of cards">
                 <div class="card-panel">
                     <span class="truncate">
                         <a (click)="selectCard(card.card._id)" *ngIf="!card.inPlay && selectedCards.indexOf(card.card._id) < 0" class="z-depth-0 btn-floating btn waves-effect waves-light blue"><i class="material-icons">add</i></a>
@@ -68,6 +67,10 @@ export class CircleSessionPreGame implements OnChanges {
     unselectCard(id:string) {
         var i = this.selectedCards.indexOf(id);
         this.selectedCards.splice(i, 1);
+    }
+
+    clear() {
+        this.selectedCards.splice(0, this.selectedCards.length);
     }
 
     submitCards(){
