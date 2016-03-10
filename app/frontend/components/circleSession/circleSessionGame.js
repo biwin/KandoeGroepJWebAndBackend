@@ -31,7 +31,7 @@ var CircleSessionGame = (function () {
             themeService.getCards(circleSession._themeId).subscribe(function (cs) {
                 cs.forEach(function (c) {
                     _this.cards.push(c);
-                    _this.pst.push(new cardPosition_1.CardPosition(_this.id, c._id, "", Math.floor(Math.random() * 5) + 1, new Date()));
+                    _this.pst.push(new cardPosition_1.CardPosition(_this.id, c._id, "", [], Math.floor(Math.random() * 5) + 1, new Date()));
                 });
             });
         });

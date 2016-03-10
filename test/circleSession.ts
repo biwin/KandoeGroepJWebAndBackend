@@ -11,6 +11,7 @@ import {Theme} from "../app/backend/model/theme";
 import {Group} from "../app/backend/model/group";
 import {User} from "../app/backend/model/user";
 import {GroupManager} from "../app/backend/logic/groupManager";
+import {CircleSessionCreateWrapper} from "../app/backend/model/circleSessionCreateWrapper";
 
 var circleSessionManager:CircleSessionManager;
 var themeManager:ThemeManager;
@@ -58,7 +59,8 @@ describe('CircleSessionManager', () => {
         it('Created circlesession should contain the users from the group', function(done:any) {
             this.timeout(0);
             circleSession = new CircleSession(group._id,[],theme._id,"","","",false,false,0,false);
-            circleSessionManager.createCircleSession(circleSession, (c:CircleSession) => {
+            var circleSessionWrapper:CircleSessionCreateWrapper = new CircleSessionCreateWrapper(circleSession, []);
+            circleSessionManager.createCircleSession(circleSessionWrapper, (c:CircleSession) => {
                 circleSession = c;
                 assert.equal(c._userIds.length, group._memberIds.length);
                 assert.deepEqual(c._userIds, group._memberIds);

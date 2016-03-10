@@ -278,6 +278,10 @@ export class UserManager {
     }
 
     getUsers(userIds:string[], callback:(us:User[]) => any) {
-        this._dao.getUsers(userIds.map((s:string) => new ObjectID(s)),callback);
+        this._dao.readUsers(userIds.map((s:string) => new ObjectID(s)),callback);
+    }
+
+    getUserIdsByEmail(_userEmailAdresses:string[], callback:(us:string[]) => any) {
+        this._dao.readUserIdsByEmail(_userEmailAdresses, callback);
     }
 }
