@@ -1,12 +1,13 @@
 import {CircleSession} from "../model/circleSession";
 import {CircleSessionManager} from "../logic/circleSessionManager";
 import {CardPosition} from "../model/cardPosition";
+import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
 
 export class CircleSessionApi {
     private static mgr:CircleSessionManager = new CircleSessionManager();
 
-    public static createCircleSession(circleSession:CircleSession, res) {
-        CircleSessionApi.mgr.createCircleSession(circleSession, (c:CircleSession) => {
+    public static createCircleSession(circleSessionCreateWrapper:CircleSessionCreateWrapper, res) {
+        CircleSessionApi.mgr.createCircleSession(circleSessionCreateWrapper, (c:CircleSession) => {
             res.send(c);
         });
     }

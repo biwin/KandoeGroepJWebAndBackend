@@ -94,7 +94,7 @@ export class CircleSessionDao {
     }
 
     createCardPosition(sessionId:string, cardId:string, userId:string, callback:(cp:CardPosition) => any) {
-        var cp:CardPosition = new CardPosition(sessionId, cardId, userId, 0, new Date());
+        var cp:CardPosition = new CardPosition(sessionId, cardId, userId,[], 0, new Date());
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').insertOne(cp, null, (err:MongoError, result: InsertOneWriteOpResult) => {
                 cp._id = result.insertedId.toString();

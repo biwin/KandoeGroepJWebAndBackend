@@ -2,8 +2,8 @@ var circleSessionManager_1 = require("../logic/circleSessionManager");
 var CircleSessionApi = (function () {
     function CircleSessionApi() {
     }
-    CircleSessionApi.createCircleSession = function (circleSession, res) {
-        CircleSessionApi.mgr.createCircleSession(circleSession, function (c) {
+    CircleSessionApi.createCircleSession = function (circleSessionCreateWrapper, res) {
+        CircleSessionApi.mgr.createCircleSession(circleSessionCreateWrapper, function (c) {
             res.send(c);
         });
     };

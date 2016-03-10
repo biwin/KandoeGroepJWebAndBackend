@@ -16,8 +16,8 @@ import {OnInit} from "angular2/core";
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
             <li class="collection-item row valign-wrapper" *ngFor="#user of users">
                 <div class="col s4">
-                    <img *ngIf="user._pictureSmall !== undefined && user._pictureSmall.length > 0" [attr.src]="user._pictureSmall" class="circle responsive-img valign">
-                    <i *ngIf="user._pictureSmall === undefined || user._pictureSmall.length == 0" class="material-icons valign">person</i>
+                   <!-- <img *ngIf="user._pictureSmall !== undefined && user._pictureSmall.length > 0" [attr.src]="user._pictureSmall" class="circle responsive-img valign">
+                    <i *ngIf="user._pictureSmall === undefined || user._pictureSmall.length == 0" class="material-icons valign">person</i>-->
                 </div>
                 <div class="col s8">
                     {{user._name}}

@@ -58,6 +58,15 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.readUserIdsByEmail = function (_userEmailAdresses, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
+            return db.collection('users').find({ '_email': { '$in': _userEmailAdresses } }).project({ '_id': 1 }).toArray(function (err, result) {
+                var ids = result.map(function (u) { return u._id.toString(); });
+                db.close();
+                callback(ids);
+            });
+        });
+    };
     UserDao.prototype.readUserByFacebookId = function (facebookId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
             return db.collection('users').find({ '_facebookId': facebookId }).limit(1).next().then(function (cursor) {
@@ -263,7 +272,7 @@ var UserDao = (function () {
             });
         });
     };
-    UserDao.prototype.getUsers = function (ids, callback) {
+    UserDao.prototype.readUsers = function (ids, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').find({ '_id': { '$in': ids } }).toArray(function (err, result) {
                 db.close();

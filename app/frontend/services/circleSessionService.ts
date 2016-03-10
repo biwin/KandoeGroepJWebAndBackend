@@ -6,6 +6,7 @@ import {Response} from "angular2/http";
 import {Headers} from "angular2/http";
 import "rxjs/add/operator/map";
 import {CircleSession} from "../../backend/model/circleSession";
+import {CircleSessionCreateWrapper} from "../../backend/model/circleSessionCreateWrapper";
 
 @Injectable()
 export class CircleSessionService {
@@ -21,10 +22,13 @@ export class CircleSessionService {
         return this.http.get(this.path + 'circlesessions').map((res:Response) => res.json());
     }
 
-    create(circleSession:CircleSession):Observable<CircleSession>{
+    create(circleSession:CircleSession, emailadresses:string[]):Observable<CircleSession>{
         var header = new Headers();
+        var circleSessionCreateWrapper:CircleSessionCreateWrapper = CircleSessionCreateWrapper.empty();
+        circleSessionCreateWrapper._circleSession = circleSession;
+        circleSessionCreateWrapper._userEmailAdresses = emailadresses;
         header.append('Content-Type', 'application/json');
-        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSession), {headers:header}).map((res:Response) => res.json());
+        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSessionCreateWrapper), {headers:header}).map((res:Response) => res.json());
     }
 
     get(id:string):Observable<CircleSession>{

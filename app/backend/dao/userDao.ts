@@ -78,6 +78,16 @@ export class UserDao {
         });
     }
 
+    readUserIdsByEmail(_userEmailAdresses:string[], callback:(us:string[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
+            return db.collection('users').find({'_email': {'$in': _userEmailAdresses}}).project({'_id': 1}).toArray((err:MongoError, result:User[]) => {
+                var ids:string[] = result.map(u => u._id.toString());
+                db.close();
+                callback(ids);
+            });
+        });
+    }
+
     readUserByFacebookId(facebookId: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_facebookId': facebookId}).limit(1).next().then((cursor: CursorResult) => {
@@ -311,7 +321,7 @@ export class UserDao {
         });
     }
 
-    getUsers(ids:ObjectID[], callback:(us:User[])=>any) {
+    readUsers(ids:ObjectID[], callback:(us:User[])=>any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('users').find({'_id': {'$in': ids}}).toArray((err:MongoError, result:User[]) => {
                 db.close();

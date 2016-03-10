@@ -68,7 +68,7 @@ export class CircleSessionGame {
             themeService.getCards(circleSession._themeId).subscribe((cs:Card[]) => {
                 cs.forEach((c:Card) => {
                     this.cards.push(c);
-                    this.pst.push(new CardPosition(this.id, c._id, "", Math.floor(Math.random() * 5) + 1, new Date()));
+                    this.pst.push(new CardPosition(this.id, c._id, "", [],Math.floor(Math.random() * 5) + 1, new Date()));
                 });
             })
         });

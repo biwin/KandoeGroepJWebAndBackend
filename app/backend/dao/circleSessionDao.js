@@ -78,7 +78,7 @@ var CircleSessionDao = (function () {
         });
     };
     CircleSessionDao.prototype.createCardPosition = function (sessionId, cardId, userId, callback) {
-        var cp = new cardPosition_1.CardPosition(sessionId, cardId, userId, 0, new Date());
+        var cp = new cardPosition_1.CardPosition(sessionId, cardId, userId, [], 0, new Date());
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cardpositions').insertOne(cp, null, function (err, result) {
                 cp._id = result.insertedId.toString();

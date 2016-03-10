@@ -9,6 +9,7 @@ var theme_1 = require("../app/backend/model/theme");
 var group_1 = require("../app/backend/model/group");
 var user_1 = require("../app/backend/model/user");
 var groupManager_1 = require("../app/backend/logic/groupManager");
+var circleSessionCreateWrapper_1 = require("../app/backend/model/circleSessionCreateWrapper");
 var circleSessionManager;
 var themeManager;
 var userManager;
@@ -53,7 +54,8 @@ describe('CircleSessionManager', function () {
         it('Created circlesession should contain the users from the group', function (done) {
             this.timeout(0);
             circleSession = new circleSession_1.CircleSession(group._id, [], theme._id, "", "", "", false, false, 0, false);
-            circleSessionManager.createCircleSession(circleSession, function (c) {
+            var circleSessionWrapper = new circleSessionCreateWrapper_1.CircleSessionCreateWrapper(circleSession, []);
+            circleSessionManager.createCircleSession(circleSessionWrapper, function (c) {
                 circleSession = c;
                 assert.equal(c._userIds.length, group._memberIds.length);
                 assert.deepEqual(c._userIds, group._memberIds);

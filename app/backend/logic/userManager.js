@@ -256,7 +256,10 @@ var UserManager = (function () {
         });
     };
     UserManager.prototype.getUsers = function (userIds, callback) {
-        this._dao.getUsers(userIds.map(function (s) { return new mongodb_1.ObjectID(s); }), callback);
+        this._dao.readUsers(userIds.map(function (s) { return new mongodb_1.ObjectID(s); }), callback);
+    };
+    UserManager.prototype.getUserIdsByEmail = function (_userEmailAdresses, callback) {
+        this._dao.readUserIdsByEmail(_userEmailAdresses, callback);
     };
     return UserManager;
 })();

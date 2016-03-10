@@ -15,6 +15,7 @@ import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
+import {TagInput} from "../general/tagInput";
 
 @Component({
     selector: 'circlesession-form',
@@ -93,22 +94,27 @@ import {UserService} from "../../services/userService";
      </div>
     </div>
 
+    <div class="row">
+        <tags [title]="'Voeg extra spelers toe met hun e-mailadres (splits met een puntkomma)'" [tagArray]="emailadresses"></tags>
+    </div>
+
       <button type="submit" class="waves-effect waves-light btn red"><i class="material-icons center">add</i></button>
     </form>
     </div></div>
   </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput]
 })
 export class CircleSessionForm implements AfterViewInit {
     circleSession:CircleSession = CircleSession.empty();
+    emailadresses:string[] = [];
     service:CircleSessionService;
     router:Router;
 
 
     private _currentUserId:string;
-    private _groups: Group[] = [];
-    private _themes: Theme[] = [];
+    private _groups:Group[] = [];
+    private _themes:Theme[] = [];
 
     ngAfterViewInit():any {
         $('select').material_select();
@@ -116,7 +122,7 @@ export class CircleSessionForm implements AfterViewInit {
         $('.datepicker').pickadate({
             monthsFull: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
             today: 'Vandaag',
-            clear:'Leeg',
+            clear: 'Leeg',
             close: 'Sluit',
             selectMonths: true,
             selectYears: 2,
@@ -124,11 +130,11 @@ export class CircleSessionForm implements AfterViewInit {
             min: Date.now()
         });
 
-        $('#realtime').change( ()=>  {
+        $('#realtime').change(()=> {
             $('#durationbox').toggleClass('hide');
         });
 
-        $('#endpoint').change( ()=>  {
+        $('#endpoint').change(()=> {
             $('#turnbox').toggleClass('hide');
         });
     }
@@ -140,11 +146,11 @@ export class CircleSessionForm implements AfterViewInit {
             this._currentUserId = u;
             var organisationId = routeParam.params["organisationId"];
 
-            if(organisationId == null){
+            if (organisationId == null) {
                 userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
                     this._groups = grs;
                 });
-            }else{
+            } else {
                 organisationService.getGroupsOfOrganisationById(organisationId).subscribe((grs:Group[]) => {
                     this._groups = grs;
                 });
@@ -152,20 +158,20 @@ export class CircleSessionForm implements AfterViewInit {
         });
 
 
-        themeService.getAll().subscribe((ts:Theme[]) =>{
+        themeService.getAll().subscribe((ts:Theme[]) => {
             this._themes = ts;
         });
     }
 
-    private OnSubmit(){
+    private OnSubmit() {
         this.circleSession._creatorId = this._currentUserId;
 
-        if(this.circleSession._realTime)
+        if (this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;
 
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
 
-        this.service.create(this.circleSession).subscribe((c:CircleSession) =>{
+        this.service.create(this.circleSession, this.emailadresses).subscribe((c:CircleSession) => {
             this.router.navigate(['CircleSessionOverview']);
         });
     }

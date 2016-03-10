@@ -24,7 +24,7 @@ import {Router} from "angular2/router";
                 </div></div>
 
                 <div class="row">
-                    <tags [title]="'Tags (end each tag with a semicolon)'" [tagArray]="theme._tags"></tags>
+                    <tags [title]="'Tags (splits met een puntkomma)'" [tagArray]="theme._tags"></tags>
                 </div>
 
                 <button type="submit" class="waves-effect waves-light btn red"><i class="material-icons center">add</i></button>

@@ -15,6 +15,7 @@ var http_1 = require("angular2/http");
 var core_2 = require("angular2/core");
 var http_2 = require("angular2/http");
 require("rxjs/add/operator/map");
+var circleSessionCreateWrapper_1 = require("../../backend/model/circleSessionCreateWrapper");
 var CircleSessionService = (function () {
     function CircleSessionService(http, path) {
         this.http = null;
@@ -24,10 +25,13 @@ var CircleSessionService = (function () {
     CircleSessionService.prototype.getAll = function () {
         return this.http.get(this.path + 'circlesessions').map(function (res) { return res.json(); });
     };
-    CircleSessionService.prototype.create = function (circleSession) {
+    CircleSessionService.prototype.create = function (circleSession, emailadresses) {
         var header = new http_2.Headers();
+        var circleSessionCreateWrapper = circleSessionCreateWrapper_1.CircleSessionCreateWrapper.empty();
+        circleSessionCreateWrapper._circleSession = circleSession;
+        circleSessionCreateWrapper._userEmailAdresses = emailadresses;
         header.append('Content-Type', 'application/json');
-        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSession), { headers: header }).map(function (res) { return res.json(); });
+        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSessionCreateWrapper), { headers: header }).map(function (res) { return res.json(); });
     };
     CircleSessionService.prototype.get = function (id) {
         return this.http.get(this.path + 'circlesessions/' + id).map(function (res) { return res.json(); });
