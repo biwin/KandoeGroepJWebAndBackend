@@ -8,6 +8,8 @@ import {Group} from "../model/group";
 import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
 import {UserManager} from "./userManager";
 import {User} from "../model/user";
+import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
+import {Card} from "../model/card";
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 
@@ -21,7 +23,6 @@ export class CircleSessionManager {
             if (exists) {
                 callback(null);
             } else {
-
                 var uMgr:UserManager = new UserManager();
                 var tMgr:ThemeManager = new ThemeManager();
                 var gMgr:GroupManager = new GroupManager();
@@ -40,7 +41,7 @@ export class CircleSessionManager {
                                     gMgr.getUserIdsInGroup(circleSession._groupId, (us:string[]) => {
                                         var changed:number = 0;
                                         us.forEach((u:string) => {
-                                            if(circleSession._userIds.indexOf(u) < 0){
+                                            if (circleSession._userIds.indexOf(u) < 0) {
                                                 circleSession._userIds.push(u);
                                             }
                                             if (++changed == us.length) {
@@ -95,5 +96,38 @@ export class CircleSessionManager {
 
     removeCircleSessionById(circleSessionId:string, callback:(b:boolean) => any) {
         this._dao.deleteCircleSessionById(circleSessionId, callback);
+    }
+
+    getCircleSessionCards(circleSessionId:string, callback:(wrappers:CircleSessionCardWrapper[]) => any) {
+        var tMgr:ThemeManager = new ThemeManager();
+        var circleSessionCardWrappers:CircleSessionCardWrapper[] = [];
+        this._dao.readCircleSession(circleSessionId, (c:CircleSession) => {
+            tMgr.getCards(c._themeId, (cards:Card[]) => {
+                var a:number = 0;
+                cards.forEach((c:Card) => {
+                    this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean) => {
+                        circleSessionCardWrappers.push(new CircleSessionCardWrapper(c, b));
+                        if (++a == cards.length) {
+                            callback(circleSessionCardWrappers);
+                        }
+                    });
+                });
+            })
+        });
+    }
+
+    initCardsForSession(uId:string, circleSessionId:string, cardIds:string[], callback:() => any) {
+        this._dao.getCardPositions(circleSessionId, cardIds, (cps:CardPosition[]) => {
+            for(var i = 0; i < cps.length; i++) {
+                var index = cardIds.indexOf(cps[i]._id);
+                if(index > -1) {
+                    cardIds.splice(index, 1);
+                }
+            }
+
+            var callsMade = 0;
+
+            this._dao.createCardPositions(circleSessionId, cardIds, uId, callback);
+        });
     }
 }

@@ -1,4 +1,5 @@
 var circleSessionManager_1 = require("../logic/circleSessionManager");
+var userApi_1 = require("./userApi");
 var CircleSessionApi = (function () {
     function CircleSessionApi() {
     }
@@ -23,8 +24,27 @@ var CircleSessionApi = (function () {
         });
     };
     CircleSessionApi.getCircleSessionsOfUserById = function (userId, res) {
-        this.mgr.getCircleSessionsOfUserById(userId, function (circleSessions) {
+        CircleSessionApi.mgr.getCircleSessionsOfUserById(userId, function (circleSessions) {
             res.send(circleSessions);
+        });
+    };
+    CircleSessionApi.getCircleSessionCards = function (circleSessionId, res) {
+        CircleSessionApi.mgr.getCircleSessionCards(circleSessionId, function (wrappers) {
+            res.send(wrappers);
+        });
+    };
+    CircleSessionApi.initCardsForSession = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (uId) {
+            if (uId != null) {
+                var circleSessionId = req.params.id;
+                var cardIds = req.body;
+                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function () {
+                    res.status(200).send('Success');
+                });
+            }
+            else {
+                res.status(401).send('Unauthorized');
+            }
         });
     };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();

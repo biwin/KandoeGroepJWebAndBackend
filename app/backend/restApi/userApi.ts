@@ -126,4 +126,10 @@ export class UserApi {
             res.send(us);
         })
     }
+
+    public static getCurrentUserId(token:string, callback: (userId:string) => any) {
+        UserApi.isTokenValid(token, (b: boolean, decodedToken:any) => {
+            callback(b ? decodedToken.id : null);
+        });
+    }
 }

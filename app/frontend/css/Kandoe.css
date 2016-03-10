@@ -28,6 +28,17 @@ nav {
     }
 }
 
+.disabled-with-tooltip {
+    background-color:#DFDFDF;
+    color:#9F9F9F;
+    cursor: default;
+}
+
+.disabled-with-tooltip:hover {
+    background-color:#DFDFDF;
+    color:#9F9F9F;
+}
+
 .formCard form.col {
     float: none;
     margin: 0;
@@ -65,10 +76,6 @@ nav {
     margin-top: 2em;
 }
 
-.valid {
-
-}
-
 svg circle.kandoeRing {
     stroke: #2196F3;
     fill: #2196F3;
@@ -77,10 +84,6 @@ svg circle.kandoeRing {
 
 svg circle.kandoeRing.inner {
     fill-opacity: 1;
-}
-
-svg circle.highlight {
-    fill: yellow !important;
 }
 
 .thCard {

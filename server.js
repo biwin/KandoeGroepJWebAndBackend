@@ -67,6 +67,12 @@ app.get('/api/circlesessions/:id', function(req, res){
 app.post('/api/circlesessions', function(req, res) {
     CircleSessionApi.CircleSessionApi.createCircleSession(req.body, res);
 });
+
+app.get('/api/circlesessions/:id/cards', function(req, res) {
+    CircleSessionApi.CircleSessionApi.getCircleSessionCards(req.params.id, res);
+});
+
+app.post('/api/circlesessions/:id/cards',  CircleSessionApi.CircleSessionApi.initCardsForSession);
 //endregion
 
 //region organisation routes

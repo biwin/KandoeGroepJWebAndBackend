@@ -35,7 +35,7 @@ var CircleSessionCardDetail = (function () {
     ], CircleSessionCardDetail.prototype, "hover", void 0);
     CircleSessionCardDetail = __decorate([
         core_1.Component({
-            selector: 'circlesession-card',
+            selector: 'circlesession-carddetail',
             template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable thCard\" [attr.title]=\"card._name\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content valign-wrapper\">\n            <a class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\"><i class=\"material-icons\">arrow_upward</i></a>\n            <span class=\"valign center-block center-align\">{{card._name}}</span>\n        </div>\n      </div>\n      </div>\n\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 

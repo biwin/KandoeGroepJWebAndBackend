@@ -10,6 +10,8 @@ import {ObjectID} from "mongodb";
 import {CardPosition} from "../model/cardPosition";
 import {UpdateWriteOpResult} from "mongodb";
 import {DeleteWriteOpResultObject} from "mongodb";
+import {Card} from "../model/card";
+import {InsertWriteOpResult} from "mongodb";
 
 
 export class CircleSessionDao {
@@ -67,7 +69,7 @@ export class CircleSessionDao {
             }).limit(1).next((cursor:CursorResult) => {
                 db.close();
                 var cp:CardPosition = cursor;
-                callback(cp != null, cp._position);
+                callback(cp != null, cp == null ? -1 : cp._position);
             })
         });
     }
@@ -128,6 +130,25 @@ export class CircleSessionDao {
            db.collection('circlesessions').deleteOne({'_id': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
                db.close();
                 callback(result.deletedCount == 1);
+            });
+        });
+    }
+
+    getCardPositions(circleSessionId:string, cardIds:string[], callback:(cardPositions:CardPosition[]) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+            db.collection('cardpositions').find({'_sessionId': circleSessionId, '_cardId': {'$in': cardIds}}).toArray((err:MongoError, docs: CardPosition[]) =>{
+                db.close();
+                callback(docs);
+            });
+        });
+    }
+
+    createCardPositions(circleSessionId:string, cardIds:string[], uId:string, callback:() => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            var cps:CardPosition[] = cardIds.map((ci:string) => new CardPosition(circleSessionId, ci, uId, [], 0, new Date()));
+            db.collection('cardpositions').insertMany(cps, (err:MongoError, res:InsertWriteOpResult) => {
+                db.close();
+                callback();
             });
         });
     }

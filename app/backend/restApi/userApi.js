@@ -135,6 +135,11 @@ var UserApi = (function () {
             res.send(us);
         });
     };
+    UserApi.getCurrentUserId = function (token, callback) {
+        UserApi.isTokenValid(token, function (b, decodedToken) {
+            callback(b ? decodedToken.id : null);
+        });
+    };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;
 })();

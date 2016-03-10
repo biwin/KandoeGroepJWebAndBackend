@@ -51,7 +51,7 @@ var CircleSessionDao = (function () {
             }).limit(1).next(function (cursor) {
                 db.close();
                 var cp = cursor;
-                callback(cp != null, cp._position);
+                callback(cp != null, cp == null ? -1 : cp._position);
             });
         });
     };
@@ -109,6 +109,23 @@ var CircleSessionDao = (function () {
             db.collection('circlesessions').deleteOne({ '_id': circleSessionId }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
+            });
+        });
+    };
+    CircleSessionDao.prototype.getCardPositions = function (circleSessionId, cardIds, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('cardpositions').find({ '_sessionId': circleSessionId, '_cardId': { '$in': cardIds } }).toArray(function (err, docs) {
+                db.close();
+                callback(docs);
+            });
+        });
+    };
+    CircleSessionDao.prototype.createCardPositions = function (circleSessionId, cardIds, uId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            var cps = cardIds.map(function (ci) { return new cardPosition_1.CardPosition(circleSessionId, ci, uId, [], 0, new Date()); });
+            db.collection('cardpositions').insertMany(cps, function (err, res) {
+                db.close();
+                callback();
             });
         });
     };

@@ -11,11 +11,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var http_1 = require("angular2/http");
 var core_2 = require("angular2/core");
-var http_2 = require("angular2/http");
 require("rxjs/add/operator/map");
 var circleSessionCreateWrapper_1 = require("../../backend/model/circleSessionCreateWrapper");
+var httpWrapperService_1 = require("./httpWrapperService");
 var CircleSessionService = (function () {
     function CircleSessionService(http, path) {
         this.http = null;
@@ -23,23 +22,27 @@ var CircleSessionService = (function () {
         this.http = http;
     }
     CircleSessionService.prototype.getAll = function () {
-        return this.http.get(this.path + 'circlesessions').map(function (res) { return res.json(); });
+        return this.http.get(this.path + 'circlesessions', false, true, false);
     };
     CircleSessionService.prototype.create = function (circleSession, emailadresses) {
-        var header = new http_2.Headers();
         var circleSessionCreateWrapper = circleSessionCreateWrapper_1.CircleSessionCreateWrapper.empty();
         circleSessionCreateWrapper._circleSession = circleSession;
         circleSessionCreateWrapper._userEmailAdresses = emailadresses;
-        header.append('Content-Type', 'application/json');
-        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSessionCreateWrapper), { headers: header }).map(function (res) { return res.json(); });
+        return this.http.post(this.path + 'circlesessions', JSON.stringify(circleSessionCreateWrapper), true, true, false);
     };
     CircleSessionService.prototype.get = function (id) {
-        return this.http.get(this.path + 'circlesessions/' + id).map(function (res) { return res.json(); });
+        return this.http.get(this.path + 'circlesessions/' + id, false, true, false);
+    };
+    CircleSessionService.prototype.getCircleSessionCards = function (circleSessionId) {
+        return this.http.get(this.path + 'circlesessions/' + circleSessionId + '/cards', false, true, false);
+    };
+    CircleSessionService.prototype.initCards = function (circlesessionId, selectedCards) {
+        return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards), true, true, true);
     };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 
-        __metadata('design:paramtypes', [http_1.Http, String])
+        __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], CircleSessionService);
     return CircleSessionService;
 })();

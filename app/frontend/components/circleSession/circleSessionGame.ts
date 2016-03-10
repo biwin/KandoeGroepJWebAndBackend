@@ -12,6 +12,7 @@ import {CardPosition} from "../../../backend/model/cardPosition";
 import {CircleSessionUserList} from "./circleSessionUserList";
 import {User} from "../../../backend/model/user";
 import {UserService} from "../../services/userService";
+import {CircleSessionPreGame} from "./circleSessionPreGame";
 
 @Component({
     selector: 'circlesession-game',
@@ -20,35 +21,40 @@ import {UserService} from "../../services/userService";
         <div class="row">
             <h3 class="center-align">{{circleSession._name}}</h3>
         </div>
-        <div class="row margin-top">
-            <div class="col s8 offset-s2">
-                <svg [attr.viewBox]="constants.VIEWBOX">
-                    <!-- Draw Kandoe board circles -->
-                    <circle *ngFor="#filled of constants.RINGS; #i = index"
-                            [attr.r]="constants.CircleRadius(i+1)"
-                            [attr.stroke-width]="constants.RING_WIDTH"
-                            [attr.cy]="constants.CENTER" [attr.cx]="constants.CENTER"
-                            id="circle-{{i+1}}" class="kandoeRing" [class.inner]="filled"/>
+
+        <pregame [circleSession]="circleSession" *ngIf="true"></pregame>
+
+        <div id="game" *ngIf="false">
+            <div class="row margin-top">
+                <div class="col s8 offset-s2">
+                    <svg [attr.viewBox]="constants.VIEWBOX">
+                        <!-- Draw Kandoe board circles -->
+                        <circle *ngFor="#filled of constants.RINGS; #i = index"
+                                [attr.r]="constants.CircleRadius(i+1)"
+                                [attr.stroke-width]="constants.RING_WIDTH"
+                                [attr.cy]="constants.CENTER" [attr.cx]="constants.CENTER"
+                                id="circle-{{i+1}}" class="kandoeRing" [class.inner]="filled"/>
 
 
-                    <!-- circle voorbeelden vervangen door cardposition -->
-                    <circle *ngFor="#bol of pst; #i = index"
-                            [class.hoveredBall]="hoveredCardId === bol._cardId"
-                            [id]="bol._cardId"
-                            [attr.r]="35" [attr.fill]="constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
-                            [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
-                </svg>
+                        <!-- circle voorbeelden vervangen door cardposition -->
+                        <circle *ngFor="#bol of pst; #i = index"
+                                [class.hoveredBall]="hoveredCardId === bol._cardId"
+                                [id]="bol._cardId"
+                                [attr.r]="35" [attr.fill]="constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
+                                [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
+                    </svg>
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <circlesession-card *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)"></circlesession-card>
+            <div class="row">
+                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)"></circlesession-carddetail>
+            </div>
         </div>
 
         <user-list [users]="circleSession._userIds"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList]
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame]
 })
 
 export class CircleSessionGame {

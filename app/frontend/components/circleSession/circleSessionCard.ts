@@ -11,7 +11,7 @@ import {GroupService} from "../../services/groupService";
     selector: 'circlesession-card',
     template: `
     <div class="col s4">
-      <div (click)="openCard()" class="card hoverable">
+      <div (click)="openCard()" class="card hoverable clickable">
         <div class="card-content">
            <span class="card-title">{{circleSession._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
