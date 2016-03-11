@@ -10,6 +10,17 @@ import {UserService} from "../../services/userService";
     selector: 'circlesession-overview',
     template: `
     <div class="container">
+            <div class="modal" id="mDelCircleSession">
+                <div class="modal-content">
+                    <h4>Spel verwijderen?</h4>
+                    <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-action modal-close waves-effect waves-green btn-flat" (click)="doDelete = false">Nee, ga terug</a>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat" (click)="doDelete = true">Ja, verwijder</a>
+                </div>
+            </div>
+
      <div *ngIf="loading" class="row center margin-top">
                 <div class="preloader-wrapper big active">
                     <div class="spinner-layer spinner-blue-only">
@@ -23,9 +34,9 @@ import {UserService} from "../../services/userService";
                     </div>
                 </div>
             </div>
-    <div class="row">
-        <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession">
-    </circlesession-card></div>
+     <div class="row">
+        <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
+     </div>
     </div>
     `,
     directives: [CORE_DIRECTIVES, CircleSessionCard]
@@ -33,11 +44,14 @@ import {UserService} from "../../services/userService";
 
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
+    private circleService:CircleSessionService;
     private _currentUserId:string;
     private loading:boolean = true;
+    private doDelete:boolean = false;
 
 
     constructor(service:CircleSessionService, userService:UserService) {
+        this.circleService = service;
         userService.getUserId((u:string)=>{
            this._currentUserId = u;
             userService.getCircleSessionsOfUserById(this._currentUserId).subscribe((circleSessions:CircleSession[]) =>{
@@ -45,5 +59,33 @@ export class CircleSessionOverview {
                 this.loading = false;
             });
         });
+    }
+
+    deleteCircleSession(id:string) {
+        $('#mDelCircleSession').openModal({
+            opacity: .75,
+            complete: () => {
+                if(this.doDelete) {
+                    this.circleService.deleteCircleSession(id).subscribe((b:boolean) => {
+                        if (b) {
+                            this.removeCircleSessionFromArray(id);
+                            Materialize.toast('Spel verwijderd.', 3000, 'rounded');
+                        } else {
+                            Materialize.toast('Verwijderen mislukt.', 3000, 'rounded');
+                        }
+
+                        this.doDelete = false;
+                    }, () => {
+                        Materialize.toast('Verwijderen mislukt.', 3000, 'rounded');
+                        console.warn('Delete theme failed, theme not found');
+                    });
+                }
+            }
+        });
+    }
+
+    private removeCircleSessionFromArray(id:string) {
+        var i = this.circleSessions.findIndex((c:CircleSession) => c._id == id);
+        this.circleSessions.splice(i, 1);
     }
 }

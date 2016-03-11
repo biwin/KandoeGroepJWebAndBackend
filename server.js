@@ -73,6 +73,8 @@ app.get('/api/circlesessions/:id/cards', function(req, res) {
 });
 
 app.post('/api/circlesessions/:id/cards',  CircleSessionApi.CircleSessionApi.initCardsForSession);
+
+app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCircleSession);
 //endregion
 
 //region organisation routes

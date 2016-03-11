@@ -89,7 +89,7 @@ export class UserService {
     }
 
     getCircleSessionsOfUserById(_userId:string):Observable<CircleSession[]> {
-        return this.http.get(this.path + 'user/' + _userId + '/circlesessions').map((res:Response) => res.json());
+        return this.http.get(this.path + 'user/circlesessions', false,true,true);
     }
 
     getUsers(userIds:string[]) : Observable<User[]> {

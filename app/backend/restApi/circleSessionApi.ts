@@ -58,4 +58,17 @@ export class CircleSessionApi {
             }
         });
     }
+
+    public static deleteCircleSession(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
+            if(currentUserId != null) {
+                var circleSessionId:string = req.params.id;
+                CircleSessionApi.mgr.deleteCircleSession(currentUserId, circleSessionId, () =>{
+                   res.status(204).send('Deleted');
+                });
+            }else {
+                res.status(401).send('Unauthorized');
+            }
+        });
+    }
 }

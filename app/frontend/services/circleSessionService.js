@@ -39,6 +39,9 @@ var CircleSessionService = (function () {
     CircleSessionService.prototype.initCards = function (circlesessionId, selectedCards) {
         return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards), true, true, true);
     };
+    CircleSessionService.prototype.deleteCircleSession = function (circleSessionId) {
+        return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false, false, true);
+    };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

@@ -47,6 +47,19 @@ var CircleSessionApi = (function () {
             }
         });
     };
+    CircleSessionApi.deleteCircleSession = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var circleSessionId = req.params.id;
+                CircleSessionApi.mgr.deleteCircleSession(currentUserId, circleSessionId, function () {
+                    res.status(204).send('Deleted');
+                });
+            }
+            else {
+                res.status(401).send('Unauthorized');
+            }
+        });
+    };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();
     return CircleSessionApi;
 })();
