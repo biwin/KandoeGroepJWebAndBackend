@@ -1,15 +1,18 @@
 import {Component} from "angular2/core";
-import {Router} from "angular2/router";
+import {Router, RouteParams} from "angular2/router";
 import {NgClass} from "angular2/common";
+
+import {GroupService} from "../../services/groupService";
 
 import {Group} from "../../../backend/model/group";
 import {User} from "../../../backend/model/user";
+import {Organisation} from "../../../backend/model/organisation";
 
 @Component({
     selector: 'group-detail',
     template: `
-    <div class="row container">
-        <h5>{{group._name}} [{{group.getOrganisation()._name}}]</h5>
+    <div class="row container" *ngIf="group != null">
+        <h5>{{group._name}} [{{organisation._name}}]</h5>
 
         <div class="card"><div class="card-content">
             # leden: {{group._memberIds.length}}
@@ -33,7 +36,13 @@ import {User} from "../../../backend/model/user";
                 </tr>
             </table>
 
-            <p *ngIf="group._memberIds.length==0">De groep "{{group._name}}" van organisatie "{{group.getOrganisation()._name}}" heeft momenteel nog geen leden.</p>
+            <p *ngIf="group._memberIds.length==0">De groep "{{group._name}}" van organisatie "{{organisation._name}}" heeft momenteel nog geen leden.</p>
+        </div></div>
+    </div>
+
+    <div class="row container" *ngIf="group == null">
+        <div class="card"><div class="card-content">
+            <p>ONGELDIG ID</p>
         </div></div>
     </div>
     `,
@@ -44,18 +53,22 @@ export class GroupDetail {
     private router: Router;
     private group: Group;
     private members: User[];
+    private organisation: Organisation = Organisation.empty();
 
-    public constructor(router: Router) {
+    public constructor(router: Router, routeParam: RouteParams, groupService: GroupService) {
+        var groupId: string = routeParam.params["id"];
+
         this.router = router;
 
-        this.group = new Group(
-            "Voeding",
-            "De groep van alle medewerkers Voeding",
-            "Delhaize",
-            ["Gunther De Wilde", "Michaël De Boey", "Olivier De Poortere"]
-        );
+        groupService.getGroupById(groupId).subscribe((group: Group) => {
+            this.group = group;
 
-        this.members = this.group.getMembers();
+            if(group._memberIds.length != 0) {
+                groupService.getMembersOfGroupById(groupId).subscribe((members: User[]) => {
+                    this.members = members;
+                });
+            }
+        });
     }
 
     private viewMember(userId: string): void {
