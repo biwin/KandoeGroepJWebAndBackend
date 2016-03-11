@@ -18,6 +18,11 @@ var OrganisationDetail = (function () {
         this.router = router;
         organisationService.getOrganisationById(organisationId).subscribe(function (organisation) {
             _this.organisation = organisation;
+            if (organisation._groupIds.length != 0) {
+                organisationService.getGroupsOfOrganisationById(organisationId).subscribe(function (groups) {
+                    _this.groups = groups;
+                });
+            }
         });
     }
     //TODO: styling van edit button

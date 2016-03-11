@@ -111,6 +111,12 @@ export class OrganisationDetail {
 
         organisationService.getOrganisationById(organisationId).subscribe((organisation: Organisation) => {
             this.organisation = organisation;
+
+            if(organisation._groupIds.length != 0) {
+                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups:Group[]) => {
+                    this.groups = groups;
+                });
+            }
         });
     }
 
