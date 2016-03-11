@@ -12,7 +12,6 @@ import {MongoError} from "mongodb";
 import {Collection} from "mongodb";
 
 export class UserDao {
-
     private client: MongoClient;
 
     constructor() {
@@ -326,6 +325,14 @@ export class UserDao {
             db.collection('users').find({'_id': {'$in': ids}}).toArray((err:MongoError, result:User[]) => {
                 db.close();
                 callback(result);
+            });
+        });
+    }
+
+    getMembersOfOrganisationById(organisationId: string, callback:(members: User[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({'_memberOf': organisationId}).toArray((err: MongoError, docs: User[]) => {
+                callback(docs);
             });
         });
     }

@@ -1,4 +1,5 @@
 import {GroupAPI} from "./groupAPI";
+import {UserApi} from "./userApi";
 
 import {OrganisationManager} from "../logic/organisationManager";
 
@@ -21,6 +22,10 @@ export class OrganisationAPI {
 
     public static getGroups(organisationId: string, res) {
         GroupAPI.getGroupsOfOrganisationById(organisationId, res);
+    }
+
+    public static getMembers(organisationId: string, res) {
+        UserApi.getMembersOfOrganisationById(organisationId, res);
     }
 
     public static getAllOrganisationsOfUserById(userId: string, res) {

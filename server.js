@@ -17,7 +17,7 @@ var bodyParser = require('body-parser'),
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -68,6 +68,10 @@ app.post("/api/organisations", function (req, res) {
 
 app.get("/api/organisations/:id/groups", function (req, res) {
     OrganisationAPI.OrganisationAPI.getGroups(req.params.id, res);
+});
+
+app.get("/api/organisations/:id/members", function (req, res) {
+    OrganisationAPI.OrganisationAPI.getMembers(req.params.id, res);
 });
 //endregion
 

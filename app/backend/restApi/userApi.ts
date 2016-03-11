@@ -132,4 +132,10 @@ export class UserApi {
     public static getAllOrganisationsOfUserById(userId: string, res) {
         OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
     }
+
+    public static getMembersOfOrganisationById(organisationId: string, res) {
+        this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
+            res.send(members);
+        });
+    }
 }

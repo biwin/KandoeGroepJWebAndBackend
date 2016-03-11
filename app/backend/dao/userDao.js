@@ -280,6 +280,13 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.getMembersOfOrganisationById = function (organisationId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({ '_memberOf': organisationId }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return UserDao;
 })();
 exports.UserDao = UserDao;
