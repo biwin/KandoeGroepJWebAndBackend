@@ -33,7 +33,7 @@ import {User} from "../../../backend/model/user";
             <h5>Groepen</h5>
 
             <div id="groupsMenu">
-                <a class="btn-floating waves-effect waves-light red"(click)="addGroup()" title="Voeg groep toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addGroup()" title="Voeg groep toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -64,7 +64,7 @@ import {User} from "../../../backend/model/user";
             <h5>Leden</h5>
 
             <div id="membersMenu">
-                <a class="btn-floating waves-effect waves-light red"(click)="addMember()" title="Voeg lid toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addMember()" title="Voeg lid toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -135,8 +135,7 @@ export class OrganisationDetail {
 
     //TODO: styling van addGroup button
     private addGroup(): void {
-        //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
-        this.router.navigate(["/CreateGroup", {organisationId: "Albert Hein"}]);
+        this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
     }
 
     private viewGroup(groupId: string): void {
