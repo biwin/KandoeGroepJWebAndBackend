@@ -39,11 +39,11 @@ var CircleSessionApi = (function () {
                 var circleSessionId = req.params.id;
                 var cardIds = req.body;
                 CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function () {
-                    res.status(200).send('Success');
+                    res.status(200).send({ result: 'Success' });
                 });
             }
             else {
-                res.status(401).send('Unauthorized');
+                res.status(401).send({ error: 'Unauthorized' });
             }
         });
     };

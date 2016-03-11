@@ -51,10 +51,10 @@ export class CircleSessionApi {
                 var circleSessionId:string = req.params.id;
                 var cardIds:string[] = req.body;
                 CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, () => {
-                    res.status(200).send('Success');
+                    res.status(200).send({result: 'Success'});
                 });
             } else {
-                res.status(401).send('Unauthorized');
+                res.status(401).send({error:'Unauthorized'});
             }
         });
     }

@@ -17,10 +17,9 @@ import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCard
                   <i class="large material-icons">arrow_forward</i>
                 </a>
                 <ul>
-                  <li><a (click)="clear()" class="btn-floating orange tooltipped" data-tooltip="Opnieuw" data-delay="50" data-position="left"><i class="material-icons">undo</i></a></li>
+                  <li><a (click)="clear()" class="btn-floating orange"><i class="material-icons">undo</i></a></li>
                 </ul>
               </div>
-
 
             <h5 class="center-align">Kies de kaarten die belangrijk zijn voor jou!</h5>
             <div class="col s12 m4" *ngFor="#card of cards">

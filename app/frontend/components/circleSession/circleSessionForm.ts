@@ -64,7 +64,7 @@ import {TagInput} from "../general/tagInput";
          <input type="date" required class="datepicker" id="startDate">
     </div>
      <div class="input-field col s3">
-          <input id="time" required type="text" class="validate">
+          <input id="time" required type="text" pattern="([0-1]?[0-9]|2[0-3]):[0-5][0-9]" title="Gebruik een geldig 24h tijdformaat." class="validate">
           <label for="time">Beginuur</label>
      </div>
     </div>
