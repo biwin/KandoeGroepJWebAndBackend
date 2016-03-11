@@ -1,6 +1,3 @@
-import {User} from "./user";
-import {Organisation} from "./organisation";
-
 export class Group {
     public _id: string;
 
