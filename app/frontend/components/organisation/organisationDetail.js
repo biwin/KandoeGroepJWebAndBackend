@@ -23,6 +23,11 @@ var OrganisationDetail = (function () {
                     _this.groups = groups;
                 });
             }
+            if (organisation._memberIds.length != 0) {
+                organisationService.getMembersOfOrganisationById(organisationId).subscribe(function (members) {
+                    _this.members = members;
+                });
+            }
         });
     }
     //TODO: styling van edit button

@@ -4,6 +4,7 @@ import {Observable} from "rxjs/Observable";
 
 import {Organisation} from "../../backend/model/organisation";
 import {Group} from "../../backend/model/group";
+import {User} from "../../backend/model/user";
 
 @Injectable()
 export class OrganisationService {
@@ -37,5 +38,13 @@ export class OrganisationService {
         header.append("Content-Type", "application/json");
 
         return this.http.get(this.path + "organisations/" + organisationId + "/groups").map((res: Response) => res.json());
+    }
+
+    getMembersOfOrganisationById(organisationId: string): Observable<User[]> {
+        var header = new Headers();
+
+        header.append("Content-Type", "application/json");
+
+        return this.http.get(this.path + "organisations/" + organisationId + "/members").map((res: Response) => res.json());
     }
 }
