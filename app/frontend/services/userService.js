@@ -84,8 +84,8 @@ var UserService = (function () {
     UserService.prototype.getAllGroupsOfUser = function (_userId) {
         return this.http.get(this.path + 'user/' + _userId + '/groups').map(function (res) { return res.json(); });
     };
-    UserService.prototype.getCircleSessionsOfUserById = function (_userId) {
-        return this.http.get(this.path + 'user/' + _userId + '/circlesessions').map(function (res) { return res.json(); });
+    UserService.prototype.getCircleSessionsOfCurrentUser = function () {
+        return this.http.get(this.path + 'user/circlesessions', false, true, true);
     };
     UserService.prototype.getUsers = function (userIds) {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);

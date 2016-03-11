@@ -42,5 +42,9 @@ export class CircleSessionService {
     initCards(circlesessionId:string, selectedCards:string[]):Observable<string> {
         return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards),true,true,true);
     }
+
+    deleteCircleSession(circleSessionId:string):Observable<string> {
+        return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false,false,true);
+    }
 }
 
