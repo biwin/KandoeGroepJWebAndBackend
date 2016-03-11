@@ -23,6 +23,14 @@ export class OrganisationService {
         return this.http.post(this.path + "organisations/", JSON.stringify(organisation), {headers: header}).map((res: Response) => res.json());
     }
 
+    getOrganisationById(organisationId: string): Observable<Organisation> {
+        var header = new Headers();
+
+        header.append("Content-Type", "application/json");
+
+        return this.http.get(this.path + "organisations/" + organisationId).map((res: Response) => res.json());
+    }
+
     getGroupsOfOrganisationById(organisationId: string): Observable<Group[]> {
         var header = new Headers();
 
