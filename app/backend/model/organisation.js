@@ -1,5 +1,3 @@
-var group_1 = require("./group");
-var user_1 = require("./user");
 var Organisation = (function () {
     function Organisation(_name, _memberIds) {
         this._name = _name;
@@ -7,33 +5,6 @@ var Organisation = (function () {
         this._groupIds = [];
         this._organisatorIds = [];
     }
-    Organisation.prototype.getGroups = function () {
-        //TODO: call backend
-        var groups = [];
-        if (this._groupIds) {
-            for (var i = 0; i < this._groupIds.length; i++) {
-                var groupId = this._groupIds[i];
-                var newGroup = group_1.Group.empty();
-                newGroup._name = groupId;
-                newGroup._organisationId = this._id;
-                groups.push(newGroup);
-            }
-        }
-        return groups;
-    };
-    Organisation.prototype.getMembers = function () {
-        //TODO: call backend
-        var members = [];
-        if (this._memberIds) {
-            for (var i = 0; i < this._memberIds.length; i++) {
-                var memberId = this._memberIds[i];
-                var newUser = user_1.User.empty();
-                newUser._name = memberId;
-                members.push(newUser);
-            }
-        }
-        return members;
-    };
     Organisation.empty = function () {
         return new Organisation("", []);
     };
