@@ -13,30 +13,24 @@ var router_1 = require("angular2/router");
 var groupService_1 = require("../../services/groupService");
 var userService_1 = require("../../services/userService");
 var group_1 = require("../../../backend/model/group");
-var organisation_1 = require("../../../backend/model/organisation");
 var GroupForm = (function () {
     function GroupForm(router, routeParam, groupService, userService) {
+        var _this = this;
         this.group = group_1.Group.empty();
-        this.organisations = [
-            new organisation_1.Organisation("Delhaize", ["Michaël", "Jan"]),
-            new organisation_1.Organisation("Colruyt", ["Michaël"]),
-            new organisation_1.Organisation("Albert Hein", ["Michaël", "Jan", "Jasper"]),
-            new organisation_1.Organisation("Aldi", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël"]),
-            new organisation_1.Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
-        ];
         this.router = router;
         this.groupService = groupService;
         this.userService = userService;
-        for (var i = 0; i < this.organisations.length; i++) {
-            var organisation = this.organisations[i];
-            organisation._id = organisation._name;
-        }
         if (routeParam.params["organisationId"]) {
             this.group._organisationId = routeParam.params["organisationId"];
         }
         else {
             this.group._organisationId = "";
         }
+        userService.getUserId(function (userId) {
+            userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
+                _this.organisations = organisations;
+            });
+        });
     }
     GroupForm.prototype.OnSubmit = function () {
         var _this = this;

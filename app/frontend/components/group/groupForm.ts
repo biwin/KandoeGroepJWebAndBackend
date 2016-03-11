@@ -47,31 +47,24 @@ export class GroupForm implements AfterViewInit {
     groupService: GroupService;
     userService: UserService;
     private group: Group = Group.empty();
-
-    private organisations: Organisation[] = [
-        new Organisation("Delhaize", ["Michaël", "Jan"]),
-        new Organisation("Colruyt", ["Michaël"]),
-        new Organisation("Albert Hein", ["Michaël", "Jan", "Jasper"]),
-        new Organisation("Aldi", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël"]),
-        new Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
-    ];
+    private organisations: Organisation[];
 
     public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
         this.router = router;
         this.groupService = groupService;
         this.userService = userService;
 
-        for (var i = 0; i < this.organisations.length; i++) {
-            var organisation: Organisation = this.organisations[i];
-
-            organisation._id = organisation._name;
-        }
-
         if(routeParam.params["organisationId"]) {
             this.group._organisationId = routeParam.params["organisationId"];
         } else {
             this.group._organisationId = "";
         }
+
+        userService.getUserId((userId: string) => {
+            userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+                this.organisations = organisations;
+            });
+        });
     }
 
     private OnSubmit() {
