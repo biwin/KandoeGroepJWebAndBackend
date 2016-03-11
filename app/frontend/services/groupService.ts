@@ -39,4 +39,12 @@ export class GroupService {
 
         return this.http.get(this.path + "groups/" + groupId + "/members").map((res: Response) => res.json());
     }
+
+    getOrganisationOfGroupById(groupId: string): Observable<Organisation> {
+        var header = new Headers();
+
+        header.append("Content-Type", "application/json");
+
+        return this.http.get(this.path + "groups/" + groupId + "/organisation").map((res: Response) => res.json());
+    }
 }

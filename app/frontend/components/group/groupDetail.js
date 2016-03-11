@@ -25,6 +25,9 @@ var GroupDetail = (function () {
                     _this.members = members;
                 });
             }
+            groupService.getOrganisationOfGroupById(groupId).subscribe(function (organisation) {
+                _this.organisation = organisation;
+            });
         });
     }
     GroupDetail.prototype.viewMember = function (userId) {

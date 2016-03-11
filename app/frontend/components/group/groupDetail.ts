@@ -68,6 +68,10 @@ export class GroupDetail {
                     this.members = members;
                 });
             }
+
+            groupService.getOrganisationOfGroupById(groupId).subscribe((organisation: Organisation) => {
+                this.organisation = organisation;
+            });
         });
     }
 

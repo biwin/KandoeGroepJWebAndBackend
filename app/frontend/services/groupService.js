@@ -33,6 +33,11 @@ var GroupService = (function () {
         header.append("Content-Type", "application/json");
         return this.http.get(this.path + "groups/" + groupId + "/members").map(function (res) { return res.json(); });
     };
+    GroupService.prototype.getOrganisationOfGroupById = function (groupId) {
+        var header = new http_1.Headers();
+        header.append("Content-Type", "application/json");
+        return this.http.get(this.path + "groups/" + groupId + "/organisation").map(function (res) { return res.json(); });
+    };
     GroupService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject("App.BackendPath")), 
