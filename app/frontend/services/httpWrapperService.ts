@@ -35,4 +35,18 @@ export class HttpWrapperService {
         if (needsToken) options.headers.append('Bearer', localStorage.getItem('token'));
         return this.http.post(url, body, options).map((res: Response) => needsJson ? res.json() : res);
     }
+
+    delete<T>(url: string, isJson: boolean, needsJson: boolean, needsToken: boolean, options?: RequestOptionsArgs): Observable<T> {
+        if (options == null) {
+            options = new RequestOptions();
+            options.headers = new Headers();
+        }
+        if (isJson) options.headers.append('Content-Type', 'application/json');
+        if (needsToken) options.headers.append('Bearer', localStorage.getItem('token'));
+        return this.http.delete(url, options).map((res: Response) => {
+            return needsJson ? res.json() : res;
+        } );
+    }
+
+
 }

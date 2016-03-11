@@ -113,6 +113,16 @@ var CircleSessionManager = (function () {
             _this._dao.createCardPositions(circleSessionId, cardIds, uId, callback);
         });
     };
+    CircleSessionManager.prototype.deleteCircleSession = function (currentUserId, circleSessionId, callback) {
+        var _this = this;
+        this.getCircleSession(circleSessionId, function (c) {
+            if (c._creatorId == currentUserId) {
+                _this._dao.deleteCircleSessionById(circleSessionId, function (b) {
+                    _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+                });
+            }
+        });
+    };
     return CircleSessionManager;
 })();
 exports.CircleSessionManager = CircleSessionManager;

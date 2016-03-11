@@ -1,6 +1,7 @@
 import {UserManager} from "../logic/userManager";
 import {User} from "../model/user";
 import {GroupAPI} from "./groupAPI";
+import {OrganisationAPI} from "./organisationAPI";
 import {CircleSessionApi} from "./circleSessionApi";
 import {Request} from "express";
 import {Response} from "express";
@@ -126,5 +127,9 @@ export class UserApi {
         UserApi.isTokenValid(token, (b: boolean, decodedToken:any) => {
             callback(b ? decodedToken.id : null);
         });
+    }
+
+    public static getAllOrganisationsOfUserById(userId: string, res) {
+        OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
     }
 }

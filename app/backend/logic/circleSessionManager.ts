@@ -128,4 +128,14 @@ export class CircleSessionManager {
             this._dao.createCardPositions(circleSessionId, cardIds, uId, callback);
         });
     }
+
+    deleteCircleSession(currentUserId:string, circleSessionId:string, callback:() => any){
+        this.getCircleSession(circleSessionId, (c:CircleSession) => {
+           if(c._creatorId == currentUserId) {
+               this._dao.deleteCircleSessionById(circleSessionId, (b:boolean) => {
+                   this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+               });
+           }
+        });
+    }
 }

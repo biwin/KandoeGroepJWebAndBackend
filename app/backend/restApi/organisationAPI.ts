@@ -22,4 +22,10 @@ export class OrganisationAPI {
     public static getGroups(organisationId: string, res) {
         GroupAPI.getGroupsOfOrganisationById(organisationId, res);
     }
+
+    public static getAllOrganisationsOfUserById(userId: string, res) {
+        this.mgr.getAllOrganisationsOfUserById(userId, (organisations: Organisation[]) => {
+            res.send(organisations);
+        });
+    }
 }

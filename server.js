@@ -42,7 +42,10 @@ app.get('/api/user/get', function (req, res) {
 
 app.get('/api/user/bulk/:array', UserApi.UserApi.getUsers);
 app.get('/api/user/:id/groups', GroupAPI.GroupAPI.getGroupsOfUserById);
-app.get('/api/user/:id/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfUserById);
+app.get('/api/user/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfCurrentUser);
+app.get('/api/user/:id/organisations', function (req, res) {
+    UserApi.UserApi.getAllOrganisationsOfUserById(req.params.id, res);
+});
 //endregion
 
 //region circlesession routes
@@ -51,6 +54,7 @@ app.get('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.find);
 app.post('/api/circlesessions', CircleSessionApi.CircleSessionApi.createCircleSession);
 app.get('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.getCircleSessionCards);
 app.post('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.initCardsForSession);
+app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCircleSession);
 //endregion
 
 //region organisation routes

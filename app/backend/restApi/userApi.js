@@ -1,5 +1,6 @@
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
+var organisationAPI_1 = require("./organisationAPI");
 var SHA256 = require("crypto-js/sha256");
 var UserApi = (function () {
     function UserApi() {
@@ -132,6 +133,9 @@ var UserApi = (function () {
         UserApi.isTokenValid(token, function (b, decodedToken) {
             callback(b ? decodedToken.id : null);
         });
+    };
+    UserApi.getAllOrganisationsOfUserById = function (userId, res) {
+        organisationAPI_1.OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
     };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;

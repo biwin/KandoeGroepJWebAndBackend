@@ -42,6 +42,19 @@ var HttpWrapperService = (function () {
             options.headers.append('Bearer', localStorage.getItem('token'));
         return this.http.post(url, body, options).map(function (res) { return needsJson ? res.json() : res; });
     };
+    HttpWrapperService.prototype.delete = function (url, isJson, needsJson, needsToken, options) {
+        if (options == null) {
+            options = new http_1.RequestOptions();
+            options.headers = new http_1.Headers();
+        }
+        if (isJson)
+            options.headers.append('Content-Type', 'application/json');
+        if (needsToken)
+            options.headers.append('Bearer', localStorage.getItem('token'));
+        return this.http.delete(url, options).map(function (res) {
+            return needsJson ? res.json() : res;
+        });
+    };
     HttpWrapperService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject('App.BackendPath')), 

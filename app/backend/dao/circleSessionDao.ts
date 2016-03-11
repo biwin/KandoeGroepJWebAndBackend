@@ -123,7 +123,7 @@ export class CircleSessionDao {
 
     deleteCircleSessionById(circleSessionId:string, callback:(deleted:boolean)=> any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
-           db.collection('circlesessions').deleteOne({'_id': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
+           db.collection('circlesessions').deleteOne({'_id': new ObjectID(circleSessionId)}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
                db.close();
                 callback(result.deletedCount == 1);
             });
@@ -145,6 +145,15 @@ export class CircleSessionDao {
             db.collection('cardpositions').insertMany(cps, (err:MongoError, res:InsertWriteOpResult) => {
                 db.close();
                 callback();
+            });
+        });
+    }
+
+    deleteCardPositionsByCircleSessionId(circleSessionId:string, callback:(b:boolean)=> any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
+            db.collection('cardpositions').deleteMany({'_sessionId': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
+                db.close();
+                callback(result.deletedCount == 1);
             });
         });
     }

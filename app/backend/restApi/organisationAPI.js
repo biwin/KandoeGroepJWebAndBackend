@@ -16,6 +16,11 @@ var OrganisationAPI = (function () {
     OrganisationAPI.getGroups = function (organisationId, res) {
         groupAPI_1.GroupAPI.getGroupsOfOrganisationById(organisationId, res);
     };
+    OrganisationAPI.getAllOrganisationsOfUserById = function (userId, res) {
+        this.mgr.getAllOrganisationsOfUserById(userId, function (organisations) {
+            res.send(organisations);
+        });
+    };
     OrganisationAPI.mgr = new organisationManager_1.OrganisationManager();
     return OrganisationAPI;
 })();
