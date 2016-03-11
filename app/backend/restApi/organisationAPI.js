@@ -20,6 +20,11 @@ var OrganisationAPI = (function () {
     OrganisationAPI.getMembers = function (organisationId, res) {
         userApi_1.UserApi.getMembersOfOrganisationById(organisationId, res);
     };
+    OrganisationAPI.getOrganisationOfGroupById = function (groupId, res) {
+        this.mgr.getOrganisationOfGroupById(groupId, function (organisation) {
+            res.send(organisation);
+        });
+    };
     OrganisationAPI.getAllOrganisationsOfUserById = function (userId, res) {
         this.mgr.getAllOrganisationsOfUserById(userId, function (organisations) {
             res.send(organisations);

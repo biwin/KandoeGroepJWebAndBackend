@@ -69,6 +69,16 @@ export class OrganisationDao {
         })
     }
 
+    getOrganisationOfGroupById(groupId: string, callback: (organisation: Organisation) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').find({'_groupIds': {'$in': [groupId]}}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
+
+                callback(cursor);
+            });
+        });
+    }
+
     getAllOrganisationsOfUserById(userId: string, callback: (organisations: Organisation[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').find({'$or': [{'_organisatorIds': {'$in': [userId]}}, {'_memberIds': {'$in': [userId]}}]}).toArray((err: MongoError, docs: Organisation[]) => {

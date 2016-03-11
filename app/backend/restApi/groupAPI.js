@@ -1,4 +1,5 @@
 var userApi_1 = require("./userApi");
+var organisationAPI_1 = require("./organisationAPI");
 var groupManager_1 = require("../logic/groupManager");
 var GroupAPI = (function () {
     function GroupAPI() {
@@ -15,6 +16,9 @@ var GroupAPI = (function () {
     };
     GroupAPI.getMembers = function (groupId, res) {
         userApi_1.UserApi.getMembersOfGroupById(groupId, res);
+    };
+    GroupAPI.getOrganisation = function (groupId, res) {
+        organisationAPI_1.OrganisationAPI.getOrganisationOfGroupById(groupId, res);
     };
     GroupAPI.getGroupsOfOrganisationById = function (organisationId, res) {
         GroupAPI.mgr.getGroupsOfOrganisationById(organisationId, function (groups) {

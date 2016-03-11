@@ -37,6 +37,10 @@ export class OrganisationManager {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     }
 
+    getOrganisationOfGroupById(groupId: string, callback: (organisation: Organisation) => any) {
+        this._dao.getOrganisationOfGroupById(groupId, callback);
+    }
+
     getAllOrganisationsOfUserById(userId: string, callback: (organisations: Organisation[]) => any) {
         this._dao.getAllOrganisationsOfUserById(userId, callback);
     }

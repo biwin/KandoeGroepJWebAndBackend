@@ -87,6 +87,10 @@ app.post("/api/groups", function (req, res) {
 app.get("/api/groups/:id/members", function (req, res) {
     GroupAPI.GroupAPI.getMembers(req.params.id, res);
 });
+
+app.get("/api/groups/:id/organisation", function (req, res) {
+    GroupAPI.GroupAPI.getOrganisation(req.params.id, res);
+});
 //endregion
 
 //region theme routes

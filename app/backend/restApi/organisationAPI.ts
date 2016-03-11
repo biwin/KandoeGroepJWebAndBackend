@@ -28,6 +28,12 @@ export class OrganisationAPI {
         UserApi.getMembersOfOrganisationById(organisationId, res);
     }
 
+    public static getOrganisationOfGroupById(groupId: string, res) {
+        this.mgr.getOrganisationOfGroupById(groupId, (organisation: Organisation) => {
+            res.send(organisation)
+        });
+    }
+
     public static getAllOrganisationsOfUserById(userId: string, res) {
         this.mgr.getAllOrganisationsOfUserById(userId, (organisations: Organisation[]) => {
             res.send(organisations);
