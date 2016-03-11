@@ -1,22 +1,47 @@
 var assert = require('assert');
 var organisationManager_1 = require("../app/backend/logic/organisationManager");
+var userManager_1 = require("../app/backend/logic/userManager");
 var organisation_1 = require("../app/backend/model/organisation");
+var user_1 = require("../app/backend/model/user");
 var organisationManager;
+var userManager;
 before(function (done) {
     organisationManager = new organisationManager_1.OrganisationManager();
+    userManager = new userManager_1.UserManager();
     done();
 });
 describe("OrganisationManager", function () {
     describe("createOrganisation", function () {
         var organisation;
+        var user;
+        before(function (done) {
+            this.timeout(0);
+            user = new user_1.User("MichaelDeBoey", "michael.deboey@student.kdg.be", "password", "test");
+            userManager.registerUser(user, function (u) {
+                try {
+                    user = u;
+                    done();
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
         it("Create organisation, should return organisation from database", function (done) {
             this.timeout(0);
             organisation = new organisation_1.Organisation("Delhaize", []);
+            organisation._organisatorIds.push(user._id);
             organisationManager.createOrganisation(organisation, function (o) {
                 try {
                     organisationManager.getOrganisationById(o._id, function (newOrganisation) {
                         assert.equal(organisation._name, newOrganisation._name);
                         organisation = o;
+                        //TODO: check if organisationId is added to _organisatorOf array in User-object
+                        //userManager.getUserById(user._id, (newUser: User) => {
+                        //    assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
+                        //
+                        //    done();
+                        //});
                         done();
                     });
                 }
@@ -28,8 +53,10 @@ describe("OrganisationManager", function () {
         after(function (done) {
             this.timeout(0);
             try {
-                organisationManager.removeOrganisationById(organisation._id, function () {
-                    done();
+                userManager.removeUserById(user._id, function () {
+                    organisationManager.removeOrganisationById(organisation._id, function () {
+                        done();
+                    });
                 });
             }
             catch (e) {
