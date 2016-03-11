@@ -288,4 +288,8 @@ export class UserManager {
     getMembersOfOrganisationById(organisationId: string, callback: (members: User[]) => any) {
         this._dao.getMembersOfOrganisationById(organisationId, callback);
     }
+
+    getMembersOfGroupById(groupId: string, callback: (members: User[]) => any) {
+        this._dao.getMembersOfGroupById(groupId, callback);
+    }
 }

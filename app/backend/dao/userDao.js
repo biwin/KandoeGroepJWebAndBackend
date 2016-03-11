@@ -282,7 +282,14 @@ var UserDao = (function () {
     };
     UserDao.prototype.getMembersOfOrganisationById = function (organisationId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').find({ '_memberOf': organisationId }).toArray(function (err, docs) {
+            db.collection('users').find({ '_memberOf': { '$in': [organisationId] } }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
+    UserDao.prototype.getMembersOfGroupById = function (groupId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({ '_memberOfGroupIds': { '$in': [groupId] } }).toArray(function (err, docs) {
                 callback(docs);
             });
         });

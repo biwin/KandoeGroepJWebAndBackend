@@ -331,7 +331,15 @@ export class UserDao {
 
     getMembersOfOrganisationById(organisationId: string, callback:(members: User[]) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').find({'_memberOf': organisationId}).toArray((err: MongoError, docs: User[]) => {
+            db.collection('users').find({'_memberOf': { '$in': [organisationId]}}).toArray((err: MongoError, docs: User[]) => {
+                callback(docs);
+            });
+        });
+    }
+
+    getMembersOfGroupById(groupId: string, callback:(members: User[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({'_memberOfGroupIds': { '$in': [groupId]}}).toArray((err: MongoError, docs: User[]) => {
                 callback(docs);
             });
         });
