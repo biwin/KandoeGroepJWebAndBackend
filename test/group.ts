@@ -1,4 +1,3 @@
-/*
 import assert = require('assert');
 
 import {GroupManager} from "../app/backend/logic/groupManager";
@@ -127,4 +126,4 @@ describe("GroupManager", () => {
             }
         });
     });
-});*/
+});
