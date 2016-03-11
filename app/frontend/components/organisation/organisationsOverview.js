@@ -22,14 +22,14 @@ var OrganisationsOverview = (function () {
         ];
         this.router = router;
     }
-    OrganisationsOverview.prototype.onClick = function (organisationId) {
+    OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {
         //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
         this.router.navigate(["/OrganisationDetail", { id: 0 }]);
     };
     OrganisationsOverview = __decorate([
         core_1.Component({
             selector: 'organisations-overview',
-            template: "\n    <div class=\"row container\">\n        <h5>Mijn organisaties</h5>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" (click)=\"onClick(organisation._id)\" class=\"clickable\">\n                    <td>{{organisation._name}}</td>\n                    <td>{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <h5>Mijn organisaties</h5>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" (click)=\"viewOrganisation(organisation._id)\" class=\"clickable\">\n                    <td>{{organisation._name}}</td>\n                    <td>{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
             directives: [common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [router_1.Router])

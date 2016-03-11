@@ -19,7 +19,7 @@ import {Organisation} from "../../../backend/model/organisation";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#organisation of organisations" (click)="onClick(organisation._id)" class="clickable">
+                <tr *ngFor="#organisation of organisations" (click)="viewOrganisation(organisation._id)" class="clickable">
                     <td>{{organisation._name}}</td>
                     <td>{{organisation._memberIds.length}}</td>
                 </tr>
@@ -34,11 +34,6 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class OrganisationsOverview {
     private router: Router;
-
-    public constructor(router: Router) {
-        this.router = router;
-    }
-
     private organisations: Organisation[] = [
         new Organisation("Delhaize", ["Michaël", "Jan"]),
         new Organisation("Colruyt", ["Michaël"]),
@@ -47,7 +42,11 @@ export class OrganisationsOverview {
         new Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
     ];
 
-    private onClick(organisationId: string): void {
+    public constructor(router: Router) {
+        this.router = router;
+    }
+
+    private viewOrganisation(organisationId: string): void {
         //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
         this.router.navigate(["/OrganisationDetail", {id: 0}]);
     }
