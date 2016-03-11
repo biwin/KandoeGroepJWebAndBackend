@@ -6,7 +6,7 @@ import {Request,Response} from "express";
 export class GroupAPI {
     private static mgr: GroupManager = new GroupManager();
 
-    public static create(group :Group, res){
+    public static create(group: Group, res){
         this.mgr.createGroup(group, (g: Group) => {
             res.send(g);
         });
@@ -24,7 +24,7 @@ export class GroupAPI {
         });
     }
 
-    public static getGroupsOfUserById(req:Request, res:Response) {
+    public static getGroupsOfUserById(req: Request, res: Response) {
         this.mgr.getGroupsOfUserById(req.params.id, (groups:Group[]) =>{
             res.send(groups);
         });
