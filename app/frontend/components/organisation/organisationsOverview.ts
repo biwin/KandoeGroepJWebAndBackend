@@ -2,6 +2,8 @@ import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
+import {UserService} from "../../services/userService";
+
 import {Organisation} from "../../../backend/model/organisation";
 
 @Component({
@@ -36,16 +38,16 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class OrganisationsOverview {
     private router: Router;
-    private organisations: Organisation[] = [
-        new Organisation("Delhaize", ["Michaël", "Jan"]),
-        new Organisation("Colruyt", ["Michaël"]),
-        new Organisation("Albert Hein", ["Michaël", "Jan", "Jasper"]),
-        new Organisation("Aldi", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël"]),
-        new Organisation("Euroshop", ["Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël", "Michaël"])
-    ];
+    private organisations: Organisation[] = [];
 
-    public constructor(router: Router) {
+    public constructor(router: Router, userService: UserService) {
         this.router = router;
+
+        userService.getUserId((userId: string) => {
+            userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+                this.organisations = organisations;
+            });
+        });
     }
 
     private viewOrganisation(organisationId: string): void {

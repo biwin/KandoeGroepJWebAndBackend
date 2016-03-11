@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var core_2 = require("angular2/core");
+var http_1 = require("angular2/http");
 var httpWrapperService_1 = require("./httpWrapperService");
 var router_1 = require("angular2/router");
 var UserService = (function () {
@@ -88,6 +89,11 @@ var UserService = (function () {
     };
     UserService.prototype.getUsers = function (userIds) {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
+    };
+    UserService.prototype.getAllOrganisationsOfUserById = function (userId) {
+        var header = new http_1.Headers();
+        header.append("Content-Type", "application/json");
+        return this.http.get(this.path + "user/" + userId + "/organisations").map(function (res) { return res.json(); });
     };
     UserService = __decorate([
         core_1.Injectable(),
