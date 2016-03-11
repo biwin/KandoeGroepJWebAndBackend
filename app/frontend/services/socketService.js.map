@@ -1,0 +1,1 @@
+{"version":3,"file":"socketService.js","sourceRoot":"","sources":["socketService.ts"],"names":["SocketService","SocketService.constructor","SocketService.getSocket"],"mappings":"AACA,uEAAuE;AAEvE;IAEIA,4BAA4BA;IAE5BA;QACJC,4DAA4DA;IACxDA,CAACA;IAEMD,iCAASA,GAAhBA;QACIE,qBAAqBA;QACrBA,MAAMA,CAACA,IAAIA,CAACA;IAChBA,CAACA;IACLF,oBAACA;AAADA,CAACA,AAZD,IAYC;AAZY,qBAAa,gBAYzB,CAAA"}

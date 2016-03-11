@@ -7,9 +7,9 @@ var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();
     }
-    CircleSessionManager.prototype.createCircleSession = function (circleSessionCreateWrapper, callback) {
+    CircleSessionManager.prototype.createCircleSession = function (wrapper, callback) {
         var _this = this;
-        var circleSession = circleSessionCreateWrapper._circleSession;
+        var circleSession = wrapper._circleSession;
         this._dao.circleSessionExists(circleSession, function (exists) {
             if (exists) {
                 callback(null);
@@ -18,29 +18,29 @@ var CircleSessionManager = (function () {
                 var uMgr = new userManager_1.UserManager();
                 var tMgr = new themeManager_1.ThemeManager();
                 var gMgr = new groupManager_1.GroupManager();
-                uMgr.getUserIdsByEmail(circleSessionCreateWrapper._userEmailAdresses, function (users) {
-                    var done = 0;
-                    users.forEach(function (u) {
-                        circleSession._userIds.push(u);
-                        if (++done == users.length) {
-                            gMgr.getGroupById(circleSession._groupId, function (g) {
-                                circleSession._name = g._name + " - ";
-                                tMgr.getTheme(circleSession._themeId, function (t) {
-                                    circleSession._name += t._name;
-                                    gMgr.getUserIdsInGroup(circleSession._groupId, function (us) {
-                                        var changed = 0;
-                                        us.forEach(function (u) {
-                                            if (circleSession._userIds.indexOf(u) < 0) {
-                                                circleSession._userIds.push(u);
-                                            }
-                                            if (++changed == us.length) {
-                                                _this._dao.createCircleSession(circleSession, callback);
-                                            }
-                                        });
+                gMgr.getGroupById(circleSession._groupId, function (g) {
+                    circleSession._name = g._name + " - ";
+                    tMgr.getTheme(circleSession._themeId, function (t) {
+                        circleSession._name += t._name;
+                        gMgr.getUserIdsInGroup(circleSession._groupId, function (us) {
+                            circleSession._userIds = us;
+                            uMgr.getUserIdsByEmail(wrapper._userEmailAdresses, function (users) {
+                                if (users.length == 0) {
+                                    _this._dao.createCircleSession(circleSession, callback);
+                                }
+                                else {
+                                    var counter = 0;
+                                    users.forEach(function (u) {
+                                        if (users.indexOf(u) < 0) {
+                                            circleSession._userIds.push(u);
+                                        }
+                                        if (++counter == users.length) {
+                                            _this._dao.createCircleSession(circleSession, callback);
+                                        }
                                     });
-                                });
+                                }
                             });
-                        }
+                        });
                     });
                 });
             }
@@ -91,7 +91,7 @@ var CircleSessionManager = (function () {
             tMgr.getCards(c._themeId, function (cards) {
                 var a = 0;
                 cards.forEach(function (c) {
-                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
+                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b, n) {
                         circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);
@@ -110,7 +110,6 @@ var CircleSessionManager = (function () {
                     cardIds.splice(index, 1);
                 }
             }
-            var callsMade = 0;
             _this._dao.createCardPositions(circleSessionId, cardIds, uId, callback);
         });
     };

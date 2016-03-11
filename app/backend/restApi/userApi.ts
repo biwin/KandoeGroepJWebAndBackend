@@ -2,6 +2,8 @@ import {UserManager} from "../logic/userManager";
 import {User} from "../model/user";
 import {GroupAPI} from "./groupAPI";
 import {CircleSessionApi} from "./circleSessionApi";
+import {Request} from "express";
+import {Response} from "express";
 var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
@@ -113,15 +115,8 @@ export class UserApi {
         });
     }
 
-    public static getGroups(userId:string, res){
-        GroupAPI.getGroupsOfUserById(userId, res);
-    }
-
-    public static getCircleSessions(userId:string, res){
-        CircleSessionApi.getCircleSessionsOfUserById(userId, res);
-    }
-
-    public static getUsers(userIds:string[], res) {
+    public static getUsers(req:Request, res:Response) {
+        var userIds:string[] = JSON.parse(decodeURI(req.params.array));
         UserApi.manager.getUsers(userIds, (us:User[]) => {
             res.send(us);
         })

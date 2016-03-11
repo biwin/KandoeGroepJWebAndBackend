@@ -171,7 +171,10 @@ export class CircleSessionForm implements AfterViewInit {
 
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
 
+
+        console.log('going to post');
         this.service.create(this.circleSession, this.emailadresses).subscribe((c:CircleSession) => {
+            console.log('going to navigate');
             this.router.navigate(['CircleSessionOverview']);
         });
     }

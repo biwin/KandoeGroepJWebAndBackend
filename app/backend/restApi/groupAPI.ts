@@ -1,6 +1,7 @@
 import {GroupManager} from "../logic/groupManager";
 
 import {Group} from "../model/group";
+import {Request,Response} from "express";
 
 export class GroupAPI {
     private static mgr: GroupManager = new GroupManager();
@@ -23,8 +24,8 @@ export class GroupAPI {
         });
     }
 
-    public static getGroupsOfUserById(userId:string, res) {
-        this.mgr.getGroupsOfUserById(userId, (groups:Group[]) =>{
+    public static getGroupsOfUserById(req:Request, res:Response) {
+        this.mgr.getGroupsOfUserById(req.params.id, (groups:Group[]) =>{
             res.send(groups);
         });
     }

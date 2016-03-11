@@ -13,7 +13,7 @@ var CircleSessionDao = (function () {
                 '_groupId': circleSession._groupId,
                 '_themeId': circleSession._themeId,
                 '_startDate': circleSession._startDate
-            }).limit(1).next(function (cursor) {
+            }).limit(1).next(function (error, cursor) {
                 db.close();
                 callback(cursor != null);
             });
@@ -37,7 +37,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.readCircleSession = function (id, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next().then(function (cursor) {
+            db.collection('circlesessions').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next(function (err, cursor) {
                 db.close();
                 callback(cursor);
             });
@@ -45,13 +45,9 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.cardPositionExists = function (sessionId, cardId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('cardpositions').find({
-                '_sessionId': sessionId,
-                '_cardId': cardId
-            }).limit(1).next(function (cursor) {
-                db.close();
+            db.collection('cardpositions').find({ '_sessionId': sessionId, '_cardId': cardId }).limit(1).next(function (err, cursor) {
                 var cp = cursor;
-                callback(cp != null, cp == null ? -1 : cp._position);
+                callback(cp !== null, cp == null ? -1 : cp._position);
             });
         });
     };
@@ -92,7 +88,7 @@ var CircleSessionDao = (function () {
             db.collection('cardpositions').find({
                 '_sessionId': sessionId,
                 '_cardId': cardId
-            }).limit(1).next(function (cursor) {
+            }).limit(1).next(function (err, cursor) {
                 callback(cursor);
             });
         });

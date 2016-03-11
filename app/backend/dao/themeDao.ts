@@ -14,7 +14,7 @@ export class ThemeDao {
 
     clearDatabase(callback: () => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('themes').deleteMany({}, () => {
+            db.collection('themes').deleteMany({}, (err:MongoError, res:DeleteWriteOpResultObject) => {
                 callback();
             });
         });
@@ -32,7 +32,7 @@ export class ThemeDao {
 
     readTheme(id: string, callback: (t: Theme) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('themes').find({'_id': new ObjectID(id)}).limit(1).next().then((cursor:CursorResult) => {
+            db.collection('themes').find({'_id': new ObjectID(id)}).limit(1).next((err:MongoError, cursor:CursorResult) => {
                 db.close();
                 callback(cursor);
             });
@@ -69,7 +69,11 @@ export class ThemeDao {
     readCards(themeId:string, callback:(c:Card[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({'_themeId': themeId}).toArray((err:MongoError, docs:Card[]) => {
-                callback(docs);
+                var nDocs:Card[] = docs.map(d => {
+                    d._id = d._id.toHexString();
+                    return d;
+                });
+                callback(nDocs);
             });
         });
     }
