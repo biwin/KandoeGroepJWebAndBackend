@@ -131,8 +131,6 @@ export class CircleSessionManager {
 
     deleteCircleSession(currentUserId:string, circleSessionId:string, callback:() => any){
         this.getCircleSession(circleSessionId, (c:CircleSession) => {
-            console.log('current user: ' + currentUserId);
-            console.log('creator: ' + c._creatorId);
            if(c._creatorId == currentUserId) {
                this._dao.deleteCircleSessionById(circleSessionId, (b:boolean) => {
                    this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);

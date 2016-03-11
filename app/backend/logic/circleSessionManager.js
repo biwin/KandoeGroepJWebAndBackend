@@ -116,8 +116,6 @@ var CircleSessionManager = (function () {
     CircleSessionManager.prototype.deleteCircleSession = function (currentUserId, circleSessionId, callback) {
         var _this = this;
         this.getCircleSession(circleSessionId, function (c) {
-            console.log('current user: ' + currentUserId);
-            console.log('creator: ' + c._creatorId);
             if (c._creatorId == currentUserId) {
                 _this._dao.deleteCircleSessionById(circleSessionId, function (b) {
                     _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);

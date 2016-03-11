@@ -88,7 +88,7 @@ export class UserService {
         return this.http.get(this.path + 'user/' + _userId +'/groups').map((res: Response) => res.json());
     }
 
-    getCircleSessionsOfUserById(_userId:string):Observable<CircleSession[]> {
+    getCircleSessionsOfCurrentUser():Observable<CircleSession[]> {
         return this.http.get(this.path + 'user/circlesessions', false,true,true);
     }
 

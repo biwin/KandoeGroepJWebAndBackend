@@ -19,12 +19,9 @@ var CircleSessionOverview = (function () {
         this.loading = true;
         this.doDelete = false;
         this.circleService = service;
-        userService.getUserId(function (u) {
-            _this._currentUserId = u;
-            userService.getCircleSessionsOfUserById(_this._currentUserId).subscribe(function (circleSessions) {
-                _this.circleSessions = circleSessions;
-                _this.loading = false;
-            });
+        userService.getCircleSessionsOfCurrentUser().subscribe(function (circleSessions) {
+            _this.circleSessions = circleSessions;
+            _this.loading = false;
         });
     }
     CircleSessionOverview.prototype.deleteCircleSession = function (id) {

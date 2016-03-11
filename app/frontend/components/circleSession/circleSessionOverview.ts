@@ -45,20 +45,16 @@ import {UserService} from "../../services/userService";
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
     private circleService:CircleSessionService;
-    private _currentUserId:string;
     private loading:boolean = true;
     private doDelete:boolean = false;
 
 
     constructor(service:CircleSessionService, userService:UserService) {
         this.circleService = service;
-        userService.getUserId((u:string)=>{
-           this._currentUserId = u;
-            userService.getCircleSessionsOfUserById(this._currentUserId).subscribe((circleSessions:CircleSession[]) =>{
+            userService.getCircleSessionsOfCurrentUser().subscribe((circleSessions:CircleSession[]) =>{
                 this.circleSessions = circleSessions;
                 this.loading = false;
             });
-        });
     }
 
     deleteCircleSession(id:string) {

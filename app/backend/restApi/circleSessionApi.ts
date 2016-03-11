@@ -33,12 +33,6 @@ export class CircleSessionApi {
         });
     }
 
-    static getCircleSessionsOfUserById(req:Request, res:Response) {
-        CircleSessionApi.mgr.getCircleSessionsOfUserById(req.params.id, (circleSessions:CircleSession[]) =>{
-           res.send(circleSessions);
-        });
-    }
-
     public static getCircleSessionCards(req:Request, res:Response) {
         CircleSessionApi.mgr.getCircleSessionCards(req.params.id, (wrappers:CircleSessionCardWrapper[]) => {
             res.send(wrappers);
@@ -69,6 +63,16 @@ export class CircleSessionApi {
             }else {
                 res.status(401).send('Unauthorized');
             }
+        });
+    }
+
+    public static getCircleSessionsOfCurrentUser(req:Request, res:Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
+           if(currentUserId != null){
+               CircleSessionApi.mgr.getCircleSessionsOfUserById(currentUserId, (circleSessions:CircleSession[]) => {
+                   res.send(circleSessions);
+               });
+           }
         });
     }
 }
