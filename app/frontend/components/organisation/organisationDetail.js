@@ -42,8 +42,7 @@ var OrganisationDetail = (function () {
         this.router.navigate(["/CreateGroup", { organisationId: "Albert Hein" }]);
     };
     OrganisationDetail.prototype.viewGroup = function (groupId) {
-        //this.router.navigate(["/GroupDetail", {id: groupId}]);
-        this.router.navigate(["/GroupDetail", { id: 0 }]);
+        this.router.navigate(["/GroupDetail", { id: groupId }]);
     };
     //TODO: styling van addMember button
     //TODO: uitwerking addMember methode
