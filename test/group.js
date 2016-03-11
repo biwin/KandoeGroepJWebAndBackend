@@ -1,30 +1,40 @@
 var assert = require('assert');
 var groupManager_1 = require("../app/backend/logic/groupManager");
 var organisationManager_1 = require("../app/backend/logic/organisationManager");
+var userManager_1 = require("../app/backend/logic/userManager");
 var group_1 = require("../app/backend/model/group");
 var organisation_1 = require("../app/backend/model/organisation");
+var user_1 = require("../app/backend/model/user");
 var groupManager;
 var organisationManager;
+var userManager;
 before(function (done) {
     groupManager = new groupManager_1.GroupManager();
     organisationManager = new organisationManager_1.OrganisationManager();
+    userManager = new userManager_1.UserManager();
     done();
 });
 describe("GroupManager", function () {
     describe("createGroup", function () {
         var group;
         var organisation;
+        var user;
         before(function (done) {
             this.timeout(0);
-            organisation = new organisation_1.Organisation("Delhaize", []);
-            organisationManager.createOrganisation(organisation, function (o) {
-                organisation = o;
-                done();
+            user = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
+            userManager.registerUser(user, function (u) {
+                user = u;
+                organisation = new organisation_1.Organisation("Delhaize", []);
+                organisation._organisatorIds.push(u._id);
+                organisationManager.createOrganisation(organisation, function (o) {
+                    organisation = o;
+                    done();
+                });
             });
         });
         it("Create group, should return group from database", function (done) {
             this.timeout(0);
-            group = new group_1.Group("Voeding", "Ploeg voeding", organisation._id, []);
+            group = new group_1.Group("Voeding", "Ploeg voeding", organisation._id, [user._id]);
             groupManager.createGroup(group, function (g) {
                 try {
                     groupManager.getGroupById(g._id, function (newGroup) {
@@ -34,6 +44,12 @@ describe("GroupManager", function () {
                         group = g;
                         organisationManager.getOrganisationById(organisation._id, function (newOrganisation) {
                             assert.ok(newOrganisation._groupIds.indexOf(group._id) > -1);
+                            //TODO: check if groupId is added to _memberOfGroupIds array in User-object
+                            //userManager.getUserById(user._id, (newUser: User) => {
+                            //    assert.ok(newUser._memberOfGroupIds.indexOf(group._id) > -1);
+                            //
+                            //    done();
+                            //});
                             done();
                         });
                     });
@@ -46,9 +62,11 @@ describe("GroupManager", function () {
         after(function (done) {
             this.timeout(0);
             try {
-                groupManager.removeGroupById(group._id, function () {
-                    organisationManager.removeOrganisationById(organisation._id, function () {
-                        done();
+                userManager.removeUserById(user._id, function () {
+                    groupManager.removeGroupById(group._id, function () {
+                        organisationManager.removeOrganisationById(organisation._id, function () {
+                            done();
+                        });
                     });
                 });
             }
