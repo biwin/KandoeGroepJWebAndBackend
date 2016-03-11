@@ -23,8 +23,7 @@ var OrganisationsOverview = (function () {
         });
     }
     OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {
-        //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
-        this.router.navigate(["/OrganisationDetail", { id: 0 }]);
+        this.router.navigate(["/OrganisationDetail", { id: organisationId }]);
     };
     //TODO: styling van delete button
     //TODO: uitwerking delete methode

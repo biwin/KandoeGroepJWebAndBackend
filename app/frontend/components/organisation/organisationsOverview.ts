@@ -51,8 +51,7 @@ export class OrganisationsOverview {
     }
 
     private viewOrganisation(organisationId: string): void {
-        //this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
-        this.router.navigate(["/OrganisationDetail", {id: 0}]);
+        this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
     }
 
     //TODO: styling van delete button
