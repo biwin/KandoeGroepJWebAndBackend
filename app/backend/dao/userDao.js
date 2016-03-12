@@ -303,6 +303,22 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.addOrganisationIdToUserById = function (groupId, userId, isOrganisator, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            if (isOrganisator) {
+                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_organisatorOf': groupId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
+            else {
+                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_memberOf': groupId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
+        });
+    };
     return UserDao;
 })();
 exports.UserDao = UserDao;

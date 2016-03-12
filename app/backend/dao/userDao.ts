@@ -357,7 +357,25 @@ export class UserDao {
                 db.close();
 
                 callback(result.modifiedCount == 1);
-            })
-        })
+            });
+        });
+    }
+
+    addOrganisationIdToUserById(groupId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            if(isOrganisator) {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_organisatorOf': groupId}}, (error: MongoError, result) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            } else {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOf': groupId}}, (error: MongoError, result) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            }
+        });
     }
 }
