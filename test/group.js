@@ -44,13 +44,10 @@ describe("GroupManager", function () {
                         group = g;
                         organisationManager.getOrganisationById(organisation._id, function (newOrganisation) {
                             assert.ok(newOrganisation._groupIds.indexOf(group._id) > -1);
-                            //TODO: check if groupId is added to _memberOfGroupIds array in User-object
-                            //userManager.getUserById(user._id, (newUser: User) => {
-                            //    assert.ok(newUser._memberOfGroupIds.indexOf(group._id) > -1);
-                            //
-                            //    done();
-                            //});
-                            done();
+                            userManager.getUserById(user._id, function (newUser) {
+                                assert.ok(newUser._memberOfGroupIds.indexOf(group._id) > -1);
+                                done();
+                            });
                         });
                     });
                 }
