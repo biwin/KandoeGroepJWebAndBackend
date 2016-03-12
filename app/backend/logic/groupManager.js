@@ -1,5 +1,6 @@
 var groupDao_1 = require("../dao/groupDao");
 var organisationManager_1 = require("./organisationManager");
+var userManager_1 = require("./userManager");
 var GroupManager = (function () {
     function GroupManager() {
         this._dao = new groupDao_1.GroupDao();
@@ -13,8 +14,11 @@ var GroupManager = (function () {
             else {
                 _this._dao.createGroup(group, function (newGroup) {
                     var organisationManager = new organisationManager_1.OrganisationManager();
+                    var userManager = new userManager_1.UserManager();
                     organisationManager.addGroupIdToOrganisationById(newGroup._id, newGroup._organisationId, function () {
-                        callback(newGroup);
+                        userManager.addGroupIdToUserById(newGroup._id, newGroup._memberIds[0], function () {
+                            callback(newGroup);
+                        });
                     });
                 });
             }

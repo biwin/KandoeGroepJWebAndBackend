@@ -267,6 +267,9 @@ var UserManager = (function () {
     UserManager.prototype.getMembersOfGroupById = function (groupId, callback) {
         this._dao.getMembersOfGroupById(groupId, callback);
     };
+    UserManager.prototype.addGroupIdToUserById = function (groupId, userId, callback) {
+        this._dao.addGroupIdToUserById(groupId, userId, callback);
+    };
     return UserManager;
 })();
 exports.UserManager = UserManager;
