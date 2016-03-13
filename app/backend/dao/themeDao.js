@@ -48,7 +48,7 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.readAllThemes = function (userId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('themes').find({ '__organisatorIds': { '$in': [userId] } }).toArray(function (err, docs) {
+            db.collection('themes').find({ '_organisatorIds': { '$in': [userId] } }).toArray(function (err, docs) {
                 callback(docs);
             });
         });

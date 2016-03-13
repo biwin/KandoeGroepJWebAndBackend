@@ -60,7 +60,7 @@ export class ThemeDao {
 
     readAllThemes(userId:string, callback:(t:Theme[]) => any):void {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('themes').find({'__organisatorIds': {'$in': [userId]}}).toArray((err:MongoError, docs:Theme[]) => {
+            db.collection('themes').find({'_organisatorIds': {'$in': [userId]}}).toArray((err:MongoError, docs:Theme[]) => {
                 callback(docs);
             });
         });
