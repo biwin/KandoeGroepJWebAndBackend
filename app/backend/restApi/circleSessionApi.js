@@ -64,6 +64,15 @@ var CircleSessionApi = (function () {
             }
         });
     };
+    CircleSessionApi.addUser = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                CircleSessionApi.mgr.addUser(currentUserId, req.params.id, req.body.email, function (b) {
+                    res.status(200).send({ response: 'Success' });
+                });
+            }
+        });
+    };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();
     return CircleSessionApi;
 })();

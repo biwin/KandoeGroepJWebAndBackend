@@ -133,6 +133,14 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.addUserToCircleSession = function (circleSessionId, userId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ '_id': new mongodb_2.ObjectID(circleSessionId) }, { $push: { '_userIds': userId } }, function (err, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     return CircleSessionDao;
 })();
 exports.CircleSessionDao = CircleSessionDao;

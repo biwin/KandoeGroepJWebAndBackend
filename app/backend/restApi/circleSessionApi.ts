@@ -75,4 +75,14 @@ export class CircleSessionApi {
            }
         });
     }
+
+    public static addUser(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
+           if(currentUserId != null){
+               CircleSessionApi.mgr.addUser(currentUserId, req.params.id, req.body.email, (b:boolean) =>{
+                   res.status(200).send({response: 'Success'});
+               });
+           }
+        });
+    }
 }

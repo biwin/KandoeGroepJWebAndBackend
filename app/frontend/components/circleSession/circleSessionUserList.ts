@@ -41,7 +41,6 @@ export class CircleSessionUserList implements OnChanges {
         if(this.userIds != undefined && this.userIds.length > 0) {
             this.service.getUsers(this.userIds).subscribe((us:User[]) => {
                 us.forEach((u:User) => this.users.push(u));
-                console.log("get users");
             });
         }
     }

@@ -22,7 +22,6 @@ var CircleSessionUserList = (function () {
         if (this.userIds != undefined && this.userIds.length > 0) {
             this.service.getUsers(this.userIds).subscribe(function (us) {
                 us.forEach(function (u) { return _this.users.push(u); });
-                console.log("get users");
             });
         }
     };

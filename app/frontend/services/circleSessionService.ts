@@ -46,5 +46,9 @@ export class CircleSessionService {
     deleteCircleSession(circleSessionId:string):Observable<string> {
         return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false,false,true);
     }
+
+    addUser(circleSessionId:string, email:string):Observable<string> {
+        return this.http.post(this.path + 'circlesessions/' + circleSessionId, JSON.stringify({email:email}),true,false, true);
+    }
 }
 
