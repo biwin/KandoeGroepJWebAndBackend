@@ -1,11 +1,11 @@
-/*import assert = require('assert');
+import assert = require('assert');
 
 import {ThemeManager} from "../app/backend/logic/themeManager";
 import {UserManager} from "../app/backend/logic/userManager";
 
 import {Theme} from "../app/backend/model/theme";
-import {User} from "../app/backend/model/user";
 import {Card} from "../app/backend/model/card";
+import {User} from "../app/backend/model/user";
 
 var themeManager: ThemeManager;
 var userManager: UserManager;
@@ -28,6 +28,7 @@ describe('ThemeManager', () => {
             userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password'), (u: User) => {
                 try {
                     user = u;
+
                     done();
                 } catch(e) {
                     done(e);
@@ -50,7 +51,7 @@ describe('ThemeManager', () => {
             });
         });
 
-        after(function (done:any) {
+        after(function (done: any) {
             this.timeout(0);
 
             try {
@@ -66,7 +67,7 @@ describe('ThemeManager', () => {
     });
 
     describe('AddCard', () => {
-        var card:Card;
+        var card: Card;
 
         before(function(done: any){
             card = new Card ('Cafe de vissers', 't1235');
@@ -76,10 +77,10 @@ describe('ThemeManager', () => {
         it('Card must be added to a theme', function(done: any){
             this.timeout(0);
 
-            themeManager.createCard(card, (c:Card) => {
+            themeManager.createCard(card, (c: Card) => {
                 assert.notEqual(c._id, null);
                 done();
             });
         });
     });
-});*/
+});

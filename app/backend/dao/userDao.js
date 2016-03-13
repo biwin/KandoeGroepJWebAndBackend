@@ -44,11 +44,12 @@ var UserDao = (function () {
             callback(cursor);
         });
     };
-    UserDao.prototype.readUserById = function (id, callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
-            return db.collection('users').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
-        }).then(function (cursor) {
-            callback(cursor);
+    UserDao.prototype.readUserById = function (userId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({ '_id': new mongodb_2.ObjectID(userId) }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
         });
     };
     UserDao.prototype.readUserByEmail = function (email, callback) {
@@ -81,15 +82,15 @@ var UserDao = (function () {
             callback(cursor);
         });
     };
-    UserDao.prototype.createUser = function (u, callback) {
+    UserDao.prototype.createUser = function (user, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').insertOne(u, function (error, result) {
+            db.collection('users').insertOne(user, function (error, result) {
                 if (error != null) {
                     console.log(error.message);
                 }
-                u._id = result.insertedId;
+                user._id = result.insertedId.toString();
                 db.close();
-                callback(u);
+                callback(user);
             });
         });
     };
@@ -113,9 +114,9 @@ var UserDao = (function () {
             });
         });
     };
-    UserDao.prototype.deleteUserById = function (id, callback) {
+    UserDao.prototype.deleteUserById = function (userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').deleteOne({ '_id': id }, function (err, result) {
+            db.collection('users').deleteOne({ '_id': new mongodb_2.ObjectID(userId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });
@@ -292,6 +293,30 @@ var UserDao = (function () {
             db.collection('users').find({ '_memberOfGroupIds': { '$in': [groupId] } }).toArray(function (err, docs) {
                 callback(docs);
             });
+        });
+    };
+    UserDao.prototype.addGroupIdToUserById = function (groupId, userId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_memberOfGroupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.addOrganisationIdToUserById = function (groupId, userId, isOrganisator, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            if (isOrganisator) {
+                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_organisatorOf': groupId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
+            else {
+                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_memberOf': groupId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
         });
     };
     return UserDao;

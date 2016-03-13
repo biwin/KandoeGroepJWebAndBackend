@@ -292,4 +292,12 @@ export class UserManager {
     getMembersOfGroupById(groupId: string, callback: (members: User[]) => any) {
         this._dao.getMembersOfGroupById(groupId, callback);
     }
+
+    addGroupIdToUserById(groupId: string, userId: string, callback: (added: boolean) => any) {
+        this._dao.addGroupIdToUserById(groupId, userId, callback);
+    }
+
+    addOrganisationIdToUserById(organisationId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
+        this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);
+    }
 }

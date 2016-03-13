@@ -61,11 +61,13 @@ export class UserDao {
 
     }
 
-    readUserById(id: string, callback: (u: User) => any) {
-        this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
-            return db.collection('users').find({'_id': new ObjectID(id)}).limit(1).next();
-        }).then((cursor: CursorResult) => {
-            callback(cursor);
+    readUserById(userId: string, callback: (user: User) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({'_id': new ObjectID(userId)}).limit(1).next().then((cursor: CursorResult) => {
+                db.close();
+
+                callback(cursor);
+            });
         });
     }
 
@@ -104,15 +106,18 @@ export class UserDao {
     }
 
 
-    createUser(u: User, callback: (u: User) => any) {
+    createUser(user: User, callback: (newUser: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').insertOne(u, (error: MongoError, result) => {
+            db.collection('users').insertOne(user, (error: MongoError, result) => {
                 if (error != null) {
                     console.log(error.message);
                 }
-                u._id = result.insertedId;
+
+                user._id = result.insertedId.toString();
+
                 db.close();
-                callback(u);
+
+                callback(user);
             });
         });
     }
@@ -140,10 +145,11 @@ export class UserDao {
         });
     }
 
-    deleteUserById(id: string, callback: (b: boolean) => any) {
+    deleteUserById(userId: string, callback: (deleted: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').deleteOne({'_id': id}, (err: MongoError, result) => {
+            db.collection('users').deleteOne({'_id': new ObjectID(userId)}, (err: MongoError, result) => {
                 db.close();
+
                 callback(result.deletedCount == 1);
             });
         });
@@ -342,6 +348,34 @@ export class UserDao {
             db.collection('users').find({'_memberOfGroupIds': { '$in': [groupId]}}).toArray((err: MongoError, docs: User[]) => {
                 callback(docs);
             });
+        });
+    }
+
+    addGroupIdToUserById(groupId: string, userId: string, callback: (added: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOfGroupIds': groupId}}, (error: MongoError, result) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    addOrganisationIdToUserById(groupId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            if(isOrganisator) {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_organisatorOf': groupId}}, (error: MongoError, result) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            } else {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOf': groupId}}, (error: MongoError, result) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            }
         });
     }
 }
