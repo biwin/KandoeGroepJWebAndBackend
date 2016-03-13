@@ -45,7 +45,7 @@ export class NavigationBar implements AfterViewInit {
         service.subscribeMe(this);
         if (this.service.isLoggedIn()) {
             this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
-            this.service.getUsername((name: string) => this.usernameString = name);
+            this.usernameString = this.service.getUsername();
         } else {
             this.usernameString = "Gast";
         }
@@ -62,12 +62,12 @@ export class NavigationBar implements AfterViewInit {
     }
 
     notifyProfileUpdated() {
-        this.service.getUsername((name: string) => this.usernameString = name);
+        this.usernameString = this.service.getUsername();
         this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
     }
 
     getUserName() {
-        this.service.getUsername((name: string) => this.usernameString = name);
+        this.usernameString = this.service.getUsername();
     }
 
     ngAfterViewInit() {

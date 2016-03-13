@@ -43,6 +43,7 @@ describe('CircleSessionManager', function () {
                         catch (e) {
                             done(e);
                         }
+                        //FIXME group doesn't have real organisationid yet
                         groupManager.createGroup(group, function (g) {
                             group = g;
                             done();
@@ -87,5 +88,23 @@ describe('CircleSessionManager', function () {
            });
        });
     });*/
+});
+describe('CircleSessionModel', function () {
+    describe('inProgress', function () {
+        it('circleSession with startDate in future should return false', function () {
+            var cs = circleSession_1.CircleSession.empty();
+            var d = new Date();
+            cs._startDate = "24/12/" + (d.getFullYear() + 1) + " 08:30";
+            var b = cs.isInProgress;
+            assert.equal(b, false);
+        });
+        it('circleSession with startDate in past should return true', function () {
+            var cs = circleSession_1.CircleSession.empty();
+            var d = new Date();
+            cs._startDate = "24/12/" + (d.getFullYear() - 1) + " 08:30";
+            var b = cs.isInProgress;
+            assert.equal(b, true);
+        });
+    });
 });
 //# sourceMappingURL=circleSession.js.map

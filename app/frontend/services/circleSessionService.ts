@@ -9,6 +9,7 @@ import {CircleSession} from "../../backend/model/circleSession";
 import {CircleSessionCreateWrapper} from "../../backend/model/circleSessionCreateWrapper";
 import {CircleSessionCardWrapper} from "../../backend/model/circleSessionCardWrapper";
 import {HttpWrapperService} from "./httpWrapperService";
+import {CircleSessionMoveResponse} from "../../backend/model/circleSessionMoveResponse";
 
 @Injectable()
 export class CircleSessionService {
@@ -39,12 +40,16 @@ export class CircleSessionService {
         return this.http.get(this.path + 'circlesessions/' + circleSessionId + '/cards', false,true,false);
     }
 
-    initCards(circlesessionId:string, selectedCards:string[]):Observable<string> {
+    initCards(circlesessionId:string, selectedCards:string[]):Observable<CircleSessionMoveResponse> {
         return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards),true,true,true);
     }
 
     deleteCircleSession(circleSessionId:string):Observable<string> {
         return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false,false,true);
+    }
+
+    addUser(circleSessionId:string, email:string):Observable<string> {
+        return this.http.post(this.path + 'circlesessions/' + circleSessionId, JSON.stringify({email:email}),true,false, true);
     }
 }
 

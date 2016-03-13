@@ -22,9 +22,13 @@ import {CircleSessionPreGame} from "./circleSessionPreGame";
             <h3 class="center-align">{{circleSession._name}}</h3>
         </div>
 
-        <pregame [circleSession]="circleSession" *ngIf="true"></pregame>
+        <div class="row" *ngIf="!circleSession._inProgress">
+            <h5>Deze sessie is nog niet actief...</h5>
+        </div>
 
-        <div id="game" *ngIf="false">
+        <pregame [circleSession]="circleSession" *ngIf="circleSession._inProgress && circleSession._isPreGame"></pregame>
+
+        <div id="game" *ngIf="circleSession._inProgress && !circleSession._isPreGame">
             <div class="row margin-top">
                 <div class="col s8 offset-s2">
                     <svg [attr.viewBox]="constants.VIEWBOX">
@@ -45,13 +49,12 @@ import {CircleSessionPreGame} from "./circleSessionPreGame";
                     </svg>
                 </div>
             </div>
-
             <div class="row">
                 <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)"></circlesession-carddetail>
             </div>
         </div>
 
-        <user-list [users]="circleSession._userIds"></user-list>
+        <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds"></user-list>
     </div>
     `,
     directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame]

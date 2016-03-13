@@ -5,6 +5,7 @@ import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
 import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {Response, Request} from "express";
 import {UserApi} from "./userApi";
+import {CircleSessionMoveResponse} from "../model/circleSessionMoveResponse";
 
 export class CircleSessionApi {
     private static mgr:CircleSessionManager = new CircleSessionManager();
@@ -23,7 +24,11 @@ export class CircleSessionApi {
 
     public static find(req:Request,res:Response) {
         CircleSessionApi.mgr.getCircleSession(req.params.id, (c:CircleSession) => {
-            res.send(c);
+            if(c == null) {
+                res.status(404).send('CircleSession with id ' + req.params.id + ' not found!');
+            } else {
+                res.send(c);
+            }
         });
     }
 
@@ -44,11 +49,15 @@ export class CircleSessionApi {
             if(uId != null) {
                 var circleSessionId:string = req.params.id;
                 var cardIds:string[] = req.body;
-                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, () => {
-                    res.status(200).send({result: 'Success'});
+                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, (preGameEnded:boolean, currentUserId:string, err?:string) => {
+                    if (err != undefined || err != null) {
+                        res.status(400).send(new CircleSessionMoveResponse(err));
+                    } else {
+                        res.status(200).send(new CircleSessionMoveResponse(null, preGameEnded, currentUserId));
+                    }
                 });
             } else {
-                res.status(401).send({error:'Unauthorized'});
+                res.status(401).send(new CircleSessionMoveResponse('Unauthorized'));
             }
         });
     }
@@ -71,6 +80,16 @@ export class CircleSessionApi {
            if(currentUserId != null){
                CircleSessionApi.mgr.getCircleSessionsOfUserById(currentUserId, (circleSessions:CircleSession[]) => {
                    res.send(circleSessions);
+               });
+           }
+        });
+    }
+
+    public static addUser(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
+           if(currentUserId != null){
+               CircleSessionApi.mgr.addUser(currentUserId, req.params.id, req.body.email, (b:boolean) =>{
+                   res.status(200).send({response: 'Success'});
                });
            }
         });

@@ -44,8 +44,16 @@ var CircleSessionPreGame = (function () {
         this.selectedCards.splice(0, this.selectedCards.length);
     };
     CircleSessionPreGame.prototype.submitCards = function () {
-        this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe(function (s) {
-            Materialize.toast(s, 3000, 'rounded');
+        var _this = this;
+        this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe(function (r) {
+            if (r._error == null) {
+                _this.circleSession._currentPlayerId = r._currentPlayerId;
+                if (r._roundEnded === true)
+                    _this.circleSession._isPreGame = false;
+            }
+            Materialize.toast('Done', 3000, 'rounded');
+        }, function (r) {
+            Materialize.toast(r._error, 3000, 'rounded');
         });
     };
     __decorate([

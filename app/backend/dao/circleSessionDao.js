@@ -45,12 +45,16 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.cardPositionExists = function (sessionId, cardId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('cardpositions').find({ '_sessionId': sessionId, '_cardId': cardId }).limit(1).next(function (err, cursor) {
+            db.collection('cardpositions').find({
+                '_sessionId': sessionId,
+                '_cardId': cardId
+            }).limit(1).next(function (err, cursor) {
                 var cp = cursor;
                 callback(cp !== null, cp == null ? -1 : cp._position);
             });
         });
     };
+    //TODO add previous userId to history
     CircleSessionDao.prototype.updateCardPosition = function (sessionId, cardId, userId, position, callback) {
         var _this = this;
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
@@ -110,7 +114,10 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.getCardPositions = function (circleSessionId, cardIds, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('cardpositions').find({ '_sessionId': circleSessionId, '_cardId': { '$in': cardIds } }).toArray(function (err, docs) {
+            db.collection('cardpositions').find({
+                '_sessionId': circleSessionId,
+                '_cardId': { '$in': cardIds }
+            }).toArray(function (err, docs) {
                 db.close();
                 callback(docs);
             });
@@ -130,6 +137,35 @@ var CircleSessionDao = (function () {
             db.collection('cardpositions').deleteMany({ '_sessionId': circleSessionId }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
+            });
+        });
+    };
+    CircleSessionDao.prototype.addUserToCircleSession = function (circleSessionId, userId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ '_id': new mongodb_2.ObjectID(circleSessionId) }, {
+                $push: { '_userIds': userId }
+            }, function (err, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    CircleSessionDao.prototype.updateCurrentPlayer = function (circleSessionId, newPlayerId, preGameInProgress, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: {
+                    _currentPlayerId: newPlayerId,
+                    _isPreGame: preGameInProgress,
+                } }, function (err, res) {
+                db.close();
+                callback(res.modifiedCount == 1);
+            });
+        });
+    };
+    CircleSessionDao.prototype.updateInProgress = function (circleSessionId, inProgress, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: { _inProgress: inProgress } }, function (err, res) {
+                db.close();
+                callback();
             });
         });
     };

@@ -58,7 +58,7 @@ export class Profile {
         if (token == null || token == "") {
             this.router.navigate(['UserLogin']);
         } else {
-            service.getUsername((name: string) => this.usernameString = name);
+            this.usernameString = service.getUsername();
             service.getImageLinks((smallImageLink: string, largeImageLink: string) => {this.smallImageLinkString = smallImageLink; this.largeImageLinkString = largeImageLink});
             service.getUserPicture('large').subscribe((url: Response) => this.imageSource = url.text());
         }

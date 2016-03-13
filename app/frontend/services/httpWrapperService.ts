@@ -33,7 +33,10 @@ export class HttpWrapperService {
         }
         if (isJson) options.headers.append('Content-Type', 'application/json');
         if (needsToken) options.headers.append('Bearer', localStorage.getItem('token'));
-        return this.http.post(url, body, options).map((res: Response) => needsJson ? res.json() : res);
+        return this.http.post(url, body, options).map((res: Response) => {
+            var r = res;
+            return needsJson ? res.json() : res;
+        });
     }
 
     delete<T>(url: string, isJson: boolean, needsJson: boolean, needsToken: boolean, options?: RequestOptionsArgs): Observable<T> {

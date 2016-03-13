@@ -34,6 +34,10 @@ import {UserService} from "../../services/userService";
                     </div>
                 </div>
             </div>
+
+     <div *ngIf="!loading" class="row center margin-top">
+        <h3>Mijn Cirkelsessies</h3>
+     </div>
      <div class="row">
         <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
      </div>
@@ -45,6 +49,7 @@ import {UserService} from "../../services/userService";
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
     private circleService:CircleSessionService;
+
     private loading:boolean = true;
     private doDelete:boolean = false;
 

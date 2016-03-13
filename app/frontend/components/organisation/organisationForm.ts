@@ -41,12 +41,11 @@ export class OrganisationForm {
     }
 
     private OnSubmit(){
-        this.userService.getUserId((userId: string) => {
-            this.organisation._organisatorIds.push(userId);
+        var userId:string = this.userService.getUserId();
+        this.organisation._organisatorIds.push(userId);
 
-            this.organisationService.createOrganisation(this.organisation).subscribe((o: Organisation) => {
-                this.router.navigate(["/OrganisationDetail", {id: o._id}]);
-            });
+        this.organisationService.createOrganisation(this.organisation).subscribe((o: Organisation) => {
+            this.router.navigate(["/OrganisationDetail", {id: o._id}]);
         });
     }
 }

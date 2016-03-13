@@ -1,7 +1,9 @@
 import {GroupDao} from "../dao/groupDao";
 
-import {Group} from "../model/group";
 import {OrganisationManager} from "./organisationManager";
+import {UserManager} from "./userManager";
+
+import {Group} from "../model/group";
 
 export class GroupManager {
     private _dao: GroupDao;
@@ -17,9 +19,12 @@ export class GroupManager {
             } else {
                 this._dao.createGroup(group, (newGroup: Group) => {
                     var organisationManager: OrganisationManager = new OrganisationManager();
+                    var userManager: UserManager = new UserManager();
 
                     organisationManager.addGroupIdToOrganisationById(newGroup._id, newGroup._organisationId, () => {
-                        callback(newGroup);
+                        userManager.addGroupIdToUserById(newGroup._id, newGroup._memberIds[0], () => {
+                            callback(newGroup);
+                        });
                     });
                 });
             }
