@@ -123,6 +123,25 @@ var CircleSessionManager = (function () {
             }
         });
     };
+    CircleSessionManager.prototype.addUser = function (currentUserId, circleSessionId, email, callback) {
+        var _this = this;
+        var uMgr = new userManager_1.UserManager();
+        this.getCircleSession(circleSessionId, function (c) {
+            if (c._creatorId == currentUserId && !c._inProgress) {
+                uMgr.getUserByEmail(email, function (u) {
+                    if (c._userIds.indexOf(u._id.toString()) < 0) {
+                        _this._dao.addUserToCircleSession(circleSessionId, u._id.toString(), callback);
+                    }
+                    else {
+                        callback(false);
+                    }
+                });
+            }
+            else {
+                callback(false);
+            }
+        });
+    };
     return CircleSessionManager;
 })();
 exports.CircleSessionManager = CircleSessionManager;

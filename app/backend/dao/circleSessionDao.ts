@@ -157,4 +157,13 @@ export class CircleSessionDao {
             });
         });
     }
+
+    addUserToCircleSession(circleSessionId:string, userId:string, callback:(b:boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
+            db.collection('circlesessions').updateOne({'_id': new ObjectID(circleSessionId)}, {$push: {'_userIds': userId}}, (err:MongoError, result) =>{
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
 }

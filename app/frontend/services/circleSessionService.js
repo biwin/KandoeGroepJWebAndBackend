@@ -42,6 +42,9 @@ var CircleSessionService = (function () {
     CircleSessionService.prototype.deleteCircleSession = function (circleSessionId) {
         return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false, false, true);
     };
+    CircleSessionService.prototype.addUser = function (circleSessionId, email) {
+        return this.http.post(this.path + 'circlesessions/' + circleSessionId, JSON.stringify({ email: email }), true, false, true);
+    };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 
