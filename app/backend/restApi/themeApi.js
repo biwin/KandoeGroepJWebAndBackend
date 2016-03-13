@@ -8,7 +8,7 @@ var ThemeApi = (function () {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
                 ThemeApi.mgr.getTheme(req.params.id, function (t) {
-                    res.status(200).send({ result: 'success' });
+                    res.send(t);
                 });
             }
             else {
@@ -19,8 +19,8 @@ var ThemeApi = (function () {
     ThemeApi.findAll = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
-                ThemeApi.mgr.getAllThemes(function (t) {
-                    res.status(200).send({ result: 'success' });
+                ThemeApi.mgr.getAllThemes(currentUserId, function (t) {
+                    res.send(t);
                 });
             }
             else {
@@ -31,8 +31,10 @@ var ThemeApi = (function () {
     ThemeApi.create = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
+                var theme = req.body;
+                theme._organisatorIds = [currentUserId];
                 ThemeApi.mgr.createTheme(req.body, function (t) {
-                    res.status(200).send({ result: 'success' });
+                    res.send(t);
                 });
             }
             else {
@@ -46,7 +48,7 @@ var ThemeApi = (function () {
                 var card = req.body;
                 var themeId = req.params.id;
                 ThemeApi.mgr.createCard(new card_1.Card(card._name, themeId), function (c) {
-                    res.status(200).send({ result: 'success' });
+                    res.send(c);
                 });
             }
             else {
@@ -58,7 +60,7 @@ var ThemeApi = (function () {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
                 ThemeApi.mgr.getCards(req.params.id, function (c) {
-                    res.status(200).send({ result: 'success' });
+                    res.send(c);
                 });
             }
             else {

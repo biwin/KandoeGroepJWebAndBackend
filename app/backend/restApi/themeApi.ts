@@ -11,7 +11,7 @@ export class ThemeApi {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
             if (currentUserId != null) {
                 ThemeApi.mgr.getTheme(req.params.id, (t:Theme) => {
-                    res.status(200).send({result: 'success'});
+                    res.send(t);
                 });
             }else {
                 res.status(401).send({error:'Unauthorized'});
@@ -22,8 +22,8 @@ export class ThemeApi {
     public static findAll(req:Request, res:Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
             if (currentUserId != null) {
-                ThemeApi.mgr.getAllThemes((t:Theme[]) => {
-                    res.status(200).send({result: 'success'});
+                ThemeApi.mgr.getAllThemes(currentUserId, (t:Theme[]) => {
+                    res.send(t);
                 });
             }else {
                 res.status(401).send({error:'Unauthorized'});
@@ -34,8 +34,10 @@ export class ThemeApi {
     public static create(req:Request, res:Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
             if (currentUserId != null) {
+                var theme:Theme = req.body;
+                theme._organisatorIds = [currentUserId];
                 ThemeApi.mgr.createTheme(req.body, (t:Theme) => {
-                    res.status(200).send({result: 'success'});
+                    res.send(t);
                 });
             }else {
                 res.status(401).send({error:'Unauthorized'});
@@ -49,7 +51,7 @@ export class ThemeApi {
                 var card:Card = req.body;
                 var themeId:string = req.params.id;
                 ThemeApi.mgr.createCard(new Card(card._name, themeId), (c:Card) => {
-                    res.status(200).send({result: 'success'});
+                    res.send(c);
                 });
             }else {
                 res.status(401).send({error:'Unauthorized'});
@@ -61,7 +63,7 @@ export class ThemeApi {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
             if (currentUserId != null) {
                 ThemeApi.mgr.getCards(req.params.id, (c:Card[]) => {
-                    res.status(200).send({result: 'success'});
+                    res.send(c);
                 });
             }else {
                 res.status(401).send({error:'Unauthorized'});
