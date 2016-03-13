@@ -201,4 +201,21 @@ export class CircleSessionManager {
             });
         });
     }
+
+    addUser(currentUserId:string, circleSessionId:string, email:string, callback:(b:boolean) => any) {
+        var uMgr:UserManager = new UserManager();
+        this.getCircleSession(circleSessionId, (c:CircleSession) => {
+            if(c._creatorId == currentUserId && !c._inProgress) {
+               uMgr.getUserByEmail(email, (u:User) => {
+                   if(c._userIds.indexOf(u._id.toString()) < 0){
+                       this._dao.addUserToCircleSession(circleSessionId, u._id.toString(), callback);
+                   }else {
+                       callback(false);
+                   }
+               });
+            } else {
+                callback(false);
+            }
+        });
+    }
 }

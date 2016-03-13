@@ -28,6 +28,9 @@ var OrganisationManager = (function () {
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     };
+    OrganisationManager.prototype.getOrganisationOfGroupById = function (groupId, callback) {
+        this._dao.getOrganisationOfGroupById(groupId, callback);
+    };
     OrganisationManager.prototype.getAllOrganisationsOfUserById = function (userId, callback) {
         this._dao.getAllOrganisationsOfUserById(userId, callback);
     };

@@ -17,7 +17,7 @@ var bodyParser = require('body-parser'),
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -55,6 +55,7 @@ app.post('/api/circlesessions', CircleSessionApi.CircleSessionApi.createCircleSe
 app.get('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.getCircleSessionCards);
 app.post('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.initCardsForSession);
 app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCircleSession);
+app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
 //endregion
 
 //region organisation routes
@@ -69,6 +70,10 @@ app.post("/api/organisations", function (req, res) {
 app.get("/api/organisations/:id/groups", function (req, res) {
     OrganisationAPI.OrganisationAPI.getGroups(req.params.id, res);
 });
+
+app.get("/api/organisations/:id/members", function (req, res) {
+    OrganisationAPI.OrganisationAPI.getMembers(req.params.id, res);
+});
 //endregion
 
 //region group routes
@@ -78,6 +83,14 @@ app.get("/api/groups/:id", function (req, res) {
 
 app.post("/api/groups", function (req, res) {
     GroupAPI.GroupAPI.create(req.body, res);
+});
+
+app.get("/api/groups/:id/members", function (req, res) {
+    GroupAPI.GroupAPI.getMembers(req.params.id, res);
+});
+
+app.get("/api/groups/:id/organisation", function (req, res) {
+    GroupAPI.GroupAPI.getOrganisation(req.params.id, res);
 });
 //endregion
 

@@ -49,6 +49,14 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.getOrganisationOfGroupById = function (groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').find({ '_groupIds': { '$in': [groupId] } }).limit(1).next().then(function (cursor) {
+                db.close();
+                callback(cursor);
+            });
+        });
+    };
     OrganisationDao.prototype.getAllOrganisationsOfUserById = function (userId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').find({ '$or': [{ '_organisatorIds': { '$in': [userId] } }, { '_memberIds': { '$in': [userId] } }] }).toArray(function (err, docs) {

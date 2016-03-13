@@ -23,10 +23,20 @@ var OrganisationService = (function () {
         header.append("Content-Type", "application/json");
         return this.http.post(this.path + "organisations/", JSON.stringify(organisation), { headers: header }).map(function (res) { return res.json(); });
     };
+    OrganisationService.prototype.getOrganisationById = function (organisationId) {
+        var header = new http_1.Headers();
+        header.append("Content-Type", "application/json");
+        return this.http.get(this.path + "organisations/" + organisationId).map(function (res) { return res.json(); });
+    };
     OrganisationService.prototype.getGroupsOfOrganisationById = function (organisationId) {
         var header = new http_1.Headers();
         header.append("Content-Type", "application/json");
         return this.http.get(this.path + "organisations/" + organisationId + "/groups").map(function (res) { return res.json(); });
+    };
+    OrganisationService.prototype.getMembersOfOrganisationById = function (organisationId) {
+        var header = new http_1.Headers();
+        header.append("Content-Type", "application/json");
+        return this.http.get(this.path + "organisations/" + organisationId + "/members").map(function (res) { return res.json(); });
     };
     OrganisationService = __decorate([
         core_1.Injectable(),

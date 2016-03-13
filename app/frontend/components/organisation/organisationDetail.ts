@@ -1,6 +1,9 @@
 import {Component} from "angular2/core";
-import {Router} from "angular2/router";
-import {NgClass} from "angular2/common";
+import {Router, RouteParams} from "angular2/router";
+import {NgClass, NgIf} from "angular2/common";
+
+import {OrganisationService} from "../../services/organisationService";
+import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
 import {Group} from "../../../backend/model/group";
@@ -9,7 +12,7 @@ import {User} from "../../../backend/model/user";
 @Component({
     selector: 'organisation-detail',
     template: `
-    <div class="row container">
+    <div class="row container" *ngIf="organisation != null">
         <div id="organisationHeader">
             <h5>{{organisation._name}}</h5>
 
@@ -85,8 +88,14 @@ import {User} from "../../../backend/model/user";
             <p *ngIf="organisation._memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
         </div></div>
     </div>
+
+    <div class="row container" *ngIf="organisation == null">
+        <div class="card"><div class="card-content">
+            <p>ONGELDIG ID</p>
+        </div></div>
+    </div>
     `,
-    directives: [NgClass]
+    directives: [NgClass, NgIf]
 })
 
 export class OrganisationDetail {
@@ -95,14 +104,26 @@ export class OrganisationDetail {
     private groups: Group[];
     private members: User[];
 
-    public constructor(router: Router) {
+    public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService) {
+        var organisationId: string = routeParam.params["id"];
+
         this.router = router;
 
-        this.organisation = new Organisation("Delhaize", ["Michaël", "Jan", "Jasper"]);
-        this.organisation._groupIds.push("Voeding");
+        organisationService.getOrganisationById(organisationId).subscribe((organisation: Organisation) => {
+            this.organisation = organisation;
 
-        this.groups = this.organisation.getGroups();
-        this.members = this.organisation.getMembers();
+            if(organisation._groupIds.length != 0) {
+                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups:Group[]) => {
+                    this.groups = groups;
+                });
+            }
+
+            if(organisation._memberIds.length != 0) {
+                organisationService.getMembersOfOrganisationById(organisationId).subscribe((members: User[]) => {
+                    this.members = members;
+                });
+            }
+        });
     }
 
     //TODO: styling van edit button
@@ -119,8 +140,7 @@ export class OrganisationDetail {
     }
 
     private viewGroup(groupId: string): void {
-        //this.router.navigate(["/GroupDetail", {id: groupId}]);
-        this.router.navigate(["/GroupDetail", {id: 0}]);
+        this.router.navigate(["/GroupDetail", {id: groupId}]);
     }
 
     //TODO: styling van addMember button

@@ -8,7 +8,6 @@ import {Response} from "express";
 var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
-
     private static manager: UserManager = new UserManager();
 
     public static createUser(name:string, email:string, password:string, registrar:string, res) {
@@ -131,5 +130,17 @@ export class UserApi {
 
     public static getAllOrganisationsOfUserById(userId: string, res) {
         OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
+    }
+
+    public static getMembersOfOrganisationById(organisationId: string, res) {
+        this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
+            res.send(members);
+        });
+    }
+
+    public static getMembersOfGroupById(groupId: string, res) {
+        this.manager.getMembersOfGroupById(groupId, (members: User[]) => {
+            res.send(members);
+        });
     }
 }

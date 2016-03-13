@@ -18,8 +18,8 @@ var ThemeManager = (function () {
     ThemeManager.prototype.createCard = function (card, callback) {
         this._dao.createCard(card, callback);
     };
-    ThemeManager.prototype.getAllThemes = function (callback) {
-        this._dao.readAllThemes(callback);
+    ThemeManager.prototype.getAllThemes = function (userId, callback) {
+        this._dao.readAllThemes(userId, callback);
     };
     ThemeManager.prototype.getCards = function (themeId, callback) {
         this._dao.readCards(themeId, callback);

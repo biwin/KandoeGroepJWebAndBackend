@@ -6,6 +6,7 @@ var User = (function () {
         this._registrar = _registrar;
         this._organisatorOf = [];
         this._memberOf = [];
+        this._memberOfGroupIds = [];
     }
     User.empty = function () {
         return new User("", "", "", "");

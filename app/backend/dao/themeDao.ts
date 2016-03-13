@@ -58,9 +58,9 @@ export class ThemeDao {
         });
     }
 
-    readAllThemes(callback:(t:Theme[]) => any):void {
+    readAllThemes(userId:string, callback:(t:Theme[]) => any):void {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('themes').find({}).toArray((err:MongoError, docs:Theme[]) => {
+            db.collection('themes').find({'_organisatorIds': {'$in': [userId]}}).toArray((err:MongoError, docs:Theme[]) => {
                 callback(docs);
             });
         });
@@ -70,7 +70,7 @@ export class ThemeDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({'_themeId': themeId}).toArray((err:MongoError, docs:Card[]) => {
                 var nDocs:Card[] = docs.map(d => {
-                    d._id = d._id.toHexString();
+                    d._id = d._id.toString();
                     return d;
                 });
                 callback(nDocs);

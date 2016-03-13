@@ -49,6 +49,7 @@ import {UserService} from "../../services/userService";
 export class CircleSessionOverview {
     private circleSessions:CircleSession[] = [];
     private circleService:CircleSessionService;
+
     private loading:boolean = true;
     private doDelete:boolean = false;
 

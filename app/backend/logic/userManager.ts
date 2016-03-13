@@ -284,4 +284,12 @@ export class UserManager {
     getUserIdsByEmail(_userEmailAdresses:string[], callback:(us:string[]) => any) {
         this._dao.readUserIdsByEmail(_userEmailAdresses, callback);
     }
+
+    getMembersOfOrganisationById(organisationId: string, callback: (members: User[]) => any) {
+        this._dao.getMembersOfOrganisationById(organisationId, callback);
+    }
+
+    getMembersOfGroupById(groupId: string, callback: (members: User[]) => any) {
+        this._dao.getMembersOfGroupById(groupId, callback);
+    }
 }

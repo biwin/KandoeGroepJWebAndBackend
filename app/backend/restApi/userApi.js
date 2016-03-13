@@ -137,6 +137,16 @@ var UserApi = (function () {
     UserApi.getAllOrganisationsOfUserById = function (userId, res) {
         organisationAPI_1.OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
     };
+    UserApi.getMembersOfOrganisationById = function (organisationId, res) {
+        this.manager.getMembersOfOrganisationById(organisationId, function (members) {
+            res.send(members);
+        });
+    };
+    UserApi.getMembersOfGroupById = function (groupId, res) {
+        this.manager.getMembersOfGroupById(groupId, function (members) {
+            res.send(members);
+        });
+    };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;
 })();

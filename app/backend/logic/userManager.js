@@ -261,6 +261,12 @@ var UserManager = (function () {
     UserManager.prototype.getUserIdsByEmail = function (_userEmailAdresses, callback) {
         this._dao.readUserIdsByEmail(_userEmailAdresses, callback);
     };
+    UserManager.prototype.getMembersOfOrganisationById = function (organisationId, callback) {
+        this._dao.getMembersOfOrganisationById(organisationId, callback);
+    };
+    UserManager.prototype.getMembersOfGroupById = function (groupId, callback) {
+        this._dao.getMembersOfGroupById(groupId, callback);
+    };
     return UserManager;
 })();
 exports.UserManager = UserManager;

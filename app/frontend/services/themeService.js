@@ -11,9 +11,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var http_1 = require("angular2/http");
-var core_2 = require("angular2/core");
-var http_2 = require("angular2/http");
+var httpWrapperService_1 = require("./httpWrapperService");
 require("rxjs/add/operator/map");
 var ThemeService = (function () {
     function ThemeService(http, path) {
@@ -22,34 +20,30 @@ var ThemeService = (function () {
         this.http = http;
     }
     ThemeService.prototype.getAll = function () {
-        return this.http.get(this.path + 'themes').map(function (res) { return res.json(); });
+        return this.http.get(this.path + 'themes', false, true, true);
     };
     ThemeService.prototype.getTheme = function (themeId) {
-        return this.http.get(this.path + 'themes/' + themeId).map(function (res) { return res.json(); });
+        return this.http.get(this.path + 'themes/' + themeId, false, true, true);
     };
     ThemeService.prototype.create = function (theme) {
-        var header = new http_2.Headers();
-        header.append('Content-Type', 'application/json');
-        return this.http.post(this.path + 'themes', JSON.stringify(theme), { headers: header }).map(function (res) { return res.json(); });
+        return this.http.post(this.path + 'themes', JSON.stringify(theme), true, true, true);
     };
     ThemeService.prototype.createCard = function (name, themeId) {
-        var header = new http_2.Headers();
-        header.append('Content-Type', 'application/json');
-        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({ '_name': name }), { headers: header }).map(function (res) { return res.json(); });
+        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({ '_name': name }), true, true, true);
     };
     ThemeService.prototype.getCards = function (themeId) {
-        return this.http.get(this.path + 'themes/' + themeId + '/cards').map(function (res) { return res.json(); });
+        return this.http.get(this.path + 'themes/' + themeId + '/cards', false, true, true);
     };
     ThemeService.prototype.unlinkCard = function (themeId, cardId) {
-        return this.http.delete(this.path + 'themes/' + themeId + '/cards/' + cardId).map(function (res) { return res.status == 200; });
+        return this.http.delete(this.path + 'themes/' + themeId + '/cards/' + cardId, false, false, true);
     };
     ThemeService.prototype.deleteTheme = function (id) {
-        return this.http.delete(this.path + 'themes/' + id).map(function (res) { return res.status == 200; });
+        return this.http.delete(this.path + 'themes/' + id, false, false, true);
     };
     ThemeService = __decorate([
         core_1.Injectable(),
-        __param(1, core_2.Inject('App.BackendPath')), 
-        __metadata('design:paramtypes', [http_1.Http, String])
+        __param(1, core_1.Inject('App.BackendPath')), 
+        __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], ThemeService);
     return ThemeService;
 })();
