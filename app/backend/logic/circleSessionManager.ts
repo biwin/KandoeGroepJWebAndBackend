@@ -61,13 +61,28 @@ export class CircleSessionManager {
 
     getAllCircleSessions(callback:(c:CircleSession[]) => any) {
         this._dao.readAllCircleSessions((c:CircleSession[]) => {
-            callback(c.map(this.checkInProgress));
+            var arr:CircleSession[] = [];
+            var i = 0;
+
+            c.forEach((cs:CircleSession) => {
+                this.checkInProgress(cs, (s:CircleSession) => {
+                    arr.push(s == null ? cs : s);
+
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
         });
     }
 
     getCircleSession(id:string, callback:(c:CircleSession) => any) {
         this._dao.readCircleSession(id, (cs:CircleSession) => {
-            callback(this.checkInProgress(cs));
+            if(cs != null) {
+                this.checkInProgress(cs, callback);
+            } else {
+                callback(null);
+            }
         });
     }
 
@@ -96,7 +111,20 @@ export class CircleSessionManager {
     }
 
     getCircleSessionsOfUserById(userId:string, callback:(circleSessions:CircleSession[])=> any) {
-        this._dao.getCircleSessionsOfUserById(userId, (circleSessions:CircleSession[]) => callback(circleSessions.map(this.checkInProgress)));
+        this._dao.getCircleSessionsOfUserById(userId, (c:CircleSession[]) => {
+            var arr:CircleSession[] = [];
+            var i = 0;
+
+            c.forEach((cs:CircleSession) => {
+                this.checkInProgress(cs, (s:CircleSession) => {
+                    arr.push(s == null ? cs : s);
+
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
+        });
     }
 
     removeCircleSessionById(circleSessionId:string, callback:(b:boolean) => any) {
@@ -121,30 +149,31 @@ export class CircleSessionManager {
         });
     }
 
-    initCardsForSession(uId:string, circleSessionId:string, cardIds:string[], callback:(preGameEnded:boolean, currentUserId:string) => any) {
-        this._dao.readCircleSession(circleSessionId, (c:CircleSession) => {
-            if (c.isInProgress && c._isPreGame) {
+    initCardsForSession(uId:string, circleSessionId:string, cardIds:string[], callback:(preGameEnded:boolean, currentUserId:string, errMessage?:string) => any) {
+        this.getCircleSession(circleSessionId, (c:CircleSession) => {
+            if (c._inProgress && c._isPreGame) {
                 if (c._currentPlayerId !== uId) {
-                    throw new Error("Not your turn!");
-                }
-                this._dao.getCardPositions(circleSessionId, cardIds, (cps:CardPosition[]) => {
-                    for (var i = 0; i < cps.length; i++) {
-                        var index = cardIds.indexOf(cps[i]._id);
-                        if (index > -1) {
-                            cardIds.splice(index, 1);
+                    callback(null, null, "Not your turn!");
+                } else {
+                    this._dao.getCardPositions(circleSessionId, cardIds, (cps:CardPosition[]) => {
+                        for (var i = 0; i < cps.length; i++) {
+                            var index = cardIds.indexOf(cps[i]._id);
+                            if (index > -1) {
+                                cardIds.splice(index, 1);
+                            }
                         }
-                    }
 
-                    if (cardIds.length > 0) {
-                        this._dao.createCardPositions(circleSessionId, cardIds, uId, () => {
+                        if (cardIds.length > 0) {
+                            this._dao.createCardPositions(circleSessionId, cardIds, uId, () => {
+                                this.nextPlayer(circleSessionId, callback);
+                            });
+                        } else {
                             this.nextPlayer(circleSessionId, callback);
-                        });
-                    } else {
-                        this.nextPlayer(circleSessionId, callback);
-                    }
-                });
+                        }
+                    });
+                }
             } else {
-                callback(null, c._currentPlayerId);
+                callback(null, null, "The game is not in the pre-game phase.");
             }
         });
     }
@@ -159,7 +188,9 @@ export class CircleSessionManager {
         });
     }
 
-    checkInProgress(c:CircleSession):CircleSession {
+    checkInProgress(c:CircleSession, callback:(circleSession:CircleSession)=>any) {
+        var inProgress:boolean = c._inProgress;
+
         if (c._startDate == null || c._startDate.length !== 16) {
             c._inProgress = true;
         } else {
@@ -173,7 +204,13 @@ export class CircleSessionManager {
             c._inProgress = now >= startDate;
         }
 
-        return c;
+        if(c._inProgress !== inProgress) {
+            this._dao.updateInProgress(c._id, c._inProgress, () => {
+                callback(c);
+            });
+        } else {
+            callback(c);
+        }
     }
 
     private nextPlayer(circleSessionId:string, callback:(roundEnded:boolean, currentUserId:string)=>any) {
@@ -182,7 +219,7 @@ export class CircleSessionManager {
             var newIndex:number = -1;
             var roundEnded:boolean = false;
 
-            if(currentIndex === c._userIds.length - 1) {
+            if (currentIndex === c._userIds.length - 1) {
                 newIndex = 0;
                 roundEnded = true;
             } else {
@@ -192,8 +229,8 @@ export class CircleSessionManager {
             var newPlayerId:string = c._userIds[newIndex];
             var preGameInProgress:boolean = c._isPreGame && !roundEnded;
 
-            this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress,(success:boolean) => {
-                if(success) {
+            this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, (success:boolean) => {
+                if (success) {
                     callback(roundEnded, newPlayerId);
                 } else {
                     callback(null, null);
@@ -205,14 +242,14 @@ export class CircleSessionManager {
     addUser(currentUserId:string, circleSessionId:string, email:string, callback:(b:boolean) => any) {
         var uMgr:UserManager = new UserManager();
         this.getCircleSession(circleSessionId, (c:CircleSession) => {
-            if(c._creatorId == currentUserId && !c._inProgress) {
-               uMgr.getUserByEmail(email, (u:User) => {
-                   if(c._userIds.indexOf(u._id.toString()) < 0){
-                       this._dao.addUserToCircleSession(circleSessionId, u._id.toString(), callback);
-                   }else {
-                       callback(false);
-                   }
-               });
+            if (c._creatorId == currentUserId && !c._inProgress) {
+                uMgr.getUserByEmail(email, (u:User) => {
+                    if (c._userIds.indexOf(u._id.toString()) < 0) {
+                        this._dao.addUserToCircleSession(circleSessionId, u._id.toString(), callback);
+                    } else {
+                        callback(false);
+                    }
+                });
             } else {
                 callback(false);
             }

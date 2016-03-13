@@ -42,7 +42,7 @@ export class CircleSessionUserList implements OnChanges {
     }
 
     ngOnChanges() {
-        if(this.userIds != undefined && this.userIds.length > 0) {
+        if(this.userIds != undefined && this.userIds.length > 0 && this.users.length == 0) {
             this.service.getUsers(this.userIds).subscribe((us:User[]) => {
                 us.forEach((u:User) => this.users.push(u));
             });

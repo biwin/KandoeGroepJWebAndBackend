@@ -47,6 +47,8 @@ describe('CircleSessionManager', () => {
                        } catch(e) {
                            done(e);
                        }
+
+                       //FIXME group doesn't have real organisationid yet
                        groupManager.createGroup(group, (g:Group) =>{
                            group = g;
                            done();
@@ -55,7 +57,6 @@ describe('CircleSessionManager', () => {
                 });
             });
         });
-
         it('Created circlesession should contain the users from the group', function(done:any) {
             this.timeout(0);
             circleSession = new CircleSession(group._id,[],theme._id,"","","",false,false,0,false);
@@ -93,4 +94,23 @@ describe('CircleSessionManager', () => {
            });
        });
     });*/
+});
+
+describe('CircleSessionModel', function() {
+    describe('inProgress', function() {
+        it('circleSession with startDate in future should return false', function() {
+            var cs:CircleSession = CircleSession.empty();
+            var d:Date = new Date();
+            cs._startDate = "24/12/" + (d.getFullYear()+1) + " 08:30";
+            var b = cs.isInProgress;
+            assert.equal(b, false);
+        });
+        it('circleSession with startDate in past should return true', function() {
+            var cs:CircleSession = CircleSession.empty();
+            var d:Date = new Date();
+            cs._startDate = "24/12/" + (d.getFullYear()-1) + " 08:30";
+            var b = cs.isInProgress;
+            assert.equal(b, true);
+        });
+    });
 });

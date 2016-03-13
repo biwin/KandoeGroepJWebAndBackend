@@ -43,10 +43,9 @@ export class OrganisationsOverview {
     public constructor(router: Router, userService: UserService) {
         this.router = router;
 
-        userService.getUserId((userId: string) => {
-            userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
-                this.organisations = organisations;
-            });
+        var userId:string = userService.getUserId();
+        userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+            this.organisations = organisations;
         });
     }
 

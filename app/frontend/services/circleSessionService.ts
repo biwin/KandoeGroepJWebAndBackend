@@ -9,7 +9,7 @@ import {CircleSession} from "../../backend/model/circleSession";
 import {CircleSessionCreateWrapper} from "../../backend/model/circleSessionCreateWrapper";
 import {CircleSessionCardWrapper} from "../../backend/model/circleSessionCardWrapper";
 import {HttpWrapperService} from "./httpWrapperService";
-import {CircleSessionMoveResponse} from "../components/models/circleSessionMoveResponse";
+import {CircleSessionMoveResponse} from "../../backend/model/circleSessionMoveResponse";
 
 @Injectable()
 export class CircleSessionService {

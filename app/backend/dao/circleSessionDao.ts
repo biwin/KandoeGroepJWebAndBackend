@@ -27,7 +27,7 @@ export class CircleSessionDao {
                 '_groupId': circleSession._groupId,
                 '_themeId': circleSession._themeId,
                 '_startDate': circleSession._startDate
-            }).limit(1).next((error: MongoError, cursor:CursorResult) => {
+            }).limit(1).next((error:MongoError, cursor:CursorResult) => {
                 db.close();
                 callback(cursor != null);
             });
@@ -63,13 +63,17 @@ export class CircleSessionDao {
 
     cardPositionExists(sessionId:string, cardId:string, callback:(exists:boolean, position:number) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('cardpositions').find({'_sessionId': sessionId, '_cardId':cardId}).limit(1).next((err:MongoError, cursor:CursorResult) => {
+            db.collection('cardpositions').find({
+                '_sessionId': sessionId,
+                '_cardId': cardId
+            }).limit(1).next((err:MongoError, cursor:CursorResult) => {
                 var cp:CardPosition = cursor;
                 callback(cp !== null, cp == null ? -1 : cp._position);
             });
         });
     }
 
+    //TODO add previous userId to history
     updateCardPosition(sessionId:string, cardId:string, userId:string, position:number, callback:(cp:CardPosition) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').updateOne({
@@ -82,7 +86,7 @@ export class CircleSessionDao {
                     '_position': position
                 }
             }, null, (err:MongoError, result:UpdateWriteOpResult) => {
-                if(result.modifiedCount == 0) {
+                if (result.modifiedCount == 0) {
                     callback(null);
                 } else {
                     this.getCardPosition(sessionId, cardId, callback);
@@ -92,9 +96,9 @@ export class CircleSessionDao {
     }
 
     createCardPosition(sessionId:string, cardId:string, userId:string, callback:(cp:CardPosition) => any) {
-        var cp:CardPosition = new CardPosition(sessionId, cardId, userId,[], 0, new Date());
+        var cp:CardPosition = new CardPosition(sessionId, cardId, userId, [], 0, new Date());
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('cardpositions').insertOne(cp, null, (err:MongoError, result: InsertOneWriteOpResult) => {
+            db.collection('cardpositions').insertOne(cp, null, (err:MongoError, result:InsertOneWriteOpResult) => {
                 cp._id = result.insertedId.toString();
                 db.close();
                 callback(cp);
@@ -103,7 +107,7 @@ export class CircleSessionDao {
     }
 
     getCardPosition(sessionId:string, cardId:string, callback:(cp:CardPosition) => any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').find({
                 '_sessionId': sessionId,
                 '_cardId': cardId
@@ -114,25 +118,28 @@ export class CircleSessionDao {
     }
 
     getCircleSessionsOfUserById(userId:string, callback:(circleSessions:CircleSession[]) => any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('circlesessions').find({'_userIds': {'$in': [userId]}}).toArray((err: MongoError, docs: CircleSession[])=>{
-               callback(docs);
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').find({'_userIds': {'$in': [userId]}}).toArray((err:MongoError, docs:CircleSession[])=> {
+                callback(docs);
             });
         })
     }
 
     deleteCircleSessionById(circleSessionId:string, callback:(deleted:boolean)=> any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
-           db.collection('circlesessions').deleteOne({'_id': new ObjectID(circleSessionId)}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
-               db.close();
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').deleteOne({'_id': new ObjectID(circleSessionId)}, (err:MongoError, result:DeleteWriteOpResultObject)=> {
+                db.close();
                 callback(result.deletedCount == 1);
             });
         });
     }
 
     getCardPositions(circleSessionId:string, cardIds:string[], callback:(cardPositions:CardPosition[]) => any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
-            db.collection('cardpositions').find({'_sessionId': circleSessionId, '_cardId': {'$in': cardIds}}).toArray((err:MongoError, docs: CardPosition[]) =>{
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').find({
+                '_sessionId': circleSessionId,
+                '_cardId': {'$in': cardIds}
+            }).toArray((err:MongoError, docs:CardPosition[]) => {
                 db.close();
                 callback(docs);
             });
@@ -150,8 +157,8 @@ export class CircleSessionDao {
     }
 
     deleteCardPositionsByCircleSessionId(circleSessionId:string, callback:(b:boolean)=> any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
-            db.collection('cardpositions').deleteMany({'_sessionId': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=>{
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').deleteMany({'_sessionId': circleSessionId}, (err:MongoError, result:DeleteWriteOpResultObject)=> {
                 db.close();
                 callback(result.deletedCount == 1);
             });
@@ -159,8 +166,10 @@ export class CircleSessionDao {
     }
 
     addUserToCircleSession(circleSessionId:string, userId:string, callback:(b:boolean) => any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) =>{
-            db.collection('circlesessions').updateOne({'_id': new ObjectID(circleSessionId)}, {$push: {'_userIds': userId}}, (err:MongoError, result) =>{
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').updateOne({'_id': new ObjectID(circleSessionId)}, {
+                $push: {'_userIds': userId}
+            }, (err:MongoError, result) => {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
@@ -169,10 +178,23 @@ export class CircleSessionDao {
 
     updateCurrentPlayer(circleSessionId:string, newPlayerId:string, preGameInProgress:boolean, callback:(success:boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)}, {_currentPlayerId: newPlayerId, _isPreGame: preGameInProgress, }, (err:MongoError, res:UpdateWriteOpResult) => {
+            db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)}, { $set: {
+                _currentPlayerId: newPlayerId,
+                _isPreGame: preGameInProgress,
+            }}, (err:MongoError, res:UpdateWriteOpResult) => {
                 db.close();
                 callback(res.modifiedCount == 1);
             });
+        });
+    }
+
+    updateInProgress(circleSessionId:string, inProgress:boolean, callback:(b:boolean)=>any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)},
+                {$set:{_inProgress: inProgress}}, (err:MongoError, res:UpdateWriteOpResult) => {
+                    db.close();
+                    callback();
+                });
         });
     }
 }

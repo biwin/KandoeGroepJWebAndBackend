@@ -50,13 +50,27 @@ var CircleSessionManager = (function () {
     CircleSessionManager.prototype.getAllCircleSessions = function (callback) {
         var _this = this;
         this._dao.readAllCircleSessions(function (c) {
-            callback(c.map(_this.checkInProgress));
+            var arr = [];
+            var i = 0;
+            c.forEach(function (cs) {
+                _this.checkInProgress(cs, function (s) {
+                    arr.push(s == null ? cs : s);
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
         });
     };
     CircleSessionManager.prototype.getCircleSession = function (id, callback) {
         var _this = this;
         this._dao.readCircleSession(id, function (cs) {
-            callback(_this.checkInProgress(cs));
+            if (cs != null) {
+                _this.checkInProgress(cs, callback);
+            }
+            else {
+                callback(null);
+            }
         });
     };
     CircleSessionManager.prototype.cardUp = function (sessionId, cardId, userId, callback) {
@@ -86,7 +100,18 @@ var CircleSessionManager = (function () {
     };
     CircleSessionManager.prototype.getCircleSessionsOfUserById = function (userId, callback) {
         var _this = this;
-        this._dao.getCircleSessionsOfUserById(userId, function (circleSessions) { return callback(circleSessions.map(_this.checkInProgress)); });
+        this._dao.getCircleSessionsOfUserById(userId, function (c) {
+            var arr = [];
+            var i = 0;
+            c.forEach(function (cs) {
+                _this.checkInProgress(cs, function (s) {
+                    arr.push(s == null ? cs : s);
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
+        });
     };
     CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
         this._dao.deleteCircleSessionById(circleSessionId, callback);
@@ -111,30 +136,32 @@ var CircleSessionManager = (function () {
     };
     CircleSessionManager.prototype.initCardsForSession = function (uId, circleSessionId, cardIds, callback) {
         var _this = this;
-        this._dao.readCircleSession(circleSessionId, function (c) {
-            if (c.isInProgress && c._isPreGame) {
+        this.getCircleSession(circleSessionId, function (c) {
+            if (c._inProgress && c._isPreGame) {
                 if (c._currentPlayerId !== uId) {
-                    throw new Error("Not your turn!");
+                    callback(null, null, "Not your turn!");
                 }
-                _this._dao.getCardPositions(circleSessionId, cardIds, function (cps) {
-                    for (var i = 0; i < cps.length; i++) {
-                        var index = cardIds.indexOf(cps[i]._id);
-                        if (index > -1) {
-                            cardIds.splice(index, 1);
+                else {
+                    _this._dao.getCardPositions(circleSessionId, cardIds, function (cps) {
+                        for (var i = 0; i < cps.length; i++) {
+                            var index = cardIds.indexOf(cps[i]._id);
+                            if (index > -1) {
+                                cardIds.splice(index, 1);
+                            }
                         }
-                    }
-                    if (cardIds.length > 0) {
-                        _this._dao.createCardPositions(circleSessionId, cardIds, uId, function () {
+                        if (cardIds.length > 0) {
+                            _this._dao.createCardPositions(circleSessionId, cardIds, uId, function () {
+                                _this.nextPlayer(circleSessionId, callback);
+                            });
+                        }
+                        else {
                             _this.nextPlayer(circleSessionId, callback);
-                        });
-                    }
-                    else {
-                        _this.nextPlayer(circleSessionId, callback);
-                    }
-                });
+                        }
+                    });
+                }
             }
             else {
-                callback(null, c._currentPlayerId);
+                callback(null, null, "The game is not in the pre-game phase.");
             }
         });
     };
@@ -148,7 +175,8 @@ var CircleSessionManager = (function () {
             }
         });
     };
-    CircleSessionManager.prototype.checkInProgress = function (c) {
+    CircleSessionManager.prototype.checkInProgress = function (c, callback) {
+        var inProgress = c._inProgress;
         if (c._startDate == null || c._startDate.length !== 16) {
             c._inProgress = true;
         }
@@ -160,7 +188,14 @@ var CircleSessionManager = (function () {
             var startDate = new Date(Date.UTC(splittedDate[2], splittedDate[1] - 1, splittedDate[0], splittedTime[0], splittedTime[1]));
             c._inProgress = now >= startDate;
         }
-        return c;
+        if (c._inProgress !== inProgress) {
+            this._dao.updateInProgress(c._id, c._inProgress, function () {
+                callback(c);
+            });
+        }
+        else {
+            callback(c);
+        }
     };
     CircleSessionManager.prototype.nextPlayer = function (circleSessionId, callback) {
         var _this = this;
@@ -185,6 +220,25 @@ var CircleSessionManager = (function () {
                     callback(null, null);
                 }
             });
+        });
+    };
+    CircleSessionManager.prototype.addUser = function (currentUserId, circleSessionId, email, callback) {
+        var _this = this;
+        var uMgr = new userManager_1.UserManager();
+        this.getCircleSession(circleSessionId, function (c) {
+            if (c._creatorId == currentUserId && !c._inProgress) {
+                uMgr.getUserByEmail(email, function (u) {
+                    if (c._userIds.indexOf(u._id.toString()) < 0) {
+                        _this._dao.addUserToCircleSession(circleSessionId, u._id.toString(), callback);
+                    }
+                    else {
+                        callback(false);
+                    }
+                });
+            }
+            else {
+                callback(false);
+            }
         });
     };
     return CircleSessionManager;

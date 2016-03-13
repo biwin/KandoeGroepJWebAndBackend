@@ -19,10 +19,9 @@ var CircleSessionUserList = (function () {
     }
     CircleSessionUserList.prototype.ngOnChanges = function () {
         var _this = this;
-        if (this.userIds != undefined && this.userIds.length > 0) {
+        if (this.userIds != undefined && this.userIds.length > 0 && this.users.length == 0) {
             this.service.getUsers(this.userIds).subscribe(function (us) {
                 us.forEach(function (u) { return _this.users.push(u); });
-                console.log("get users");
             });
         }
     };
@@ -37,7 +36,7 @@ var CircleSessionUserList = (function () {
     CircleSessionUserList = __decorate([
         core_1.Component({
             selector: 'user-list',
-            template: "\n        <ul id=\"user-list\" class=\"collection with-header side-nav fixed right-aligned user-sidenav\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === currentPlayerId\" [class.lighten-5]=\"user._id === currentPlayerId\">\n                <div class=\"col s4\">\n                   <img *ngIf=\"user._pictureSmall !== undefined && user._pictureSmall.length > 0\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                   <i *ngIf=\"user._pictureSmall === undefined || user._pictureSmall.length == 0\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"material-icons green-text\">gamepad</i>\n                </div>\n            </li>\n        </ul>\n  ",
+            template: "\n        <ul id=\"user-list\" class=\"collection with-header side-nav fixed right-aligned user-sidenav\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === currentPlayerId\" [class.lighten-5]=\"user._id === currentPlayerId\">\n                <div class=\"col s4\">\n                    <img *ngIf=\"user._pictureSmall !== undefined\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                    <i *ngIf=\"user._pictureSmall === undefined\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"material-icons green-text\">gamepad</i>\n                </div>\n            </li>\n        </ul>\n  ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [userService_1.UserService])

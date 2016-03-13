@@ -141,21 +141,18 @@ export class CircleSessionForm implements AfterViewInit {
     constructor(service:CircleSessionService, themeService:ThemeService, organisationService:OrganisationService, userService:UserService, router:Router, routeParam:RouteParams) {
         this.service = service;
         this.router = router;
-        userService.getUserId((u:string) => {
-            this._currentUserId = u;
-            var organisationId = routeParam.params["organisationId"];
+        this._currentUserId = userService.getUserId();
+        var organisationId = routeParam.params["organisationId"];
 
-            if (organisationId == null) {
-                userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
-                    this._groups = grs;
-                });
-            } else {
-                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((grs:Group[]) => {
-                    this._groups = grs;
-                });
-            }
-        });
-
+        if (organisationId == null) {
+            userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
+                this._groups = grs;
+            });
+        } else {
+            organisationService.getGroupsOfOrganisationById(organisationId).subscribe((grs:Group[]) => {
+                this._groups = grs;
+            });
+        }
 
         themeService.getAll().subscribe((ts:Theme[]) => {
             this._themes = ts;
@@ -171,9 +168,7 @@ export class CircleSessionForm implements AfterViewInit {
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
 
 
-        console.log('going to post');
         this.service.create(this.circleSession, this.emailadresses).subscribe((c:CircleSession) => {
-            console.log('going to navigate');
             this.router.navigate(['CircleSessionOverview']);
         });
     }

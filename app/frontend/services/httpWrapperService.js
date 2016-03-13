@@ -40,7 +40,10 @@ var HttpWrapperService = (function () {
             options.headers.append('Content-Type', 'application/json');
         if (needsToken)
             options.headers.append('Bearer', localStorage.getItem('token'));
-        return this.http.post(url, body, options).map(function (res) { return needsJson ? res.json() : res; });
+        return this.http.post(url, body, options).map(function (res) {
+            var r = res;
+            return needsJson ? res.json() : res;
+        });
     };
     HttpWrapperService.prototype.delete = function (url, isJson, needsJson, needsToken, options) {
         if (options == null) {

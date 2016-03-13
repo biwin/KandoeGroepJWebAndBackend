@@ -63,7 +63,7 @@ export class UserService {
 
     getUsername():string {
         var token = localStorage.getItem('token');
-        if (token == null || token == "") callback("");
+        if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         return JSON.parse(payloadDecoded).name;
@@ -71,7 +71,7 @@ export class UserService {
 
     getUserId():string {
         var token = localStorage.getItem('token');
-        if (token == null || token == "") callback("");
+        if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         return JSON.parse(payloadDecoded).id;

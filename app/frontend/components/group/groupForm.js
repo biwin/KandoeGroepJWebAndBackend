@@ -40,11 +40,10 @@ var GroupForm = (function () {
     }
     GroupForm.prototype.OnSubmit = function () {
         var _this = this;
-        this.userService.getUserId(function (userId) {
-            _this.group._memberIds.push(userId);
-            _this.groupService.createGroup(_this.group).subscribe(function (g) {
-                _this.router.navigate(["/GroupDetail", { id: g._id }]);
-            });
+        var userId = this.userService.getUserId();
+        this.group._memberIds.push(userId);
+        this.groupService.createGroup(this.group).subscribe(function (g) {
+            _this.router.navigate(["/GroupDetail", { id: g._id }]);
         });
     };
     GroupForm.prototype.ngAfterViewInit = function () {

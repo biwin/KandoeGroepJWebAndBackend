@@ -1,5 +1,6 @@
 var circleSessionManager_1 = require("../logic/circleSessionManager");
 var userApi_1 = require("./userApi");
+var circleSessionMoveResponse_1 = require("../model/circleSessionMoveResponse");
 var CircleSessionApi = (function () {
     function CircleSessionApi() {
     }
@@ -15,7 +16,12 @@ var CircleSessionApi = (function () {
     };
     CircleSessionApi.find = function (req, res) {
         CircleSessionApi.mgr.getCircleSession(req.params.id, function (c) {
-            res.send(c);
+            if (c == null) {
+                res.status(404).send('CircleSession with id ' + req.params.id + ' not found!');
+            }
+            else {
+                res.send(c);
+            }
         });
     };
     CircleSessionApi.cardUp = function (sessionId, cardId, userId, res) {
@@ -33,22 +39,17 @@ var CircleSessionApi = (function () {
             if (uId != null) {
                 var circleSessionId = req.params.id;
                 var cardIds = req.body;
-                try {
-                    CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function (preGameEnded, currentUserId) {
-                        if (preGameEnded == null) {
-                            res.status(400).send({ _error: 'PreGamePhase not in progress' });
-                        }
-                        else {
-                            res.status(200).send({ _roundEnded: preGameEnded, _currentUserId: currentUserId });
-                        }
-                    });
-                }
-                catch (e) {
-                    res.status(401).send({ _error: e.message });
-                }
+                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function (preGameEnded, currentUserId, err) {
+                    if (err != undefined || err != null) {
+                        res.status(400).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(err));
+                    }
+                    else {
+                        res.status(200).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(null, preGameEnded, currentUserId));
+                    }
+                });
             }
             else {
-                res.status(401).send({ _error: 'Unauthorized' });
+                res.status(401).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse('Unauthorized'));
             }
         });
     };

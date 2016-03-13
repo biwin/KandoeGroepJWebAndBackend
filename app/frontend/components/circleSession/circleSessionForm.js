@@ -27,20 +27,18 @@ var CircleSessionForm = (function () {
         this._themes = [];
         this.service = service;
         this.router = router;
-        userService.getUserId(function (u) {
-            _this._currentUserId = u;
-            var organisationId = routeParam.params["organisationId"];
-            if (organisationId == null) {
-                userService.getAllGroupsOfUser(_this._currentUserId).subscribe(function (grs) {
-                    _this._groups = grs;
-                });
-            }
-            else {
-                organisationService.getGroupsOfOrganisationById(organisationId).subscribe(function (grs) {
-                    _this._groups = grs;
-                });
-            }
-        });
+        this._currentUserId = userService.getUserId();
+        var organisationId = routeParam.params["organisationId"];
+        if (organisationId == null) {
+            userService.getAllGroupsOfUser(this._currentUserId).subscribe(function (grs) {
+                _this._groups = grs;
+            });
+        }
+        else {
+            organisationService.getGroupsOfOrganisationById(organisationId).subscribe(function (grs) {
+                _this._groups = grs;
+            });
+        }
         themeService.getAll().subscribe(function (ts) {
             _this._themes = ts;
         });
@@ -70,9 +68,7 @@ var CircleSessionForm = (function () {
         if (this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;
         this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
-        console.log('going to post');
         this.service.create(this.circleSession, this.emailadresses).subscribe(function (c) {
-            console.log('going to navigate');
             _this.router.navigate(['CircleSessionOverview']);
         });
     };

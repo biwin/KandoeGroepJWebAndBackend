@@ -7,7 +7,7 @@ import {CORE_DIRECTIVES} from "angular2/common";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCardWrapper";
-import {CircleSessionMoveResponse} from "../models/circleSessionMoveResponse";
+import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
 
 @Component({
     selector: 'pregame',
@@ -74,14 +74,14 @@ export class CircleSessionPreGame implements OnChanges {
     }
 
     submitCards(){
-        this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionInitResponse) => {
+        this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
             if(r._error == null) {
                 this.circleSession._currentPlayerId = r._currentPlayerId;
                 if (r._roundEnded === true)
                     this.circleSession._isPreGame = false;
             }
             Materialize.toast('Done', 3000, 'rounded');
-        }, (r:CircleSessionInitResponse) => {
+        }, (r:CircleSessionMoveResponse) => {
             Materialize.toast(r._error, 3000, 'rounded');
         });
     }

@@ -99,11 +99,8 @@ export class CircleSessionCard implements AfterViewInit{
     }
 
     ngAfterViewInit() {
-        this.userService.getUserId((currentUserId:string)=>{
-            if(this.circleSession._creatorId == currentUserId){
-                this.iamCreator = true;
-            }
-        });
+        //FIXME: iamCreator was changed after...
+        this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     }
 }
 

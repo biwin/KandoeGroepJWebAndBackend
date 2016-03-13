@@ -60,7 +60,7 @@ var UserService = (function () {
     UserService.prototype.getUsername = function () {
         var token = localStorage.getItem('token');
         if (token == null || token == "")
-            callback("");
+            return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         return JSON.parse(payloadDecoded).name;
@@ -68,7 +68,7 @@ var UserService = (function () {
     UserService.prototype.getUserId = function () {
         var token = localStorage.getItem('token');
         if (token == null || token == "")
-            callback("");
+            return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
         return JSON.parse(payloadDecoded).id;
