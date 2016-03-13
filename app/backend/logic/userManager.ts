@@ -76,7 +76,7 @@ export class UserManager {
         this._dao.readFacebookUser(facebookId, callback);
     }
 
-    facebookUserExists(facebookId: number, callback: (exists: boolean) => any) {
+    facebookUserExists(facebookId: string, callback: (exists: boolean) => any) {
         this._dao.readFacebookUser(facebookId, (u: User) => {
             callback(u != null);
         });

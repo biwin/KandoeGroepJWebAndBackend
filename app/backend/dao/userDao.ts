@@ -44,7 +44,7 @@ export class UserDao {
         });
     }
 
-    readFacebookUser(facebookId: number, callback: (u: User) => any) {
+    readFacebookUser(facebookId: string, callback: (u: User) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL).then((db: Db) => {
             return db.collection('users').find({'_facebookId': facebookId}).limit(1).next().then((cursor:CursorResult) => {
                 callback(cursor);
