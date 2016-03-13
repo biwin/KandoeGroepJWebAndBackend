@@ -6,14 +6,15 @@ import {Router} from "angular2/router";
 import {Group} from "../../../backend/model/group";
 import {GroupService} from "../../services/groupService";
 import {CircleSessionService} from "../../services/circleSessionService";
-
-
+import {AfterViewInit} from "angular2/core";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'circlesession-card',
     template: `
     <div class="col s4">
       <div class="card hoverable">
+        <i class="material-icons right green-text padding-5" *ngIf="user === circleSession._currentPlayerId">gamepad</i>
         <div (click)="openCard()" class="card-content clickable">
             <span class="card-title truncate">{{circleSession._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
@@ -35,10 +36,12 @@ export class CircleSessionCard {
 
     private router:Router;
     private circleSessionService:CircleSessionService;
+    private user:string;
 
-    constructor(circleSessionService:CircleSessionService, router:Router){
+    constructor(circleSessionService:CircleSessionService,uService:UserService, router:Router){
         this.router = router;
         this.circleSessionService = circleSessionService;
+        this.user = uService.getUserId();
     }
 
     deleteCircleSession() {

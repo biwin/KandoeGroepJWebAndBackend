@@ -57,21 +57,21 @@ var UserService = (function () {
     UserService.prototype.getUserPicture = function (type) {
         return this.http.post(this.path + 'user/get-picture', JSON.stringify({ 'type': type }), true, false, true);
     };
-    UserService.prototype.getUsername = function (callback) {
+    UserService.prototype.getUsername = function () {
         var token = localStorage.getItem('token');
         if (token == null || token == "")
             callback("");
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        callback(JSON.parse(payloadDecoded).name);
+        return JSON.parse(payloadDecoded).name;
     };
-    UserService.prototype.getUserId = function (callback) {
+    UserService.prototype.getUserId = function () {
         var token = localStorage.getItem('token');
         if (token == null || token == "")
             callback("");
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        callback(JSON.parse(payloadDecoded).id);
+        return JSON.parse(payloadDecoded).id;
     };
     UserService.prototype.getImageLinks = function (callback) {
         var _this = this;

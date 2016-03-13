@@ -33,12 +33,22 @@ var CircleSessionApi = (function () {
             if (uId != null) {
                 var circleSessionId = req.params.id;
                 var cardIds = req.body;
-                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function () {
-                    res.status(200).send({ result: 'Success' });
-                });
+                try {
+                    CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, function (preGameEnded, currentUserId) {
+                        if (preGameEnded == null) {
+                            res.status(400).send({ _error: 'PreGamePhase not in progress' });
+                        }
+                        else {
+                            res.status(200).send({ _roundEnded: preGameEnded, _currentUserId: currentUserId });
+                        }
+                    });
+                }
+                catch (e) {
+                    res.status(401).send({ _error: e.message });
+                }
             }
             else {
-                res.status(401).send({ error: 'Unauthorized' });
+                res.status(401).send({ _error: 'Unauthorized' });
             }
         });
     };

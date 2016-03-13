@@ -132,3 +132,16 @@ svg circle.kandoeRing.inner {
     bottom: 20px !important;
     right: 270px !important;
 }
+
+.padding-5 {
+    padding: 5px !important;
+}
+
+.chip {
+    margin-right: 5px;
+    margin-bottom:5px;
+}
+
+.card-content.scrollable {
+    overflow:auto!important;
+}

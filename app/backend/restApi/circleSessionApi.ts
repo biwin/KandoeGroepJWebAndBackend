@@ -44,11 +44,19 @@ export class CircleSessionApi {
             if(uId != null) {
                 var circleSessionId:string = req.params.id;
                 var cardIds:string[] = req.body;
-                CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, () => {
-                    res.status(200).send({result: 'Success'});
-                });
+                try {
+                    CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, (preGameEnded:boolean, currentUserId:string) => {
+                        if (preGameEnded == null) {
+                            res.status(400).send({_error: 'PreGamePhase not in progress'});
+                        } else {
+                            res.status(200).send({_roundEnded: preGameEnded, _currentUserId: currentUserId});
+                        }
+                    });
+                } catch(e:Error) {
+                    res.status(401).send({_error:e.message});
+                }
             } else {
-                res.status(401).send({error:'Unauthorized'});
+                res.status(401).send({_error:'Unauthorized'});
             }
         });
     }

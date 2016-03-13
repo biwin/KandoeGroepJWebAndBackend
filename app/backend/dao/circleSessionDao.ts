@@ -157,4 +157,13 @@ export class CircleSessionDao {
             });
         });
     }
+
+    updateCurrentPlayer(circleSessionId:string, newPlayerId:string, preGameInProgress:boolean, callback:(success:boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)}, {_currentPlayerId: newPlayerId, _isPreGame: preGameInProgress, }, (err:MongoError, res:UpdateWriteOpResult) => {
+                db.close();
+                callback(res.modifiedCount == 1);
+            });
+        });
+    }
 }
