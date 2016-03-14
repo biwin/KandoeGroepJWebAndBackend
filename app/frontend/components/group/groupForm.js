@@ -26,10 +26,9 @@ var GroupForm = (function () {
         else {
             this.group._organisationId = "";
         }
-        userService.getUserId(function (userId) {
-            userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
-                _this.organisations = organisations;
-            });
+        var userId = userService.getUserId();
+        userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
+            _this.organisations = organisations;
         });
     }
     GroupForm.prototype.OnSubmit = function () {

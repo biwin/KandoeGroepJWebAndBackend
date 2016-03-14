@@ -1,10 +1,10 @@
-import {Injectable} from "angular2/core";
-import {Inject} from "angular2/core";
+import {Injectable, Inject} from "angular2/core";
+import {Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
-import {User} from "../../backend/model/user";
-import {Headers, Response} from "angular2/http";
+
 import {HttpWrapperService} from "./httpWrapperService";
-import {Router} from "angular2/router";
+
+import {User} from "../../backend/model/user";
 import {Group} from "../../backend/model/group";
 import {Organisation} from "../../backend/model/organisation";
 import {CircleSession} from "../../backend/model/circleSession";
@@ -15,7 +15,7 @@ export class UserService {
     private path: string;
     private subscribers: any[] = [];
 
-    constructor(private router: Router, http: HttpWrapperService, @Inject('App.BackendPath') path: string) {
+    constructor(http: HttpWrapperService, @Inject('App.BackendPath') path: string) {
         this.path = path;
         this.http = http;
     }
@@ -38,7 +38,7 @@ export class UserService {
 
     isLoggedIn(): boolean {
         var token: string = localStorage.getItem('token');
-        return token != null && token != "";
+        return token!=null && token!="";
     }
 
     changeProfile(newName: string, newSmallPictureLink: string, newLargePictureLink: string) {
@@ -61,7 +61,7 @@ export class UserService {
         return this.http.post(this.path + 'user/get-picture', JSON.stringify({'type': type}), true, false, true);
     }
 
-    getUsername():string {
+    getUsername(): string {
         var token = localStorage.getItem('token');
         if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
@@ -69,7 +69,7 @@ export class UserService {
         return JSON.parse(payloadDecoded).name;
     }
 
-    getUserId():string {
+    getUserId(): string {
         var token = localStorage.getItem('token');
         if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
@@ -85,23 +85,19 @@ export class UserService {
         });
     }
 
-    getAllGroupsOfUser(_userId:string): Observable<Group> {
-        return this.http.get(this.path + 'user/' + _userId +'/groups').map((res: Response) => res.json());
+    getAllGroupsOfUser(userId: string): Observable<Group> {
+        return this.http.get(this.path + 'user/' + userId +'/groups', false, true, false);
     }
 
-    getCircleSessionsOfCurrentUser():Observable<CircleSession[]> {
-        return this.http.get(this.path + 'user/circlesessions', false,true,true);
+    getCircleSessionsOfCurrentUser(): Observable<CircleSession[]> {
+        return this.http.get(this.path + 'user/circlesessions', false, true, true);
     }
 
-    getUsers(userIds:string[]) : Observable<User[]> {
+    getUsers(userIds: string[]): Observable<User[]> {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
     }
 
     getAllOrganisationsOfUserById(userId: string): Observable<Organisation[]> {
-        var header = new Headers();
-
-        header.append("Content-Type", "application/json");
-
-        return this.http.get(this.path + "user/" + userId + "/organisations").map((res: Response) => res.json());
+        return this.http.get(this.path + "user/" + userId + "/organisations", false, true, false);
     }
 }

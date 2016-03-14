@@ -11,13 +11,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var core_2 = require("angular2/core");
-var http_1 = require("angular2/http");
 var httpWrapperService_1 = require("./httpWrapperService");
-var router_1 = require("angular2/router");
 var UserService = (function () {
-    function UserService(router, http, path) {
-        this.router = router;
+    function UserService(http, path) {
         this.http = null;
         this.subscribers = [];
         this.path = path;
@@ -81,8 +77,8 @@ var UserService = (function () {
             });
         });
     };
-    UserService.prototype.getAllGroupsOfUser = function (_userId) {
-        return this.http.get(this.path + 'user/' + _userId + '/groups').map(function (res) { return res.json(); });
+    UserService.prototype.getAllGroupsOfUser = function (userId) {
+        return this.http.get(this.path + 'user/' + userId + '/groups', false, true, false);
     };
     UserService.prototype.getCircleSessionsOfCurrentUser = function () {
         return this.http.get(this.path + 'user/circlesessions', false, true, true);
@@ -91,14 +87,12 @@ var UserService = (function () {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
     };
     UserService.prototype.getAllOrganisationsOfUserById = function (userId) {
-        var header = new http_1.Headers();
-        header.append("Content-Type", "application/json");
-        return this.http.get(this.path + "user/" + userId + "/organisations").map(function (res) { return res.json(); });
+        return this.http.get(this.path + "user/" + userId + "/organisations", false, true, false);
     };
     UserService = __decorate([
         core_1.Injectable(),
-        __param(2, core_2.Inject('App.BackendPath')), 
-        __metadata('design:paramtypes', [router_1.Router, httpWrapperService_1.HttpWrapperService, String])
+        __param(1, core_1.Inject('App.BackendPath')), 
+        __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], UserService);
     return UserService;
 })();
