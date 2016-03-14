@@ -54,7 +54,7 @@ export class UserService {
     }
 
     loginUserFacebook(id: string, name: string, email: string, pictureSmall: string, pictureLarge: string): Observable<Response> {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'name': name, 'email': email, 'facebookId': id, 'pictureSmall': pictureSmall, 'pictureLarge': pictureLarge, 'registrar': 'facebook'}), true, false, false);
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook'}), true, false, false);
     }
 
     getUserPicture(type: string) {

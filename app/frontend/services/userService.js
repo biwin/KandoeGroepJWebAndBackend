@@ -48,7 +48,7 @@ var UserService = (function () {
         return this.http.post(this.path + 'user/register', JSON.stringify({ 'username': name, 'password': password, 'email': email, 'registrar': registrar }), true, false, false);
     };
     UserService.prototype.loginUserFacebook = function (id, name, email, pictureSmall, pictureLarge) {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ 'name': name, 'email': email, 'facebookId': id, 'pictureSmall': pictureSmall, 'pictureLarge': pictureLarge, 'registrar': 'facebook' }), true, false, false);
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ '_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook' }), true, false, false);
     };
     UserService.prototype.getUserPicture = function (type) {
         return this.http.post(this.path + 'user/get-picture', JSON.stringify({ 'type': type }), true, false, true);
