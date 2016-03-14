@@ -49,8 +49,7 @@ var CircleSessionCard = (function () {
             }
         });
     };
-    CircleSessionCard.prototype.ngAfterViewInit = function () {
-        //FIXME: iamCreator was changed after...
+    CircleSessionCard.prototype.ngOnInit = function () {
         this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     };
     __decorate([

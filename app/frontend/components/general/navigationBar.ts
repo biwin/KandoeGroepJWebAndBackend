@@ -21,12 +21,9 @@ import {Response} from "angular2/http";
                 </li>
             </ul>
             <ul *ngIf="service.isLoggedIn()" id="slide-out" class="side-nav fixed">
-                <li><a [routerLink]="['ThemeOverview']">Thema overzicht</a></li>
-                <li><a [routerLink]="['CreateTheme']">Nieuw thema</a></li>
-                <li><a [routerLink]="['CreateSession']">Nieuwe sessie</a></li>
-                <li><a [routerLink]="['CircleSessionOverview']">Sessie overzicht</a></li>
-                <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
-                <li><a [routerLink]="['CreateOrganisation']">Nieuwe organisatie</a></li>
+                <li><a [routerLink]="['ThemeOverview']">Jouw thema's</a></li>
+                <li><a [routerLink]="['CircleSessionOverview']">Jouw spellen</a></li>
+                <li><a [routerLink]="['OrganisationsOverview']">Jouw organisaties</a></li>
             </ul>
             <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse">
                 <i class="material-icons">menu</i>

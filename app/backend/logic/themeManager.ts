@@ -45,7 +45,7 @@ export class ThemeManager {
                 organisationIds.forEach((organisationId:string) => {
                     this._dao.readAllThemesByOrganisationId(organisationId, (organisationThemes:Theme[]) => {
                         organisationThemes.forEach((theme:Theme) =>{
-                            if(myAccesableThemes.indexOf(theme) < 0){
+                            if(JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0){
                                 myAccesableThemes.push(theme);
                             };
                         });
@@ -68,6 +68,19 @@ export class ThemeManager {
 
     deleteCardsFromTheme(themeId:string, callback:(amount:number) => any) {
         this._dao.removeCardsFromTheme(themeId, callback);
+    }
+
+    createSubTheme(theme:Theme, parentThemeId:string, callback:(theme:Theme) => any) {
+        this.createTheme(theme, (theme:Theme) =>{
+           if(parentThemeId != ""){
+               this._dao.addSubThemeToTheme(parentThemeId, theme._id, (b:boolean) => {
+                   if(b)
+                       callback(theme);
+                   else
+                       callback(null);
+               });
+           }
+        });
     }
 
     getCardsByIds(cardIds:string[], callback:(cs:Card[])=>any) {

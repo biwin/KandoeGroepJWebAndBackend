@@ -6,10 +6,12 @@ import {Component, Input, AfterViewInit, EventEmitter} from "angular2/core";
 import {Card} from "../../../backend/model/card";
 import {ThemeService} from "../../services/themeService";
 import {Output} from "angular2/core";
+import {OnInit} from "angular2/core";
 
 @Component({
     selector: 'theme-card',
     template: `
+
     <div class="col s4">
       <div class="modal" id="{{'m' + theme._id}}">
         <div class="modal-content">
@@ -21,13 +23,31 @@ import {Output} from "angular2/core";
             <a class="modal-action modal-close waves-effect waves-red btn-flat" (click)="doDelete = true">Ja, verwijder</a>
         </div>
       </div>
+
+
       <div class="card hoverable small">
         <div class="card-content scrollable">
            <span class="card-title activator">{{theme._name}}<i class="material-icons right">filter_none</i></span>
+
            <p class="black-text">{{theme._description}}</p>
+           <br/>
+
+           <div *ngIf="subThemeNames.length > 0">
+             <p class="black-text">Subthema's:</p>
+             <ul class="collection">
+                <li *ngFor="#subThemeName of subThemeNames" class="collection-item">{{subThemeName}}</li>
+             </ul>
+           </div>
+
            <br/>
            <div *ngFor="#tag of theme._tags" class="chip">{{tag}}</div>
         </div>
+
+        <div class="card-action">
+            <a (click)="deleteTheme()" class="red-text clickable"><i class="material-icons">delete</i></a>
+        </div>
+
+
         <div class="card-reveal">
            <span class="card-title">{{theme._name}}<i class="material-icons right">close</i></span>
            <h5>Kaartjes</h5>
@@ -46,22 +66,19 @@ import {Output} from "angular2/core";
                     <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" href="#" class="btn-floating"><i class="material-icons">add</i></a>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col s12">
-                    <a (click)="deleteTheme()" class="full-width btn waves-effect waves-light red"><i class="material-icons left">delete</i>Verwijder</a>
-                </div>
-            </div>
            </div>
         </div>
+
       </div>
       </div>
   `
 })
-export class ThemeCard implements AfterViewInit {
+
+export class ThemeCard implements OnInit {
     @Input() private theme:Theme;
     @Output() onDelete:EventEmitter<string> = new EventEmitter();
     private cards:Card[] = [];
+    private subThemeNames:string[] = [];
     private doDelete:boolean = false;
     private cardsLoaded:boolean = false;
 
@@ -80,11 +97,18 @@ export class ThemeCard implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         if (this.theme != undefined && !this.cardsLoaded) {
             this.service.getCards(this.theme._id).subscribe((c:Card[]) => {
                 c.forEach((card:Card) => this.cards.push(card));
                 this.cardsLoaded = true;
+            });
+
+            this.theme._subThemes.forEach((themeId:string) =>{
+               this.service.getTheme(themeId).subscribe((theme:Theme) =>{
+                   this.subThemeNames.push(theme._name);
+                   console.log(this.subThemeNames);
+               });
             });
         }
     }

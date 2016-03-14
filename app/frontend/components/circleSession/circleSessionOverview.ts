@@ -5,6 +5,7 @@ import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
 import {UserService} from "../../services/userService";
+import {ROUTER_DIRECTIVES} from "angular2/router";
 
 @Component({
     selector: 'circlesession-overview',
@@ -21,7 +22,14 @@ import {UserService} from "../../services/userService";
                 </div>
             </div>
 
-     <div *ngIf="loading" class="row center margin-top">
+            <h5>Jouw spellen</h5>
+            <div>
+                <a [routerLink]="['CreateSession']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+
+            <div *ngIf="loading" class="row center margin-top">
                 <div class="preloader-wrapper big active">
                     <div class="spinner-layer spinner-blue-only">
                       <div class="circle-clipper left">
@@ -35,15 +43,13 @@ import {UserService} from "../../services/userService";
                 </div>
             </div>
 
-     <div *ngIf="!loading" class="row center margin-top">
-        <h3>Mijn Cirkelsessies</h3>
-     </div>
+
      <div class="row">
         <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
      </div>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCard]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, CircleSessionCard]
 })
 
 export class CircleSessionOverview {

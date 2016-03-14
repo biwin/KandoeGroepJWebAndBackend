@@ -33,7 +33,22 @@ var ThemeApi = (function () {
             if (currentUserId != null) {
                 var theme = req.body;
                 theme._organisatorIds = [currentUserId];
-                ThemeApi.mgr.createTheme(req.body, function (t) {
+                ThemeApi.mgr.createTheme(theme, function (t) {
+                    res.send(t);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
+    ThemeApi.createSubTheme = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var theme = req.body;
+                var parentThemeId = req.params.id;
+                theme._organisatorIds = [currentUserId];
+                ThemeApi.mgr.createSubTheme(theme, parentThemeId, function (t) {
                     res.send(t);
                 });
             }

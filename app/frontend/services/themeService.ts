@@ -27,8 +27,12 @@ export class ThemeService {
         return this.http.post(this.path + 'themes', JSON.stringify(theme), true, true, true);
     }
 
+    createSubTheme(theme: Theme, parentId:string): Observable<Theme>{
+        return this.http.post(this.path + 'themes/' + parentId, JSON.stringify(theme), true, true, true);
+    }
+
     createCard(name: string, themeId: string): Observable<Card> {
-        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({'_name': name}), true, true, true);
+        return this.http.post(this.path + 'themes/' + themeId + '/cards', JSON.stringify({'_name': name}), true, true, true);
     }
 
     getCards(themeId: string): Observable<Card[]> {

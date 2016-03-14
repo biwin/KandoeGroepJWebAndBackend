@@ -36,7 +36,22 @@ export class ThemeApi {
             if (currentUserId != null) {
                 var theme:Theme = req.body;
                 theme._organisatorIds = [currentUserId];
-                ThemeApi.mgr.createTheme(req.body, (t:Theme) => {
+                ThemeApi.mgr.createTheme(theme, (t:Theme) => {
+                    res.send(t);
+                });
+            }else {
+                res.status(401).send({error:'Unauthorized'});
+            }
+        });
+    }
+
+    public static createSubTheme(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
+            if (currentUserId != null) {
+                var theme:Theme = req.body;
+                var parentThemeId = req.params.id;
+                theme._organisatorIds = [currentUserId];
+                ThemeApi.mgr.createSubTheme(theme, parentThemeId, (t:Theme) => {
                     res.send(t);
                 });
             }else {
