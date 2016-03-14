@@ -2,6 +2,7 @@ import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {NgClass} from "angular2/common";
 
+import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
@@ -38,12 +39,16 @@ import {Organisation} from "../../../backend/model/organisation";
 
 export class OrganisationsOverview {
     private router: Router;
+    private organisationService: OrganisationService;
+    private userService: UserService;
     private organisations: Organisation[] = [];
 
-    public constructor(router: Router, userService: UserService) {
+    public constructor(router: Router, organisationService: OrganisationService, userService: UserService) {
         this.router = router;
+        this.organisationService = organisationService;
+        this.userService = userService;
 
-        var userId:string = userService.getUserId();
+        var userId: string = userService.getUserId();
         userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
         });
@@ -54,8 +59,9 @@ export class OrganisationsOverview {
     }
 
     //TODO: styling van delete button
-    //TODO: uitwerking delete methode
     private deleteOrganisation(organisationId: string): void {
-        alert("DELETED: " + organisationId);
+        var userId: string = this.userService.getUserId();
+
+        this.organisationService.deleteMemberFromOrganisationById(userId, organisationId);
     }
 }

@@ -31,4 +31,8 @@ export class OrganisationService {
     getMembersOfOrganisationById(organisationId: string): Observable<User[]> {
         return this.http.get(this.path + "organisations/" + organisationId + "/members").map((res: Response) => res.json());
     }
+
+    deleteMemberFromOrganisationById(userId: string, organisationId: string) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId);
+    }
 }
