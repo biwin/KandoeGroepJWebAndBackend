@@ -11,8 +11,8 @@ var bodyParser = require('body-parser'),
     UserApi = require('./app/backend/restApi/userApi.js'),
 
     morgan = require('morgan'),
-    server_port = process.env.OPENSHIFT_NODEJS_PORT || 80,
-    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '192.168.0.149';
+    server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
+    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -109,7 +109,7 @@ app.post('/api/user/login', function (req, res) {
     console.log(req.body);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send("You are already logged in");
+        res.send("{\"_message\":\"You are already logged in\"}");
     } else {
         UserApi.UserApi.getUser(req.body._email, req.body._password, res);
     }
@@ -118,7 +118,7 @@ app.post('/api/user/login', function (req, res) {
 app.post('/api/user/register', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send("You are already registered");
+        res.send("{\"_message\":\"You are already registered\"}");
     } else {
         UserApi.UserApi.createUser(req.body._username, req.body._email, req.body._password, req.body._registrar, res);
     }
@@ -133,7 +133,7 @@ app.post('/api/user/change-profile', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.changeProfile(token, req.body._username, req.body._smallPicture, req.body._largePicture, res);
     } else {
-        res.send("You are not logged in");
+        res.send("{\"_message\":\"You are not logged in\"}");
     }
 });
 
@@ -142,7 +142,7 @@ app.post('/api/user/get-picture', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.getPicture(token, req.body._type, res);
     } else {
-        res.send("You are not logged in");
+        res.send("{\"_message\":\"You are not logged in\"}");
     }
 });
 

@@ -72,7 +72,7 @@ export class UserManager {
         this._dao.readUserByEmail(email, callback);
     }
 
-    getFacebookUser(facebookId: number, callback: (u: User) => any) {
+    getFacebookUser(facebookId: string, callback: (u: User) => any) {
         this._dao.readFacebookUser(facebookId, callback);
     }
 
