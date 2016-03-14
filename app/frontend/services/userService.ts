@@ -42,15 +42,15 @@ export class UserService {
     }
 
     changeProfile(newName: string, newSmallPictureLink: string, newLargePictureLink: string) {
-        return this.http.post(this.path + 'user/change-profile', JSON.stringify({'username': newName, 'smallPicture': newSmallPictureLink, 'largePicture': newLargePictureLink}), true, false, true);
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({'_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink}), true, false, true);
     }
 
     getUser(email: string, password: string): Observable<Response> {
-        return this.http.post(this.path + 'user/login', JSON.stringify({'email': email, 'password': password}), true, false, false);
+        return this.http.post(this.path + 'user/login', JSON.stringify({'_email': email, '_password': password}), true, false, false);
     }
 
     registerUser(name: string, password: string, email: string, registrar: string): Observable<Response> {
-        return this.http.post(this.path + 'user/register', JSON.stringify({'username': name, 'password': password, 'email': email, 'registrar': registrar}), true, false, false);
+        return this.http.post(this.path + 'user/register', JSON.stringify({'_username': name, '_password': password, '_email': email, '_registrar': registrar}), true, false, false);
     }
 
     loginUserFacebook(id: string, name: string, email: string, pictureSmall: string, pictureLarge: string): Observable<Response> {
@@ -58,7 +58,7 @@ export class UserService {
     }
 
     getUserPicture(type: string) {
-        return this.http.post(this.path + 'user/get-picture', JSON.stringify({'type': type}), true, false, true);
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({'_type': type}), true, false, true);
     }
 
     getUsername(): string {
@@ -66,7 +66,7 @@ export class UserService {
         if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        return JSON.parse(payloadDecoded).name;
+        return JSON.parse(payloadDecoded)._name;
     }
 
     getUserId(): string {
@@ -74,7 +74,7 @@ export class UserService {
         if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        return JSON.parse(payloadDecoded).id;
+        return JSON.parse(payloadDecoded)._id;
     }
 
     getImageLinks(callback: (smallImageLink: string, largeImageLink: string) => any) {

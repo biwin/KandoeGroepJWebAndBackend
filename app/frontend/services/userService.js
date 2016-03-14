@@ -39,19 +39,19 @@ var UserService = (function () {
         return token != null && token != "";
     };
     UserService.prototype.changeProfile = function (newName, newSmallPictureLink, newLargePictureLink) {
-        return this.http.post(this.path + 'user/change-profile', JSON.stringify({ 'username': newName, 'smallPicture': newSmallPictureLink, 'largePicture': newLargePictureLink }), true, false, true);
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({ '_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink }), true, false, true);
     };
     UserService.prototype.getUser = function (email, password) {
-        return this.http.post(this.path + 'user/login', JSON.stringify({ 'email': email, 'password': password }), true, false, false);
+        return this.http.post(this.path + 'user/login', JSON.stringify({ '_email': email, '_password': password }), true, false, false);
     };
     UserService.prototype.registerUser = function (name, password, email, registrar) {
-        return this.http.post(this.path + 'user/register', JSON.stringify({ 'username': name, 'password': password, 'email': email, 'registrar': registrar }), true, false, false);
+        return this.http.post(this.path + 'user/register', JSON.stringify({ '_username': name, '_password': password, '_email': email, '_registrar': registrar }), true, false, false);
     };
     UserService.prototype.loginUserFacebook = function (id, name, email, pictureSmall, pictureLarge) {
         return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ '_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook' }), true, false, false);
     };
     UserService.prototype.getUserPicture = function (type) {
-        return this.http.post(this.path + 'user/get-picture', JSON.stringify({ 'type': type }), true, false, true);
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({ '_type': type }), true, false, true);
     };
     UserService.prototype.getUsername = function () {
         var token = localStorage.getItem('token');
@@ -59,7 +59,7 @@ var UserService = (function () {
             return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        return JSON.parse(payloadDecoded).name;
+        return JSON.parse(payloadDecoded)._name;
     };
     UserService.prototype.getUserId = function () {
         var token = localStorage.getItem('token');
@@ -67,7 +67,7 @@ var UserService = (function () {
             return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        return JSON.parse(payloadDecoded).id;
+        return JSON.parse(payloadDecoded)._id;
     };
     UserService.prototype.getImageLinks = function (callback) {
         var _this = this;

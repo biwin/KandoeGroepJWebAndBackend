@@ -12,7 +12,7 @@ var UserApi = (function () {
             }
             else {
                 var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                var claim = new Buffer(JSON.stringify({ "type": "web", "name": name, "id": u._id, "email": email })).toString('base64');
+                var claim = new Buffer(JSON.stringify({ "_type": "web", "_name": name, "_id": u._id, "_email": email })).toString('base64');
                 var signature = SHA256(header + "." + claim);
                 var token = header + "." + claim + "." + signature;
                 res.send("{\"_message\":\"" + token + "\"}");
@@ -32,7 +32,7 @@ var UserApi = (function () {
     UserApi.getPicture = function (token, type, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid)
-                UserApi.manager.getUserById(decodedClaim.id, function (u) { return res.send("{\"message\":\"" + (type == 'small' ? u._pictureSmall : u._pictureLarge) + "\"}"); });
+                UserApi.manager.getUserById(decodedClaim._id, function (u) { return res.send("{\"message\":\"" + (type == 'small' ? u._pictureSmall : u._pictureLarge) + "\"}"); });
             else
                 res.send("{\"_message\":\"nope\"}");
         });
@@ -40,8 +40,8 @@ var UserApi = (function () {
     UserApi.changeProfile = function (token, newName, newSmallPicture, newLargePicture, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid) {
-                if (decodedClaim.type == 'facebook') {
-                    UserApi.manager.changeProfileByFacebookId(decodedClaim.facebookId, newName, newSmallPicture, newLargePicture, function (u) {
+                if (decodedClaim._type == 'facebook') {
+                    UserApi.manager.changeProfileByFacebookId(decodedClaim._facebookId, newName, newSmallPicture, newLargePicture, function (u) {
                         if (u == null)
                             res.send("{\"_message\":\"nope\"}");
                         else
@@ -49,7 +49,7 @@ var UserApi = (function () {
                     });
                 }
                 else {
-                    UserApi.manager.changeProfileByEmail(decodedClaim.email, newName, newSmallPicture, newLargePicture, function (u) {
+                    UserApi.manager.changeProfileByEmail(decodedClaim._email, newName, newSmallPicture, newLargePicture, function (u) {
                         if (u == null)
                             res.send("{\"_message\":\"nope\"}");
                         else
@@ -80,9 +80,9 @@ var UserApi = (function () {
     };
     UserApi.generateTokenForUser = function (u, type, facebookId) {
         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-        var claimObject = { "type": type, "name": u._name, "email": u._email, "id": u._id.toString() };
+        var claimObject = { "_type": type, "_name": u._name, "_email": u._email, "_id": u._id.toString() };
         if (facebookId)
-            claimObject.facebookId = facebookId;
+            claimObject._facebookId = facebookId;
         var claim = new Buffer(JSON.stringify(claimObject)).toString('base64');
         var signature = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
@@ -96,7 +96,7 @@ var UserApi = (function () {
                     }
                     else {
                         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                        var claim = new Buffer(JSON.stringify({ "facebookId": facebookId, "type": "facebook", "name": u._name, "id": u._id.toString() })).toString('base64');
+                        var claim = new Buffer(JSON.stringify({ "_facebookId": facebookId, "_type": "facebook", "_name": u._name, "_id": u._id.toString() })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;
                         res.send("{\"_message\":\"" + token + "\"}");
@@ -114,7 +114,7 @@ var UserApi = (function () {
                     }
                     else {
                         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');
-                        var claim = new Buffer(JSON.stringify({ "facebookId": facebookId, "type": "facebook", "name": name, "id": u._id })).toString('base64');
+                        var claim = new Buffer(JSON.stringify({ "_facebookId": facebookId, "_type": "facebook", "_name": name, "_id": u._id })).toString('base64');
                         var signature = SHA256(header + "." + claim);
                         var token = header + "." + claim + "." + signature;
                         res.send("{\"_message\":\"" + token + "\"}");
@@ -131,7 +131,7 @@ var UserApi = (function () {
     };
     UserApi.getCurrentUserId = function (token, callback) {
         UserApi.isTokenValid(token, function (b, decodedToken) {
-            callback(b ? decodedToken.id : null);
+            callback(b ? decodedToken._id : null);
         });
     };
     UserApi.getAllOrganisationsOfCurrentUser = function (req, res) {
