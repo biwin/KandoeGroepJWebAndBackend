@@ -31,10 +31,11 @@ var CircleSessionManager = (function () {
                                 else {
                                     var counter = 0;
                                     users.forEach(function (u) {
-                                        if (users.indexOf(u) < 0) {
+                                        if (circleSession._userIds.indexOf(u) < 0) {
                                             circleSession._userIds.push(u);
                                         }
                                         if (++counter == users.length) {
+                                            circleSession._currentPlayerId = circleSession._userIds[0];
                                             _this._dao.createCircleSession(circleSession, callback);
                                         }
                                     });
@@ -47,10 +48,30 @@ var CircleSessionManager = (function () {
         });
     };
     CircleSessionManager.prototype.getAllCircleSessions = function (callback) {
-        this._dao.readAllCircleSessions(callback);
+        var _this = this;
+        this._dao.readAllCircleSessions(function (c) {
+            var arr = [];
+            var i = 0;
+            c.forEach(function (cs) {
+                _this.checkInProgress(cs, function (s) {
+                    arr.push(s == null ? cs : s);
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
+        });
     };
     CircleSessionManager.prototype.getCircleSession = function (id, callback) {
-        this._dao.readCircleSession(id, callback);
+        var _this = this;
+        this._dao.readCircleSession(id, function (cs) {
+            if (cs != null) {
+                _this.checkInProgress(cs, callback);
+            }
+            else {
+                callback(null);
+            }
+        });
     };
     CircleSessionManager.prototype.cardUp = function (sessionId, cardId, userId, callback) {
         /*
@@ -78,7 +99,19 @@ var CircleSessionManager = (function () {
         });
     };
     CircleSessionManager.prototype.getCircleSessionsOfUserById = function (userId, callback) {
-        this._dao.getCircleSessionsOfUserById(userId, callback);
+        var _this = this;
+        this._dao.getCircleSessionsOfUserById(userId, function (c) {
+            var arr = [];
+            var i = 0;
+            c.forEach(function (cs) {
+                _this.checkInProgress(cs, function (s) {
+                    arr.push(s == null ? cs : s);
+                    if (++i == c.length) {
+                        callback(arr);
+                    }
+                });
+            });
+        });
     };
     CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
         this._dao.deleteCircleSessionById(circleSessionId, callback);
@@ -103,14 +136,33 @@ var CircleSessionManager = (function () {
     };
     CircleSessionManager.prototype.initCardsForSession = function (uId, circleSessionId, cardIds, callback) {
         var _this = this;
-        this._dao.getCardPositions(circleSessionId, cardIds, function (cps) {
-            for (var i = 0; i < cps.length; i++) {
-                var index = cardIds.indexOf(cps[i]._id);
-                if (index > -1) {
-                    cardIds.splice(index, 1);
+        this.getCircleSession(circleSessionId, function (c) {
+            if (c._inProgress && c._isPreGame) {
+                if (c._currentPlayerId !== uId) {
+                    callback(null, null, "Not your turn!");
+                }
+                else {
+                    _this._dao.getCardPositions(circleSessionId, cardIds, function (cps) {
+                        for (var i = 0; i < cps.length; i++) {
+                            var index = cardIds.indexOf(cps[i]._id);
+                            if (index > -1) {
+                                cardIds.splice(index, 1);
+                            }
+                        }
+                        if (cardIds.length > 0) {
+                            _this._dao.createCardPositions(circleSessionId, cardIds, uId, function () {
+                                _this.nextPlayer(circleSessionId, callback);
+                            });
+                        }
+                        else {
+                            _this.nextPlayer(circleSessionId, callback);
+                        }
+                    });
                 }
             }
-            _this._dao.createCardPositions(circleSessionId, cardIds, uId, callback);
+            else {
+                callback(null, null, "The game is not in the pre-game phase.");
+            }
         });
     };
     CircleSessionManager.prototype.deleteCircleSession = function (currentUserId, circleSessionId, callback) {
@@ -121,6 +173,53 @@ var CircleSessionManager = (function () {
                     _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
                 });
             }
+        });
+    };
+    CircleSessionManager.prototype.checkInProgress = function (c, callback) {
+        var inProgress = c._inProgress;
+        if (c._startDate == null || c._startDate.length !== 16) {
+            c._inProgress = true;
+        }
+        else {
+            var now = new Date(Date.now());
+            var splittedDateAndTime = c._startDate.split(' ');
+            var splittedDate = splittedDateAndTime[0].split('/').map(function (i) { return parseInt(i); });
+            var splittedTime = splittedDateAndTime[1].split(':').map(function (i) { return parseInt(i); });
+            var startDate = new Date(Date.UTC(splittedDate[2], splittedDate[1] - 1, splittedDate[0], splittedTime[0], splittedTime[1]));
+            c._inProgress = now >= startDate;
+        }
+        if (c._inProgress !== inProgress) {
+            this._dao.updateInProgress(c._id, c._inProgress, function () {
+                callback(c);
+            });
+        }
+        else {
+            callback(c);
+        }
+    };
+    CircleSessionManager.prototype.nextPlayer = function (circleSessionId, callback) {
+        var _this = this;
+        this._dao.readCircleSession(circleSessionId, function (c) {
+            var currentIndex = c._userIds.indexOf(c._currentPlayerId);
+            var newIndex = -1;
+            var roundEnded = false;
+            if (currentIndex === c._userIds.length - 1) {
+                newIndex = 0;
+                roundEnded = true;
+            }
+            else {
+                newIndex = currentIndex + 1;
+            }
+            var newPlayerId = c._userIds[newIndex];
+            var preGameInProgress = c._isPreGame && !roundEnded;
+            _this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, function (success) {
+                if (success) {
+                    callback(roundEnded, newPlayerId);
+                }
+                else {
+                    callback(null, null);
+                }
+            });
         });
     };
     CircleSessionManager.prototype.addUser = function (currentUserId, circleSessionId, email, callback) {

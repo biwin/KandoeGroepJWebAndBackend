@@ -18,7 +18,7 @@ var NavigationBar = (function () {
         service.subscribeMe(this);
         if (this.service.isLoggedIn()) {
             this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url.text(); });
-            this.service.getUsername(function (name) { return _this.usernameString = name; });
+            this.usernameString = this.service.getUsername();
         }
         else {
             this.usernameString = "Gast";
@@ -35,12 +35,11 @@ var NavigationBar = (function () {
     };
     NavigationBar.prototype.notifyProfileUpdated = function () {
         var _this = this;
-        this.service.getUsername(function (name) { return _this.usernameString = name; });
+        this.usernameString = this.service.getUsername();
         this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url.text(); });
     };
     NavigationBar.prototype.getUserName = function () {
-        var _this = this;
-        this.service.getUsername(function (name) { return _this.usernameString = name; });
+        this.usernameString = this.service.getUsername();
     };
     NavigationBar.prototype.ngAfterViewInit = function () {
         $("#main-nav-toggle").sideNav({ menuWidth: 240 });

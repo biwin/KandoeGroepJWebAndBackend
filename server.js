@@ -11,8 +11,8 @@ var bodyParser = require('body-parser'),
     UserApi = require('./app/backend/restApi/userApi.js'),
 
     morgan = require('morgan'),
-    server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+    server_port = process.env.OPENSHIFT_NODEJS_PORT || 80,
+    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '192.168.0.149';
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -106,11 +106,12 @@ app.delete('/api/themes/:id/cards/:cid', ThemeApi.ThemeApi.deleteCardFromTheme);
 
 //region auth routes
 app.post('/api/user/login', function (req, res) {
+    console.log(req.body);
     var token = req.header('Bearer');
     if (token != null && token != "") {
         res.send("You are already logged in");
     } else {
-        UserApi.UserApi.getUser(req.body.email, req.body.password, res);
+        UserApi.UserApi.getUser(req.body._email, req.body._password, res);
     }
 });
 
@@ -119,18 +120,18 @@ app.post('/api/user/register', function (req, res) {
     if (token != null && token != "") {
         res.send("You are already registered");
     } else {
-        UserApi.UserApi.createUser(req.body.username, req.body.email, req.body.password, req.body.registrar, res);
+        UserApi.UserApi.createUser(req.body._username, req.body._email, req.body._password, req.body._registrar, res);
     }
 });
 
 app.post('/api/user/login-facebook', function (req, res) {
-    UserApi.UserApi.getFacebookUser(req.body.facebookId, req.body.email, req.body.pictureSmall, req.body.pictureLarge, req.body.name, req.body.registrar, res);
+    UserApi.UserApi.getFacebookUser(req.body._facebookId, req.body._email, req.body._pictureSmall, req.body._pictureLarge, req.body._name, req.body._registrar, res);
 });
 
 app.post('/api/user/change-profile', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        UserApi.UserApi.changeProfile(token, req.body.username, req.body.smallPicture, req.body.largePicture, res);
+        UserApi.UserApi.changeProfile(token, req.body._username, req.body._smallPicture, req.body._largePicture, res);
     } else {
         res.send("You are not logged in");
     }
@@ -139,7 +140,7 @@ app.post('/api/user/change-profile', function (req, res) {
 app.post('/api/user/get-picture', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        UserApi.UserApi.getPicture(token, req.body.type, res);
+        UserApi.UserApi.getPicture(token, req.body._type, res);
     } else {
         res.send("You are not logged in");
     }

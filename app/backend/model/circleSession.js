@@ -3,7 +3,7 @@ var CircleSession = (function () {
         /* _name format: "GroupName - ThemeName" */
         _name, _creatorId, 
         /* _startDate format: dd/mm/yyyy hh:mm */
-        _startDate, _realTime, _endPoint, _allowComment, _turnTimeMin) {
+        _startDate, _realTime, _isPreGame, _endPoint, _allowComment, _inProgress, _turnTimeMin, _currentPlayerId) {
         this._groupId = _groupId;
         this._userIds = _userIds;
         this._themeId = _themeId;
@@ -11,28 +11,16 @@ var CircleSession = (function () {
         this._creatorId = _creatorId;
         this._startDate = _startDate;
         this._realTime = _realTime;
+        this._isPreGame = _isPreGame;
         this._endPoint = _endPoint;
         this._allowComment = _allowComment;
+        this._inProgress = _inProgress;
         this._turnTimeMin = _turnTimeMin;
+        this._currentPlayerId = _currentPlayerId;
     }
     CircleSession.empty = function () {
-        return new CircleSession("", [], "", "", "", "", false, null, true);
+        return new CircleSession("", [], "", "", "", "", false, true, null, true, false);
     };
-    Object.defineProperty(CircleSession.prototype, "_inProgress", {
-        get: function () {
-            if (this._startDate == null || this._startDate.length !== 16) {
-                return true;
-            }
-            var now = new Date(Date.now());
-            var splittedDateAndTime = this._startDate.split(' ');
-            var splittedDate = splittedDateAndTime[0].split('/').map(parseInt);
-            var splittedTime = splittedDateAndTime[1].split(':').map(parseInt);
-            var startDate = new Date(Date.UTC(splittedDate[2], splittedDate[1] - 1, splittedDate[0], splittedTime[0], splittedTime[1]));
-            return now >= startDate;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return CircleSession;
 })();
 exports.CircleSession = CircleSession;

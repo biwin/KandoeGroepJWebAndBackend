@@ -33,6 +33,7 @@ import {UserService} from "../../services/userService";
 
 
       <div class="card hoverable">
+      <i class="material-icons right green-text padding-5" *ngIf="user === circleSession._currentPlayerId">gamepad</i>
         <div (click)="openCard()" class="card-content clickable">
             <span class="card-title truncate">{{circleSession._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
@@ -58,6 +59,7 @@ export class CircleSessionCard implements AfterViewInit{
     private email:string = "";
 
     private router:Router;
+    private user:string;
     private userService:UserService;
     private circleService:CircleSessionService;
 
@@ -65,6 +67,7 @@ export class CircleSessionCard implements AfterViewInit{
         this.router = router;
         this.userService = userService;
         this.circleService = circleService;
+        this.user = userService.getUserId();
     }
 
     deleteCircleSession() {
@@ -96,11 +99,8 @@ export class CircleSessionCard implements AfterViewInit{
     }
 
     ngAfterViewInit() {
-        this.userService.getUserId((currentUserId:string)=>{
-            if(this.circleSession._creatorId == currentUserId){
-                this.iamCreator = true;
-            }
-        });
+        //FIXME: iamCreator was changed after...
+        this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     }
 }
 

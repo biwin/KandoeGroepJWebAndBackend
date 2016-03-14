@@ -14,13 +14,16 @@ import {OnInit} from "angular2/core";
     template: `
         <ul id="user-list" class="collection with-header side-nav fixed right-aligned user-sidenav">
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
-            <li class="collection-item row valign-wrapper" *ngFor="#user of users">
+            <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === currentPlayerId" [class.lighten-5]="user._id === currentPlayerId">
                 <div class="col s4">
                     <img *ngIf="user._pictureSmall !== undefined" [attr.src]="user._pictureSmall" class="circle responsive-img valign">
                     <i *ngIf="user._pictureSmall === undefined" class="material-icons valign">person</i>
                 </div>
-                <div class="col s8">
+                <div class="col s7">
                     {{user._name}}
+                </div>
+                <div class="col s1" *ngIf="user._id === currentPlayerId">
+                    <i class="material-icons green-text">gamepad</i>
                 </div>
             </li>
         </ul>
@@ -30,6 +33,7 @@ import {OnInit} from "angular2/core";
 
 export class CircleSessionUserList implements OnChanges {
     @Input("users") userIds:string[];
+    @Input() currentPlayerId:string;
     private users:User[] = [];
     private service:UserService;
 
@@ -38,7 +42,7 @@ export class CircleSessionUserList implements OnChanges {
     }
 
     ngOnChanges() {
-        if(this.userIds != undefined && this.userIds.length > 0) {
+        if(this.userIds != undefined && this.userIds.length > 0 && this.users.length == 0) {
             this.service.getUsers(this.userIds).subscribe((us:User[]) => {
                 us.forEach((u:User) => this.users.push(u));
             });

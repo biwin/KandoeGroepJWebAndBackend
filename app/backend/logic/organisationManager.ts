@@ -1,5 +1,7 @@
 import {OrganisationDao} from "../dao/organisationDao";
 
+import {UserManager} from "./userManager";
+
 import {Organisation} from "../model/organisation";
 
 export class OrganisationManager {
@@ -14,7 +16,13 @@ export class OrganisationManager {
             if (exists) {
                 callback(null);
             } else {
-                this._dao.createOrganisation(organisation, callback);
+                this._dao.createOrganisation(organisation, (newOrganisation: Organisation) => {
+                    var userManager: UserManager = new UserManager();
+
+                    userManager.addOrganisationIdToUserById(newOrganisation._id, newOrganisation._memberIds[0], true, () => {
+                        callback(newOrganisation);
+                    });
+                });
             }
         });
     }

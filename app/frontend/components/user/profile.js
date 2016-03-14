@@ -21,7 +21,7 @@ var Profile = (function () {
             this.router.navigate(['UserLogin']);
         }
         else {
-            service.getUsername(function (name) { return _this.usernameString = name; });
+            this.usernameString = service.getUsername();
             service.getImageLinks(function (smallImageLink, largeImageLink) { _this.smallImageLinkString = smallImageLink; _this.largeImageLinkString = largeImageLink; });
             service.getUserPicture('large').subscribe(function (url) { return _this.imageSource = url.text(); });
         }

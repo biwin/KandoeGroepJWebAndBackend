@@ -73,7 +73,7 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.clearThemeIdOfCard = function (themeId, cardId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('cards').updateOne({ '_themeId': themeId, '_id': new mongodb_1.ObjectID(cardId) }, { '_themeId': null }, function (err, res) {
+            db.collection('cards').updateOne({ '_themeId': themeId, '_id': new mongodb_1.ObjectID(cardId) }, { $set: { '_themeId': null } }, function (err, res) {
                 callback(res.modifiedCount == 1);
             });
         });

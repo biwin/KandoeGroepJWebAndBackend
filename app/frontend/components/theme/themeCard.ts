@@ -22,7 +22,7 @@ import {Output} from "angular2/core";
         </div>
       </div>
       <div class="card hoverable small">
-        <div class="card-content">
+        <div class="card-content scrollable">
            <span class="card-title activator">{{theme._name}}<i class="material-icons right">filter_none</i></span>
            <p class="black-text">{{theme._description}}</p>
            <br/>

@@ -22,11 +22,10 @@ var OrganisationForm = (function () {
     }
     OrganisationForm.prototype.OnSubmit = function () {
         var _this = this;
-        this.userService.getUserId(function (userId) {
-            _this.organisation._organisatorIds.push(userId);
-            _this.organisationService.createOrganisation(_this.organisation).subscribe(function (o) {
-                _this.router.navigate(["/OrganisationDetail", { id: o._id }]);
-            });
+        var userId = this.userService.getUserId();
+        this.organisation._organisatorIds.push(userId);
+        this.organisationService.createOrganisation(this.organisation).subscribe(function (o) {
+            _this.router.navigate(["/OrganisationDetail", { id: o._id }]);
         });
     };
     OrganisationForm = __decorate([

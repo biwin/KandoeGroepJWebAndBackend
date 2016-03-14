@@ -20,6 +20,7 @@ var CircleSessionCard = (function () {
         this.router = router;
         this.userService = userService;
         this.circleService = circleService;
+        this.user = userService.getUserId();
     }
     CircleSessionCard.prototype.deleteCircleSession = function () {
         this.onDelete.emit(this.circleSession._id);
@@ -49,12 +50,8 @@ var CircleSessionCard = (function () {
         });
     };
     CircleSessionCard.prototype.ngAfterViewInit = function () {
-        var _this = this;
-        this.userService.getUserId(function (currentUserId) {
-            if (_this.circleSession._creatorId == currentUserId) {
-                _this.iamCreator = true;
-            }
-        });
+        //FIXME: iamCreator was changed after...
+        this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     };
     __decorate([
         core_1.Input(), 
@@ -67,7 +64,7 @@ var CircleSessionCard = (function () {
     CircleSessionCard = __decorate([
         core_1.Component({
             selector: 'circlesession-card',
-            template: "\n    <div class=\"col s4\">\n\n     <div class=\"modal\" id=\"{{'m' + circleSession._id}}\">\n        <div class=\"modal-content\">\n            <h4>Speler toevoegen</h4>\n            <div class=\"input-field col s12\">\n                <input id=\"email\" type=\"email\" class=\"validate\" [(ngModel)]=\"email\">\n                <label for=\"email\">Email</label>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doAdd = false\">Annuleren</a>\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doAdd = true\">Toevoegen</a>\n        </div>\n      </div>\n\n\n\n      <div class=\"card hoverable\">\n        <div (click)=\"openCard()\" class=\"card-content clickable\">\n            <span class=\"card-title truncate\">{{circleSession._name}}</span>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>\n           <p class=\"black-text\">{{circleSession._allowComment ? 'Commentaar toegelaten op kaarten' : 'Commentaar niet mogelijk op kaarten'}}</p>\n        </div>\n        <div *ngIf=\"iamCreator\" class=\"card-action\">\n            <a *ngIf=\"!circleSession._inProgress\" (click)=\"addUser()\" class=\"black-text clickable\"><i class=\"material-icons\">person_add</i></a>\n            <a (click)=\"deleteCircleSession()\" class=\"red-text clickable\"><i class=\"material-icons\">delete</i></a>\n        </div>\n      </div>\n      </div>\n  "
+            template: "\n    <div class=\"col s4\">\n\n     <div class=\"modal\" id=\"{{'m' + circleSession._id}}\">\n        <div class=\"modal-content\">\n            <h4>Speler toevoegen</h4>\n            <div class=\"input-field col s12\">\n                <input id=\"email\" type=\"email\" class=\"validate\" [(ngModel)]=\"email\">\n                <label for=\"email\">Email</label>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doAdd = false\">Annuleren</a>\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doAdd = true\">Toevoegen</a>\n        </div>\n      </div>\n\n\n\n      <div class=\"card hoverable\">\n      <i class=\"material-icons right green-text padding-5\" *ngIf=\"user === circleSession._currentPlayerId\">gamepad</i>\n        <div (click)=\"openCard()\" class=\"card-content clickable\">\n            <span class=\"card-title truncate\">{{circleSession._name}}</span>\n           <p class=\"black-text\">Start: {{circleSession._startDate}}</p>\n           <p class=\"black-text\">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>\n           <p class=\"black-text\">{{circleSession._allowComment ? 'Commentaar toegelaten op kaarten' : 'Commentaar niet mogelijk op kaarten'}}</p>\n        </div>\n        <div *ngIf=\"iamCreator\" class=\"card-action\">\n            <a *ngIf=\"!circleSession._inProgress\" (click)=\"addUser()\" class=\"black-text clickable\"><i class=\"material-icons\">person_add</i></a>\n            <a (click)=\"deleteCircleSession()\" class=\"red-text clickable\"><i class=\"material-icons\">delete</i></a>\n        </div>\n      </div>\n      </div>\n  "
         }), 
         __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, router_1.Router])
     ], CircleSessionCard);

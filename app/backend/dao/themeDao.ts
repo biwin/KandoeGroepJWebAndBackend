@@ -88,7 +88,7 @@ export class ThemeDao {
 
     clearThemeIdOfCard(themeId:string, cardId:string, callback:(b:boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('cards').updateOne({'_themeId': themeId, '_id': new ObjectID(cardId)}, {'_themeId': null}, (err:MongoError, res:UpdateWriteOpResult) => {
+            db.collection('cards').updateOne({'_themeId': themeId, '_id': new ObjectID(cardId)}, {$set: {'_themeId': null}}, (err:MongoError, res:UpdateWriteOpResult) => {
                 callback(res.modifiedCount == 1);
             });
         });

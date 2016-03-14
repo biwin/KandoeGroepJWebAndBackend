@@ -16,11 +16,9 @@ var OrganisationsOverview = (function () {
         var _this = this;
         this.organisations = [];
         this.router = router;
-        //TODO: geen userId meesturen
-        userService.getUserId(function (userId) {
-            userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
-                _this.organisations = organisations;
-            });
+        var userId = userService.getUserId();
+        userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
+            _this.organisations = organisations;
         });
     }
     OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {

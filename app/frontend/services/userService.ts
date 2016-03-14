@@ -61,20 +61,20 @@ export class UserService {
         return this.http.post(this.path + 'user/get-picture', JSON.stringify({'type': type}), true, false, true);
     }
 
-    getUsername(callback: (name: string) => any) {
+    getUsername():string {
         var token = localStorage.getItem('token');
-        if (token == null || token == "") callback("");
+        if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        callback(JSON.parse(payloadDecoded).name);
+        return JSON.parse(payloadDecoded).name;
     }
 
-    getUserId(callback: (name: string) => any) {
+    getUserId():string {
         var token = localStorage.getItem('token');
-        if (token == null || token == "") callback("");
+        if (token == null || token == "") return "";
         var payloadEncoded = token.split('.')[1];
         var payloadDecoded = atob(payloadEncoded);
-        callback(JSON.parse(payloadDecoded).id);
+        return JSON.parse(payloadDecoded).id;
     }
 
     getImageLinks(callback: (smallImageLink: string, largeImageLink: string) => any) {
