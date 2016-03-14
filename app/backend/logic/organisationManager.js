@@ -34,6 +34,9 @@ var OrganisationManager = (function () {
     OrganisationManager.prototype.getAllOrganisationsOfUserById = function (userId, callback) {
         this._dao.getAllOrganisationsOfUserById(userId, callback);
     };
+    OrganisationManager.prototype.getAllOrganisationIdsOfUserById = function (userId, callback) {
+        this._dao.getAllOrganisationIdsOfUserById(userId, callback);
+    };
     return OrganisationManager;
 })();
 exports.OrganisationManager = OrganisationManager;

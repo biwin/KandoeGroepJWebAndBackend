@@ -1,4 +1,5 @@
 var themeDao_1 = require("../dao/themeDao");
+var organisationManager_1 = require("./organisationManager");
 var ThemeManager = (function () {
     function ThemeManager() {
         this._dao = new themeDao_1.ThemeDao();
@@ -19,7 +20,29 @@ var ThemeManager = (function () {
         this._dao.createCard(card, callback);
     };
     ThemeManager.prototype.getAllThemes = function (userId, callback) {
-        this._dao.readAllThemes(userId, callback);
+        var _this = this;
+        var oMgr = new organisationManager_1.OrganisationManager();
+        var myAccesableThemes = [];
+        this._dao.readAllThemes(userId, function (themes) {
+            myAccesableThemes = themes;
+            oMgr.getAllOrganisationIdsOfUserById(userId, function (organisationIds) {
+                var counter = 0;
+                console.log('orgids: ' + organisationIds);
+                organisationIds.forEach(function (organisationId) {
+                    _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
+                        organisationThemes.forEach(function (theme) {
+                            if (myAccesableThemes.indexOf(theme) < 0) {
+                                myAccesableThemes.push(theme);
+                            }
+                            ;
+                        });
+                        if (++counter == organisationIds.length) {
+                            callback(myAccesableThemes);
+                        }
+                    });
+                });
+            });
+        });
     };
     ThemeManager.prototype.getCards = function (themeId, callback) {
         this._dao.readCards(themeId, callback);

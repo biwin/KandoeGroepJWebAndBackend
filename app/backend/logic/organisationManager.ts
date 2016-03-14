@@ -44,4 +44,8 @@ export class OrganisationManager {
     getAllOrganisationsOfUserById(userId: string, callback: (organisations: Organisation[]) => any) {
         this._dao.getAllOrganisationsOfUserById(userId, callback);
     }
+
+    getAllOrganisationIdsOfUserById(userId:string, callback:(organisationIds:string[])=>any) {
+        this._dao.getAllOrganisationIdsOfUserById(userId, callback);
+    }
 }

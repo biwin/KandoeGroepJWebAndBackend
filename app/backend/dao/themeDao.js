@@ -53,6 +53,13 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.readAllThemesByOrganisationId = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     ThemeDao.prototype.readCards = function (themeId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cards').find({ '_themeId': themeId }).toArray(function (err, docs) {

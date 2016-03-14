@@ -43,6 +43,7 @@ export class OrganisationsOverview {
     public constructor(router: Router, userService: UserService) {
         this.router = router;
 
+        //TODO: geen userId meesturen
         userService.getUserId((userId: string) => {
             userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
                 this.organisations = organisations;

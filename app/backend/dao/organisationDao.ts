@@ -88,4 +88,14 @@ export class OrganisationDao {
             });
         });
     }
+
+    getAllOrganisationIdsOfUserById(userId:string, callback:(organisationIds:string[])=> any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').find({'$or': [{'_organisatorIds': {'$in': [userId]}}, {'_memberIds': {'$in': [userId]}}]}).project({'_id': 1}).toArray((err: MongoError, docs: Organisation[]) => {
+                var ids:string[] = docs.map( o => o._id.toString());
+                db.close();
+                callback(ids);
+            });
+        });
+    }
 }

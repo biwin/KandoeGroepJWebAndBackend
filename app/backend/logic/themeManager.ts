@@ -1,6 +1,8 @@
 import {ThemeDao} from "../dao/themeDao";
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
+import {OrganisationManager} from "./organisationManager";
+import {Organisation} from "../model/organisation";
 
 export class ThemeManager {
     private _dao:ThemeDao;
@@ -30,7 +32,30 @@ export class ThemeManager {
     }
 
     getAllThemes(userId:string, callback: (t:Theme[]) => any) {
-        this._dao.readAllThemes(userId, callback);
+        var oMgr:OrganisationManager = new OrganisationManager();
+        var myAccesableThemes:Theme[] = [];
+
+        this._dao.readAllThemes(userId, (themes:Theme[]) =>{
+
+            myAccesableThemes = themes;
+
+            oMgr.getAllOrganisationIdsOfUserById(userId, (organisationIds:string[]) => {
+                var counter:number = 0;
+                console.log('orgids: ' + organisationIds);
+                organisationIds.forEach((organisationId:string) => {
+                    this._dao.readAllThemesByOrganisationId(organisationId, (organisationThemes:Theme[]) => {
+                        organisationThemes.forEach((theme:Theme) =>{
+                            if(myAccesableThemes.indexOf(theme) < 0){
+                                myAccesableThemes.push(theme);
+                            };
+                        });
+                        if(++counter == organisationIds.length){
+                            callback(myAccesableThemes);
+                        }
+                    });
+                });
+            });
+        });
     }
 
     getCards(themeId:string, callback:(c:Card[])=>any) {
