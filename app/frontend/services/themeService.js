@@ -12,7 +12,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var httpWrapperService_1 = require("./httpWrapperService");
-require("rxjs/add/operator/map");
 var ThemeService = (function () {
     function ThemeService(http, path) {
         this.http = null;
@@ -37,8 +36,8 @@ var ThemeService = (function () {
     ThemeService.prototype.unlinkCard = function (themeId, cardId) {
         return this.http.delete(this.path + 'themes/' + themeId + '/cards/' + cardId, false, false, true);
     };
-    ThemeService.prototype.deleteTheme = function (id) {
-        return this.http.delete(this.path + 'themes/' + id, false, false, true);
+    ThemeService.prototype.deleteTheme = function (themeId) {
+        return this.http.delete(this.path + 'themes/' + themeId, false, false, true);
     };
     ThemeService = __decorate([
         core_1.Injectable(),
