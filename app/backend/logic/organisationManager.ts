@@ -41,6 +41,16 @@ export class OrganisationManager {
         this._dao.deleteOrganisationById(organisationId, callback);
     }
 
+    deleteMemberFromOrganisationById(memberId: string, organisationId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteMemberFromOrganisationById(memberId, organisationId, (deleted: boolean) => {
+            var userManager: UserManager = new UserManager();
+
+            userManager.deleteOrganisationFromUserById(organisationId, memberId, () => {
+                callback(deleted);
+            });
+        });
+    }
+
     addGroupIdToOrganisationById(groupId: string, organisationId: string, callback: (added: boolean) => any) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     }

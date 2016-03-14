@@ -273,6 +273,9 @@ var UserManager = (function () {
     UserManager.prototype.addOrganisationIdToUserById = function (organisationId, userId, isOrganisator, callback) {
         this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);
     };
+    UserManager.prototype.deleteOrganisationFromUserById = function (organisationId, userId, callback) {
+        this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
+    };
     return UserManager;
 })();
 exports.UserManager = UserManager;

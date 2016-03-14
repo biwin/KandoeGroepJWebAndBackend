@@ -11,8 +11,8 @@ var bodyParser = require('body-parser'),
     UserApi = require('./app/backend/restApi/userApi.js'),
 
     morgan = require('morgan'),
-    server_port = process.env.OPENSHIFT_NODEJS_PORT || 80,
-    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '192.168.0.149';
+    server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
+    server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -59,37 +59,41 @@ app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
 //endregion
 
 //region organisation routes
-app.get("/api/organisations/:id", function (req, res) {
+app.get("/api/organisations/:id", function(req, res) {
     OrganisationAPI.OrganisationAPI.find(req.params.id, res);
 });
 
-app.post("/api/organisations", function (req, res) {
+app.post("/api/organisations", function(req, res) {
     OrganisationAPI.OrganisationAPI.create(req.body, res);
 });
 
-app.get("/api/organisations/:id/groups", function (req, res) {
+app.get("/api/organisations/:id/groups", function(req, res) {
     OrganisationAPI.OrganisationAPI.getGroups(req.params.id, res);
 });
 
-app.get("/api/organisations/:id/members", function (req, res) {
+app.get("/api/organisations/:id/members", function(req, res) {
     OrganisationAPI.OrganisationAPI.getMembers(req.params.id, res);
+});
+
+app.delete("/api/organisations/:id/members/:memberId", function(req, res) {
+    OrganisationAPI.OrganisationAPI.deleteMemberById(req.params.memberId, req.params.id, res)
 });
 //endregion
 
 //region group routes
-app.get("/api/groups/:id", function (req, res) {
+app.get("/api/groups/:id", function(req, res) {
     GroupAPI.GroupAPI.find(req.params.id, res);
 });
 
-app.post("/api/groups", function (req, res) {
+app.post("/api/groups", function(req, res) {
     GroupAPI.GroupAPI.create(req.body, res);
 });
 
-app.get("/api/groups/:id/members", function (req, res) {
+app.get("/api/groups/:id/members", function(req, res) {
     GroupAPI.GroupAPI.getMembers(req.params.id, res);
 });
 
-app.get("/api/groups/:id/organisation", function (req, res) {
+app.get("/api/groups/:id/organisation", function(req, res) {
     GroupAPI.GroupAPI.getOrganisation(req.params.id, res);
 });
 //endregion
@@ -166,5 +170,5 @@ io.on('connection', function (socket) {
 });
 
 http.listen(server_port, server_ip_address, function () {
-    console.log("Started listening on port 8080!");
+    console.log("Started listening to "+server_ip_address+" on port "+server_port+"!");
 });

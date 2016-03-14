@@ -8,7 +8,7 @@ import {Organisation} from "../model/organisation";
 export class OrganisationAPI {
     private static mgr: OrganisationManager = new OrganisationManager();
 
-    public static create(organisation :Organisation, res){
+    public static create(organisation: Organisation, res){
         this.mgr.createOrganisation(organisation, (o: Organisation) => {
            res.send(o);
         });
@@ -26,6 +26,12 @@ export class OrganisationAPI {
 
     public static getMembers(organisationId: string, res) {
         UserApi.getMembersOfOrganisationById(organisationId, res);
+    }
+
+    public static deleteMemberById(organisationId: string, memberId: string, res) {
+        this.mgr.deleteMemberFromOrganisationById(memberId, organisationId, (deleted: boolean) => {
+            res.send(deleted);
+        });
     }
 
     public static getOrganisationOfGroupById(groupId: string, res) {

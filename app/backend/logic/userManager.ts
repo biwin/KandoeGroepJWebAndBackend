@@ -119,7 +119,7 @@ export class UserManager {
         });
     }
 
-    addToGroupById(uId:string, gId:string, callback: (b: boolean) => any) {
+    addToGroupById(uId: string, gId: string, callback: (b: boolean) => any) {
         this.userIdInGroup(gId, uId, (alreadyInGroup: boolean) => {
             if (alreadyInGroup) {
                 callback(null);
@@ -213,17 +213,17 @@ export class UserManager {
         });
     }
 
-    private userIdInGroup(gId:string, uId:string, callback: (b: boolean) => any) {
+    private userIdInGroup(gId: string, uId: string, callback: (b: boolean) => any) {
         this._dao.readIsUserInGroup(gId, uId, (inGroup: boolean) => {
             callback(inGroup);
         });
     }
 
-    getGroupByName(gName: string, callback: (g:Group) => any) {
+    getGroupByName(gName: string, callback: (g: Group) => any) {
         this._dao.readGroupByName(gName, callback);
     }
     // br = boolean reference verwijderd? bg = boolean group verwijderd?
-    removeGroupById(_id:string, callback: (b: boolean) => any) {
+    removeGroupById(_id: string, callback: (b: boolean) => any) {
         this._dao.readGroupById(_id, (g: Group) => {
             this.getOrganisationById(g._organisationId, (o:Organisation) => {
                 this._dao.deleteGroupFromOrganisation(g._id, o._id, (br: boolean) => {
@@ -236,7 +236,7 @@ export class UserManager {
     }
 
 
-    removeUserFromGroupById(_uId:string, _gId:string, callback: (b: boolean) => any) {
+    removeUserFromGroupById(_uId: string, _gId: string, callback: (b: boolean) => any) {
         this._dao.readUserById(_uId, (u: User) => {
             this._dao.readGroupById(_gId, (g: Group) => {
                 this._dao.deleteUserFromGroup(u._id, g._id, callback);
@@ -277,7 +277,7 @@ export class UserManager {
         });
     }
 
-    getUsers(userIds:string[], callback:(us:User[]) => any) {
+    getUsers(userIds: string[], callback:(us: User[]) => any) {
         this._dao.readUsers(userIds.map((s:string) => new ObjectID(s)),callback);
     }
 
@@ -299,5 +299,9 @@ export class UserManager {
 
     addOrganisationIdToUserById(organisationId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
         this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);
+    }
+
+    deleteOrganisationFromUserById(organisationId: string, userId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
     }
 }

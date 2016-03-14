@@ -378,4 +378,14 @@ export class UserDao {
             }
         });
     }
+
+    deleteOrganisationFromUserById(organisationId: string, userId: string, callback: (deleted: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$pull: {'_memberOf': organisationId}}, (error: MongoError, result) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
 }

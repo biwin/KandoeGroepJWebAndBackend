@@ -31,6 +31,14 @@ var OrganisationManager = (function () {
     OrganisationManager.prototype.removeOrganisationById = function (organisationId, callback) {
         this._dao.deleteOrganisationById(organisationId, callback);
     };
+    OrganisationManager.prototype.deleteMemberFromOrganisationById = function (memberId, organisationId, callback) {
+        this._dao.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {
+            var userManager = new userManager_1.UserManager();
+            userManager.deleteOrganisationFromUserById(organisationId, memberId, function () {
+                callback(deleted);
+            });
+        });
+    };
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     };
