@@ -15,14 +15,24 @@ var UserApi = (function () {
                 var claim = new Buffer(JSON.stringify({ "type": "web", "name": name, "id": u._id, "email": email })).toString('base64');
                 var signature = SHA256(header + "." + claim);
                 var token = header + "." + claim + "." + signature;
-                res.send(token);
+                res.send("{\"_message\":\"" + token + "\"}");
+            }
+        });
+    };
+    UserApi.getUser = function (email, password, res) {
+        UserApi.manager.getUserByEmail(email, function (u) {
+            if (u == null || u._password != password) {
+                res.send("{\"_message\":\"nope\"}");
+            }
+            else {
+                res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
             }
         });
     };
     UserApi.getPicture = function (token, type, res) {
         UserApi.isTokenValid(token, function (valid, decodedClaim) {
             if (valid)
-                UserApi.manager.getUserById(decodedClaim.id, function (u) { return res.send(type == 'small' ? u._pictureSmall : u._pictureLarge); });
+                UserApi.manager.getUserById(decodedClaim.id, function (u) { return res.send("{\"message\":\"" + (type == 'small' ? u._pictureSmall : u._pictureLarge) + "\"}"); });
             else
                 res.send("{\"_message\":\"nope\"}");
         });
@@ -67,16 +77,6 @@ var UserApi = (function () {
         var encSignature = parts[2];
         var isLegit = (SHA256(encHeader + "." + encClaim) == encSignature);
         callback(isLegit, isLegit ? JSON.parse(new Buffer(encClaim, 'base64').toString('ascii')) : null);
-    };
-    UserApi.getUser = function (email, password, res) {
-        UserApi.manager.getUserByEmail(email, function (u) {
-            if (u == null || u._password != password) {
-                res.send("{\"_message\":\"nope\"}");
-            }
-            else {
-                res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
-            }
-        });
     };
     UserApi.generateTokenForUser = function (u, type, facebookId) {
         var header = new Buffer(JSON.stringify({ "typ": "JWT", "alg": "HS256" })).toString('base64');

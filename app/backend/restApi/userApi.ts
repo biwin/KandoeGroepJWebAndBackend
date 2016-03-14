@@ -10,23 +10,33 @@ var SHA256 = require("crypto-js/sha256");
 export class UserApi {
     private static manager: UserManager = new UserManager();
 
-    public static createUser(name:string, email:string, password:string, registrar:string, res) {
+    public static createUser(name: string, email: string, password: string, registrar: string, res) {
         UserApi.manager.registerUser(new User(name, email, password, registrar), (u: User) => {
             if (u == null) {
                 res.send("{\"_message\":\"nope\"}");
             } else {
-                var header:string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
-                var claim:string = new Buffer(JSON.stringify({"type": "web", "name": name, "id": u._id, "email": email})).toString('base64');
-                var signature:string = SHA256(header + "." + claim);
-                var token:string = header + "." + claim + "." + signature;
-                res.send(token);
+                var header: string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
+                var claim: string = new Buffer(JSON.stringify({"type": "web", "name": name, "id": u._id, "email": email})).toString('base64');
+                var signature: string = SHA256(header + "." + claim);
+                var token: string = header + "." + claim + "." + signature;
+                res.send("{\"_message\":\"" + token + "\"}");
+            }
+        });
+    }
+
+    public static getUser(email: string, password: string, res) {
+        UserApi.manager.getUserByEmail(email, (u:User) => {
+            if (u == null || u._password != password) {
+                res.send("{\"_message\":\"nope\"}");
+            } else {
+                res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
             }
         });
     }
 
     public static getPicture(token, type: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
-            if (valid) UserApi.manager.getUserById(decodedClaim.id, (u: User) => res.send(type == 'small' ? u._pictureSmall : u._pictureLarge));
+            if (valid) UserApi.manager.getUserById(decodedClaim.id, (u: User) => res.send("{\"message\":\"" + (type == 'small' ? u._pictureSmall : u._pictureLarge) + "\"}"));
             else res.send("{\"_message\":\"nope\"}");
         });
     }
@@ -60,16 +70,6 @@ export class UserApi {
         var encSignature = parts[2];
         var isLegit = (SHA256(encHeader + "." + encClaim) == encSignature);
         callback(isLegit, isLegit ? JSON.parse(new Buffer(encClaim, 'base64').toString('ascii')) : null);
-    }
-
-    public static getUser(email: string, password: string, res) {
-        UserApi.manager.getUserByEmail(email, (u:User) => {
-            if (u == null || u._password != password) {
-                res.send("{\"_message\":\"nope\"}");
-            } else {
-                res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
-            }
-        });
     }
 
     private static generateTokenForUser(u: User, type: string, facebookId?: string) {

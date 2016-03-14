@@ -66,6 +66,14 @@ export class ThemeDao {
         });
     }
 
+    readAllThemesByOrganisationId(organisationId:string, callback:(themes:Theme[])=> any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('themes').find({'_organisationId': organisationId}).toArray((err:MongoError, docs:Theme[]) => {
+                callback(docs);
+            });
+        });
+    }
+
     readCards(themeId:string, callback:(c:Card[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({'_themeId': themeId}).toArray((err:MongoError, docs:Card[]) => {
