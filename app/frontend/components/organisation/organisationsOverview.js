@@ -19,8 +19,7 @@ var OrganisationsOverview = (function () {
         this.router = router;
         this.organisationService = organisationService;
         this.userService = userService;
-        var userId = userService.getUserId();
-        userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
+        userService.getAllOrganisationsOfCurrentUser().subscribe(function (organisations) {
             _this.organisations = organisations;
         });
     }

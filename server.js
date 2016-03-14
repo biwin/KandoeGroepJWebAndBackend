@@ -43,9 +43,7 @@ app.get('/api/user/get', function (req, res) {
 app.get('/api/user/bulk/:array', UserApi.UserApi.getUsers);
 app.get('/api/user/:id/groups', GroupAPI.GroupAPI.getGroupsOfUserById);
 app.get('/api/user/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfCurrentUser);
-app.get('/api/user/:id/organisations', function (req, res) {
-    UserApi.UserApi.getAllOrganisationsOfUserById(req.params.id, res);
-});
+app.get('/api/user/organisations', UserApi.UserApi.getAllOrganisationsOfCurrentUser);
 //endregion
 
 //region circlesession routes

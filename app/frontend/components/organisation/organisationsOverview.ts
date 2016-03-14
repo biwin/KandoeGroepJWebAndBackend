@@ -48,8 +48,7 @@ export class OrganisationsOverview {
         this.organisationService = organisationService;
         this.userService = userService;
 
-        var userId: string = userService.getUserId();
-        userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+        userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
         });
     }

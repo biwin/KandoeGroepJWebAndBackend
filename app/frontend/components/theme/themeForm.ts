@@ -55,11 +55,8 @@ export class ThemeForm {
         this.service = service;
         this.router = router;
 
-        //TODO: user niet meegeven
-        userService.getUserId((userId: string) => {
-            userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
-                this._organisations = organisations;
-            });
+        userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
+            this._organisations = organisations;
         });
     }
 

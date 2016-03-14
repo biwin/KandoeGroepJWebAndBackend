@@ -26,8 +26,7 @@ var GroupForm = (function () {
         else {
             this.group._organisationId = "";
         }
-        var userId = userService.getUserId();
-        userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
+        userService.getAllOrganisationsOfCurrentUser().subscribe(function (organisations) {
             _this.organisations = organisations;
         });
     }

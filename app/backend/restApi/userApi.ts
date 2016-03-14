@@ -1,10 +1,13 @@
-import {UserManager} from "../logic/userManager";
-import {User} from "../model/user";
+import {Request, Response} from "express";
+
 import {GroupAPI} from "./groupAPI";
 import {OrganisationAPI} from "./organisationAPI";
 import {CircleSessionApi} from "./circleSessionApi";
-import {Request} from "express";
-import {Response} from "express";
+
+import {UserManager} from "../logic/userManager";
+
+import {User} from "../model/user";
+
 var SHA256 = require("crypto-js/sha256");
 
 export class UserApi {
@@ -128,8 +131,8 @@ export class UserApi {
         });
     }
 
-    public static getAllOrganisationsOfUserById(userId: string, res) {
-        OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
+    public static getAllOrganisationsOfCurrentUser(req: Request, res: Response) {
+        OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     }
 
     public static getMembersOfOrganisationById(organisationId: string, res) {

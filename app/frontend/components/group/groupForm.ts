@@ -60,8 +60,7 @@ export class GroupForm implements AfterViewInit {
             this.group._organisationId = "";
         }
 
-        var userId: string = userService.getUserId();
-        userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+        userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
         });
     }

@@ -1,6 +1,6 @@
+var organisationAPI_1 = require("./organisationAPI");
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
-var organisationAPI_1 = require("./organisationAPI");
 var SHA256 = require("crypto-js/sha256");
 var UserApi = (function () {
     function UserApi() {
@@ -134,8 +134,8 @@ var UserApi = (function () {
             callback(b ? decodedToken.id : null);
         });
     };
-    UserApi.getAllOrganisationsOfUserById = function (userId, res) {
-        organisationAPI_1.OrganisationAPI.getAllOrganisationsOfUserById(userId, res);
+    UserApi.getAllOrganisationsOfCurrentUser = function (req, res) {
+        organisationAPI_1.OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     };
     UserApi.getMembersOfOrganisationById = function (organisationId, res) {
         this.manager.getMembersOfOrganisationById(organisationId, function (members) {

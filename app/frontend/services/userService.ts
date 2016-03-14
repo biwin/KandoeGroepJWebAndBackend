@@ -97,7 +97,7 @@ export class UserService {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
     }
 
-    getAllOrganisationsOfUserById(userId: string): Observable<Organisation[]> {
-        return this.http.get(this.path + "user/" + userId + "/organisations", false, true, false);
+    getAllOrganisationsOfCurrentUser(): Observable<Organisation[]> {
+        return this.http.get(this.path + "user/organisations", false, true, true);
     }
 }

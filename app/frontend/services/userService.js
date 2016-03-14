@@ -86,8 +86,8 @@ var UserService = (function () {
     UserService.prototype.getUsers = function (userIds) {
         return this.http.get(this.path + 'user/bulk/' + encodeURI(JSON.stringify(userIds)), false, true, true);
     };
-    UserService.prototype.getAllOrganisationsOfUserById = function (userId) {
-        return this.http.get(this.path + "user/" + userId + "/organisations", false, true, false);
+    UserService.prototype.getAllOrganisationsOfCurrentUser = function () {
+        return this.http.get(this.path + "user/organisations", false, true, true);
     };
     UserService = __decorate([
         core_1.Injectable(),

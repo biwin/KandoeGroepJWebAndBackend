@@ -1,3 +1,5 @@
+import {Request, Response} from "express";
+
 import {GroupAPI} from "./groupAPI";
 import {UserApi} from "./userApi";
 
@@ -40,9 +42,13 @@ export class OrganisationAPI {
         });
     }
 
-    public static getAllOrganisationsOfUserById(userId: string, res) {
-        this.mgr.getAllOrganisationsOfUserById(userId, (organisations: Organisation[]) => {
-            res.send(organisations);
+    public static getAllOrganisationsOfCurrentUser(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) =>{
+            if(currentUserId != null){
+                this.mgr.getAllOrganisationsOfUserById(currentUserId, (organisations: Organisation[]) => {
+                    res.send(organisations);
+                });
+            }
         });
     }
 }

@@ -30,9 +30,14 @@ var OrganisationAPI = (function () {
             res.send(organisation);
         });
     };
-    OrganisationAPI.getAllOrganisationsOfUserById = function (userId, res) {
-        this.mgr.getAllOrganisationsOfUserById(userId, function (organisations) {
-            res.send(organisations);
+    OrganisationAPI.getAllOrganisationsOfCurrentUser = function (req, res) {
+        var _this = this;
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                _this.mgr.getAllOrganisationsOfUserById(currentUserId, function (organisations) {
+                    res.send(organisations);
+                });
+            }
         });
     };
     OrganisationAPI.mgr = new organisationManager_1.OrganisationManager();

@@ -22,11 +22,8 @@ var ThemeForm = (function () {
         this._organisations = [];
         this.service = service;
         this.router = router;
-        //TODO: user niet meegeven
-        userService.getUserId(function (userId) {
-            userService.getAllOrganisationsOfUserById(userId).subscribe(function (organisations) {
-                _this._organisations = organisations;
-            });
+        userService.getAllOrganisationsOfCurrentUser().subscribe(function (organisations) {
+            _this._organisations = organisations;
         });
     }
     ThemeForm.prototype.OnSubmit = function () {
