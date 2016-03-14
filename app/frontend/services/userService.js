@@ -39,19 +39,19 @@ var UserService = (function () {
         return token != null && token != "";
     };
     UserService.prototype.changeProfile = function (newName, newSmallPictureLink, newLargePictureLink) {
-        return this.http.post(this.path + 'user/change-profile', JSON.stringify({ '_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink }), true, false, true);
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({ '_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink }), true, false, true).map(function (res) { return res.json()._message; });
     };
     UserService.prototype.getUser = function (email, password) {
-        return this.http.post(this.path + 'user/login', JSON.stringify({ '_email': email, '_password': password }), true, false, false);
+        return this.http.post(this.path + 'user/login', JSON.stringify({ '_email': email, '_password': password }), true, false, false).map(function (res) { return res.json()._message; });
     };
     UserService.prototype.registerUser = function (name, password, email, registrar) {
-        return this.http.post(this.path + 'user/register', JSON.stringify({ '_username': name, '_password': password, '_email': email, '_registrar': registrar }), true, false, false);
+        return this.http.post(this.path + 'user/register', JSON.stringify({ '_username': name, '_password': password, '_email': email, '_registrar': registrar }), true, false, false).map(function (res) { return res.json()._message; });
     };
     UserService.prototype.loginUserFacebook = function (id, name, email, pictureSmall, pictureLarge) {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ '_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook' }), true, false, false);
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({ '_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook' }), true, false, false).map(function (res) { return res.json()._message; });
     };
     UserService.prototype.getUserPicture = function (type) {
-        return this.http.post(this.path + 'user/get-picture', JSON.stringify({ '_type': type }), true, false, true);
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({ '_type': type }), true, false, true).map(function (res) { return res.json()._message; });
     };
     UserService.prototype.getUsername = function () {
         var token = localStorage.getItem('token');
@@ -71,9 +71,9 @@ var UserService = (function () {
     };
     UserService.prototype.getImageLinks = function (callback) {
         var _this = this;
-        this.getUserPicture('small').subscribe(function (res1) {
-            _this.getUserPicture('large').subscribe(function (res2) {
-                callback(res1.text(), res2.text());
+        this.getUserPicture('small').subscribe(function (p1) {
+            _this.getUserPicture('large').subscribe(function (p2) {
+                callback(p1, p2);
             });
         });
     };

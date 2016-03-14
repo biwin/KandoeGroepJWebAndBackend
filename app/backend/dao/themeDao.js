@@ -85,6 +85,15 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.readCardsByIds = function (cardIds, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('cards').find({
+                '_id': { '$in': cardIds.map(function (i) { return new mongodb_1.ObjectID(i); }) }
+            }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     return ThemeDao;
 })();
 exports.ThemeDao = ThemeDao;

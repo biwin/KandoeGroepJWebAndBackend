@@ -50,7 +50,7 @@ import {UserService} from "../../services/userService";
   `
 })
 
-export class CircleSessionCard implements AfterViewInit{
+export class CircleSessionCard implements AfterViewInit {
     @Input() private circleSession:CircleSession;
     @Output() onDelete:EventEmitter<string> = new EventEmitter();
 

@@ -105,6 +105,18 @@ var ThemeApi = (function () {
             }
         });
     };
+    ThemeApi.getCardsByIds = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                ThemeApi.mgr.getCardsByIds(JSON.parse(req.params.array), function (cs) {
+                    res.send(cs);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     ThemeApi.mgr = new themeManager_1.ThemeManager();
     return ThemeApi;
 })();

@@ -1,9 +1,7 @@
 import {Injectable, Inject} from "angular2/core";
 import {Response, Headers} from "angular2/http";
 import {Observable} from "rxjs/Observable";
-
 import {HttpWrapperService} from "./httpWrapperService";
-
 import {Theme} from "../../backend/model/theme";
 import {Card} from "../../backend/model/card";
 
@@ -43,5 +41,9 @@ export class ThemeService {
 
     deleteTheme(themeId: string): Observable<boolean> {
         return this.http.delete(this.path + 'themes/' + themeId, false, false, true);
+    }
+
+    getCardsByIds(cardIds:string[]):Observable<Card[]> {
+        return this.http.get(this.path + 'themes/cards/' + encodeURI(JSON.stringify(cardIds)), true, true, true);
     }
 }

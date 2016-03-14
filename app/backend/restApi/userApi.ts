@@ -16,13 +16,13 @@ export class UserApi {
     public static createUser(name: string, email: string, password: string, registrar: string, res) {
         UserApi.manager.registerUser(new User(name, email, password, registrar), (u: User) => {
             if (u == null) {
-                res.send("{\"_message\":\"nope\"}");
+                res.send({'_message':'nope'});
             } else {
                 var header: string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
                 var claim: string = new Buffer(JSON.stringify({"_type": "web", "_name": name, "_id": u._id, "_email": email})).toString('base64');
                 var signature: string = SHA256(header + "." + claim);
                 var token: string = header + "." + claim + "." + signature;
-                res.send("{\"_message\":\"" + token + "\"}");
+                res.send({'_message': token});
             }
         });
     }
@@ -30,17 +30,17 @@ export class UserApi {
     public static getUser(email: string, password: string, res) {
         UserApi.manager.getUserByEmail(email, (u:User) => {
             if (u == null || u._password != password) {
-                res.send("{\"_message\":\"nope\"}");
+                res.send({'_message':'nope'});
             } else {
-                res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
+                res.send({'_message': UserApi.generateTokenForUser(u, "web")});
             }
         });
     }
 
     public static getPicture(token, type: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
-            if (valid) UserApi.manager.getUserById(decodedClaim._id, (u: User) => res.send("{\"message\":\"" + (type == 'small' ? u._pictureSmall : u._pictureLarge) + "\"}"));
-            else res.send("{\"_message\":\"nope\"}");
+            if (valid) UserApi.manager.getUserById(decodedClaim._id, (u: User) => res.send({'_message': (type == 'small' ? u._pictureSmall : u._pictureLarge) }));
+            else res.send({'_message':'nope'});
         });
     }
 
@@ -49,17 +49,17 @@ export class UserApi {
             if (valid) {
                 if (decodedClaim._type == 'facebook') {
                     UserApi.manager.changeProfileByFacebookId(decodedClaim._facebookId, newName, newSmallPicture, newLargePicture, (u: User) => {
-                        if (u == null) res.send("{\"_message\":\"nope\"}");
-                        else res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "facebook", u._facebookId) + "\"}");
+                        if (u == null) res.send({'_message':'nope'});
+                        else res.send({'_message': UserApi.generateTokenForUser(u, "facebook", u._facebookId) });
                     });
                 } else {
                     UserApi.manager.changeProfileByEmail(decodedClaim._email, newName, newSmallPicture, newLargePicture, (u: User) => {
-                        if (u == null) res.send("{\"_message\":\"nope\"}");
-                        else res.send("{\"_message\":\"" + UserApi.generateTokenForUser(u, "web") + "\"}");
+                        if (u == null) res.send({'_message':'nope'});
+                        else res.send({'_message': UserApi.generateTokenForUser(u, "web")});
                     });
                 }
             } else {
-                res.send("{\"_message\":\"nope\"}");
+                res.send({'_message':'nope'});
             }
         });
     }
@@ -89,13 +89,13 @@ export class UserApi {
             if (exists) {
                 UserApi.manager.getFacebookUser(facebookId, (u: User) => {
                     if (u == null) {
-                        res.send("{\"_message\":\"nope\"}");
+                        res.send({'_message':'nope'});
                     } else {
                         var header: string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
                         var claim: string = new Buffer(JSON.stringify({"_facebookId": facebookId, "_type": "facebook", "_name": u._name, "_id": u._id.toString()})).toString('base64');
                         var signature: string = SHA256(header + "." + claim);
                         var token: string = header + "." + claim + "." + signature;
-                        res.send("{\"_message\":\"" + token + "\"}");
+                        res.send({'_message': token});
                     }
                 });
             } else {
@@ -105,13 +105,13 @@ export class UserApi {
                 user._pictureLarge = pictureLarge;
                 UserApi.manager.registerUser(user, (u: User) => {
                     if (u == null) {
-                        res.send("{\"_message\":\"nope\"}");
+                        res.send({'_message':"nope"});
                     } else {
                         var header: string = new Buffer(JSON.stringify({"typ": "JWT", "alg": "HS256"})).toString('base64');
                         var claim: string = new Buffer(JSON.stringify({"_facebookId": facebookId, "_type": "facebook", "_name": name, "_id": u._id})).toString('base64');
                         var signature: string = SHA256(header + "." + claim);
                         var token: string = header + "." + claim + "." + signature;
-                        res.send("{\"_message\":\"" + token + "\"}");
+                        res.send({'_message': token});
                     }
                 });
             }

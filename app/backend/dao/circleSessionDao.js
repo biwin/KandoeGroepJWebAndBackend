@@ -112,7 +112,7 @@ var CircleSessionDao = (function () {
             });
         });
     };
-    CircleSessionDao.prototype.getCardPositions = function (circleSessionId, cardIds, callback) {
+    CircleSessionDao.prototype.getCardPositionsForCardIds = function (circleSessionId, cardIds, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cardpositions').find({
                 '_sessionId': circleSessionId,
@@ -166,6 +166,13 @@ var CircleSessionDao = (function () {
             db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: { _inProgress: inProgress } }, function (err, res) {
                 db.close();
                 callback();
+            });
+        });
+    };
+    CircleSessionDao.prototype.getCardPositions = function (circleSessionId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('cardpositions').find({ '_sessionId': circleSessionId }).toArray(function (err, docs) {
+                callback(docs);
             });
         });
     };

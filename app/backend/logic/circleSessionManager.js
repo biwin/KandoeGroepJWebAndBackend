@@ -142,7 +142,7 @@ var CircleSessionManager = (function () {
                     callback(null, null, "Not your turn!");
                 }
                 else {
-                    _this._dao.getCardPositions(circleSessionId, cardIds, function (cps) {
+                    _this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, function (cps) {
                         for (var i = 0; i < cps.length; i++) {
                             var index = cardIds.indexOf(cps[i]._id);
                             if (index > -1) {
@@ -240,6 +240,9 @@ var CircleSessionManager = (function () {
                 callback(false);
             }
         });
+    };
+    CircleSessionManager.prototype.getCardPositions = function (circleSessionId, callback) {
+        this._dao.getCardPositions(circleSessionId, callback);
     };
     return CircleSessionManager;
 })();

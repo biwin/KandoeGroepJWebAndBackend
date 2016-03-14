@@ -53,6 +53,9 @@ var ThemeManager = (function () {
     ThemeManager.prototype.deleteCardsFromTheme = function (themeId, callback) {
         this._dao.removeCardsFromTheme(themeId, callback);
     };
+    ThemeManager.prototype.getCardsByIds = function (cardIds, callback) {
+        this._dao.readCardsByIds(cardIds, callback);
+    };
     return ThemeManager;
 })();
 exports.ThemeManager = ThemeManager;

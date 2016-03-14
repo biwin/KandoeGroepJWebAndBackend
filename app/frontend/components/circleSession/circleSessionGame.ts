@@ -74,12 +74,14 @@ export class CircleSessionGame {
         service.get(this.id).subscribe((circleSession:CircleSession) => {
             this.circleSession = circleSession;
 
-            themeService.getCards(circleSession._themeId).subscribe((cs:Card[]) => {
-                cs.forEach((c:Card) => {
-                    this.cards.push(c);
-                    this.pst.push(new CardPosition(this.id, c._id, "", [],Math.floor(Math.random() * 5) + 1, new Date()));
-                });
-            })
+            service.getCardPositionsOfSession(circleSession._id).subscribe((cps:CardPosition[]) => {
+                this.pst.push(cps);
+                if(cps.length > 0) {
+                    themeService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
+                        this.cards.push(cs);
+                    });
+                }
+            });
         });
     }
 

@@ -13,11 +13,13 @@ var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
 var circleSession_1 = require("../../../backend/model/circleSession");
 var circleSessionService_1 = require("../../services/circleSessionService");
+var userService_1 = require("../../services/userService");
 var CircleSessionPreGame = (function () {
-    function CircleSessionPreGame(cService) {
+    function CircleSessionPreGame(cService, uService) {
         this.circleSession = circleSession_1.CircleSession.empty();
         this.selectedCards = [];
         this.circleService = cService;
+        this.myUserId = uService.getUserId();
     }
     CircleSessionPreGame.prototype.ngOnChanges = function () {
         var _this = this;
@@ -50,10 +52,17 @@ var CircleSessionPreGame = (function () {
                 _this.circleSession._currentPlayerId = r._currentPlayerId;
                 if (r._roundEnded === true)
                     _this.circleSession._isPreGame = false;
+                _this.cards = _this.cards.map(function (c) {
+                    if (_this.selectedCards.indexOf(c.card._id) > -1)
+                        c.inPlay = true;
+                    return c;
+                });
+                _this.selectedCards.splice(0, _this.selectedCards.length);
             }
             Materialize.toast('Done', 3000, 'rounded');
         }, function (r) {
             Materialize.toast(r._error, 3000, 'rounded');
+            alert(r._error);
         });
     };
     __decorate([
@@ -63,10 +72,10 @@ var CircleSessionPreGame = (function () {
     CircleSessionPreGame = __decorate([
         core_1.Component({
             selector: 'pregame',
-            template: "\n        <div class=\"row container\">\n              <div class=\"fixed-action-btn\" id=\"sessionPreGameSave\">\n                <a (click)=\"submitCards()\" class=\"btn-floating btn-large red\">\n                  <i class=\"large material-icons\">arrow_forward</i>\n                </a>\n                <ul>\n                  <li><a (click)=\"clear()\" class=\"btn-floating orange\"><i class=\"material-icons\">undo</i></a></li>\n                </ul>\n              </div>\n\n            <h5 class=\"center-align\">Kies de kaarten die belangrijk zijn voor jou!</h5>\n            <div class=\"col s12 m4\" *ngFor=\"#card of cards\">\n                <div class=\"card-panel\">\n                    <span class=\"truncate\">\n                        <a (click)=\"selectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) < 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light blue\"><i class=\"material-icons\">add</i></a>\n                        <a (click)=\"unselectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) >= 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light red\"><i class=\"material-icons\">remove</i></a>\n                        <a *ngIf=\"card.inPlay\" class=\"z-depth-0 btn-floating btn disabled-with-tooltip tooltipped\" data-position=\"bottom\" data-delay=\"50\" data-tooltip=\"Deze kaart is al door een andere speler gekozen.\"><i class=\"material-icons\">remove</i></a>\n                        <span class=\"center-align\">  {{card.card._name}}</span>\n                    </span>\n               </div>\n            </div>\n        </div>\n    ",
+            template: "\n        <div class=\"row container\">\n              <div class=\"fixed-action-btn\" id=\"sessionPreGameSave\">\n                <a (click)=\"submitCards()\" class=\"btn-floating btn-large red\">\n                  <i class=\"large material-icons\">arrow_forward</i>\n                </a>\n                <ul>\n                  <li><a (click)=\"clear()\" class=\"btn-floating orange\"><i class=\"material-icons\">undo</i></a></li>\n                </ul>\n              </div>\n\n            <h5 class=\"center-align\">Kies de kaarten die belangrijk zijn voor jou!</h5>\n            <div class=\"col s12 m4\" *ngFor=\"#card of cards\" *ngIf=\"myUserId === circleSession._currentPlayerId\">\n                <div class=\"card-panel\">\n                    <span class=\"truncate\">\n                        <a (click)=\"selectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) < 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light blue\"><i class=\"material-icons\">add</i></a>\n                        <a (click)=\"unselectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) >= 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light red\"><i class=\"material-icons\">remove</i></a>\n                        <a *ngIf=\"card.inPlay\" class=\"z-depth-0 btn-floating btn disabled-with-tooltip tooltipped\" data-position=\"bottom\" data-delay=\"50\" data-tooltip=\"Deze kaart is al door een andere speler gekozen.\"><i class=\"material-icons\">remove</i></a>\n                        <span class=\"center-align\">  {{card.card._name}}</span>\n                    </span>\n               </div>\n            </div>\n            <div *ngIf=\"myUserId !== circleSession._currentPlayerId\" class=\"col s12\">\n                <h6>Beurt voorbij! Wacht tot iedereen kaartjes gekozen heeft om het spel te beginnen...</h6>\n            </div>\n        </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 
-        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService])
+        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, userService_1.UserService])
     ], CircleSessionPreGame);
     return CircleSessionPreGame;
 })();

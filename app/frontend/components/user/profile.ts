@@ -60,7 +60,7 @@ export class Profile {
         } else {
             this.usernameString = service.getUsername();
             service.getImageLinks((smallImageLink: string, largeImageLink: string) => {this.smallImageLinkString = smallImageLink; this.largeImageLinkString = largeImageLink});
-            service.getUserPicture('large').subscribe((url: Response) => this.imageSource = url.text());
+            service.getUserPicture('large').subscribe((url: string) => this.imageSource = url);
         }
     }
 

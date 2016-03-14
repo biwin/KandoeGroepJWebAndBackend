@@ -106,4 +106,16 @@ export class ThemeApi {
             }
         });
     }
+
+    public static getCardsByIds(req:Request, res:Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
+            if(currentUserId != null) {
+                ThemeApi.mgr.getCardsByIds(JSON.parse(req.params.array), (cs:Card[]) => {
+                    res.send(cs);
+                });
+            } else {
+                res.status(401).send({error:'Unauthorized'});
+            }
+        });
+    }
 }

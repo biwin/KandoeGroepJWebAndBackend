@@ -155,7 +155,7 @@ export class CircleSessionManager {
                 if (c._currentPlayerId !== uId) {
                     callback(null, null, "Not your turn!");
                 } else {
-                    this._dao.getCardPositions(circleSessionId, cardIds, (cps:CardPosition[]) => {
+                    this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, (cps:CardPosition[]) => {
                         for (var i = 0; i < cps.length; i++) {
                             var index = cardIds.indexOf(cps[i]._id);
                             if (index > -1) {
@@ -254,5 +254,9 @@ export class CircleSessionManager {
                 callback(false);
             }
         });
+    }
+
+    getCardPositions(circleSessionId:string, callback:(cps:CardPosition[]) => any) {
+        this._dao.getCardPositions(circleSessionId, callback);
     }
 }

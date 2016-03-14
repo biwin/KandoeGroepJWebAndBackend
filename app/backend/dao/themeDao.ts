@@ -101,4 +101,14 @@ export class ThemeDao {
             });
         });
     }
+
+    readCardsByIds(cardIds:string[], callback:(cs:Card[])=>any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cards').find({
+                '_id': {'$in': cardIds.map((i:string) => new ObjectID(i))}
+            }).toArray((err:MongoError, docs:Card[]) => {
+                callback(docs);
+            });
+        });
+    }
 }

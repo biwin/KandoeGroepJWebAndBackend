@@ -45,6 +45,9 @@ var CircleSessionService = (function () {
     CircleSessionService.prototype.addUser = function (circleSessionId, email) {
         return this.http.post(this.path + 'circlesessions/' + circleSessionId, JSON.stringify({ email: email }), true, false, true);
     };
+    CircleSessionService.prototype.getCardPositionsOfSession = function (sessionId) {
+        return this.http.get(this.path + 'circlesessions/' + sessionId + '/positions', true, true, true);
+    };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

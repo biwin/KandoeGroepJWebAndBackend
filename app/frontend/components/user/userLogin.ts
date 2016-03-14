@@ -87,9 +87,9 @@ export class UserLogin {
         FB.login((res) => {
             if (res.authResponse) {
                 this.getFacebookStandardData((id, name, email, pictureSmall, pictureLarge) => {
-                    this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe((token: Response) => {
+                    this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe((token: string) => {
                         if (token != null) {
-                            if (token.text() == "nope") this.errorInfo = "Error";
+                            if (token == "nope") this.errorInfo = "Error";
                             else this.setLoggedIn(token);
                         }
                     });
@@ -100,24 +100,24 @@ export class UserLogin {
         }, {scope: 'public_profile'})
     }
 
-    setLoggedIn(token) {
-        localStorage.setItem('token', token.text());
+    setLoggedIn(token:string) {
+        localStorage.setItem('token', token);
         this.router.navigate(['Profile']);
         this.service.notifyLoggedIn();
     }
 
     onLoginSubmit() {
         if (this.button == "login") {
-            this.service.getUser(this.emailString, this.passwordString).subscribe((token: Response) => {
+            this.service.getUser(this.emailString, this.passwordString).subscribe((token: string) => {
                 if (token != null) {
-                    if (token.text() == "nope") this.errorInfo = "Incorrecte login informatie";
+                    if (token == "nope") this.errorInfo = "Incorrecte login informatie";
                     else this.setLoggedIn(token);
                 }
             });
         } else if (this.button == "register") {
-            this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe((token: Response) => {
+            this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe((token: string) => {
                 if (token != null) {
-                    if (token.text() == "nope") this.errorInfo = "Email is reeds in gebruik";
+                    if (token == "nope") this.errorInfo = "Email is reeds in gebruik";
                     else this.setLoggedIn(token);
                 }
             });

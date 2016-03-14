@@ -31,7 +31,7 @@ var UserLogin = (function () {
                 _this.getFacebookStandardData(function (id, name, email, pictureSmall, pictureLarge) {
                     _this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe(function (token) {
                         if (token != null) {
-                            if (token.text() == "nope")
+                            if (token == "nope")
                                 _this.errorInfo = "Error";
                             else
                                 _this.setLoggedIn(token);
@@ -45,7 +45,7 @@ var UserLogin = (function () {
         }, { scope: 'public_profile' });
     };
     UserLogin.prototype.setLoggedIn = function (token) {
-        localStorage.setItem('token', token.text());
+        localStorage.setItem('token', token);
         this.router.navigate(['Profile']);
         this.service.notifyLoggedIn();
     };
@@ -54,7 +54,7 @@ var UserLogin = (function () {
         if (this.button == "login") {
             this.service.getUser(this.emailString, this.passwordString).subscribe(function (token) {
                 if (token != null) {
-                    if (token.text() == "nope")
+                    if (token == "nope")
                         _this.errorInfo = "Incorrecte login informatie";
                     else
                         _this.setLoggedIn(token);
@@ -64,7 +64,7 @@ var UserLogin = (function () {
         else if (this.button == "register") {
             this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe(function (token) {
                 if (token != null) {
-                    if (token.text() == "nope")
+                    if (token == "nope")
                         _this.errorInfo = "Email is reeds in gebruik";
                     else
                         _this.setLoggedIn(token);

@@ -44,7 +44,7 @@ export class NavigationBar implements AfterViewInit {
     constructor(private service: UserService) {
         service.subscribeMe(this);
         if (this.service.isLoggedIn()) {
-            this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
+            this.service.getUserPicture('small').subscribe((url: string) => this.imageSource = url);
             this.usernameString = this.service.getUsername();
         } else {
             this.usernameString = "Gast";
@@ -53,7 +53,7 @@ export class NavigationBar implements AfterViewInit {
 
     notifyLoggedIn() {
         this.getUserName();
-        this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
+        this.service.getUserPicture('small').subscribe((url: string) => this.imageSource = url);
     }
 
     notifyLoggedOut() {
@@ -63,7 +63,7 @@ export class NavigationBar implements AfterViewInit {
 
     notifyProfileUpdated() {
         this.usernameString = this.service.getUsername();
-        this.service.getUserPicture('small').subscribe((url: Response) => this.imageSource = url.text());
+        this.service.getUserPicture('small').subscribe((url: string) => this.imageSource = url);
     }
 
     getUserName() {
@@ -71,6 +71,7 @@ export class NavigationBar implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+        //FIXME: navbar doesn't seem to open on mobile
         $("#main-nav-toggle").sideNav({menuWidth: 240});
     }
 }

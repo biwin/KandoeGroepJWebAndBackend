@@ -39,6 +39,9 @@ var ThemeService = (function () {
     ThemeService.prototype.deleteTheme = function (themeId) {
         return this.http.delete(this.path + 'themes/' + themeId, false, false, true);
     };
+    ThemeService.prototype.getCardsByIds = function (cardIds) {
+        return this.http.get(this.path + 'themes/cards/' + encodeURI(JSON.stringify(cardIds)), true, true, true);
+    };
     ThemeService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject('App.BackendPath')), 

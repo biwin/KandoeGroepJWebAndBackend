@@ -42,23 +42,23 @@ export class UserService {
     }
 
     changeProfile(newName: string, newSmallPictureLink: string, newLargePictureLink: string) {
-        return this.http.post(this.path + 'user/change-profile', JSON.stringify({'_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink}), true, false, true);
+        return this.http.post(this.path + 'user/change-profile', JSON.stringify({'_username': newName, '_smallPicture': newSmallPictureLink, '_largePicture': newLargePictureLink}), true, false, true).map((res:Response)=>res.json()._message);
     }
 
     getUser(email: string, password: string): Observable<Response> {
-        return this.http.post(this.path + 'user/login', JSON.stringify({'_email': email, '_password': password}), true, false, false);
+        return this.http.post(this.path + 'user/login', JSON.stringify({'_email': email, '_password': password}), true, false, false).map((res:Response) => res.json()._message);
     }
 
     registerUser(name: string, password: string, email: string, registrar: string): Observable<Response> {
-        return this.http.post(this.path + 'user/register', JSON.stringify({'_username': name, '_password': password, '_email': email, '_registrar': registrar}), true, false, false);
+        return this.http.post(this.path + 'user/register', JSON.stringify({'_username': name, '_password': password, '_email': email, '_registrar': registrar}), true, false, false).map((res:Response) => res.json()._message);
     }
 
     loginUserFacebook(id: string, name: string, email: string, pictureSmall: string, pictureLarge: string): Observable<Response> {
-        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook'}), true, false, false);
+        return this.http.post(this.path + 'user/login-facebook', JSON.stringify({'_name': name, '_email': email, '_facebookId': id, '_pictureSmall': pictureSmall, '_pictureLarge': pictureLarge, '_registrar': 'facebook'}), true, false, false).map((res:Response) => res.json()._message);
     }
 
-    getUserPicture(type: string) {
-        return this.http.post(this.path + 'user/get-picture', JSON.stringify({'_type': type}), true, false, true);
+    getUserPicture(type: string):Observable<string> {
+        return this.http.post(this.path + 'user/get-picture', JSON.stringify({'_type': type}), true, false, true).map((res:Response) => res.json()._message);
     }
 
     getUsername(): string {
@@ -78,9 +78,9 @@ export class UserService {
     }
 
     getImageLinks(callback: (smallImageLink: string, largeImageLink: string) => any) {
-        this.getUserPicture('small').subscribe((res1: Response) => {
-            this.getUserPicture('large').subscribe((res2: Response) => {
-                callback(res1.text(), res2.text());
+        this.getUserPicture('small').subscribe((p1: string) => {
+            this.getUserPicture('large').subscribe((p2: string) => {
+                callback(p1, p2);
             });
         });
     }

@@ -15,7 +15,6 @@ var router_1 = require("angular2/router");
 var themeService_1 = require("../../services/themeService");
 var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionConstants_1 = require("./../../logic/circleSessionConstants");
-var cardPosition_1 = require("../../../backend/model/cardPosition");
 var circleSessionUserList_1 = require("./circleSessionUserList");
 var circleSessionPreGame_1 = require("./circleSessionPreGame");
 var CircleSessionGame = (function () {
@@ -29,11 +28,13 @@ var CircleSessionGame = (function () {
         this.id = route.get('id');
         service.get(this.id).subscribe(function (circleSession) {
             _this.circleSession = circleSession;
-            themeService.getCards(circleSession._themeId).subscribe(function (cs) {
-                cs.forEach(function (c) {
-                    _this.cards.push(c);
-                    _this.pst.push(new cardPosition_1.CardPosition(_this.id, c._id, "", [], Math.floor(Math.random() * 5) + 1, new Date()));
-                });
+            service.getCardPositionsOfSession(circleSession._id).subscribe(function (cps) {
+                _this.pst.push(cps);
+                if (cps.length > 0) {
+                    themeService.getCardsByIds(cps.map(function (c) { return c._cardId; })).subscribe(function (cs) {
+                        _this.cards.push(cs);
+                    });
+                }
             });
         });
     }

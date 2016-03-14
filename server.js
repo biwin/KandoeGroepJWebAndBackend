@@ -54,6 +54,7 @@ app.get('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.getCi
 app.post('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.initCardsForSession);
 app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCircleSession);
 app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
+app.get('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.getCardPositions);
 //endregion
 
 //region organisation routes
@@ -104,6 +105,7 @@ app.get('/api/themes/:id', ThemeApi.ThemeApi.find);
 app.post('/api/themes/:id', ThemeApi.ThemeApi.createCard);
 app.delete('/api/themes/:id', ThemeApi.ThemeApi.deleteThemeWithCards);
 app.delete('/api/themes/:id/cards/:cid', ThemeApi.ThemeApi.deleteCardFromTheme);
+app.get('/api/themes/cards/:array', ThemeApi.ThemeApi.getCardsByIds);
 //endregion
 
 //region auth routes
@@ -111,7 +113,7 @@ app.post('/api/user/login', function (req, res) {
     console.log(req.body);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send("{\"_message\":\"You are already logged in\"}");
+        res.send({_message:'You are already logged in'});
     } else {
         UserApi.UserApi.getUser(req.body._email, req.body._password, res);
     }

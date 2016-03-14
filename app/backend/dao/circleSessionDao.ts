@@ -134,7 +134,7 @@ export class CircleSessionDao {
         });
     }
 
-    getCardPositions(circleSessionId:string, cardIds:string[], callback:(cardPositions:CardPosition[]) => any) {
+    getCardPositionsForCardIds(circleSessionId:string, cardIds:string[], callback:(cardPositions:CardPosition[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').find({
                 '_sessionId': circleSessionId,
@@ -195,6 +195,14 @@ export class CircleSessionDao {
                     db.close();
                     callback();
                 });
+        });
+    }
+
+    getCardPositions(circleSessionId:string, callback:(cps:CardPosition[])=>any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('cardpositions').find({'_sessionId': circleSessionId}).toArray((err:MongoError, docs:CardPosition[]) => {
+                callback(docs);
+            });
         });
     }
 }

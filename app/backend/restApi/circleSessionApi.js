@@ -44,6 +44,7 @@ var CircleSessionApi = (function () {
                         res.status(400).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(err));
                     }
                     else {
+                        //TODO notify active clients using WebSocket
                         res.status(200).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(null, preGameEnded, currentUserId));
                     }
                 });
@@ -79,8 +80,27 @@ var CircleSessionApi = (function () {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
                 CircleSessionApi.mgr.addUser(currentUserId, req.params.id, req.body.email, function (b) {
-                    res.status(200).send({ response: 'Success' });
+                    res.status(200).send({ _response: 'Success' });
                 });
+            }
+        });
+    };
+    CircleSessionApi.getCardPositions = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                CircleSessionApi.mgr.getCircleSession(req.params.id, function (c) {
+                    if (c._userIds.indexOf(currentUserId) < 0) {
+                        res.status(401).send({ _error: 'Unauthorized' });
+                    }
+                    else {
+                        CircleSessionApi.mgr.getCardPositions(req.params.id, function (cps) {
+                            res.send(cps);
+                        });
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ _error: 'Unauthorized' });
             }
         });
     };

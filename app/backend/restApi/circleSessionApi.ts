@@ -53,6 +53,7 @@ export class CircleSessionApi {
                     if (err != undefined || err != null) {
                         res.status(400).send(new CircleSessionMoveResponse(err));
                     } else {
+                        //TODO notify active clients using WebSocket
                         res.status(200).send(new CircleSessionMoveResponse(null, preGameEnded, currentUserId));
                     }
                 });
@@ -89,9 +90,27 @@ export class CircleSessionApi {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
            if(currentUserId != null){
                CircleSessionApi.mgr.addUser(currentUserId, req.params.id, req.body.email, (b:boolean) =>{
-                   res.status(200).send({response: 'Success'});
+                   res.status(200).send({_response: 'Success'});
                });
            }
+        });
+    }
+
+    public static getCardPositions(req:Request, res:Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) => {
+            if(currentUserId != null) {
+                CircleSessionApi.mgr.getCircleSession(req.params.id, (c:CircleSession) => {
+                    if(c._userIds.indexOf(currentUserId) < 0) {
+                        res.status(401).send({_error: 'Unauthorized'});
+                    } else {
+                        CircleSessionApi.mgr.getCardPositions(req.params.id, (cps:CardPosition[]) => {
+                            res.send(cps);
+                        });
+                    }
+                });
+            } else {
+                res.status(401).send({_error: 'Unauthorized'});
+            }
         });
     }
 }

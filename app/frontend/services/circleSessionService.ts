@@ -51,5 +51,9 @@ export class CircleSessionService {
     addUser(circleSessionId:string, email:string):Observable<string> {
         return this.http.post(this.path + 'circlesessions/' + circleSessionId, JSON.stringify({email:email}),true,false, true);
     }
+
+    getCardPositionsOfSession(sessionId:string):Observable<CardPostion[]> {
+        return this.http.get(this.path + 'circlesessions/' + sessionId + '/positions', true, true, true);
+    }
 }
 

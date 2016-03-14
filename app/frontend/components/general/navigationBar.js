@@ -17,7 +17,7 @@ var NavigationBar = (function () {
         this.service = service;
         service.subscribeMe(this);
         if (this.service.isLoggedIn()) {
-            this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url.text(); });
+            this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url; });
             this.usernameString = this.service.getUsername();
         }
         else {
@@ -27,7 +27,7 @@ var NavigationBar = (function () {
     NavigationBar.prototype.notifyLoggedIn = function () {
         var _this = this;
         this.getUserName();
-        this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url.text(); });
+        this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url; });
     };
     NavigationBar.prototype.notifyLoggedOut = function () {
         this.imageSource = null;
@@ -36,7 +36,7 @@ var NavigationBar = (function () {
     NavigationBar.prototype.notifyProfileUpdated = function () {
         var _this = this;
         this.usernameString = this.service.getUsername();
-        this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url.text(); });
+        this.service.getUserPicture('small').subscribe(function (url) { return _this.imageSource = url; });
     };
     NavigationBar.prototype.getUserName = function () {
         this.usernameString = this.service.getUsername();

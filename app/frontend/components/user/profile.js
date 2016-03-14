@@ -23,7 +23,7 @@ var Profile = (function () {
         else {
             this.usernameString = service.getUsername();
             service.getImageLinks(function (smallImageLink, largeImageLink) { _this.smallImageLinkString = smallImageLink; _this.largeImageLinkString = largeImageLink; });
-            service.getUserPicture('large').subscribe(function (url) { return _this.imageSource = url.text(); });
+            service.getUserPicture('large').subscribe(function (url) { return _this.imageSource = url; });
         }
     }
     Profile.prototype.onChangeDetailsSubmit = function () {
