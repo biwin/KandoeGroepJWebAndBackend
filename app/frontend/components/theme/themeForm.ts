@@ -6,6 +6,7 @@ import {TagInput} from "../general/tagInput";
 import {ThemeService} from "../../services/themeService";
 import {Router} from "angular2/router";
 import {Organisation} from "../../../backend/model/organisation";
+import {UserService} from "../../services/userService";
 
 @Component({
     selector: 'theme-form',
@@ -24,12 +25,13 @@ import {Organisation} from "../../../backend/model/organisation";
                     <label for="description">Beschrijving</label>
                 </div></div>
 
-                <!--<div class="row"><div class="input-field col s3">
+                <div class="row"><div class="input-field col s3">
+                <label>Toegang:</label>
                     <select class="browser-default" [(ngModel)]="theme._organisationId" id="organisation">
-                        <option value="" disabled>Prive</option>
+                        <option value="">Prive</option>
                         <option *ngFor="#organisation of _organisations" value="{{organisation._id}}">{{organisation._name}}</option>
                     </select>
-                </div></div>-->
+                </div></div>
 
                 <div class="row">
                     <tags [title]="'Tags (splits met een puntkomma)'" [tagArray]="theme._tags"></tags>
@@ -47,11 +49,18 @@ export class ThemeForm {
     private theme:Theme = Theme.empty();
     private service:ThemeService;
     private router:Router;
-    private _organisations:Organisation[];
+    private _organisations:Organisation[] = [];
 
-    constructor(service:ThemeService, router:Router) {
+    constructor(service:ThemeService, userService:UserService, router:Router) {
         this.service = service;
         this.router = router;
+
+        //TODO: user niet meegeven
+        userService.getUserId((userId: string) => {
+            userService.getAllOrganisationsOfUserById(userId).subscribe((organisations: Organisation[]) => {
+                this._organisations = organisations;
+            });
+        });
     }
 
     private OnSubmit(){

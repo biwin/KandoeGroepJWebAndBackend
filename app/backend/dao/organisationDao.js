@@ -65,6 +65,15 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.getAllOrganisationIdsOfUserById = function (userId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').find({ '$or': [{ '_organisatorIds': { '$in': [userId] } }, { '_memberIds': { '$in': [userId] } }] }).project({ '_id': 1 }).toArray(function (err, docs) {
+                var ids = docs.map(function (o) { return o._id.toString(); });
+                db.close();
+                callback(ids);
+            });
+        });
+    };
     return OrganisationDao;
 })();
 exports.OrganisationDao = OrganisationDao;
