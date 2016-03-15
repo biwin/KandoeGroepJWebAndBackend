@@ -85,6 +85,16 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.addSubThemeToTheme = function (parentThemeId, childId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').updateOne({ '_id': new mongodb_1.ObjectID(parentThemeId) }, {
+                $push: { '_subThemes': childId }
+            }, function (err, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     ThemeDao.prototype.readCardsByIds = function (cardIds, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cards').find({

@@ -27,8 +27,11 @@ var ThemeService = (function () {
     ThemeService.prototype.create = function (theme) {
         return this.http.post(this.path + 'themes', JSON.stringify(theme), true, true, true);
     };
+    ThemeService.prototype.createSubTheme = function (theme, parentId) {
+        return this.http.post(this.path + 'themes/' + parentId, JSON.stringify(theme), true, true, true);
+    };
     ThemeService.prototype.createCard = function (name, themeId) {
-        return this.http.post(this.path + 'themes/' + themeId, JSON.stringify({ '_name': name }), true, true, true);
+        return this.http.post(this.path + 'themes/' + themeId + '/cards', JSON.stringify({ '_name': name }), true, true, true);
     };
     ThemeService.prototype.getCards = function (themeId) {
         return this.http.get(this.path + 'themes/' + themeId + '/cards', false, true, true);

@@ -102,6 +102,17 @@ export class ThemeDao {
         });
     }
 
+    addSubThemeToTheme(parentThemeId:string, childId:string, callback:(b:boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('themes').updateOne({'_id': new ObjectID(parentThemeId)}, {
+                $push: {'_subThemes': childId}
+            }, (err:MongoError, result) => {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
     readCardsByIds(cardIds:string[], callback:(cs:Card[])=>any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cards').find({

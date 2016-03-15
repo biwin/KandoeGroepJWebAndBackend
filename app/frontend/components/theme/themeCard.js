@@ -17,6 +17,7 @@ var ThemeCard = (function () {
     function ThemeCard(themeService) {
         this.onDelete = new core_1.EventEmitter();
         this.cards = [];
+        this.subThemeNames = [];
         this.doDelete = false;
         this.cardsLoaded = false;
         this.service = themeService;
@@ -30,12 +31,18 @@ var ThemeCard = (function () {
             });
         }
     };
-    ThemeCard.prototype.ngAfterViewInit = function () {
+    ThemeCard.prototype.ngOnInit = function () {
         var _this = this;
         if (this.theme != undefined && !this.cardsLoaded) {
             this.service.getCards(this.theme._id).subscribe(function (c) {
                 c.forEach(function (card) { return _this.cards.push(card); });
                 _this.cardsLoaded = true;
+            });
+            this.theme._subThemes.forEach(function (themeId) {
+                _this.service.getTheme(themeId).subscribe(function (theme) {
+                    _this.subThemeNames.push(theme._name);
+                    console.log(_this.subThemeNames);
+                });
             });
         }
     };
@@ -80,7 +87,7 @@ var ThemeCard = (function () {
     ThemeCard = __decorate([
         core_1.Component({
             selector: 'theme-card',
-            template: "\n    <div class=\"col s4\">\n      <div class=\"modal\" id=\"{{'m' + theme._id}}\">\n        <div class=\"modal-content\">\n            <h4>Kaart verwijderen?</h4>\n            <p>Bent u zeker dat u deze kaart wil verwijderen van dit thema?</p>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n        </div>\n      </div>\n      <div class=\"card hoverable small\">\n        <div class=\"card-content scrollable\">\n           <span class=\"card-title activator\">{{theme._name}}<i class=\"material-icons right\">filter_none</i></span>\n           <p class=\"black-text\">{{theme._description}}</p>\n           <br/>\n           <div *ngFor=\"#tag of theme._tags\" class=\"chip\">{{tag}}</div>\n        </div>\n        <div class=\"card-reveal\">\n           <span class=\"card-title\">{{theme._name}}<i class=\"material-icons right\">close</i></span>\n           <h5>Kaartjes</h5>\n           <div>\n               <p *ngIf=\"cards.length == 0\">Nog geen kaartjes...</p>\n               <ul class=\"collection\" *ngIf=\"cards.length > 0\">\n                  <li class=\"collection-item\" *ngFor=\"#card of cards\"><i class=\"material-icons red-text clickable\" (click)=\"deleteCard(card._id)\">delete</i> {{card._name}}</li>\n                </ul>\n\n            <div class=\"row\">\n                <div class=\"col s8 input-field\">\n                    <label for=\"cardname\">Nieuw</label>\n                    <input #cardname type=\"text\" id=\"cardname\">\n                </div>\n                <div class=\"col s2 margin-top\">\n                    <a [class.disabled]=\"cardname.value.trim().length == 0\" (click)=\"addCard(cardname)\" href=\"#\" class=\"btn-floating\"><i class=\"material-icons\">add</i></a>\n                </div>\n            </div>\n\n            <div class=\"row\">\n                <div class=\"col s12\">\n                    <a (click)=\"deleteTheme()\" class=\"full-width btn waves-effect waves-light red\"><i class=\"material-icons left\">delete</i>Verwijder</a>\n                </div>\n            </div>\n           </div>\n        </div>\n      </div>\n      </div>\n  "
+            template: "\n\n    <div class=\"col s4\">\n      <div class=\"modal\" id=\"{{'m' + theme._id}}\">\n        <div class=\"modal-content\">\n            <h4>Kaart verwijderen?</h4>\n            <p>Bent u zeker dat u deze kaart wil verwijderen van dit thema?</p>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n        </div>\n      </div>\n\n\n      <div class=\"card hoverable small\">\n        <div class=\"card-content scrollable\">\n           <span class=\"card-title activator\">{{theme._name}}<i class=\"material-icons right\">filter_none</i></span>\n\n           <p class=\"black-text\">{{theme._description}}</p>\n           <br/>\n\n           <div *ngIf=\"subThemeNames.length > 0\">\n             <p class=\"black-text\">Subthema's:</p>\n             <ul class=\"collection\">\n                <li *ngFor=\"#subThemeName of subThemeNames\" class=\"collection-item\">{{subThemeName}}</li>\n             </ul>\n           </div>\n\n           <br/>\n           <div *ngFor=\"#tag of theme._tags\" class=\"chip\">{{tag}}</div>\n        </div>\n\n        <div class=\"card-action\">\n            <a (click)=\"deleteTheme()\" class=\"red-text clickable\"><i class=\"material-icons\">delete</i></a>\n        </div>\n\n\n        <div class=\"card-reveal\">\n           <span class=\"card-title\">{{theme._name}}<i class=\"material-icons right\">close</i></span>\n           <h5>Kaartjes</h5>\n           <div>\n               <p *ngIf=\"cards.length == 0\">Nog geen kaartjes...</p>\n               <ul class=\"collection\" *ngIf=\"cards.length > 0\">\n                  <li class=\"collection-item\" *ngFor=\"#card of cards\"><i class=\"material-icons red-text clickable\" (click)=\"deleteCard(card._id)\">delete</i> {{card._name}}</li>\n                </ul>\n\n            <div class=\"row\">\n                <div class=\"col s8 input-field\">\n                    <label for=\"cardname\">Nieuw</label>\n                    <input #cardname type=\"text\" id=\"cardname\">\n                </div>\n                <div class=\"col s2 margin-top\">\n                    <a [class.disabled]=\"cardname.value.trim().length == 0\" (click)=\"addCard(cardname)\" href=\"#\" class=\"btn-floating\"><i class=\"material-icons\">add</i></a>\n                </div>\n            </div>\n           </div>\n        </div>\n\n      </div>\n      </div>\n  "
         }), 
         __metadata('design:paramtypes', [themeService_1.ThemeService])
     ], ThemeCard);

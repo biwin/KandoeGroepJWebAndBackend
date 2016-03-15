@@ -31,7 +31,7 @@ var ThemeManager = (function () {
                 organisationIds.forEach(function (organisationId) {
                     _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
                         organisationThemes.forEach(function (theme) {
-                            if (myAccesableThemes.indexOf(theme) < 0) {
+                            if (JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0) {
                                 myAccesableThemes.push(theme);
                             }
                             ;
@@ -52,6 +52,19 @@ var ThemeManager = (function () {
     };
     ThemeManager.prototype.deleteCardsFromTheme = function (themeId, callback) {
         this._dao.removeCardsFromTheme(themeId, callback);
+    };
+    ThemeManager.prototype.createSubTheme = function (theme, parentThemeId, callback) {
+        var _this = this;
+        this.createTheme(theme, function (theme) {
+            if (parentThemeId != "") {
+                _this._dao.addSubThemeToTheme(parentThemeId, theme._id, function (b) {
+                    if (b)
+                        callback(theme);
+                    else
+                        callback(null);
+                });
+            }
+        });
     };
     ThemeManager.prototype.getCardsByIds = function (cardIds, callback) {
         this._dao.readCardsByIds(cardIds, callback);

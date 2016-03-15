@@ -1,5 +1,5 @@
 import {Component} from "angular2/core";
-import {Router} from "angular2/router";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {OrganisationService} from "../../services/organisationService";
@@ -11,7 +11,12 @@ import {Organisation} from "../../../backend/model/organisation";
     selector: 'organisations-overview',
     template: `
     <div class="row container">
-        <h5>Mijn organisaties</h5>
+        <h5>Jouw organisaties</h5>
+        <div>
+           <a [routerLink]="['CreateOrganisation']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
+                <i class="material-icons">add</i>
+           </a>
+        </div>
 
         <div class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisations.length!=0">
@@ -34,7 +39,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [NgClass]
+    directives: [ROUTER_DIRECTIVES, NgClass]
 })
 
 export class OrganisationsOverview {

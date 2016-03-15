@@ -6,8 +6,8 @@ import {Router} from "angular2/router";
 import {Group} from "../../../backend/model/group";
 import {GroupService} from "../../services/groupService";
 import {CircleSessionService} from "../../services/circleSessionService";
-import {AfterViewInit} from "angular2/core";
 import {UserService} from "../../services/userService";
+import {OnInit} from "angular2/core";
 
 
 
@@ -50,7 +50,7 @@ import {UserService} from "../../services/userService";
   `
 })
 
-export class CircleSessionCard implements AfterViewInit {
+export class CircleSessionCard implements OnInit {
     @Input() private circleSession:CircleSession;
     @Output() onDelete:EventEmitter<string> = new EventEmitter();
 
@@ -98,8 +98,7 @@ export class CircleSessionCard implements AfterViewInit {
         });
     }
 
-    ngAfterViewInit() {
-        //FIXME: iamCreator was changed after...
+    ngOnInit() {
         this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     }
 }

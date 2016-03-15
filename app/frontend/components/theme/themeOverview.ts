@@ -1,12 +1,15 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 
-import {Theme} from "../../../backend/model/theme";
-import {Component} from "angular2/core";
+
+import {Component, Inject} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {ROUTER_DIRECTIVES} from "angular2/router";
+
+import {Theme} from "../../../backend/model/theme";
 import {ThemeCard} from "./themeCard";
 import {ThemeService} from "../../services/themeService";
-import {Inject} from "angular2/core";
+
 
 @Component({
     selector: 'theme-overview',
@@ -23,6 +26,13 @@ import {Inject} from "angular2/core";
                 </div>
             </div>
 
+            <h5>Jouw thema's</h5>
+            <div>
+                <a [routerLink]="['CreateTheme']" class="btn-floating waves-effect waves-light red" title="Creëer thema">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+
             <div *ngIf="loading" class="row center margin-top">
                 <div class="preloader-wrapper big active">
                     <div class="spinner-layer spinner-blue-only">
@@ -36,13 +46,14 @@ import {Inject} from "angular2/core";
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <theme-card *ngFor="#theme of themes" [theme]="theme" (onDelete)="deleteTheme($event)">
                 </theme-card>
             </div>
         </div>
     `,
-    directives: [CORE_DIRECTIVES, ThemeCard]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, ThemeCard]
 })
 export class ThemeOverview {
     private loading:boolean = true;
