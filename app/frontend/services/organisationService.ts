@@ -7,6 +7,7 @@ import {HttpWrapperService} from "./httpWrapperService";
 import {Organisation} from "../../backend/model/organisation";
 import {Group} from "../../backend/model/group";
 import {User} from "../../backend/model/user";
+import {Theme} from "../../backend/model/theme";
 
 @Injectable()
 export class OrganisationService {
@@ -37,6 +38,10 @@ export class OrganisationService {
 
     getMembersOfOrganisationById(organisationId: string): Observable<User[]> {
         return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, false);
+    }
+
+    getThemesOfOrganisationById(organisationId: string): Observable<Theme[]> {
+        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, false);
     }
 
     deleteMemberFromOrganisationById(userId: string, organisationId: string) {

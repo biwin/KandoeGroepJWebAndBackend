@@ -33,6 +33,9 @@ var OrganisationService = (function () {
     OrganisationService.prototype.getMembersOfOrganisationById = function (organisationId) {
         return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, false);
     };
+    OrganisationService.prototype.getThemesOfOrganisationById = function (organisationId) {
+        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, false);
+    };
     OrganisationService.prototype.deleteMemberFromOrganisationById = function (userId, organisationId) {
         return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, false);
     };
