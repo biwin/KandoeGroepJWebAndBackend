@@ -101,7 +101,7 @@ app.get("/api/groups/:id/organisation", function(req, res) {
 //region theme routes
 app.get('/api/themes', ThemeApi.ThemeApi.findAll);
 app.post('/api/themes', ThemeApi.ThemeApi.create);
-app.post('/api/themes/:id', ThemeApi.ThemeApi.createSubTheme);
+app.post('/api/themes/:id', ThemeApi.ThemeApi.cregateSubTheme);
 app.get('/api/themes/:id/cards', ThemeApi.ThemeApi.getCards);
 app.get('/api/themes/:id', ThemeApi.ThemeApi.find);
 app.post('/api/themes/:id/cards', ThemeApi.ThemeApi.createCard);
