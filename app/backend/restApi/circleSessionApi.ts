@@ -18,6 +18,7 @@ export class CircleSessionApi {
 
     public static findAll(req:Request, res:Response) {
         CircleSessionApi.mgr.getAllCircleSessions((c:CircleSession[]) => {
+            console.log(c);
             res.send(c);
         });
     }
