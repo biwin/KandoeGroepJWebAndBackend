@@ -53,6 +53,7 @@ var CircleSessionForm = (function () {
             today: 'Vandaag',
             clear: 'Leeg',
             close: 'Ok',
+            closeOnSelect: true,
             selectMonths: true,
             selectYears: 2,
             format: 'yyyy-mm-dd',

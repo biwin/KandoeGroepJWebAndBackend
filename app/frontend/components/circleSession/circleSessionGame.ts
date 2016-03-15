@@ -19,6 +19,7 @@ import {Response} from "angular2/http";
 import {LiteralMap} from "angular2/src/core/change_detection/parser/ast";
 import {OnChanges} from "angular2/core";
 import {NgZone} from "angular2/core";
+import {NgFor} from "angular2/common";
 
 @Component({
     selector: 'circlesession-game',
@@ -65,7 +66,7 @@ import {NgZone} from "angular2/core";
         <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds" [circleSessionId]="circleSession._id"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame],
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame, NgFor],
     pipes: [CircleSessionCardOnBoardPipe]
 })
 
@@ -94,7 +95,9 @@ export class CircleSessionGame {
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);
-                this.pst.find((p: CardPosition) => p._cardId == dataObject._cardId)._position = dataObject._cardPosition ;
+                console.log(this.pst);
+                this.pst.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
+                this.pst = this.pst.slice();
             }));
             /*END SOCKET UPDATE*/
 
@@ -106,9 +109,12 @@ export class CircleSessionGame {
                             var i:number = this.pst.length - 1;
                             this.colors.set(c._cardId, this.constants.CardColor(i));
                         });
+
                         themeService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
                             this.cards = cs;
                         });
+
+                        this.pst = this.pst.slice();
                     }
                 });
             }
@@ -130,7 +136,7 @@ export class CircleSessionGame {
                 this.pst.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 this.pst = this.pst.slice();
-                this.socket.emit('send message', JSON.stringify({_cardId: cardId, _cardPosition: r._updatedCardPosition._position}));
+                this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position});
             }
         }, (r:Response) => {
             var o:CircleSessionMoveResponse = r.json();
