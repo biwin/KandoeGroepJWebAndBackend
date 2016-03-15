@@ -18,6 +18,7 @@ var circleSessionConstants_1 = require("./../../logic/circleSessionConstants");
 var circleSessionUserList_1 = require("./circleSessionUserList");
 var circleSessionPreGame_1 = require("./circleSessionPreGame");
 var circleSessionCardOnBoardPipe_1 = require("../../logic/circleSessionCardOnBoardPipe");
+var core_2 = require("angular2/core");
 var CircleSessionGame = (function () {
     function CircleSessionGame(service, themeService, route) {
         var _this = this;
@@ -31,6 +32,15 @@ var CircleSessionGame = (function () {
         this.service = service;
         service.get(this.id).subscribe(function (circleSession) {
             _this.circleSession = circleSession;
+            /*SOCKET UPDATE*/
+            _this.zone = new core_2.NgZone({ enableLongStackTrace: false });
+            _this.socket = io("http://localhost:8080");
+            _this.socket.emit('join session', JSON.stringify({ sessionId: _this.circleSession._id || 'Unknown' }));
+            _this.socket.on('send move', function (data) { return _this.zone.run(function () {
+                var dataObject = JSON.parse(data);
+                _this.pst.find(function (p) { return p._cardId == dataObject._cardId; })._position = dataObject._cardPosition;
+            }); });
+            /*END SOCKET UPDATE*/
             if (circleSession._inProgress && !circleSession._isPreGame) {
                 service.getCardPositionsOfSession(circleSession._id).subscribe(function (cps) {
                     _this.pst = _this.pst.concat(cps);
@@ -63,6 +73,7 @@ var CircleSessionGame = (function () {
                 _this.pst.find(function (p) { return p._cardId === r._updatedCardPosition._cardId; })._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 _this.pst = _this.pst.slice();
+                _this.socket.emit('send message', JSON.stringify({ _cardId: cardId, _cardPosition: r._updatedCardPosition._position }));
             }
         }, function (r) {
             var o = r.json();
