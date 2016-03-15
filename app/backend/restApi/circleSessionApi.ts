@@ -33,9 +33,22 @@ export class CircleSessionApi {
         });
     }
 
-    public static cardUp(sessionId:string, cardId:string, userId:string, res){
-        CircleSessionApi.mgr.cardUp(sessionId, cardId, userId, (cp:CardPosition) => {
-            res.send(cp);
+    public static playCard(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (userId:string) => {
+            if(userId != null) {
+                var circleSessionId:string = req.params.id;
+                var cardId:string = req.body._cardId;
+
+                CircleSessionApi.mgr.cardUp(circleSessionId, cardId, userId, (newPlayerId:string, updatedCardPosition:CardPosition, errMessage?:string) => {
+                    if(errMessage != undefined || errMessage != null) {
+                        res.status(400).send(new CircleSessionMoveResponse(errMessage));
+                    } else {
+                        res.status(200).send(new CircleSessionMoveResponse(null, null, newPlayerId, updatedCardPosition));
+                    }
+                });
+            } else {
+                res.status(401).send(new CircleSessionMoveResponse('Unauthorized'));
+            }
         });
     }
 

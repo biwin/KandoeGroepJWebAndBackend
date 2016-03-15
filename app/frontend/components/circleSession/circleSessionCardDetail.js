@@ -14,12 +14,16 @@ var CircleSessionCardDetail = (function () {
     function CircleSessionCardDetail() {
         this.color = "";
         this.hover = new core_1.EventEmitter();
+        this.playCard = new core_1.EventEmitter();
     }
     CircleSessionCardDetail.prototype.onMouseEnter = function () {
         this.hover.emit(true);
     };
     CircleSessionCardDetail.prototype.onMouseLeave = function () {
         this.hover.emit(false);
+    };
+    CircleSessionCardDetail.prototype.clickButton = function () {
+        this.playCard.emit(this.card._id);
     };
     __decorate([
         core_1.Input(), 
@@ -33,10 +37,14 @@ var CircleSessionCardDetail = (function () {
         core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], CircleSessionCardDetail.prototype, "hover", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', core_1.EventEmitter)
+    ], CircleSessionCardDetail.prototype, "playCard", void 0);
     CircleSessionCardDetail = __decorate([
         core_1.Component({
             selector: 'circlesession-carddetail',
-            template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable thCard\" [attr.title]=\"card._name\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content valign-wrapper\">\n            <a class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\"><i class=\"material-icons\">arrow_upward</i></a>\n            <span class=\"valign center-block center-align\">{{card._name}}</span>\n        </div>\n      </div>\n      </div>\n\n    ",
+            template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable thCard\" [attr.title]=\"card._name\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content valign-wrapper\">\n            <a class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\" (click)=\"clickButton()\"><i class=\"material-icons\">arrow_upward</i></a>\n            <span class=\"valign center-block center-align\">{{card._name}}</span>\n        </div>\n      </div>\n      </div>\n\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])

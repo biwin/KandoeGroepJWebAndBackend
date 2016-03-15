@@ -25,9 +25,23 @@ var CircleSessionApi = (function () {
             }
         });
     };
-    CircleSessionApi.cardUp = function (sessionId, cardId, userId, res) {
-        CircleSessionApi.mgr.cardUp(sessionId, cardId, userId, function (cp) {
-            res.send(cp);
+    CircleSessionApi.playCard = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (userId) {
+            if (userId != null) {
+                var circleSessionId = req.params.id;
+                var cardId = req.body._cardId;
+                CircleSessionApi.mgr.cardUp(circleSessionId, cardId, userId, function (newPlayerId, updatedCardPosition, errMessage) {
+                    if (errMessage != undefined || errMessage != null) {
+                        res.status(400).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(errMessage));
+                    }
+                    else {
+                        res.status(200).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(null, null, newPlayerId, updatedCardPosition));
+                    }
+                });
+            }
+            else {
+                res.status(401).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse('Unauthorized'));
+            }
         });
     };
     CircleSessionApi.getCircleSessionCards = function (req, res) {

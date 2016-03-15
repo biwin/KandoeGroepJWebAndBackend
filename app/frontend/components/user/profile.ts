@@ -65,13 +65,10 @@ export class Profile {
     }
 
     onChangeDetailsSubmit() {
-        console.log("jasper2");
-        this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe((token: Response) => {
-            console.log("jasper2");
+        this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe((token: string) => {
             if (token != null) {
-                console.log("jasper: " + JSON.stringify(token));
-                if (token.text() != "nope") {
-                    localStorage.setItem('token', token.text());
+                if (token != "nope") {
+                    localStorage.setItem('token', token);
                     this.imageSource = this.largeImageLinkString;
                     this.service.notifyProfileUpdated();
                 }

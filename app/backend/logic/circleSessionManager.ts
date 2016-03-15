@@ -86,26 +86,35 @@ export class CircleSessionManager {
         });
     }
 
-    cardUp(sessionId:string, cardId:string, userId:string, callback:(cp:CardPosition) => any) {
-        /*
-         * kijken of een cardposition voor gegeven data bestaat
-         * indien ja: updaten
-         * indien nee: nieuwe maken
-         *
-         * altijd: timestamp op huidige tijd
-         *
-         * cardposition teruggeven
-         * */
-
-        this._dao.cardPositionExists(sessionId, cardId, (exists:boolean, position:number) => {
+    cardUp(sessionId:string, cardId:string, userId:string, callback:(newPlayerId:string, updatedCardPosition:CardPosition, errMessage?:string) => any) {
+        this._dao.cardPositionExists(sessionId, cardId, (exists:boolean) => {
             if (exists) {
-                if (position < 5) {
-                    this._dao.updateCardPosition(sessionId, cardId, userId, position++, callback);
-                } else {
-                    this._dao.getCardPosition(sessionId, cardId, callback);
-                }
+                this._dao.readCircleSession(sessionId, (c:CircleSession) => {
+                    if(c._currentPlayerId !== userId) {
+                        callback(c._currentPlayerId, null, "Not your turn!");
+                    } else {
+                        this._dao.getCardPosition(sessionId, cardId, (c:CardPosition) => {
+                            var newPosition:number = c._position + 1;
+                            if(newPosition > 5) {
+                                callback(userId, null, "Card already in the middle!");
+                            } else {
+                                var lastChangedUserId:string = c._userId;
+
+                                this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, (c:CardPosition) => {
+                                    if(c != null) {
+                                        this.nextPlayer(sessionId, (roundEnds:boolean, newPlayerId:string) => {
+                                            callback(newPlayerId, c);
+                                        });
+                                    } else {
+                                        callback(userId, null, "Something went wrong while updating the position");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             } else {
-                this._dao.createCardPosition(sessionId, cardId, userId, callback);
+                callback(userId, null, "Card is not in the game.");
             }
         })
     }
@@ -138,7 +147,7 @@ export class CircleSessionManager {
             tMgr.getCards(c._themeId, (cards:Card[]) => {
                 var a:number = 0;
                 cards.forEach((c:Card) => {
-                    this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean, n:number) => {
+                    this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean ) => {
                         circleSessionCardWrappers.push(new CircleSessionCardWrapper(c, b));
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);

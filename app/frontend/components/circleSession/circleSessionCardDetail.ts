@@ -12,7 +12,7 @@ import {Card} from "../../../backend/model/card";
         <div class="col s3">
       <div class="card hoverable thCard" [attr.title]="card._name" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
         <div class="card-content valign-wrapper">
-            <a class="btn-floating btn waves-effect waves-light" [style.background]="color"><i class="material-icons">arrow_upward</i></a>
+            <a class="btn-floating btn waves-effect waves-light" [style.background]="color" (click)="clickButton()"><i class="material-icons">arrow_upward</i></a>
             <span class="valign center-block center-align">{{card._name}}</span>
         </div>
       </div>
@@ -26,6 +26,7 @@ export class CircleSessionCardDetail {
     @Input() private card:Card;
     @Input() private color:string = "";
     @Output() private hover:EventEmitter<boolean> = new EventEmitter();
+    @Output() private playCard:EventEmitter<string> = new EventEmitter();
 
     onMouseEnter() {
         this.hover.emit(true);
@@ -33,5 +34,9 @@ export class CircleSessionCardDetail {
 
     onMouseLeave() {
         this.hover.emit(false);
+    }
+
+    clickButton() {
+        this.playCard.emit(this.card._id);
     }
 }

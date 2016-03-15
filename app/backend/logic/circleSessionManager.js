@@ -74,27 +74,38 @@ var CircleSessionManager = (function () {
         });
     };
     CircleSessionManager.prototype.cardUp = function (sessionId, cardId, userId, callback) {
-        /*
-         * kijken of een cardposition voor gegeven data bestaat
-         * indien ja: updaten
-         * indien nee: nieuwe maken
-         *
-         * altijd: timestamp op huidige tijd
-         *
-         * cardposition teruggeven
-         * */
         var _this = this;
-        this._dao.cardPositionExists(sessionId, cardId, function (exists, position) {
+        this._dao.cardPositionExists(sessionId, cardId, function (exists) {
             if (exists) {
-                if (position < 5) {
-                    _this._dao.updateCardPosition(sessionId, cardId, userId, position++, callback);
-                }
-                else {
-                    _this._dao.getCardPosition(sessionId, cardId, callback);
-                }
+                _this._dao.readCircleSession(sessionId, function (c) {
+                    if (c._currentPlayerId !== userId) {
+                        callback(c._currentPlayerId, null, "Not your turn!");
+                    }
+                    else {
+                        _this._dao.getCardPosition(sessionId, cardId, function (c) {
+                            var newPosition = c._position + 1;
+                            if (newPosition > 5) {
+                                callback(userId, null, "Card already in the middle!");
+                            }
+                            else {
+                                var lastChangedUserId = c._userId;
+                                _this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, function (c) {
+                                    if (c != null) {
+                                        _this.nextPlayer(sessionId, function (roundEnds, newPlayerId) {
+                                            callback(newPlayerId, c);
+                                        });
+                                    }
+                                    else {
+                                        callback(userId, null, "Something went wrong while updating the position");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
             else {
-                _this._dao.createCardPosition(sessionId, cardId, userId, callback);
+                callback(userId, null, "Card is not in the game.");
             }
         });
     };
@@ -124,7 +135,7 @@ var CircleSessionManager = (function () {
             tMgr.getCards(c._themeId, function (cards) {
                 var a = 0;
                 cards.forEach(function (c) {
-                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b, n) {
+                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
                         circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);

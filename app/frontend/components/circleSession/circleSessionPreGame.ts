@@ -9,6 +9,7 @@ import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
 import {UserService} from "../../services/userService";
+import {Response} from "angular2/http";
 
 @Component({
     selector: 'pregame',
@@ -24,15 +25,17 @@ import {UserService} from "../../services/userService";
               </div>
 
             <h5 class="center-align">Kies de kaarten die belangrijk zijn voor jou!</h5>
-            <div class="col s12 m4" *ngFor="#card of cards" *ngIf="myUserId === circleSession._currentPlayerId">
-                <div class="card-panel">
-                    <span class="truncate">
-                        <a (click)="selectCard(card.card._id)" *ngIf="!card.inPlay && selectedCards.indexOf(card.card._id) < 0" class="z-depth-0 btn-floating btn waves-effect waves-light blue"><i class="material-icons">add</i></a>
-                        <a (click)="unselectCard(card.card._id)" *ngIf="!card.inPlay && selectedCards.indexOf(card.card._id) >= 0" class="z-depth-0 btn-floating btn waves-effect waves-light red"><i class="material-icons">remove</i></a>
-                        <a *ngIf="card.inPlay" class="z-depth-0 btn-floating btn disabled-with-tooltip tooltipped" data-position="bottom" data-delay="50" data-tooltip="Deze kaart is al door een andere speler gekozen."><i class="material-icons">remove</i></a>
-                        <span class="center-align">  {{card.card._name}}</span>
-                    </span>
-               </div>
+            <div *ngIf="myUserId === circleSession._currentPlayerId">
+                <div class="col s12 m4" *ngFor="#card of cards">
+                    <div class="card-panel">
+                        <span class="truncate">
+                            <a (click)="selectCard(card.card._id)" *ngIf="!card.inPlay && selectedCards.indexOf(card.card._id) < 0" class="z-depth-0 btn-floating btn waves-effect waves-light blue"><i class="material-icons">add</i></a>
+                            <a (click)="unselectCard(card.card._id)" *ngIf="!card.inPlay && selectedCards.indexOf(card.card._id) >= 0" class="z-depth-0 btn-floating btn waves-effect waves-light red"><i class="material-icons">remove</i></a>
+                            <a *ngIf="card.inPlay" class="z-depth-0 btn-floating btn disabled-with-tooltip tooltipped" data-position="bottom" data-delay="50" data-tooltip="Deze kaart is al door een andere speler gekozen."><i class="material-icons">remove</i></a>
+                            <span class="center-align">  {{card.card._name}}</span>
+                        </span>
+                   </div>
+                </div>
             </div>
             <div *ngIf="myUserId !== circleSession._currentPlayerId" class="col s12">
                 <h6>Beurt voorbij! Wacht tot iedereen kaartjes gekozen heeft om het spel te beginnen...</h6>
@@ -44,7 +47,7 @@ import {UserService} from "../../services/userService";
 export class CircleSessionPreGame implements OnChanges {
     @Input() circleSession:CircleSession = CircleSession.empty();
     circleService:CircleSessionService;
-    cards:CircleSessionCardWrapper[];
+    cards:CircleSessionCardWrapper[] = [];
     selectedCards:string[] = [];
     myUserId:string;
 
@@ -57,7 +60,7 @@ export class CircleSessionPreGame implements OnChanges {
         if (this.circleSession._id != undefined && this.circleSession._id.length > 0) {
             this.circleService.getCircleSessionCards(this.circleSession._id).subscribe((wrappers:CircleSessionCardWrapper[])=> {
                 this.cards = wrappers;
-                $('.tooltipped').tooltip({delay:50});
+                $('.tooltipped').tooltip({delay: 50});
             });
         }
     }
@@ -79,23 +82,24 @@ export class CircleSessionPreGame implements OnChanges {
         this.selectedCards.splice(0, this.selectedCards.length);
     }
 
-    submitCards(){
+    submitCards() {
         this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
-            if(r._error == null) {
+            if (r._error == null) {
                 this.circleSession._currentPlayerId = r._currentPlayerId;
                 if (r._roundEnded === true)
                     this.circleSession._isPreGame = false;
                 this.cards = this.cards.map((c:CircleSessionCardWrapper) => {
-                    if(this.selectedCards.indexOf(c.card._id) > -1)
+                    if (this.selectedCards.indexOf(c.card._id) > -1)
                         c.inPlay = true;
                     return c;
                 });
                 this.selectedCards.splice(0, this.selectedCards.length);
             }
             Materialize.toast('Done', 3000, 'rounded');
-        }, (r:CircleSessionMoveResponse) => {
-            Materialize.toast(r._error, 3000, 'rounded');
-            alert(r._error);
+        }, (r:Response) => {
+            var o:CircleSessionMoveResponse = r.json();
+            Materialize.toast(o._error, 3000, 'rounded');
+            console.error('Error while adding card to game...: ' + o._error);
         });
     }
 }

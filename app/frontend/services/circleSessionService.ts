@@ -55,5 +55,9 @@ export class CircleSessionService {
     getCardPositionsOfSession(sessionId:string):Observable<CardPostion[]> {
         return this.http.get(this.path + 'circlesessions/' + sessionId + '/positions', true, true, true);
     }
+
+    playCard(sessionId:string, cardId:string):Observable<CircleSessionMoveResponse> {
+        return this.http.post(this.path + 'circlesessions/' + sessionId + '/positions', JSON.stringify({_cardId: cardId}), true, true, true);
+    }
 }
 

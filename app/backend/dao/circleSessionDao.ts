@@ -61,20 +61,18 @@ export class CircleSessionDao {
         });
     }
 
-    cardPositionExists(sessionId:string, cardId:string, callback:(exists:boolean, position:number) => any) {
+    cardPositionExists(sessionId:string, cardId:string, callback:(exists:boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').find({
                 '_sessionId': sessionId,
                 '_cardId': cardId
             }).limit(1).next((err:MongoError, cursor:CursorResult) => {
-                var cp:CardPosition = cursor;
-                callback(cp !== null, cp == null ? -1 : cp._position);
+                callback(cursor !== null);
             });
         });
     }
 
-    //TODO add previous userId to history
-    updateCardPosition(sessionId:string, cardId:string, userId:string, position:number, callback:(cp:CardPosition) => any) {
+    updateCardPosition(sessionId:string, cardId:string, userId:string, previousUserId:string, position:number, callback:(cp:CardPosition) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').updateOne({
                 '_sessionId': sessionId,
@@ -84,8 +82,10 @@ export class CircleSessionDao {
                     '_lastChanged': new Date(),
                     '_userId': userId,
                     '_position': position
+                }, '$push' : {
+                    '_userHistory': previousUserId
                 }
-            }, null, (err:MongoError, result:UpdateWriteOpResult) => {
+            }, (err:MongoError, result:UpdateWriteOpResult) => {
                 if (result.modifiedCount == 0) {
                     callback(null);
                 } else {

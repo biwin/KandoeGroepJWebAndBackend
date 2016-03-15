@@ -83,34 +83,4 @@ describe('CircleSessionManager', () => {
             });
         });
     });
-
-    /*describe('movecardup', () =>{
-       it('non-existent card should be created and have position 0', function(done:any) {
-           this.timeout(0);
-           circleSessionManager.cardUp("123456789","123456", "12", (cp:CardPosition) =>{
-               assert.equal(cp._position, 0);
-               assert.notEqual(cp._id, null);
-               done();
-           });
-       });
-    });*/
-});
-
-describe('CircleSessionModel', function() {
-    describe('inProgress', function() {
-        it('circleSession with startDate in future should return false', function() {
-            var cs:CircleSession = CircleSession.empty();
-            var d:Date = new Date();
-            cs._startDate = "24/12/" + (d.getFullYear()+1) + " 08:30";
-            var b = cs.isInProgress;
-            assert.equal(b, false);
-        });
-        it('circleSession with startDate in past should return true', function() {
-            var cs:CircleSession = CircleSession.empty();
-            var d:Date = new Date();
-            cs._startDate = "24/12/" + (d.getFullYear()-1) + " 08:30";
-            var b = cs.isInProgress;
-            assert.equal(b, true);
-        });
-    });
 });
