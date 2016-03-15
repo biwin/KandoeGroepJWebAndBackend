@@ -56,7 +56,7 @@ var AppComponent = (function () {
             { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail },
             { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin },
             { path: '/profile', as: 'Profile', component: profile_1.Profile },
-            { path: '/chat', as: 'Chatbox', component: chatComponent_1.ChatboxComponent }
+            { path: '/chat', as: 'Chatbox', component: chatComponent_1.ChatComponent }
         ]), 
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], AppComponent);

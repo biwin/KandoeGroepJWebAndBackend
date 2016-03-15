@@ -1,6 +1,6 @@
+var userApi_1 = require("./userApi");
 var themeManager_1 = require("../logic/themeManager");
 var card_1 = require("../model/card");
-var userApi_1 = require("./userApi");
 var ThemeApi = (function () {
     function ThemeApi() {
     }
@@ -130,6 +130,11 @@ var ThemeApi = (function () {
             else {
                 res.status(401).send({ error: 'Unauthorized' });
             }
+        });
+    };
+    ThemeApi.getThemesOfOrganisationById = function (organisationId, res) {
+        this.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
+            res.send(themes);
         });
     };
     ThemeApi.mgr = new themeManager_1.ThemeManager();

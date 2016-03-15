@@ -11,6 +11,7 @@ var CircleSessionApi = (function () {
     };
     CircleSessionApi.findAll = function (req, res) {
         CircleSessionApi.mgr.getAllCircleSessions(function (c) {
+            console.log(c);
             res.send(c);
         });
     };

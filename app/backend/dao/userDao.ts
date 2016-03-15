@@ -335,6 +335,14 @@ export class UserDao {
         });
     }
 
+    getAdminsOfOrganisationById(organisationId: string, callback:(admins: User[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({'_organisatorOf': { '$in': [organisationId]}}).toArray((err: MongoError, docs: User[]) => {
+                callback(docs);
+            });
+        });
+    }
+
     getMembersOfOrganisationById(organisationId: string, callback:(members: User[]) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('users').find({'_memberOf': { '$in': [organisationId]}}).toArray((err: MongoError, docs: User[]) => {

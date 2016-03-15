@@ -27,14 +27,12 @@ var ThemeManager = (function () {
             myAccesableThemes = themes;
             oMgr.getAllOrganisationIdsOfUserById(userId, function (organisationIds) {
                 var counter = 0;
-                console.log('orgids: ' + organisationIds);
                 organisationIds.forEach(function (organisationId) {
                     _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
                         organisationThemes.forEach(function (theme) {
                             if (JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0) {
                                 myAccesableThemes.push(theme);
                             }
-                            ;
                         });
                         if (++counter == organisationIds.length) {
                             callback(myAccesableThemes);
@@ -68,6 +66,9 @@ var ThemeManager = (function () {
     };
     ThemeManager.prototype.getCardsByIds = function (cardIds, callback) {
         this._dao.readCardsByIds(cardIds, callback);
+    };
+    ThemeManager.prototype.getThemesOfOrganisationById = function (organisationId, callback) {
+        this._dao.getThemesOfOrganisationById(organisationId, callback);
     };
     return ThemeManager;
 })();
