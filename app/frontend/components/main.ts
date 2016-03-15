@@ -9,9 +9,9 @@ import {CircleSessionService} from "../services/circleSessionService";
 import {GroupService} from "../services/groupService";
 import {HttpWrapperService} from "../services/httpWrapperService";
 import {OrganisationService} from "../services/organisationService";
+import {SocketService} from "../services/socketService";
 import {ThemeService} from "../services/themeService";
 import {UserService} from "../services/userService";
-import {SocketService} from "../services/socketService";
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,
@@ -21,9 +21,9 @@ bootstrap(AppComponent, [
     GroupService,
     HttpWrapperService,
     OrganisationService,
+    SocketService,
     ThemeService,
     UserService,
-    SocketService,
 
     provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
     //provide('App.BackendPath', {useValue: 'http://192.168.0.149:80/api/'}), //LOCAL TESTS

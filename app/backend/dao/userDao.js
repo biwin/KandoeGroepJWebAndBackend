@@ -281,6 +281,13 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.getAdminsOfOrganisationById = function (organisationId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').find({ '_organisatorOf': { '$in': [organisationId] } }).toArray(function (err, docs) {
+                callback(docs);
+            });
+        });
+    };
     UserDao.prototype.getMembersOfOrganisationById = function (organisationId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').find({ '_memberOf': { '$in': [organisationId] } }).toArray(function (err, docs) {
