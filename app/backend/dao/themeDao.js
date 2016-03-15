@@ -106,7 +106,7 @@ var ThemeDao = (function () {
     };
     ThemeDao.prototype.getThemesOfOrganisationById = function (organisationId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
+            db.collection('themes').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
                 callback(docs);
             });
         });

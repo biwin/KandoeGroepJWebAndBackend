@@ -135,7 +135,7 @@ export class ThemeDao {
 
     getThemesOfOrganisationById(organisationId: string, callback:(themes: Theme[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').find({'_organisationId': organisationId}).toArray((err: MongoError, docs: Theme[]) => {
+            db.collection('themes').find({'_organisationId': organisationId}).toArray((err: MongoError, docs: Theme[]) => {
                 callback(docs);
             });
         });
