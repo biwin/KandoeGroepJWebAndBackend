@@ -1,5 +1,6 @@
 var groupAPI_1 = require("./groupAPI");
 var userApi_1 = require("./userApi");
+var themeApi_1 = require("./themeApi");
 var organisationManager_1 = require("../logic/organisationManager");
 var OrganisationAPI = (function () {
     function OrganisationAPI() {
@@ -22,6 +23,9 @@ var OrganisationAPI = (function () {
     };
     OrganisationAPI.getMembers = function (organisationId, res) {
         userApi_1.UserApi.getMembersOfOrganisationById(organisationId, res);
+    };
+    OrganisationAPI.getThemes = function (organisationId, res) {
+        themeApi_1.ThemeApi.getThemesOfOrganisationById(organisationId, res);
     };
     OrganisationAPI.deleteMemberById = function (organisationId, memberId, res) {
         this.mgr.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {

@@ -3,6 +3,8 @@ import {Request, Response} from "express";
 import {GroupAPI} from "./groupAPI";
 import {UserApi} from "./userApi";
 
+import {ThemeApi} from "./themeApi";
+
 import {OrganisationManager} from "../logic/organisationManager";
 
 import {Organisation} from "../model/organisation";
@@ -32,6 +34,10 @@ export class OrganisationAPI {
 
     public static getMembers(organisationId: string, res) {
         UserApi.getMembersOfOrganisationById(organisationId, res);
+    }
+
+    public static getThemes(organisationId: string, res) {
+        ThemeApi.getThemesOfOrganisationById(organisationId, res);
     }
 
     public static deleteMemberById(organisationId: string, memberId: string, res) {

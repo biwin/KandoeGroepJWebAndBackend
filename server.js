@@ -82,6 +82,10 @@ app.get("/api/organisations/:id/members", function(req, res) {
 app.delete("/api/organisations/:id/members/:memberId", function(req, res) {
     OrganisationAPI.OrganisationAPI.deleteMemberById(req.params.memberId, req.params.id, res)
 });
+
+app.get("/api/organisations/:id/themes", function(req, res) {
+    OrganisationAPI.OrganisationAPI.getThemes(req.params.id, res);
+});
 //endregion
 
 //region group routes

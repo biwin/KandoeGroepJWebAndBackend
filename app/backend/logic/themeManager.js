@@ -34,7 +34,6 @@ var ThemeManager = (function () {
                             if (JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0) {
                                 myAccesableThemes.push(theme);
                             }
-                            ;
                         });
                         if (++counter == organisationIds.length) {
                             callback(myAccesableThemes);
@@ -68,6 +67,9 @@ var ThemeManager = (function () {
     };
     ThemeManager.prototype.getCardsByIds = function (cardIds, callback) {
         this._dao.readCardsByIds(cardIds, callback);
+    };
+    ThemeManager.prototype.getThemesOfOrganisationById = function (organisationId, callback) {
+        this._dao.getThemesOfOrganisationById(organisationId, callback);
     };
     return ThemeManager;
 })();
