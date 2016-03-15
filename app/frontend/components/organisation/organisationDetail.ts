@@ -8,6 +8,7 @@ import {UserService} from "../../services/userService";
 import {Organisation} from "../../../backend/model/organisation";
 import {Group} from "../../../backend/model/group";
 import {User} from "../../../backend/model/user";
+import {Theme} from "../../../backend/model/theme";
 
 @Component({
     selector: 'organisation-detail',
@@ -25,6 +26,7 @@ import {User} from "../../../backend/model/user";
 
         <div class="card"><div class="card-content">
             <p># groepen: {{organisation._groupIds.length}}</p>
+            <p># admins: {{organisation._organisatorIds.length}}</p>
             <p># leden: {{organisation._memberIds.length}}</p>
         </div></div>
 
@@ -59,8 +61,36 @@ import {User} from "../../../backend/model/user";
             <p *ngIf="organisation._groupIds.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
         </div></div>
 
+        <div id="adminsHeader">
+            <h5>Admins</h5>
 
-        <div id="membersHeader">
+            <div id="adminsMenu">
+                <a class="btn-floating waves-effect waves-light red" (click)="addAdmin()" title="Voeg admin toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="card" [ngClass]="{tableCard: organisation._organisatorIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation._organisatorIds.length!=0">
+                <thead>
+                    <tr>
+                        <th data-field="name">Naam</th>
+                        <th data-field="email">E-mail adres</th>
+                    </tr>
+                </thead>
+
+                <tr *ngFor="#admin of admins" (click)="viewMember(admin._id)" class="clickable">
+                    <td>{{admin._name}}</td>
+                    <td>{{admin._email}}</td>
+                </tr>
+            </table>
+
+            <p *ngIf="organisation._organisatorIds.length==0">{{organisation._name}} heeft momenteel nog geen admins.</p>
+        </div></div>
+
+
+        <div id="themesHeader">
             <h5>Leden</h5>
 
             <div id="membersMenu">
@@ -102,6 +132,7 @@ export class OrganisationDetail {
     private router: Router;
     private organisation: Organisation;
     private groups: Group[];
+    private admins: User[];
     private members: User[];
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService) {
@@ -110,11 +141,15 @@ export class OrganisationDetail {
         this.router = router;
 
         organisationService.getOrganisationById(organisationId).subscribe((organisation: Organisation) => {
-            this.organisation = organisation;
-
             if(organisation._groupIds.length != 0) {
-                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups:Group[]) => {
+                organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups: Group[]) => {
                     this.groups = groups;
+                });
+            }
+
+            if(organisation._organisatorIds.length != 0) {
+                organisationService.getAdminsOfOrganisationById(organisationId).subscribe((admins: User[]) => {
+                    this.admins = admins;
                 });
             }
 
@@ -123,6 +158,8 @@ export class OrganisationDetail {
                     this.members = members;
                 });
             }
+
+            this.organisation = organisation;
         });
     }
 

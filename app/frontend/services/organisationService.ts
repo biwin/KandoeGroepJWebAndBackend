@@ -26,6 +26,10 @@ export class OrganisationService {
         return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
     }
 
+    getAdminsOfOrganisationById(organisationId: string): Observable<User[]> {
+        return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, false);
+    }
+
     getGroupsOfOrganisationById(organisationId: string): Observable<Group[]> {
         return this.http.get(this.path + "organisations/" + organisationId + "/groups", false, true, false);
 
