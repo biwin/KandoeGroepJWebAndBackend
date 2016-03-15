@@ -27,14 +27,19 @@ var OrganisationsOverview = (function () {
         this.router.navigate(["/OrganisationDetail", { id: organisationId }]);
     };
     //TODO: styling van delete button
-    OrganisationsOverview.prototype.deleteOrganisation = function (organisationId) {
+    OrganisationsOverview.prototype.deleteOrganisation = function (organisation) {
         var userId = this.userService.getUserId();
-        this.organisationService.deleteMemberFromOrganisationById(userId, organisationId);
+        if (organisation._organisatorIds.length == 1 && organisation._organisatorIds[0] == userId) {
+            this.organisationService.deleteOrganisationById(organisation._id);
+        }
+        else {
+            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id);
+        }
     };
     OrganisationsOverview = __decorate([
         core_1.Component({
             selector: 'organisations-overview',
-            template: "\n    <div class=\"row container\">\n        <h5>Jouw organisaties</h5>\n        <div>\n           <a [routerLink]=\"['CreateOrganisation']\" class=\"btn-floating waves-effect waves-light red\" title=\"Cre\u00EBer circlespel\">\n                <i class=\"material-icons\">add</i>\n           </a>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation._id)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <div id=\"organisationsHeader\">\n            <h5>Mijn organisaties</h5>\n\n            <div id=\"organisationsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addOrganisation()\" title=\"Voeg organisatie toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES, common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])

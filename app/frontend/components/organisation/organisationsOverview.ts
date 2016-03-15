@@ -11,11 +11,14 @@ import {Organisation} from "../../../backend/model/organisation";
     selector: 'organisations-overview',
     template: `
     <div class="row container">
-        <h5>Jouw organisaties</h5>
-        <div>
-           <a [routerLink]="['CreateOrganisation']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
-                <i class="material-icons">add</i>
-           </a>
+        <div id="organisationsHeader">
+            <h5>Mijn organisaties</h5>
+
+            <div id="organisationsMenu">
+                <a class="btn-floating waves-effect waves-light red" (click)="addOrganisation()" title="Voeg organisatie toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
 
         <div class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
@@ -29,7 +32,7 @@ import {Organisation} from "../../../backend/model/organisation";
                 </thead>
 
                 <tr *ngFor="#organisation of organisations" class="clickable">
-                    <td><i class="material-icons red-text" (click)="deleteOrganisation(organisation._id)"  title="Verwijder {{organisation._name}}">delete</i></td>
+                    <td><i class="material-icons red-text" (click)="deleteOrganisation(organisation)"  title="Verwijder {{organisation._name}}">delete</i></td>
                     <td (click)="viewOrganisation(organisation._id)">{{organisation._name}}</td>
                     <td (click)="viewOrganisation(organisation._id)">{{organisation._memberIds.length}}</td>
                 </tr>
@@ -63,9 +66,13 @@ export class OrganisationsOverview {
     }
 
     //TODO: styling van delete button
-    private deleteOrganisation(organisationId: string): void {
-        var userId: string = this.userService.getUserId();
+    private deleteOrganisation(organisation: Organisation): void {
+        var userId = this.userService.getUserId();
 
-        this.organisationService.deleteMemberFromOrganisationById(userId, organisationId);
+        if(organisation._organisatorIds.length==1 && organisation._organisatorIds[0]==userId) {
+            this.organisationService.deleteOrganisationById(organisation._id);
+        } else {
+            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id);
+        }
     }
 }

@@ -27,6 +27,10 @@ export class OrganisationService {
         return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
     }
 
+    deleteOrganisationById(organisationId: string) {
+        return this.http.delete(this.path + "organisations/" + organisationId, false, false, false);
+    }
+
     getAdminsOfOrganisationById(organisationId: string): Observable<User[]> {
         return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, false);
     }

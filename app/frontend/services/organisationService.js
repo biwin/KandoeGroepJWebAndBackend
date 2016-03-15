@@ -24,6 +24,9 @@ var OrganisationService = (function () {
     OrganisationService.prototype.getOrganisationById = function (organisationId) {
         return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
     };
+    OrganisationService.prototype.deleteOrganisationById = function (organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId, false, false, false);
+    };
     OrganisationService.prototype.getAdminsOfOrganisationById = function (organisationId) {
         return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, false);
     };
