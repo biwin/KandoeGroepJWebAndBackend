@@ -28,11 +28,8 @@ var Profile = (function () {
     }
     Profile.prototype.onChangeDetailsSubmit = function () {
         var _this = this;
-        console.log("jasper2");
         this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe(function (token) {
-            console.log("jasper2");
             if (token != null) {
-                console.log("jasper: " + JSON.stringify(token));
                 if (token != "nope") {
                     localStorage.setItem('token', token);
                     _this.imageSource = _this.largeImageLinkString;
