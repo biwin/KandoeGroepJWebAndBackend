@@ -67,6 +67,10 @@ app.post("/api/organisations", function(req, res) {
     OrganisationAPI.OrganisationAPI.create(req.body, res);
 });
 
+app.delete("/api/organisations/:id", function(req, res) {
+    OrganisationAPI.OrganisationAPI.delete(req.params.id, res);
+});
+
 app.get("/api/organisations/:id/admins", function(req, res) {
     OrganisationAPI.OrganisationAPI.getAdmins(req.params.id, res);
 });

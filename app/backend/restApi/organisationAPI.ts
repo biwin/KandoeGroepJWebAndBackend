@@ -24,6 +24,12 @@ export class OrganisationAPI {
         });
     }
 
+    public static delete(organisationId: string, res) {
+        this.mgr.removeOrganisationById(organisationId, (deleted: boolean) => {
+            res.send(deleted);
+        });
+    }
+
     public static getAdmins(organisationId: string, res) {
         UserApi.getAdminsOfOrganisationById(organisationId, res);
     }

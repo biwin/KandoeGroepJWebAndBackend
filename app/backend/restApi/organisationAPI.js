@@ -15,6 +15,11 @@ var OrganisationAPI = (function () {
             res.send(organisation);
         });
     };
+    OrganisationAPI.delete = function (organisationId, res) {
+        this.mgr.removeOrganisationById(organisationId, function (deleted) {
+            res.send(deleted);
+        });
+    };
     OrganisationAPI.getAdmins = function (organisationId, res) {
         userApi_1.UserApi.getAdminsOfOrganisationById(organisationId, res);
     };
