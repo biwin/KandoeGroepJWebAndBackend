@@ -32,18 +32,22 @@ import {OnInit} from "angular2/core";
 
 
 
-      <div class="card hoverable">
+      <div class="card hoverable small">
       <i class="material-icons right green-text padding-5" *ngIf="user === circleSession._currentPlayerId">gamepad</i>
-        <div (click)="openCard()" class="card-content clickable">
+
+      <div *ngIf="iamCreator" class="card-action">
+            <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
+            <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
+            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class="clickable"><i class="material-icons">stop</i></a>
+        </div>
+
+        <div (click)="openCard()" class="card-content clickable scrollable">
             <span class="card-title truncate">{{circleSession._name}}</span>
            <p class="black-text">Start: {{circleSession._startDate}}</p>
            <p class="black-text">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>
            <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>
            <p class="black-text">{{circleSession._allowComment ? 'Commentaar toegelaten op kaarten' : 'Commentaar niet mogelijk op kaarten'}}</p>
-        </div>
-        <div *ngIf="iamCreator" class="card-action">
-            <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
-            <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
+           <p class="black-text">{{circleSession._isStopped ? 'Spel beëindigd' : 'Spel bezig'}}</p>
         </div>
       </div>
       </div>
@@ -78,7 +82,7 @@ export class CircleSessionCard implements OnInit {
         this.router.navigate(['/CircleSessionGame', {id: this.circleSession._id}]);
     }
 
-    private addUser(cId:string) {
+    private addUser() {
         $('#m' + this.circleSession._id).openModal({
             opacity: .75,
             complete: () => {
@@ -100,6 +104,10 @@ export class CircleSessionCard implements OnInit {
 
     ngOnInit() {
         this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
+    }
+
+    stopGame() {
+        alert('Stop GAME');
     }
 }
 

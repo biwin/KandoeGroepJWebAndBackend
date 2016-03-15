@@ -120,12 +120,16 @@ export class CircleSessionForm implements AfterViewInit {
 
         $('.datepicker').pickadate({
             monthsFull: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
+            monthsShort: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+            weekdaysFull: ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'],
+            weekdaysShort: ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'],
             today: 'Vandaag',
             clear: 'Leeg',
-            close: 'Sluit',
+            close: 'Ok',
+            closeOnSelect:true,
             selectMonths: true,
             selectYears: 2,
-            format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
             min: Date.now()
         });
 

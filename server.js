@@ -22,7 +22,7 @@ app.use(morgan('dev'));
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Bearer');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -56,6 +56,7 @@ app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCi
 app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
 app.get('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.getCardPositions);
 app.post('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.playCard);
+app.post('/api/circlesessions/:id/stopGame', CircleSessionApi.CircleSessionApi.stopGame);
 //endregion
 
 //region organisation routes
@@ -101,7 +102,7 @@ app.get("/api/groups/:id/organisation", function(req, res) {
 //region theme routes
 app.get('/api/themes', ThemeApi.ThemeApi.findAll);
 app.post('/api/themes', ThemeApi.ThemeApi.create);
-app.post('/api/themes/:id', ThemeApi.ThemeApi.cregateSubTheme);
+app.post('/api/themes/:id', ThemeApi.ThemeApi.createSubTheme);
 app.get('/api/themes/:id/cards', ThemeApi.ThemeApi.getCards);
 app.get('/api/themes/:id', ThemeApi.ThemeApi.find);
 app.post('/api/themes/:id/cards', ThemeApi.ThemeApi.createCard);

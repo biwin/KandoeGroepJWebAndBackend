@@ -126,4 +126,22 @@ export class CircleSessionApi {
             }
         });
     }
+
+    public static stopGame(req:Request, res:Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (id:string) => {
+            if(id != null) {
+                CircleSessionApi.mgr.stopGame(req.params.id, id, (stopped:boolean, err?:string) => {
+                    if(err != null) {
+                        res.status(400).send({'_error': err});
+                    } else if(!stopped) {
+                        res.status(400).send({'_error': 'Failed to stop game.'});
+                    } else {
+                        res.send({'_stopped': true});
+                    }
+                });
+            } else {
+                res.status(401).send({'_error': 'Unauthorized'});
+            }
+        });
+    }
 }

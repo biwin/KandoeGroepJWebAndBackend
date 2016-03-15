@@ -46,16 +46,18 @@ import {OnChanges} from "angular2/core";
 
 
                         <!-- FIXME: kleur correct aanduiden, index komt niet overeen met index hieronder -->
-                        <circle *ngFor="#bol of (pst | onBoardCards); #i = index"
-                                [class.hoveredBall]="hoveredCardId === bol._cardId"
+                        <circle *ngFor="#bol of pst | onBoardCards; #i = index"
+                                [class.hoveredBall]="bol._cardId != null && hoveredCardId === bol._cardId"
                                 [id]="bol._cardId"
-                                [attr.r]="35" [attr.fill]="constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
-                                [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
+                                [attr.r]="35"
+                                [attr.fill]="colors.get(bol._cardId)"
+                                [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
+                                [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)" />
                     </svg>
                 </div>
             </div>
             <div class="row">
-                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
+                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
             </div>
         </div>
 
@@ -74,7 +76,7 @@ export class CircleSessionGame {
     private id:string;
     private hoveredCardId:string = "";
     private service:CircleSessionService;
-    private colors:string[] = [];
+    private colors:Map<string,string> = new Map<string,string>();
 
     constructor(service:CircleSessionService,themeService:ThemeService, route:RouteParams) {
         this.id = route.get('id');
@@ -85,14 +87,14 @@ export class CircleSessionGame {
 
             if(circleSession._inProgress && ! circleSession._isPreGame){
                 service.getCardPositionsOfSession(circleSession._id).subscribe((cps:CardPosition[]) => {
-                    this.pst = this.pst.concat(cps);
                     if(cps.length > 0) {
+                        cps.forEach((c:CardPosition) => {
+                            this.pst.push(c);
+                            var i:number = this.pst.length - 1;
+                            this.colors.set(c._cardId, this.constants.CardColor(i));
+                        });
                         themeService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
-                            cs.forEach((c:Card) => {
-                                this.cards.push(c);
-                                var i:number = this.cards.length - 1;
-                                this.colors[c._id] = this.constants.CardColor(i);
-                            });
+                            this.cards = cs;
                         });
                     }
                 });

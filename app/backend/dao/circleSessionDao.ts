@@ -188,7 +188,7 @@ export class CircleSessionDao {
         });
     }
 
-    updateInProgress(circleSessionId:string, inProgress:boolean, callback:(b:boolean)=>any) {
+    updateInProgress(circleSessionId:string, inProgress:boolean, callback:()=>any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)},
                 {$set:{_inProgress: inProgress}}, (err:MongoError, res:UpdateWriteOpResult) => {
@@ -202,6 +202,14 @@ export class CircleSessionDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('cardpositions').find({'_sessionId': circleSessionId}).toArray((err:MongoError, docs:CardPosition[]) => {
                 callback(docs);
+            });
+        });
+    }
+
+    stopGame(sessionId:string, callback:(stopped:boolean, err?:string) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').updateOne({_id: new ObjectID(sessionId)}, { $set: {_isStopped: true}}, (err:MongoError, res:UpdateWriteOpResult) => {
+                callback(res.modifiedCount == 1);
             });
         });
     }

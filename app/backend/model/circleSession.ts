@@ -6,17 +6,18 @@ export class CircleSession {
                 /* _name format: "GroupName - ThemeName" */
                 public _name:string,
                 public _creatorId: string,
-                /* _startDate format: dd/mm/yyyy hh:mm */
+                /* _startDate format: yyyy-mm-dd hh:mm */
                 public _startDate:string,
                 public _realTime:boolean,
                 public _isPreGame:boolean,
                 public _endPoint:number,
                 public _allowComment:boolean,
                 public _inProgress:boolean,
+                public _isStopped:boolean,
                 public _turnTimeMin?:number,
                 public _currentPlayerId?:string) {}
 
     public static empty():CircleSession{
-        return new CircleSession("",[] ,"","","","",false, true,null,true,false);
+        return new CircleSession("",[] ,"","","","",false, true,null,true,false, false);
     }
 }

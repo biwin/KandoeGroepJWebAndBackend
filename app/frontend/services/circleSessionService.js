@@ -51,6 +51,9 @@ var CircleSessionService = (function () {
     CircleSessionService.prototype.playCard = function (sessionId, cardId) {
         return this.http.post(this.path + 'circlesessions/' + sessionId + '/positions', JSON.stringify({ _cardId: cardId }), true, true, true);
     };
+    CircleSessionService.prototype.stopGame = function (sessionId) {
+        this.http.post(this.path + 'circlesessions/' + sessionId + '/stopGame', "", false, true, true);
+    };
     CircleSessionService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 

@@ -204,11 +204,7 @@ export class CircleSessionManager {
             c._inProgress = true;
         } else {
             var now:Date = new Date(Date.now());
-            var splittedDateAndTime:string[] = c._startDate.split(' ');
-            var splittedDate:number[] = splittedDateAndTime[0].split('/').map((i:string) => parseInt(i));
-            var splittedTime:number[] = splittedDateAndTime[1].split(':').map((i:string) => parseInt(i));
-
-            var startDate:Date = new Date(Date.UTC(splittedDate[2], splittedDate[1] - 1, splittedDate[0], splittedTime[0], splittedTime[1]));
+            var startDate:Date = new Date(Date.parse(c._startDate));
 
             c._inProgress = now >= startDate;
         }
@@ -267,5 +263,15 @@ export class CircleSessionManager {
 
     getCardPositions(circleSessionId:string, callback:(cps:CardPosition[]) => any) {
         this._dao.getCardPositions(circleSessionId, callback);
+    }
+
+    stopGame(sessionId:string, userId:string, callback:(stopped:boolean, err?:string) => any) {
+        this.getCircleSession(sessionId, (c:CircleSession) => {
+            if(c._creatorId !== userId) {
+                callback(false, "You're not the owner of this session!");
+            } else {
+                this._dao.stopGame(sessionId, callback);
+            }
+        });
     }
 }

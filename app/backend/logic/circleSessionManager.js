@@ -193,10 +193,7 @@ var CircleSessionManager = (function () {
         }
         else {
             var now = new Date(Date.now());
-            var splittedDateAndTime = c._startDate.split(' ');
-            var splittedDate = splittedDateAndTime[0].split('/').map(function (i) { return parseInt(i); });
-            var splittedTime = splittedDateAndTime[1].split(':').map(function (i) { return parseInt(i); });
-            var startDate = new Date(Date.UTC(splittedDate[2], splittedDate[1] - 1, splittedDate[0], splittedTime[0], splittedTime[1]));
+            var startDate = new Date(Date.parse(c._startDate));
             c._inProgress = now >= startDate;
         }
         if (c._inProgress !== inProgress) {
@@ -254,6 +251,17 @@ var CircleSessionManager = (function () {
     };
     CircleSessionManager.prototype.getCardPositions = function (circleSessionId, callback) {
         this._dao.getCardPositions(circleSessionId, callback);
+    };
+    CircleSessionManager.prototype.stopGame = function (sessionId, userId, callback) {
+        var _this = this;
+        this.getCircleSession(sessionId, function (c) {
+            if (c._creatorId !== userId) {
+                callback();
+            }
+            else {
+                _this._dao.stopGame(sessionId, userId, callback);
+            }
+        });
     };
     return CircleSessionManager;
 })();

@@ -145,3 +145,7 @@ svg circle.kandoeRing.inner {
 .card-content.scrollable {
     overflow:auto!important;
 }
+
+.card-action + .card-content.scrollable {
+    max-height: 235px;
+}

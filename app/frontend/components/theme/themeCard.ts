@@ -26,7 +26,11 @@ import {OnInit} from "angular2/core";
 
 
       <div class="card hoverable small">
-        <div class="card-content scrollable">
+          <div class="card-action">
+                <a (click)="deleteTheme()" class="red-text clickable"><i class="material-icons">delete</i></a>
+          </div>
+
+          <div class="card-content scrollable">
            <span class="card-title activator">{{theme._name}}<i class="material-icons right">filter_none</i></span>
 
            <p class="black-text">{{theme._description}}</p>
@@ -42,11 +46,6 @@ import {OnInit} from "angular2/core";
            <br/>
            <div *ngFor="#tag of theme._tags" class="chip">{{tag}}</div>
         </div>
-
-        <div class="card-action">
-            <a (click)="deleteTheme()" class="red-text clickable"><i class="material-icons">delete</i></a>
-        </div>
-
 
         <div class="card-reveal">
            <span class="card-title">{{theme._name}}<i class="material-icons right">close</i></span>
@@ -70,7 +69,7 @@ import {OnInit} from "angular2/core";
         </div>
 
       </div>
-      </div>
+    </div>
   `
 })
 
