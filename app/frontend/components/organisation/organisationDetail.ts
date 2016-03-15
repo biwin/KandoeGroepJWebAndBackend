@@ -1,6 +1,6 @@
 import {Component} from "angular2/core";
 import {Router, RouteParams} from "angular2/router";
-import {NgClass, NgIf} from "angular2/common";
+import {NgClass} from "angular2/common";
 
 import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
@@ -91,31 +91,31 @@ import {Theme} from "../../../backend/model/theme";
 
 
         <div id="themesHeader">
-            <h5>Leden</h5>
+            <h5>Thema's</h5>
 
             <div id="membersMenu">
-                <a class="btn-floating waves-effect waves-light red" (click)="addMember()" title="Voeg lid toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addTheme()" title="Voeg thema toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
         </div>
 
-        <div class="card" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
-            <table class="striped" *ngIf="organisation._memberIds.length!=0">
+        <div class="card" [ngClass]="{tableCard: themes.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="themes.length!=0">
                 <thead>
                     <tr>
                         <th data-field="name">Naam</th>
-                        <th data-field="email">E-mail adres</th>
+                        <th data-field="description">Beschrijving</th>
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of members" (click)="viewMember(member._id)" class="clickable">
-                    <td>{{member._name}}</td>
-                    <td>{{member._email}}</td>
+                <tr *ngFor="#theme of themes" (click)="viewTheme(theme._id)" class="clickable">
+                    <td>{{theme._name}}</td>
+                    <td>{{theme._description}}</td>
                 </tr>
             </table>
 
-            <p *ngIf="organisation._memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
+            <p *ngIf="themes.length==0">{{organisation._name}} heeft momenteel nog geen thema's.</p>
         </div></div>
     </div>
 
@@ -125,7 +125,7 @@ import {Theme} from "../../../backend/model/theme";
         </div></div>
     </div>
     `,
-    directives: [NgClass, NgIf]
+    directives: [NgClass]
 })
 
 export class OrganisationDetail {
@@ -134,6 +134,7 @@ export class OrganisationDetail {
     private groups: Group[];
     private admins: User[];
     private members: User[];
+    private themes: Theme[] = [];
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService) {
         var organisationId: string = routeParam.params["id"];
@@ -158,6 +159,10 @@ export class OrganisationDetail {
                     this.members = members;
                 });
             }
+
+            organisationService.getThemesOfOrganisationById(organisationId).subscribe((themes: Theme[]) => {
+                this.themes = themes;
+            });
 
             this.organisation = organisation;
         });
@@ -190,5 +195,10 @@ export class OrganisationDetail {
     private viewMember(userId: string): void {
         //this.router.navigate(["/UserDetail", {id: userId}]);
         alert("viewMember: " + userId);
+    }
+
+    //TODO: styling van addTheme button
+    private addTheme(): void {
+        this.router.navigate(["/CreateTheme", {organisationId: this.organisation._id}]);
     }
 }
