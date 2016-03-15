@@ -261,6 +261,9 @@ var UserManager = (function () {
     UserManager.prototype.getUserIdsByEmail = function (_userEmailAdresses, callback) {
         this._dao.readUserIdsByEmail(_userEmailAdresses, callback);
     };
+    UserManager.prototype.getAdminsOfOrganisationById = function (organisationId, callback) {
+        this._dao.getAdminsOfOrganisationById(organisationId, callback);
+    };
     UserManager.prototype.getMembersOfOrganisationById = function (organisationId, callback) {
         this._dao.getMembersOfOrganisationById(organisationId, callback);
     };

@@ -136,6 +136,12 @@ export class UserApi {
         OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     }
 
+    public static getAdminsOfOrganisationById(organisationId: string, res) {
+        this.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
+            res.send(admins);
+        });
+    }
+
     public static getMembersOfOrganisationById(organisationId: string, res) {
         this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
             res.send(members);

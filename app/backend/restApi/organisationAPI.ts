@@ -22,6 +22,10 @@ export class OrganisationAPI {
         });
     }
 
+    public static getAdmins(organisationId: string, res) {
+        UserApi.getAdminsOfOrganisationById(organisationId, res);
+    }
+
     public static getGroups(organisationId: string, res) {
         GroupAPI.getGroupsOfOrganisationById(organisationId, res);
     }

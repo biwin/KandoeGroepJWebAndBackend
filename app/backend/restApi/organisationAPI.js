@@ -14,6 +14,9 @@ var OrganisationAPI = (function () {
             res.send(organisation);
         });
     };
+    OrganisationAPI.getAdmins = function (organisationId, res) {
+        userApi_1.UserApi.getAdminsOfOrganisationById(organisationId, res);
+    };
     OrganisationAPI.getGroups = function (organisationId, res) {
         groupAPI_1.GroupAPI.getGroupsOfOrganisationById(organisationId, res);
     };
