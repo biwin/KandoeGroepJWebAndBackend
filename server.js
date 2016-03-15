@@ -174,8 +174,8 @@ io.on('connection', function (socket) {
         var sessionId = object.sessionId;
         socket.join("kandoe-" + sessionId);
     });
-    socket.on('send message', function (message) {
-        var roomName = Object.keys(socket.rooms).filter(function (room) {
+    socket.on('send message', function(message) {
+        var roomName = Object.keys(socket.rooms).filter(function(room) {
             return room.startsWith('kandoe-')
         })[0];
 
@@ -184,6 +184,13 @@ io.on('connection', function (socket) {
                 io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
             }
         });
+    });
+    socket.on('send move', function(message) {
+        var roomName = Object.keys(socket.rooms).filter(function(room) {
+            return room.startsWith('kandoe-');
+        })[0];
+
+        io.to(roomName).emit('send move', JSON.stringify(message));
     });
 });
 //endregion Socket.io

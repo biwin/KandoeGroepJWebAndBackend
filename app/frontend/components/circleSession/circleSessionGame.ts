@@ -18,6 +18,7 @@ import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMov
 import {Response} from "angular2/http";
 import {LiteralMap} from "angular2/src/core/change_detection/parser/ast";
 import {OnChanges} from "angular2/core";
+import {NgZone} from "angular2/core";
 
 @Component({
     selector: 'circlesession-game',
@@ -77,6 +78,8 @@ export class CircleSessionGame {
     private hoveredCardId:string = "";
     private service:CircleSessionService;
     private colors:Map<string,string> = new Map<string,string>();
+    private socket;
+    private zone: NgZone;
 
     constructor(service:CircleSessionService,themeService:ThemeService, route:RouteParams) {
         this.id = route.get('id');
@@ -84,6 +87,16 @@ export class CircleSessionGame {
 
         service.get(this.id).subscribe((circleSession:CircleSession) => {
             this.circleSession = circleSession;
+
+            /*SOCKET UPDATE*/
+            this.zone = new NgZone({enableLongStackTrace: false});
+            this.socket = io("http://localhost:8080");
+            this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
+            this.socket.on('send move', data => this.zone.run(() => {
+                var dataObject = JSON.parse(data);
+                this.pst.find((p: CardPosition) => p._cardId == dataObject._cardId)._position = dataObject._cardPosition ;
+            }));
+            /*END SOCKET UPDATE*/
 
             if(circleSession._inProgress && ! circleSession._isPreGame){
                 service.getCardPositionsOfSession(circleSession._id).subscribe((cps:CardPosition[]) => {
@@ -117,6 +130,7 @@ export class CircleSessionGame {
                 this.pst.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 this.pst = this.pst.slice();
+                this.socket.emit('send message', JSON.stringify({_cardId: cardId, _cardPosition: r._updatedCardPosition._position}));
             }
         }, (r:Response) => {
             var o:CircleSessionMoveResponse = r.json();
