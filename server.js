@@ -55,6 +55,7 @@ app.post('/api/circlesessions/:id/cards', CircleSessionApi.CircleSessionApi.init
 app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCircleSession);
 app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
 app.get('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.getCardPositions);
+app.post('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.playCard);
 //endregion
 
 //region organisation routes

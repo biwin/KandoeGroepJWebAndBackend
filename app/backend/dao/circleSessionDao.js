@@ -49,13 +49,11 @@ var CircleSessionDao = (function () {
                 '_sessionId': sessionId,
                 '_cardId': cardId
             }).limit(1).next(function (err, cursor) {
-                var cp = cursor;
-                callback(cp !== null, cp == null ? -1 : cp._position);
+                callback(cursor !== null);
             });
         });
     };
-    //TODO add previous userId to history
-    CircleSessionDao.prototype.updateCardPosition = function (sessionId, cardId, userId, position, callback) {
+    CircleSessionDao.prototype.updateCardPosition = function (sessionId, cardId, userId, previousUserId, position, callback) {
         var _this = this;
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('cardpositions').updateOne({
@@ -66,8 +64,10 @@ var CircleSessionDao = (function () {
                     '_lastChanged': new Date(),
                     '_userId': userId,
                     '_position': position
+                }, '$push': {
+                    '_userHistory': previousUserId
                 }
-            }, null, function (err, result) {
+            }, function (err, result) {
                 if (result.modifiedCount == 0) {
                     callback(null);
                 }

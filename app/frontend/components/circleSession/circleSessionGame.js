@@ -17,6 +17,7 @@ var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionConstants_1 = require("./../../logic/circleSessionConstants");
 var circleSessionUserList_1 = require("./circleSessionUserList");
 var circleSessionPreGame_1 = require("./circleSessionPreGame");
+var circleSessionCardOnBoardPipe_1 = require("../../logic/circleSessionCardOnBoardPipe");
 var CircleSessionGame = (function () {
     function CircleSessionGame(service, themeService, route) {
         var _this = this;
@@ -25,17 +26,25 @@ var CircleSessionGame = (function () {
         this.cards = [];
         this.pst = [];
         this.hoveredCardId = "";
+        this.colors = [];
         this.id = route.get('id');
+        this.service = service;
         service.get(this.id).subscribe(function (circleSession) {
             _this.circleSession = circleSession;
-            service.getCardPositionsOfSession(circleSession._id).subscribe(function (cps) {
-                _this.pst.push(cps);
-                if (cps.length > 0) {
-                    themeService.getCardsByIds(cps.map(function (c) { return c._cardId; })).subscribe(function (cs) {
-                        _this.cards.push(cs);
-                    });
-                }
-            });
+            if (circleSession._inProgress && !circleSession._isPreGame) {
+                service.getCardPositionsOfSession(circleSession._id).subscribe(function (cps) {
+                    _this.pst = _this.pst.concat(cps);
+                    if (cps.length > 0) {
+                        themeService.getCardsByIds(cps.map(function (c) { return c._cardId; })).subscribe(function (cs) {
+                            cs.forEach(function (c) {
+                                _this.cards.push(c);
+                                var i = _this.cards.length - 1;
+                                _this.colors[c._id] = _this.constants.CardColor(i);
+                            });
+                        });
+                    }
+                });
+            }
         });
     }
     CircleSessionGame.prototype.hover = function (id, mouseover) {
@@ -46,11 +55,27 @@ var CircleSessionGame = (function () {
             this.hoveredCardId = "";
         }
     };
+    CircleSessionGame.prototype.playCard = function (cardId) {
+        var _this = this;
+        this.service.playCard(this.circleSession._id, cardId).subscribe(function (r) {
+            _this.circleSession._currentPlayerId = r._currentPlayerId;
+            if (r._updatedCardPosition != null) {
+                _this.pst.find(function (p) { return p._cardId === r._updatedCardPosition._cardId; })._position = r._updatedCardPosition._position;
+                //FIXME temporary workaround to force the Pipe to be executed again
+                _this.pst = _this.pst.slice();
+            }
+        }, function (r) {
+            var o = r.json();
+            console.error('Error while playing card...: ' + o._error);
+            Materialize.toast(o._error, 3000, 'rounded');
+        });
+    };
     CircleSessionGame = __decorate([
         core_1.Component({
             selector: 'circlesession-game',
-            template: "\n    <div class=\"padding-right-users\">\n        <div class=\"row\">\n            <h3 class=\"center-align\">{{circleSession._name}}</h3>\n        </div>\n\n        <div class=\"row\" *ngIf=\"!circleSession._inProgress\">\n            <h5>Deze sessie is nog niet actief...</h5>\n        </div>\n\n        <pregame [circleSession]=\"circleSession\" *ngIf=\"circleSession._inProgress && circleSession._isPreGame\"></pregame>\n\n        <div id=\"game\" *ngIf=\"circleSession._inProgress && !circleSession._isPreGame\">\n            <div class=\"row margin-top\">\n                <div class=\"col s8 offset-s2\">\n                    <svg [attr.viewBox]=\"constants.VIEWBOX\">\n                        <!-- Draw Kandoe board circles -->\n                        <circle *ngFor=\"#filled of constants.RINGS; #i = index\"\n                                [attr.r]=\"constants.CircleRadius(i+1)\"\n                                [attr.stroke-width]=\"constants.RING_WIDTH\"\n                                [attr.cy]=\"constants.CENTER\" [attr.cx]=\"constants.CENTER\"\n                                id=\"circle-{{i+1}}\" class=\"kandoeRing\" [class.inner]=\"filled\"/>\n\n\n                        <!-- circle voorbeelden vervangen door cardposition -->\n                        <circle *ngFor=\"#bol of pst; #i = index\"\n                                [class.hoveredBall]=\"hoveredCardId === bol._cardId\"\n                                [id]=\"bol._cardId\"\n                                [attr.r]=\"35\" [attr.fill]=\"constants.CardColor(i)\" [attr.cy]=\"constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)\"\n                                [attr.cx]=\"constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"row\">\n                <circlesession-carddetail *ngFor=\"#card of cards; #i = index\" [card]=\"card\" [color]=\"constants.CardColor(i)\" (hover)=\"hover(card._id, $event)\"></circlesession-carddetail>\n            </div>\n        </div>\n\n        <user-list [currentPlayerId]=\"circleSession._currentPlayerId\" [users]=\"circleSession._userIds\"></user-list>\n    </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, circleSessionCardDetail_1.CircleSessionCardDetail, circleSessionUserList_1.CircleSessionUserList, circleSessionPreGame_1.CircleSessionPreGame]
+            template: "\n    <div class=\"padding-right-users\">\n        <div class=\"row\">\n            <h3 class=\"center-align\">{{circleSession._name}}</h3>\n        </div>\n\n        <div class=\"row\" *ngIf=\"!circleSession._inProgress\">\n            <h5>Deze sessie is nog niet actief...</h5>\n        </div>\n\n        <pregame [circleSession]=\"circleSession\" *ngIf=\"circleSession._inProgress && circleSession._isPreGame\"></pregame>\n\n        <div id=\"game\" *ngIf=\"circleSession._inProgress && !circleSession._isPreGame\">\n            <div class=\"row margin-top\">\n                <div class=\"col s8 offset-s2\">\n                    <svg [attr.viewBox]=\"constants.VIEWBOX\">\n                        <!-- Draw Kandoe board circles -->\n                        <circle *ngFor=\"#filled of constants.RINGS; #i = index\"\n                                [attr.r]=\"constants.CircleRadius(i+1)\"\n                                [attr.stroke-width]=\"constants.RING_WIDTH\"\n                                [attr.cy]=\"constants.CENTER\" [attr.cx]=\"constants.CENTER\"\n                                id=\"circle-{{i+1}}\" class=\"kandoeRing\" [class.inner]=\"filled\"/>\n\n\n                        <!-- FIXME: kleur correct aanduiden, index komt niet overeen met index hieronder -->\n                        <circle *ngFor=\"#bol of (pst | onBoardCards); #i = index\"\n                                [class.hoveredBall]=\"hoveredCardId === bol._cardId\"\n                                [id]=\"bol._cardId\"\n                                [attr.r]=\"35\" [attr.fill]=\"constants.CardColor(i)\" [attr.cy]=\"constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)\"\n                                [attr.cx]=\"constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"row\">\n                <circlesession-carddetail *ngFor=\"#card of cards; #i = index\" [card]=\"card\" [color]=\"constants.CardColor(i)\" (hover)=\"hover(card._id, $event)\" (playCard)=\"playCard($event)\"></circlesession-carddetail>\n            </div>\n        </div>\n\n        <user-list [currentPlayerId]=\"circleSession._currentPlayerId\" [users]=\"circleSession._userIds\"></user-list>\n    </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, circleSessionCardDetail_1.CircleSessionCardDetail, circleSessionUserList_1.CircleSessionUserList, circleSessionPreGame_1.CircleSessionPreGame],
+            pipes: [circleSessionCardOnBoardPipe_1.CircleSessionCardOnBoardPipe]
         }), 
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, themeService_1.ThemeService, router_1.RouteParams])
     ], CircleSessionGame);

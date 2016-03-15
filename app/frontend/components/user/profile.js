@@ -30,8 +30,8 @@ var Profile = (function () {
         var _this = this;
         this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe(function (token) {
             if (token != null) {
-                if (token.text() != "nope") {
-                    localStorage.setItem('token', token.text());
+                if (token != "nope") {
+                    localStorage.setItem('token', token);
                     _this.imageSource = _this.largeImageLinkString;
                     _this.service.notifyProfileUpdated();
                 }

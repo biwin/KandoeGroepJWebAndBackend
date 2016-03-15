@@ -65,10 +65,10 @@ export class Profile {
     }
 
     onChangeDetailsSubmit() {
-        this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe((token: Response) => {
+        this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe((token: string) => {
             if (token != null) {
-                if (token.text() != "nope") {
-                    localStorage.setItem('token', token.text());
+                if (token != "nope") {
+                    localStorage.setItem('token', token);
                     this.imageSource = this.largeImageLinkString;
                     this.service.notifyProfileUpdated();
                 }
