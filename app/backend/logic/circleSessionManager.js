@@ -256,10 +256,10 @@ var CircleSessionManager = (function () {
         var _this = this;
         this.getCircleSession(sessionId, function (c) {
             if (c._creatorId !== userId) {
-                callback();
+                callback(false, "You're not the owner of this session!");
             }
             else {
-                _this._dao.stopGame(sessionId, userId, callback);
+                _this._dao.stopGame(sessionId, callback);
             }
         });
     };
