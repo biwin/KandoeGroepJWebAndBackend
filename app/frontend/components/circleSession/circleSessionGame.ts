@@ -35,7 +35,7 @@ import {OnChanges} from "angular2/core";
 
         <div id="game" *ngIf="circleSession._inProgress && !circleSession._isPreGame">
             <div class="row margin-top">
-                <div class="col s8 offset-s2">
+                <div class="col s6 offset-s3">
                     <svg [attr.viewBox]="constants.VIEWBOX">
                         <!-- Draw Kandoe board circles -->
                         <circle *ngFor="#filled of constants.RINGS; #i = index"
@@ -59,7 +59,7 @@ import {OnChanges} from "angular2/core";
             </div>
         </div>
 
-        <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds"></user-list>
+        <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds" [circleSessionId]="circleSession._id"></user-list>
     </div>
     `,
     directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame],

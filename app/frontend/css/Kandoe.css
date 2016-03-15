@@ -10,10 +10,6 @@ nav {
     padding-right: 240px;
 }
 
-.user-sidenav {
-    z-index: -1;
-}
-
 .users-heading {
     height: 64px;
 }
@@ -144,4 +140,19 @@ svg circle.kandoeRing.inner {
 
 .card-content.scrollable {
     overflow:auto!important;
+}
+
+#user-list {
+    overflow:auto !important;
+    height: 50%;
+    margin:0 !important;
+}
+
+#message-list {
+    overflow:auto !important;
+    height: 40%;
+}
+
+#sendbox {
+    height:10%;
 }

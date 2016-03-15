@@ -9,7 +9,7 @@ var bodyParser = require('body-parser'),
     OrganisationAPI = require("./app/backend/restApi/organisationAPI.js"),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
     UserApi = require('./app/backend/restApi/userApi.js'),
-
+    ChatApi = require('./app/backend/restApi/chatApi.js'),
     morgan = require('morgan'),
     server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
     server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -56,6 +56,7 @@ app.delete('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.deleteCi
 app.post('/api/circlesessions/:id', CircleSessionApi.CircleSessionApi.addUser);
 app.get('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.getCardPositions);
 app.post('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.playCard);
+app.get('/api/circlesessions/:id/chat', ChatApi.ChatApi.getMessages);
 //endregion
 
 //region organisation routes
@@ -157,6 +158,7 @@ app.get('*', function (req, res) {
 });
 //endregion
 
+//region Socket.io
 io.on('connection', function (socket) {
     socket.on('join session', function (message) {
         var object = JSON.parse(message);
@@ -167,9 +169,15 @@ io.on('connection', function (socket) {
         var roomName = Object.keys(socket.rooms).filter(function (room) {
             return room.startsWith('kandoe-')
         })[0];
-        io.to(roomName).emit('send message', message);
+
+        ChatApi.ChatApi.addMessage(message, function(b, updatedMessage){
+            if(b === true) {
+                io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
+            }
+        });
     });
 });
+//endregion Socket.io
 
 http.listen(server_port, server_ip_address, function () {
     console.log("Started listening to "+server_ip_address+" on port "+server_port+"!");

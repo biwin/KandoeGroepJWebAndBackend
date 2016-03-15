@@ -27,7 +27,6 @@ var ThemeManager = (function () {
             myAccesableThemes = themes;
             oMgr.getAllOrganisationIdsOfUserById(userId, function (organisationIds) {
                 var counter = 0;
-                console.log('orgids: ' + organisationIds);
                 organisationIds.forEach(function (organisationId) {
                     _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
                         organisationThemes.forEach(function (theme) {
