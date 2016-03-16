@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
-var common_1 = require("angular2/common");
 var router_1 = require("angular2/router");
+var common_1 = require("angular2/common");
 var themeCard_1 = require("./themeCard");
 var themeService_1 = require("../../services/themeService");
 var ThemeOverview = (function () {

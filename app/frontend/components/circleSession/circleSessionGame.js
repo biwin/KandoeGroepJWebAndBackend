@@ -12,14 +12,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var circleSessionService_1 = require("../../services/circleSessionService");
-var circleSession_1 = require("../../../backend/model/circleSession");
 var router_1 = require("angular2/router");
 var themeService_1 = require("../../services/themeService");
-var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
-var circleSessionConstants_1 = require("./../../logic/circleSessionConstants");
-var circleSessionUserList_1 = require("./circleSessionUserList");
+var circleSessionService_1 = require("../../services/circleSessionService");
+var circleSession_1 = require("../../../backend/model/circleSession");
 var circleSessionPreGame_1 = require("./circleSessionPreGame");
+var circleSessionUserList_1 = require("./circleSessionUserList");
+var circleSessionConstants_1 = require("./../../logic/circleSessionConstants");
+var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionCardOnBoardPipe_1 = require("../../logic/circleSessionCardOnBoardPipe");
 var CircleSessionGame = (function () {
     function CircleSessionGame(service, themeService, socketUrl, route) {
