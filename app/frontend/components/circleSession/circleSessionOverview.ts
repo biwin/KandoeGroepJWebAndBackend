@@ -17,12 +17,12 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
                     <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>
                 </div>
                 <div class="modal-footer">
-                    <a class="modal-action modal-close waves-effect waves-green btn-flat" (click)="doDelete = false">Nee, ga terug</a>
-                    <a class="modal-action modal-close waves-effect waves-red btn-flat" (click)="doDelete = true">Ja, verwijder</a>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDelete = false">Nee, ga terug</a>
+                    <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doDelete = true">Ja, verwijder</a>
                 </div>
             </div>
 
-            <h5>Jouw spellen</h5>
+            <h5>Mijn spellen</h5>
             <div>
                 <a [routerLink]="['CreateSession']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
                     <i class="material-icons">add</i>
