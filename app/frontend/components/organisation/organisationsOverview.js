@@ -23,6 +23,9 @@ var OrganisationsOverview = (function () {
             _this.organisations = organisations;
         });
     }
+    OrganisationsOverview.prototype.addOrganisation = function () {
+        this.router.navigate(["/CreateOrganisation"]);
+    };
     OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {
         this.router.navigate(["/OrganisationDetail", { id: organisationId }]);
     };
@@ -30,6 +33,7 @@ var OrganisationsOverview = (function () {
     OrganisationsOverview.prototype.deleteOrganisation = function (organisation) {
         var _this = this;
         var userId = this.userService.getUserId();
+        $('#modal1').openModal();
         if (organisation._organisatorIds.length == 1 && organisation._organisatorIds[0] == userId) {
             this.organisationService.deleteOrganisationById(organisation._id).subscribe(function (deleted) {
                 if (deleted) {

@@ -61,6 +61,10 @@ export class OrganisationsOverview {
         });
     }
 
+    private addOrganisation(): void {
+        this.router.navigate(["/CreateOrganisation"]);
+    }
+
     private viewOrganisation(organisationId: string): void {
         this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
     }
@@ -68,6 +72,8 @@ export class OrganisationsOverview {
     //TODO: styling van delete button
     private deleteOrganisation(organisation: Organisation): void {
         var userId = this.userService.getUserId();
+
+        $('#modal1').openModal();
 
         if(organisation._organisatorIds.length==1 && organisation._organisatorIds[0]==userId) {
             this.organisationService.deleteOrganisationById(organisation._id).subscribe((deleted: boolean) => {
