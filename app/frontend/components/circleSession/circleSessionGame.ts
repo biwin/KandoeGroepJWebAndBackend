@@ -91,7 +91,7 @@ export class CircleSessionGame {
 
             /*SOCKET UPDATE*/
             this.zone = new NgZone({enableLongStackTrace: false});
-            this.socket = io("http://localhost");
+            this.socket = io("http://localhost:8000");
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);

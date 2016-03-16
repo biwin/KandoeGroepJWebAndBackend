@@ -35,7 +35,7 @@ var CircleSessionGame = (function () {
             _this.circleSession = circleSession;
             /*SOCKET UPDATE*/
             _this.zone = new core_2.NgZone({ enableLongStackTrace: false });
-            _this.socket = io("http://localhost");
+            _this.socket = io("http://localhost:8000");
             _this.socket.emit('join session', JSON.stringify({ sessionId: _this.circleSession._id || 'Unknown' }));
             _this.socket.on('send move', function (data) { return _this.zone.run(function () {
                 var dataObject = JSON.parse(data);
