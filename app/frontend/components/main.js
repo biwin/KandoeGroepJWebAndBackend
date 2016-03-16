@@ -23,8 +23,6 @@ browser_1.bootstrap(app_component_1.AppComponent, [
     //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
     //provide('App.BackendPath', {useValue: 'http://192.168.0.149:80/api/'}), //LOCAL TESTS
     core_1.provide('App.BackendPath', { useValue: 'http://kandoe.be/api/' }),
-    //provide('App.SocketUrl', {userValue: 'http://localhost:8080'}), // LOCAL TESTS
-    core_1.provide('App.SocketUrl', { userValue: 'http://kandoe.be:8000' }),
     core_1.provide(router_1.ROUTER_PRIMARY_COMPONENT, { useValue: app_component_1.AppComponent }),
     core_1.provide(router_1.APP_BASE_HREF, { useValue: '/' }),
     core_1.provide(router_1.LocationStrategy, { useClass: router_1.HashLocationStrategy })
