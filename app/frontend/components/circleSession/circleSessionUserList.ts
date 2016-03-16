@@ -12,7 +12,7 @@ import {ChatComponent} from "../chat/chatComponent";
 @Component({
     selector: 'user-list',
     template: `
-    <div class="side-nav fixed right-aligned">
+    <div class="side-nav fixed right-aligned" id="user-sidenav">
         <ul id="user-list" class="collection with-header">
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
             <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === currentPlayerId" [class.lighten-5]="user._id === currentPlayerId">

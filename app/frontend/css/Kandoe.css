@@ -155,8 +155,15 @@ svg circle.kandoeRing.inner {
 #message-list {
     overflow:auto !important;
     height: 40%;
+    margin-bottom: 0 !important;
 }
 
 #sendbox {
     height:10%;
+}
+
+#user-sidenav {
+    overflow-y: visible;
+    padding-bottom: 0;
+    height: 100% !important;
 }
