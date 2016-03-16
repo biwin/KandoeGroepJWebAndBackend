@@ -12,6 +12,7 @@ import {ChatMessage} from "../../../backend/model/chatMessage";
 import {NgZone} from "angular2/core";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {OnChanges} from "angular2/core";
+import {Inject} from "angular2/core";
 
 @Component({
     selector: 'chatbox',
@@ -40,9 +41,9 @@ export class ChatComponent implements OnChanges {
     private initComplete:boolean = false;
     private service:CircleSessionService;
 
-    public constructor(service:CircleSessionService) {
+    public constructor(service:CircleSessionService, @Inject('App.SocketUrl') socketUrl:string) {
         this.zone = new NgZone({enableLongStackTrace: false});
-        this.socket = io("http://localhost:8080");
+        this.socket = io(socketUrl);
         this.socket.emit('join session', JSON.stringify({sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown'}));
         this.socket.on('send message', data => this.zone.run(() => {
             this.messages.push(JSON.parse(data));

@@ -21,7 +21,7 @@ var ChatComponent = (function () {
         this.messageToSend = "";
         this.initComplete = false;
         this.zone = new core_3.NgZone({ enableLongStackTrace: false });
-        this.socket = io("http://localhost:8080");
+        this.socket = io("http://localhost:8000");
         this.socket.emit('join session', JSON.stringify({ sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown' }));
         this.socket.on('send message', function (data) { return _this.zone.run(function () {
             _this.messages.push(JSON.parse(data));

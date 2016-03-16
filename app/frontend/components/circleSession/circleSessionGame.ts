@@ -82,7 +82,7 @@ export class CircleSessionGame {
     private socket;
     private zone: NgZone;
 
-    constructor(service:CircleSessionService,themeService:ThemeService, route:RouteParams) {
+    constructor(service:CircleSessionService,themeService:ThemeService, @Inject('App.SocketUrl') socketUrl:string, route:RouteParams) {
         this.id = route.get('id');
         this.service = service;
 
@@ -91,7 +91,7 @@ export class CircleSessionGame {
 
             /*SOCKET UPDATE*/
             this.zone = new NgZone({enableLongStackTrace: false});
-            this.socket = io("http://localhost:8080");
+            this.socket = io(socketUrl);
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);
