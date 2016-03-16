@@ -1,13 +1,15 @@
 import {Component} from "angular2/core";
-import {Theme} from "../../../backend/model/theme";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {FORM_DIRECTIVES} from "angular2/common";
-import {TagInput} from "../general/tagInput";
-import {ThemeService} from "../../services/themeService";
-import {Router} from "angular2/router";
-import {Organisation} from "../../../backend/model/organisation";
+import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+
 import {UserService} from "../../services/userService";
-import {ROUTER_DIRECTIVES} from "angular2/router";
+import {ThemeService} from "../../services/themeService";
+
+import {Theme} from "../../../backend/model/theme";
+import {TagInput} from "../general/tagInput";
+import {Organisation} from "../../../backend/model/organisation";
+
+
 
 @Component({
     selector: 'theme-form',

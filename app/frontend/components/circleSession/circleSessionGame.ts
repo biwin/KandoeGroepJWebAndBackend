@@ -1,21 +1,25 @@
 import {Component, Inject,OnChanges, NgZone} from "angular2/core";
-import {CORE_DIRECTIVES, NgFor} from "angular2/common";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {Component, Inject, OnChanges, NgZone} from "angular2/core";
+import {RouteParams} from "angular2/router";
+import {Response} from "angular2/http";
+
+import {UserService} from "../../services/userService";
+import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
+
+import {Card} from "../../../backend/model/card";
+import {User} from "../../../backend/model/user";
+import {CardPosition} from "../../../backend/model/cardPosition";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
-import {RouteParams} from "angular2/router";
-import {Card} from "../../../backend/model/card";
-import {ThemeService} from "../../services/themeService";
-import {CircleSessionCardDetail} from "./circleSessionCardDetail";
-import {CircleSessionConstants} from "./../../logic/circleSessionConstants";
-import {CardPosition} from "../../../backend/model/cardPosition";
-import {CircleSessionUserList} from "./circleSessionUserList";
-import {User} from "../../../backend/model/user";
-import {UserService} from "../../services/userService";
 import {CircleSessionPreGame} from "./circleSessionPreGame";
-import {CircleSessionCardOnBoardPipe} from "../../logic/circleSessionCardOnBoardPipe";
+import {CircleSessionUserList} from "./circleSessionUserList";
+import {CircleSessionConstants} from "./../../logic/circleSessionConstants";
+import {CircleSessionCardDetail} from "./circleSessionCardDetail";
 import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
-import {Response} from "angular2/http";
+import {CircleSessionCardOnBoardPipe} from "../../logic/circleSessionCardOnBoardPipe";
+
 
 @Component({
     selector: 'circlesession-game',

@@ -8,13 +8,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
-var theme_1 = require("../../../backend/model/theme");
 var common_1 = require("angular2/common");
-var common_2 = require("angular2/common");
-var tagInput_1 = require("../general/tagInput");
-var themeService_1 = require("../../services/themeService");
 var router_1 = require("angular2/router");
 var userService_1 = require("../../services/userService");
+var themeService_1 = require("../../services/themeService");
+var theme_1 = require("../../../backend/model/theme");
+var tagInput_1 = require("../general/tagInput");
 var ThemeForm = (function () {
     function ThemeForm(service, userService, router) {
         var _this = this;
@@ -48,7 +47,7 @@ var ThemeForm = (function () {
         core_1.Component({
             selector: 'theme-form',
             template: "\n    <div class=\"row container\">\n        <h5>Nieuw Thema</h5>\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <form (submit)=\"OnSubmit()\" class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input [(ngModel)]=\"theme._name\" id=\"name\" type=\"text\">\n                    <label for=\"name\">Naam</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <input [(ngModel)]=\"theme._description\" id=\"description\" type=\"text\">\n                    <label for=\"description\">Beschrijving</label>\n                </div></div>\n\n                <div class=\"row\">\n                <div class=\"input-field col s3\">\n                    <select class=\"browser-default\" [(ngModel)]=\"theme._organisationId\" id=\"organisation\">\n                        <option value=\"\">Prive</option>\n                        <option *ngFor=\"#organisation of _organisations\" value=\"{{organisation._id}}\">{{organisation._name}}</option>\n                    </select>\n                </div>\n                <div class=\"input-field col s3\">\n                    <select class=\"browser-default\" [(ngModel)]=\"_parentId\" id=\"organisation\">\n                        <option value=\"\" disabled>Subthema van</option>\n                        <option value=\"\">Geen</option>\n                        <option *ngFor=\"#theme of _themes\" value=\"{{theme._id}}\">{{theme._name}}</option>\n                    </select>\n                </div>\n                </div>\n\n                <div class=\"row\">\n                    <tags [title]=\"'Tags (splits met een puntkomma)'\" [tagArray]=\"theme._tags\"></tags>\n                </div>\n\n                <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n            </form>\n        </div></div>\n    </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, common_2.FORM_DIRECTIVES, tagInput_1.TagInput]
+            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, tagInput_1.TagInput]
         }), 
         __metadata('design:paramtypes', [themeService_1.ThemeService, userService_1.UserService, router_1.Router])
     ], ThemeForm);

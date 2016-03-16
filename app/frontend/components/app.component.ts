@@ -33,9 +33,8 @@ import {ChatComponent} from "./chat/chatComponent";
     <div class="content">
         <router-outlet></router-outlet>
     </div>
-    <pagefooter></pagefooter>
     `,
-    directives: [NavigationBar, Footer, ROUTER_DIRECTIVES, RouterOutlet]
+    directives: [NavigationBar, ROUTER_DIRECTIVES, RouterOutlet]
 })
 
 @RouteConfig([
