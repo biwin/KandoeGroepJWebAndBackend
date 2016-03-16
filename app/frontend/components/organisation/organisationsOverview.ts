@@ -40,16 +40,18 @@ import {Organisation} from "../../../backend/model/organisation";
             <table class="striped" *ngIf="organisations.length!=0">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="amountOfMembers"># leden</th>
+                        <th style="width: 2%;" data-field="isAdmin">Admin?</th>
                     </tr>
                 </thead>
 
                 <tr *ngFor="#organisation of organisations" class="clickable">
-                    <td><i class="material-icons red-text" (click)="deleteOrganisation(organisation)"  title="Verwijder {{organisation._name}}">delete</i></td>
+                    <td><i class="material-icons red-text" (click)="deleteOrganisation(organisation)"  title="Verwijder {{organisation._name}}">{{isAdmin(organisation)?"delete_forever":"delete"}}</i></td>
                     <td (click)="viewOrganisation(organisation._id)">{{organisation._name}}</td>
-                    <td (click)="viewOrganisation(organisation._id)">{{organisation._memberIds.length}}</td>
+                    <td (click)="viewOrganisation(organisation._id)">{{getAmountOfMembers(organisation)}}</td>
+                    <td (click)="viewOrganisation(organisation._id)"><i *ngIf="isAdmin(organisation)" class="material-icons green-text">check</i></td>
                 </tr>
             </table>
 
@@ -80,6 +82,17 @@ export class OrganisationsOverview {
         });
     }
 
+    private getAmountOfMembers(organisation: Organisation): number {
+        return organisation._organisatorIds.length + organisation._memberIds.length;
+    }
+
+    private isAdmin(organisation: Organisation): boolean {
+        var userId: string = this.userService.getUserId();
+
+        return organisation._organisatorIds.indexOf(userId) > -1;
+    }
+
+    //TODO: styling van add button
     private addOrganisation(): void {
         this.router.navigate(["/CreateOrganisation"]);
     }
@@ -88,7 +101,6 @@ export class OrganisationsOverview {
         this.router.navigate(["/OrganisationDetail", {id: organisationId}]);
     }
 
-    //TODO: styling van delete button
     private deleteOrganisation(organisation: Organisation): void {
         var userId: string = this.userService.getUserId();
 
@@ -96,10 +108,10 @@ export class OrganisationsOverview {
         this.isLastAdmin = this.organisationToDelete._organisatorIds.length==1 && this.organisationToDelete._organisatorIds[0]==userId;
 
         if(this.isLastAdmin) {
-            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.<br />" +
-                "Bent u zeker dat u <b>alle groepen, thema's en sessies</b> van deze organisatie wil verwijderen?";
+            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.\n" +
+                "Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?";
         } else {
-            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen." +
+            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen.\n" +
                 "Bent u zeker dat u zichzelf uit deze organisatie wil verwijderen?";
         }
 

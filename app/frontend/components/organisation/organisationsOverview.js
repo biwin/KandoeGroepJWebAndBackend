@@ -29,24 +29,31 @@ var OrganisationsOverview = (function () {
             _this.organisations = organisations;
         });
     }
+    OrganisationsOverview.prototype.getAmountOfMembers = function (organisation) {
+        return organisation._organisatorIds.length + organisation._memberIds.length;
+    };
+    OrganisationsOverview.prototype.isAdmin = function (organisation) {
+        var userId = this.userService.getUserId();
+        return organisation._organisatorIds.indexOf(userId) > -1;
+    };
+    //TODO: styling van add button
     OrganisationsOverview.prototype.addOrganisation = function () {
         this.router.navigate(["/CreateOrganisation"]);
     };
     OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {
         this.router.navigate(["/OrganisationDetail", { id: organisationId }]);
     };
-    //TODO: styling van delete button
     OrganisationsOverview.prototype.deleteOrganisation = function (organisation) {
         var _this = this;
         var userId = this.userService.getUserId();
         this.organisationToDelete = organisation;
         this.isLastAdmin = this.organisationToDelete._organisatorIds.length == 1 && this.organisationToDelete._organisatorIds[0] == userId;
         if (this.isLastAdmin) {
-            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.<br />" +
-                "Bent u zeker dat u <b>alle groepen, thema's en sessies</b> van deze organisatie wil verwijderen?";
+            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.\n" +
+                "Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?";
         }
         else {
-            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen." +
+            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen.\n" +
                 "Bent u zeker dat u zichzelf uit deze organisatie wil verwijderen?";
         }
         $('#deleteOrganisationModal').openModal({
@@ -82,7 +89,7 @@ var OrganisationsOverview = (function () {
     OrganisationsOverview = __decorate([
         core_1.Component({
             selector: 'organisations-overview',
-            template: "\n    <div class=\"row container\">\n        <div class=\"modal\" id=\"deleteOrganisationModal\">\n            <div class=\"modal-content\">\n                <h4 class=\"red-text\">{{organisationToDelete._name}} verwijderen?</h4>\n                <p>{{contentText}}</p>\n            </div>\n\n            <div class=\"modal-footer\">\n                <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDelete = true\">Ja, verwijder</a>\n            </div>\n        </div>\n\n        <div id=\"organisationsHeader\">\n            <h5>Mijn organisaties</h5>\n\n            <div id=\"organisationsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addOrganisation()\" title=\"Voeg organisatie toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <div class=\"modal\" id=\"deleteOrganisationModal\">\n            <div class=\"modal-content\">\n                <h4 class=\"red-text\">{{organisationToDelete._name}} verwijderen?</h4>\n                <p>{{contentText}}</p>\n            </div>\n\n            <div class=\"modal-footer\">\n                <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDelete = true\">Ja, verwijder</a>\n            </div>\n        </div>\n\n        <div id=\"organisationsHeader\">\n            <h5>Mijn organisaties</h5>\n\n            <div id=\"organisationsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addOrganisation()\" title=\"Voeg organisatie toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                        <th style=\"width: 2%;\" data-field=\"isAdmin\">Admin?</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation)\"  title=\"Verwijder {{organisation._name}}\">{{isAdmin(organisation)?\"delete_forever\":\"delete\"}}</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{getAmountOfMembers(organisation)}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\"><i *ngIf=\"isAdmin(organisation)\" class=\"material-icons green-text\">check</i></td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES, common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])
