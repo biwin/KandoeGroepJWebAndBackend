@@ -8,6 +8,7 @@ import {GroupService} from "../../services/groupService";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {UserService} from "../../services/userService";
 import {OnInit} from "angular2/core";
+import {Response} from "angular2/http";
 
 
 
@@ -38,7 +39,7 @@ import {OnInit} from "angular2/core";
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class="clickable"><i class="material-icons">stop</i></a>
+            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class=" black-text clickable"><i class="material-icons">do_not_disturb_on</i></a>
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">
@@ -107,7 +108,11 @@ export class CircleSessionCard implements OnInit {
     }
 
     stopGame() {
-        alert('Stop GAME');
+        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
+            this.circleSession._isStopped = a._isStopped;
+        }, (r:Response) => {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
+        });
     }
 }
 

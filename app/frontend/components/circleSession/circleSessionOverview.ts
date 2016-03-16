@@ -45,7 +45,10 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 
 
      <div class="row">
-        <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
+        <div *ngFor="#circleSession of circleSessions">
+             <circlesession-card *ngIf="!circleSession._isStopped" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
+        </div>
+
      </div>
     </div>
     `,
