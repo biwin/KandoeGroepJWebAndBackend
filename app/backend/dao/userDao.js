@@ -328,7 +328,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.deleteOrganisationFromUserById = function (organisationId, userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $pull: { '_memberOf': organisationId } }, function (error, result) {
+            db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $pull: { '_organisatorOf': organisationId, '_memberOf': organisationId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
