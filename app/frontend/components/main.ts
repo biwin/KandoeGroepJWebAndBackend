@@ -25,12 +25,12 @@ bootstrap(AppComponent, [
     ThemeService,
     UserService,
 
-    //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
+    provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
     //provide('App.BackendPath', {useValue: 'http://192.168.0.149:80/api/'}), //LOCAL TESTS
-    provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
+    //provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
 
-    //provide('App.SocketUrl', {userValue: 'http://localhost:8080'}), // LOCAL TESTS
-    provide('App.SocketUrl', {userValue: 'http://kandoe.be:8000'}), // PRODUCTION
+    provide('App.SocketUrl', {userValue: 'http://localhost:8080'}), // LOCAL TESTS
+    //provide('App.SocketUrl', {userValue: 'http://kandoe.be:8000'}), // PRODUCTION
     provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppComponent}),
     provide(APP_BASE_HREF, {useValue: '/'}),
     provide(LocationStrategy, {useClass: HashLocationStrategy})

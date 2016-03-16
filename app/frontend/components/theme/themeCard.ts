@@ -1,12 +1,13 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 
-import {Theme} from "../../../backend/model/theme";
-import {Component, Input, AfterViewInit, EventEmitter} from "angular2/core";
-import {Card} from "../../../backend/model/card";
+import {Component, Input, AfterViewInit, EventEmitter, Output, OnInit} from "angular2/core";
+
 import {ThemeService} from "../../services/themeService";
-import {Output} from "angular2/core";
-import {OnInit} from "angular2/core";
+
+import {Card} from "../../../backend/model/card";
+import {Theme} from "../../../backend/model/theme";
+
 
 @Component({
     selector: 'theme-card',

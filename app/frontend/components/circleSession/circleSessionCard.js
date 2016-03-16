@@ -8,10 +8,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
-var circleSession_1 = require("../../../backend/model/circleSession");
 var router_1 = require("angular2/router");
-var circleSessionService_1 = require("../../services/circleSessionService");
 var userService_1 = require("../../services/userService");
+var circleSessionService_1 = require("../../services/circleSessionService");
+var circleSession_1 = require("../../../backend/model/circleSession");
 var CircleSessionCard = (function () {
     function CircleSessionCard(userService, circleService, router) {
         this.onDelete = new core_1.EventEmitter();

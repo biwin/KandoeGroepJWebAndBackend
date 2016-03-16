@@ -9,15 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var common_2 = require("angular2/common");
-var circleSession_1 = require("../../../backend/model/circleSession");
 var router_1 = require("angular2/router");
 var router_2 = require("angular2/router");
+var userService_1 = require("../../services/userService");
 var themeService_1 = require("../../services/themeService");
 var circleSessionService_1 = require("../../services/circleSessionService");
 var organisationService_1 = require("../../services/organisationService");
-var userService_1 = require("../../services/userService");
 var tagInput_1 = require("../general/tagInput");
+var circleSession_1 = require("../../../backend/model/circleSession");
 var CircleSessionForm = (function () {
     function CircleSessionForm(service, themeService, organisationService, userService, router, routeParam) {
         var _this = this;
@@ -80,7 +79,7 @@ var CircleSessionForm = (function () {
         core_1.Component({
             selector: 'circlesession-form',
             template: "\n    <div class=\"row container\">\n    <h5>Nieuw Spel</h5>\n\n    <div class=\"card formCard\"><div class=\"card-content\">\n        <form (submit)=\"OnSubmit()\" class=\"col s12\">\n      <div class=\"row\">\n        <div class=\"input-field col s3\">\n                    <select class=\"browser-default\" required [(ngModel)]=\"circleSession._groupId\" id=\"group\">\n                        <option value=\"\" disabled>Groep</option>\n                        <option *ngFor=\"#group of _groups\" value=\"{{group._id}}\">{{group._name}}</option>\n                    </select>\n        </div>\n       <div class=\"input-field col s3\">\n                    <select class=\"browser-default\" required [(ngModel)]=\"circleSession._themeId\" id=\"theme\">\n                        <option value=\"\" disabled>Thema</option>\n                        <option *ngFor=\"#theme of _themes\" value=\"{{theme._id}}\">{{theme._name}}</option>\n                    </select>\n        </div>\n      </div>\n\n      <div class=\"divider\"></div>\n\n    <div class=\"row margin-top\">\n    <div class=\"col s5\">\n        <input [(ngModel)]=\"circleSession._realTime\" type=\"checkbox\" id=\"realtime\" />\n        <label for=\"realtime\">Realtime</label>\n     </div>\n    </div>\n\n    <div class=\"row\" id=\"durationbox\">\n     <div class=\"input-field col s3\">\n          <input [(ngModel)]=\"circleSession._turnTimeMin\" id=\"duration\" type=\"number\" min=\"0\" class=\"validate\">\n          <label for=\"duration\">Beurt duur</label>\n     </div>\n    </div>\n\n    <div class=\"divider\"></div>\n\n    <div class=\"row\">\n    <div class=\"col input-field s3\">\n         <label for=\"startDate\">Start datum</label>\n         <input type=\"date\" required class=\"datepicker\" id=\"startDate\">\n    </div>\n     <div class=\"input-field col s3\">\n          <input id=\"time\" required placeholder=\"Beginuur\" type=\"time\" title=\"Gebruik een geldig 24h tijdformaat.\" class=\"validate active\">\n     </div>\n    </div>\n\n          <div class=\"divider\"></div>\n\n    <h6>Optionele intellingen</h6>\n\n    <div class=\"row margin-top\">\n    <div class=\"col s5\">\n        <input type=\"checkbox\" checked id=\"endpoint\" />\n        <label for=\"endpoint\">Onbeperkt spel</label>\n     </div>\n    </div>\n\n    <div class=\"row hide\" id=\"turnbox\">\n     <div class=\"input-field col s3\">\n          <input [(ngModel)]=\"circleSession._endPoint\" id=\"duration\" type=\"number\" min=\"0\" class=\"validate\">\n          <label for=\"turns\">Aantal rondes</label>\n     </div>\n    </div>\n\n    <div class=\"row margin-top\">\n    <div class=\"col s5\">\n        <input [(ngModel)]=\"circleSession._allowComment\" type=\"checkbox\" id=\"allowcomment\"/>\n        <label for=\"allowcomment\">Spelers kunnen commentaar geven op kaarten</label>\n     </div>\n    </div>\n\n    <div class=\"row\">\n        <tags [title]=\"'Voeg extra spelers toe met hun e-mailadres (splits met een puntkomma)'\" [tagArray]=\"emailadresses\"></tags>\n    </div>\n\n      <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n    </form>\n    </div></div>\n  </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, common_2.FORM_DIRECTIVES, tagInput_1.TagInput]
+            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, tagInput_1.TagInput]
         }), 
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, themeService_1.ThemeService, organisationService_1.OrganisationService, userService_1.UserService, router_1.Router, router_2.RouteParams])
     ], CircleSessionForm);

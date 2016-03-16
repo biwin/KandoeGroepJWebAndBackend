@@ -9,10 +9,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var theme_1 = require("../../../backend/model/theme");
 var core_1 = require("angular2/core");
 var themeService_1 = require("../../services/themeService");
-var core_2 = require("angular2/core");
+var theme_1 = require("../../../backend/model/theme");
 var ThemeCard = (function () {
     function ThemeCard(themeService) {
         this.onDelete = new core_1.EventEmitter();
@@ -81,7 +80,7 @@ var ThemeCard = (function () {
         __metadata('design:type', theme_1.Theme)
     ], ThemeCard.prototype, "theme", void 0);
     __decorate([
-        core_2.Output(), 
+        core_1.Output(), 
         __metadata('design:type', core_1.EventEmitter)
     ], ThemeCard.prototype, "onDelete", void 0);
     ThemeCard = __decorate([

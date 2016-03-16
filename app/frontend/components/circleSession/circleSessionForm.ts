@@ -1,21 +1,17 @@
-import {Component} from "angular2/core";
-import {Input} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
-import {FORM_DIRECTIVES} from "angular2/common";
-import {AfterViewInit} from "angular2/core";
-
-import {Group} from "../../../backend/model/group";
-import {Theme} from "../../../backend/model/theme";
-import {CircleSession} from "../../../backend/model/circleSession";
-
+import {Component, AfterViewInit, Input} from "angular2/core";
+import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
 import {Router} from "angular2/router";
 import {RouteParams} from "angular2/router";
 
+import {UserService} from "../../services/userService";
 import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {OrganisationService} from "../../services/organisationService";
-import {UserService} from "../../services/userService";
+
+import {Group} from "../../../backend/model/group";
+import {Theme} from "../../../backend/model/theme";
 import {TagInput} from "../general/tagInput";
+import {CircleSession} from "../../../backend/model/circleSession";
 
 @Component({
     selector: 'circlesession-form',

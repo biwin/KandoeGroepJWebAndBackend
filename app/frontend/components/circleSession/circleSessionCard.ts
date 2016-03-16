@@ -1,16 +1,15 @@
-import {Component, Output, Input, EventEmitter} from "angular2/core";
-import {CircleSession} from "../../../backend/model/circleSession";
-import {ThemeService} from "../../services/themeService";
-import {Theme} from "../../../backend/model/theme";
+import {Component, Output, Input, EventEmitter, OnInit} from "angular2/core";
 import {Router} from "angular2/router";
-import {Group} from "../../../backend/model/group";
-import {GroupService} from "../../services/groupService";
-import {CircleSessionService} from "../../services/circleSessionService";
-import {UserService} from "../../services/userService";
-import {OnInit} from "angular2/core";
 import {Response} from "angular2/http";
 
+import {UserService} from "../../services/userService";
+import {GroupService} from "../../services/groupService";
+import {ThemeService} from "../../services/themeService";
+import {CircleSessionService} from "../../services/circleSessionService";
 
+import {CircleSession} from "../../../backend/model/circleSession";
+import {Theme} from "../../../backend/model/theme";
+import {Group} from "../../../backend/model/group";
 
 @Component({
     selector: 'circlesession-card',

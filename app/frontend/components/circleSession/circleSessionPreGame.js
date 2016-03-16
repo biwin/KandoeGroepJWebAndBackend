@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var circleSession_1 = require("../../../backend/model/circleSession");
-var circleSessionService_1 = require("../../services/circleSessionService");
 var userService_1 = require("../../services/userService");
+var circleSessionService_1 = require("../../services/circleSessionService");
+var circleSession_1 = require("../../../backend/model/circleSession");
 var CircleSessionPreGame = (function () {
     function CircleSessionPreGame(cService, uService) {
         this.circleSession = circleSession_1.CircleSession.empty();

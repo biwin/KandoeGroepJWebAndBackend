@@ -1,10 +1,12 @@
 import {Component, Inject, Output, Input, EventEmitter} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {RouteParams} from "angular2/router";
+
 import {CircleSessionService} from "../../services/circleSessionService";
+
+import {Card} from "../../../backend/model/card";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
-import {RouteParams} from "angular2/router";
-import {Card} from "../../../backend/model/card";
 
 @Component({
     selector: 'circlesession-carddetail',

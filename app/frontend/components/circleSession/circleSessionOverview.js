@@ -9,10 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var circleSessionService_1 = require("../../services/circleSessionService");
-var circleSessionCard_1 = require("./circleSessionCard");
-var userService_1 = require("../../services/userService");
 var router_1 = require("angular2/router");
+var circleSessionService_1 = require("../../services/circleSessionService");
+var userService_1 = require("../../services/userService");
+var circleSessionCard_1 = require("./circleSessionCard");
 var CircleSessionOverview = (function () {
     function CircleSessionOverview(service, userService) {
         var _this = this;

@@ -5,8 +5,8 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 import {Response} from "angular2/http";
 
 import {UserService} from "../../services/userService";
-import {User} from "../../../backend/model/user";
 
+import {User} from "../../../backend/model/user";
 import {ChatComponent} from "../chat/chatComponent";
 
 @Component({
