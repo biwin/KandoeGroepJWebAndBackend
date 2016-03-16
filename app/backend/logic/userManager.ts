@@ -258,6 +258,7 @@ export class UserManager {
     }
 
     changeProfileByEmail(email: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (u: User) => any) {
+        console.log("wtf Jasper: " + newName);
         this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, (success: boolean) => {
             if (success) {
                 this._dao.readUserByEmail(email, callback);

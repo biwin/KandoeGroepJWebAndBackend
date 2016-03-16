@@ -1,18 +1,19 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 
-import {Component, OnChanges} from "angular2/core";
+import {Component, OnChanges, Input} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
-import {UserService} from "../../services/userService";
 import {Response} from "angular2/http";
-import {Input} from "angular2/core";
+
+import {UserService} from "../../services/userService";
 import {User} from "../../../backend/model/user";
-import {AfterViewInit} from "angular2/core";
-import {OnInit} from "angular2/core";
+
+import {ChatComponent} from "../chat/chatComponent";
 
 @Component({
     selector: 'user-list',
     template: `
-        <ul id="user-list" class="collection with-header side-nav fixed right-aligned user-sidenav">
+    <div class="side-nav fixed right-aligned" id="user-sidenav">
+        <ul id="user-list" class="collection with-header">
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
             <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === currentPlayerId" [class.lighten-5]="user._id === currentPlayerId">
                 <div class="col s4">
@@ -27,18 +28,23 @@ import {OnInit} from "angular2/core";
                 </div>
             </li>
         </ul>
+        <chatbox [sessionId]="circleSessionId" [userId]="myUserId"></chatbox>
+     </div>
   `,
-    directives: [ROUTER_DIRECTIVES]
+    directives: [ROUTER_DIRECTIVES, ChatComponent]
 })
 
 export class CircleSessionUserList implements OnChanges {
     @Input("users") userIds:string[];
     @Input() currentPlayerId:string;
+    @Input() circleSessionId:string;
     private users:User[] = [];
     private service:UserService;
+    private myUserId:string;
 
     constructor(service:UserService) {
         this.service = service;
+        this.myUserId = service.getUserId();
     }
 
     ngOnChanges() {

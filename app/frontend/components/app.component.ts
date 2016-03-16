@@ -24,7 +24,7 @@ import {Profile} from "./user/profile";
 import {UserService} from "../services/userService";
 
 import {NgZone} from "angular2/core";
-import {ChatboxComponent} from "./chat/chatComponent";
+import {ChatComponent} from "./chat/chatComponent";
 
 @Component({
     selector: 'my-app',
@@ -58,7 +58,7 @@ import {ChatboxComponent} from "./chat/chatComponent";
     {path: '/loginUser', as: 'UserLogin', component: UserLogin},
     {path: '/profile', as: 'Profile', component: Profile},
 
-    {path: '/chat', as: 'Chatbox', component: ChatboxComponent}
+    {path: '/chat', as: 'Chatbox', component: ChatComponent}
 ])
 
 export class AppComponent {

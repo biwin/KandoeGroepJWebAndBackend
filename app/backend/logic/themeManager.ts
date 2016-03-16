@@ -42,7 +42,6 @@ export class ThemeManager {
 
             oMgr.getAllOrganisationIdsOfUserById(userId, (organisationIds: string[]) => {
                 var counter: number = 0;
-                console.log('orgids: ' + organisationIds);
                 organisationIds.forEach((organisationId: string) => {
                     this._dao.readAllThemesByOrganisationId(organisationId, (organisationThemes: Theme[]) => {
                         organisationThemes.forEach((theme: Theme) =>{

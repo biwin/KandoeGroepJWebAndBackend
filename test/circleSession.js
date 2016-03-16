@@ -54,7 +54,7 @@ describe('CircleSessionManager', function () {
         });
         it('Created circlesession should contain the users from the group', function (done) {
             this.timeout(0);
-            circleSession = new circleSession_1.CircleSession(group._id, [], theme._id, "", "", "", false, false, 0, false);
+            circleSession = new circleSession_1.CircleSession(group._id, [], theme._id, "", "", "", false, false, 0, false, false, false);
             var circleSessionWrapper = new circleSessionCreateWrapper_1.CircleSessionCreateWrapper(circleSession, []);
             circleSessionManager.createCircleSession(circleSessionWrapper, function (c) {
                 circleSession = c;

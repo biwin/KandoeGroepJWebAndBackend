@@ -91,6 +91,8 @@ export class CircleSessionApi {
     }
 
     public static getCircleSessionsOfCurrentUser(req:Request, res:Response) {
+        console.log("hi");
+        console.log(req.header('Bearer'));
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
            if(currentUserId != null){
                CircleSessionApi.mgr.getCircleSessionsOfUserById(currentUserId, (circleSessions:CircleSession[]) => {
@@ -124,6 +126,24 @@ export class CircleSessionApi {
                 });
             } else {
                 res.status(401).send({_error: 'Unauthorized'});
+            }
+        });
+    }
+
+    public static stopGame(req:Request, res:Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (id:string) => {
+            if(id != null) {
+                CircleSessionApi.mgr.stopGame(req.params.id, id, (stopped:boolean, err?:string) => {
+                    if(err != null) {
+                        res.status(400).send({'_error': err});
+                    } else if(!stopped) {
+                        res.status(400).send({'_error': 'Failed to stop game.'});
+                    } else {
+                        res.send({'_stopped': true});
+                    }
+                });
+            } else {
+                res.status(401).send({'_error': 'Unauthorized'});
             }
         });
     }

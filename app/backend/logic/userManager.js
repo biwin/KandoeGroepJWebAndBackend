@@ -235,6 +235,7 @@ var UserManager = (function () {
     };
     UserManager.prototype.changeProfileByEmail = function (email, newName, newSmallPicture, newLargePicture, callback) {
         var _this = this;
+        console.log("wtf Jasper: " + newName);
         this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, function (success) {
             if (success) {
                 _this._dao.readUserByEmail(email, callback);

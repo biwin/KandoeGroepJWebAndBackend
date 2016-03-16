@@ -43,7 +43,7 @@ export class UserApi {
             else res.send({'_message':'nope'});
         });
     }
-
+    
     public static changeProfile(token, newName: string, newSmallPicture: string, newLargePicture: string, res) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
             if (valid) {

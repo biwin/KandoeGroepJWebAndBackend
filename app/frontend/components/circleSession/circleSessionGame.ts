@@ -18,6 +18,8 @@ import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMov
 import {Response} from "angular2/http";
 import {LiteralMap} from "angular2/src/core/change_detection/parser/ast";
 import {OnChanges} from "angular2/core";
+import {NgZone} from "angular2/core";
+import {NgFor} from "angular2/common";
 
 @Component({
     selector: 'circlesession-game',
@@ -35,7 +37,7 @@ import {OnChanges} from "angular2/core";
 
         <div id="game" *ngIf="circleSession._inProgress && !circleSession._isPreGame">
             <div class="row margin-top">
-                <div class="col s8 offset-s2">
+                <div class="col s6 offset-s3">
                     <svg [attr.viewBox]="constants.VIEWBOX">
                         <!-- Draw Kandoe board circles -->
                         <circle *ngFor="#filled of constants.RINGS; #i = index"
@@ -46,23 +48,25 @@ import {OnChanges} from "angular2/core";
 
 
                         <!-- FIXME: kleur correct aanduiden, index komt niet overeen met index hieronder -->
-                        <circle *ngFor="#bol of (pst | onBoardCards); #i = index"
-                                [class.hoveredBall]="hoveredCardId === bol._cardId"
+                        <circle *ngFor="#bol of pst | onBoardCards; #i = index"
+                                [class.hoveredBall]="bol._cardId != null && hoveredCardId === bol._cardId"
                                 [id]="bol._cardId"
-                                [attr.r]="35" [attr.fill]="constants.CardColor(i)" [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
-                                [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)"/>
+                                [attr.r]="35"
+                                [attr.fill]="colors.get(bol._cardId)"
+                                [attr.cy]="constants.YPOS_CIRCLE(bol._position, (1 / pst.length) * i)"
+                                [attr.cx]="constants.XPOS_CIRCLE(bol._position, (1 / pst.length) * i)" />
                     </svg>
                 </div>
             </div>
             <div class="row">
-                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="constants.CardColor(i)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
+                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
             </div>
         </div>
 
-        <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds"></user-list>
+        <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds" [circleSessionId]="circleSession._id"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame],
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame, NgFor],
     pipes: [CircleSessionCardOnBoardPipe]
 })
 
@@ -74,7 +78,9 @@ export class CircleSessionGame {
     private id:string;
     private hoveredCardId:string = "";
     private service:CircleSessionService;
-    private colors:string[] = [];
+    private colors:Map<string,string> = new Map<string,string>();
+    private socket;
+    private zone: NgZone;
 
     constructor(service:CircleSessionService,themeService:ThemeService, route:RouteParams) {
         this.id = route.get('id');
@@ -83,17 +89,32 @@ export class CircleSessionGame {
         service.get(this.id).subscribe((circleSession:CircleSession) => {
             this.circleSession = circleSession;
 
+            /*SOCKET UPDATE*/
+            this.zone = new NgZone({enableLongStackTrace: false});
+            this.socket = io("http://localhost:8080");
+            this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
+            this.socket.on('send move', data => this.zone.run(() => {
+                var dataObject = JSON.parse(data);
+                console.log(this.pst);
+                this.pst.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
+                this.pst = this.pst.slice();
+            }));
+            /*END SOCKET UPDATE*/
+
             if(circleSession._inProgress && ! circleSession._isPreGame){
                 service.getCardPositionsOfSession(circleSession._id).subscribe((cps:CardPosition[]) => {
-                    this.pst = this.pst.concat(cps);
                     if(cps.length > 0) {
-                        themeService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
-                            cs.forEach((c:Card) => {
-                                this.cards.push(c);
-                                var i:number = this.cards.length - 1;
-                                this.colors[c._id] = this.constants.CardColor(i);
-                            });
+                        cps.forEach((c:CardPosition) => {
+                            this.pst.push(c);
+                            var i:number = this.pst.length - 1;
+                            this.colors.set(c._cardId, this.constants.CardColor(i));
                         });
+
+                        themeService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
+                            this.cards = cs;
+                        });
+
+                        this.pst = this.pst.slice();
                     }
                 });
             }
@@ -115,6 +136,7 @@ export class CircleSessionGame {
                 this.pst.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 this.pst = this.pst.slice();
+                this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position});
             }
         }, (r:Response) => {
             var o:CircleSessionMoveResponse = r.json();

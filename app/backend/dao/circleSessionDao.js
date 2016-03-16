@@ -176,6 +176,13 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.stopGame = function (sessionId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(sessionId) }, { $set: { _isStopped: true } }, function (err, res) {
+                callback(res.modifiedCount == 1);
+            });
+        });
+    };
     return CircleSessionDao;
 })();
 exports.CircleSessionDao = CircleSessionDao;
