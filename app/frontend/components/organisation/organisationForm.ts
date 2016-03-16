@@ -29,12 +29,12 @@ import {UserService} from "../../services/userService";
 })
 
 export class OrganisationForm {
-    router: Router;
-    organisationService: OrganisationService;
-    userService: UserService;
-    organisation: Organisation = Organisation.empty();
+    private router: Router;
+    private organisationService: OrganisationService;
+    private userService: UserService;
+    private organisation: Organisation = Organisation.empty();
 
-    constructor(router: Router, organisationService: OrganisationService, userService: UserService) {
+    public constructor(router: Router, organisationService: OrganisationService, userService: UserService) {
         this.router = router;
         this.organisationService = organisationService;
         this.userService = userService;
