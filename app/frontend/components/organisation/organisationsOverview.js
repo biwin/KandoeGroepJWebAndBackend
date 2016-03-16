@@ -1,3 +1,5 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -12,10 +14,14 @@ var router_1 = require("angular2/router");
 var common_1 = require("angular2/common");
 var organisationService_1 = require("../../services/organisationService");
 var userService_1 = require("../../services/userService");
+var organisation_1 = require("../../../backend/model/organisation");
 var OrganisationsOverview = (function () {
     function OrganisationsOverview(router, organisationService, userService) {
         var _this = this;
         this.organisations = [];
+        this.organisationToDelete = organisation_1.Organisation.empty();
+        this.isLastAdmin = false;
+        this.doDelete = false;
         this.router = router;
         this.organisationService = organisationService;
         this.userService = userService;
@@ -33,30 +39,50 @@ var OrganisationsOverview = (function () {
     OrganisationsOverview.prototype.deleteOrganisation = function (organisation) {
         var _this = this;
         var userId = this.userService.getUserId();
-        $('#modal1').openModal();
-        if (organisation._organisatorIds.length == 1 && organisation._organisatorIds[0] == userId) {
-            this.organisationService.deleteOrganisationById(organisation._id).subscribe(function (deleted) {
-                if (deleted) {
-                    _this.deleteOrganisationFromArray(organisation._id);
-                }
-            });
+        this.organisationToDelete = organisation;
+        this.isLastAdmin = this.organisationToDelete._organisatorIds.length == 1 && this.organisationToDelete._organisatorIds[0] == userId;
+        if (this.isLastAdmin) {
+            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.<br />" +
+                "Bent u zeker dat u <b>alle groepen, thema's en sessies</b> van deze organisatie wil verwijderen?";
         }
         else {
-            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id).subscribe(function (deleted) {
-                if (deleted) {
-                    _this.deleteOrganisationFromArray(organisation._id);
-                }
-            });
+            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen." +
+                "Bent u zeker dat u zichzelf uit deze organisatie wil verwijderen?";
+        }
+        $('#deleteOrganisationModal').openModal({
+            opacity: .75,
+            complete: function () {
+                _this.doDeleteOrganisation(userId);
+            }
+        });
+    };
+    OrganisationsOverview.prototype.doDeleteOrganisation = function (userId) {
+        var _this = this;
+        if (this.doDelete) {
+            if (this.isLastAdmin) {
+                this.organisationService.deleteOrganisationById(this.organisationToDelete._id).subscribe(function (deleted) {
+                    if (deleted) {
+                        _this.deleteOrganisationFromArray(_this.organisationToDelete._id);
+                    }
+                });
+            }
+            else {
+                this.organisationService.deleteMemberFromOrganisationById(userId, this.organisationToDelete._id).subscribe(function (deleted) {
+                    if (deleted) {
+                        _this.deleteOrganisationFromArray(_this.organisationToDelete._id);
+                    }
+                });
+            }
         }
     };
     OrganisationsOverview.prototype.deleteOrganisationFromArray = function (organisationId) {
-        var index = this.organisations.findIndex(function (organisation) { return organisation._id = organisationId; });
+        var index = this.organisations.findIndex(function (organisation) { return organisation._id == organisationId; });
         this.organisations.splice(index, 1);
     };
     OrganisationsOverview = __decorate([
         core_1.Component({
             selector: 'organisations-overview',
-            template: "\n    <div class=\"row container\">\n        <div id=\"organisationsHeader\">\n            <h5>Mijn organisaties</h5>\n\n            <div id=\"organisationsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addOrganisation()\" title=\"Voeg organisatie toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <div class=\"modal\" id=\"deleteOrganisationModal\">\n            <div class=\"modal-content\">\n                <h4 class=\"red-text\">{{organisationToDelete._name}} verwijderen?</h4>\n                <p>{{contentText}}</p>\n            </div>\n\n            <div class=\"modal-footer\">\n                <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDelete = true\">Ja, verwijder</a>\n            </div>\n        </div>\n\n        <div id=\"organisationsHeader\">\n            <h5>Mijn organisaties</h5>\n\n            <div id=\"organisationsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addOrganisation()\" title=\"Voeg organisatie toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES, common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])

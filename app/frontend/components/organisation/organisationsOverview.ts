@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component} from "angular2/core";
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 import {NgClass} from "angular2/common";
@@ -11,6 +14,18 @@ import {Organisation} from "../../../backend/model/organisation";
     selector: 'organisations-overview',
     template: `
     <div class="row container">
+        <div class="modal" id="deleteOrganisationModal">
+            <div class="modal-content">
+                <h4 class="red-text">{{organisationToDelete._name}} verwijderen?</h4>
+                <p>{{contentText}}</p>
+            </div>
+
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDelete = false">Nee, ga terug</a>
+                <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDelete = true">Ja, verwijder</a>
+            </div>
+        </div>
+
         <div id="organisationsHeader">
             <h5>Mijn organisaties</h5>
 
@@ -50,6 +65,10 @@ export class OrganisationsOverview {
     private organisationService: OrganisationService;
     private userService: UserService;
     private organisations: Organisation[] = [];
+    private organisationToDelete: Organisation = Organisation.empty();
+    private contentText: string;
+    private isLastAdmin: boolean = false;
+    private doDelete: boolean = false;
 
     public constructor(router: Router, organisationService: OrganisationService, userService: UserService) {
         this.router = router;
@@ -71,27 +90,47 @@ export class OrganisationsOverview {
 
     //TODO: styling van delete button
     private deleteOrganisation(organisation: Organisation): void {
-        var userId = this.userService.getUserId();
+        var userId: string = this.userService.getUserId();
 
-        $('#modal1').openModal();
+        this.organisationToDelete = organisation;
+        this.isLastAdmin = this.organisationToDelete._organisatorIds.length==1 && this.organisationToDelete._organisatorIds[0]==userId;
 
-        if(organisation._organisatorIds.length==1 && organisation._organisatorIds[0]==userId) {
-            this.organisationService.deleteOrganisationById(organisation._id).subscribe((deleted: boolean) => {
-                if(deleted) {
-                    this.deleteOrganisationFromArray(organisation._id);
-                }
-            });
+        if(this.isLastAdmin) {
+            this.contentText = "U staat op het punt " + this.organisationToDelete._name + " volledig te verwijderen.<br />" +
+                "Bent u zeker dat u <b>alle groepen, thema's en sessies</b> van deze organisatie wil verwijderen?";
         } else {
-            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id).subscribe((deleted: boolean) => {
-                if(deleted) {
-                    this.deleteOrganisationFromArray(organisation._id);
-                }
-            });
+            this.contentText = "U staat op het punt uzelf uit {{organisationToDelete._name}} te verwijderen." +
+                "Bent u zeker dat u zichzelf uit deze organisatie wil verwijderen?";
+        }
+
+        $('#deleteOrganisationModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteOrganisation(userId);
+            }
+        });
+    }
+
+    private doDeleteOrganisation(userId: string): void {
+        if(this.doDelete) {
+            if(this.isLastAdmin) {
+                this.organisationService.deleteOrganisationById(this.organisationToDelete._id).subscribe((deleted: boolean) => {
+                    if(deleted) {
+                        this.deleteOrganisationFromArray(this.organisationToDelete._id);
+                    }
+                });
+            } else {
+                this.organisationService.deleteMemberFromOrganisationById(userId, this.organisationToDelete._id).subscribe((deleted: boolean) => {
+                    if(deleted) {
+                        this.deleteOrganisationFromArray(this.organisationToDelete._id);
+                    }
+                });
+            }
         }
     }
 
-    private deleteOrganisationFromArray(organisationId: string) {
-        var index = this.organisations.findIndex((organisation: Organisation) => organisation._id = organisationId);
+    private deleteOrganisationFromArray(organisationId: string): void {
+        var index = this.organisations.findIndex((organisation: Organisation) => organisation._id == organisationId);
 
         this.organisations.splice(index, 1);
     }
