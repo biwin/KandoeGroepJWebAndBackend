@@ -70,9 +70,23 @@ export class OrganisationsOverview {
         var userId = this.userService.getUserId();
 
         if(organisation._organisatorIds.length==1 && organisation._organisatorIds[0]==userId) {
-            this.organisationService.deleteOrganisationById(organisation._id);
+            this.organisationService.deleteOrganisationById(organisation._id).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteOrganisationFromArray(organisation._id);
+                }
+            });
         } else {
-            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id);
+            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteOrganisationFromArray(organisation._id);
+                }
+            });
         }
+    }
+
+    private deleteOrganisationFromArray(organisationId: string) {
+        var index = this.organisations.findIndex((organisation: Organisation) => organisation._id = organisationId);
+
+        this.organisations.splice(index, 1);
     }
 }

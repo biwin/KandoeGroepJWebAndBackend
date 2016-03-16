@@ -27,7 +27,7 @@ export class OrganisationService {
         return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
     }
 
-    deleteOrganisationById(organisationId: string) {
+    deleteOrganisationById(organisationId: string): Observable<boolean> {
         return this.http.delete(this.path + "organisations/" + organisationId, false, false, false);
     }
 
@@ -48,7 +48,7 @@ export class OrganisationService {
         return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, false);
     }
 
-    deleteMemberFromOrganisationById(userId: string, organisationId: string) {
+    deleteMemberFromOrganisationById(userId: string, organisationId: string): Observable<boolean> {
         return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, false);
     }
 }

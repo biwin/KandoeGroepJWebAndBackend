@@ -28,13 +28,26 @@ var OrganisationsOverview = (function () {
     };
     //TODO: styling van delete button
     OrganisationsOverview.prototype.deleteOrganisation = function (organisation) {
+        var _this = this;
         var userId = this.userService.getUserId();
         if (organisation._organisatorIds.length == 1 && organisation._organisatorIds[0] == userId) {
-            this.organisationService.deleteOrganisationById(organisation._id);
+            this.organisationService.deleteOrganisationById(organisation._id).subscribe(function (deleted) {
+                if (deleted) {
+                    _this.deleteOrganisationFromArray(organisation._id);
+                }
+            });
         }
         else {
-            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id);
+            this.organisationService.deleteMemberFromOrganisationById(userId, organisation._id).subscribe(function (deleted) {
+                if (deleted) {
+                    _this.deleteOrganisationFromArray(organisation._id);
+                }
+            });
         }
+    };
+    OrganisationsOverview.prototype.deleteOrganisationFromArray = function (organisationId) {
+        var index = this.organisations.findIndex(function (organisation) { return organisation._id = organisationId; });
+        this.organisations.splice(index, 1);
     };
     OrganisationsOverview = __decorate([
         core_1.Component({
