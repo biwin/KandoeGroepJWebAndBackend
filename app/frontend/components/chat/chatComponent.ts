@@ -1,18 +1,14 @@
 /// <reference path="../../../../typings/socket.io.d.ts" />
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 
-import {Component} from "angular2/core";
+import {Component,Input,NgZone,OnChanges,Inject} from "angular2/core";
 import {Router} from "angular2/router";
-import {UserService} from "../../services/userService";
-import Request = Express.Request;
 import {Response} from "angular2/http";
-import {Input} from "angular2/core";
+
+import {UserService} from "../../services/userService";
 import {User} from "../../../backend/model/user";
 import {ChatMessage} from "../../../backend/model/chatMessage";
-import {NgZone} from "angular2/core";
 import {CircleSessionService} from "../../services/circleSessionService";
-import {OnChanges} from "angular2/core";
-import {Inject} from "angular2/core";
 
 @Component({
     selector: 'chatbox',
@@ -43,7 +39,8 @@ export class ChatComponent implements OnChanges {
 
     public constructor(service:CircleSessionService, @Inject('App.SocketUrl') socketUrl:string) {
         this.zone = new NgZone({enableLongStackTrace: false});
-        this.socket = io(socketUrl);
+        this.socket = io.connect(socketUrl);
+        console.log('Socket URI: ' + socketUrl);
         this.socket.emit('join session', JSON.stringify({sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown'}));
         this.socket.on('send message', data => this.zone.run(() => {
             this.messages.push(JSON.parse(data));

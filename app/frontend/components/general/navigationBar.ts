@@ -69,6 +69,6 @@ export class NavigationBar implements AfterViewInit {
 
     ngAfterViewInit() {
         //FIXME: navbar doesn't seem to open on mobile
-        $("#main-nav-toggle").sideNav({menuWidth: 240});
+        $("#main-nav-toggle").sideNav({menuWidth: 240, closeOnClick: true});
     }
 }

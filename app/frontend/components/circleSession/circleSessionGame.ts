@@ -1,5 +1,5 @@
-import {Component, Inject} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
+import {Component, Inject,OnChanges, NgZone} from "angular2/core";
+import {CORE_DIRECTIVES, NgFor} from "angular2/common";
 import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
@@ -16,10 +16,6 @@ import {CircleSessionPreGame} from "./circleSessionPreGame";
 import {CircleSessionCardOnBoardPipe} from "../../logic/circleSessionCardOnBoardPipe";
 import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
 import {Response} from "angular2/http";
-import {LiteralMap} from "angular2/src/core/change_detection/parser/ast";
-import {OnChanges} from "angular2/core";
-import {NgZone} from "angular2/core";
-import {NgFor} from "angular2/common";
 
 @Component({
     selector: 'circlesession-game',
@@ -66,7 +62,7 @@ import {NgFor} from "angular2/common";
         <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds" [circleSessionId]="circleSession._id"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame, NgFor],
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame],
     pipes: [CircleSessionCardOnBoardPipe]
 })
 
@@ -91,11 +87,10 @@ export class CircleSessionGame {
 
             /*SOCKET UPDATE*/
             this.zone = new NgZone({enableLongStackTrace: false});
-            this.socket = io(socketUrl);
+            this.socket = io.connect(socketUrl);
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);
-                console.log(this.pst);
                 this.pst.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
                 this.pst = this.pst.slice();
             }));

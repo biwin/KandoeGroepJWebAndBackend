@@ -43,7 +43,7 @@ var NavigationBar = (function () {
     };
     NavigationBar.prototype.ngAfterViewInit = function () {
         //FIXME: navbar doesn't seem to open on mobile
-        $("#main-nav-toggle").sideNav({ menuWidth: 240 });
+        $("#main-nav-toggle").sideNav({ menuWidth: 240, closeOnClick: true });
     };
     NavigationBar = __decorate([
         core_1.Component({
