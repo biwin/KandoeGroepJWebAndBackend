@@ -186,6 +186,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('send move', function(message) {
+        console.log(message);
         var roomName = Object.keys(socket.rooms).filter(function(room) {
             return room.startsWith('kandoe-');
         })[0];
