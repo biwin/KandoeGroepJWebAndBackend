@@ -26,7 +26,7 @@ import {ThemeService} from "../../services/themeService";
                 </div>
             </div>
 
-            <h5>Jouw thema's</h5>
+            <h5>Mijn thema's</h5>
             <div>
                 <a [routerLink]="['CreateTheme']" class="btn-floating waves-effect waves-light red" title="Creëer thema">
                     <i class="material-icons">add</i>
@@ -46,6 +46,8 @@ import {ThemeService} from "../../services/themeService";
                     </div>
                 </div>
             </div>
+
+             <p *ngIf="!loading && themes.length==0">Je hebt nog geen thema's.</p>
 
             <div class="row">
                 <theme-card *ngFor="#theme of themes" [theme]="theme" (onDelete)="deleteTheme($event)">

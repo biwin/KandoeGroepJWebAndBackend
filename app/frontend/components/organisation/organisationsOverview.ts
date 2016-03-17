@@ -11,7 +11,7 @@ import {Organisation} from "../../../backend/model/organisation";
     selector: 'organisations-overview',
     template: `
     <div class="row container">
-        <h5>Jouw organisaties</h5>
+        <h5>Mijn organisaties</h5>
         <div>
            <a [routerLink]="['CreateOrganisation']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
                 <i class="material-icons">add</i>

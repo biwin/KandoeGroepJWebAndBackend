@@ -22,23 +22,28 @@ var ThemeManager = (function () {
     ThemeManager.prototype.getAllThemes = function (userId, callback) {
         var _this = this;
         var oMgr = new organisationManager_1.OrganisationManager();
-        var myAccesableThemes = [];
+        var myAccessibleThemes = [];
         this._dao.readAllThemes(userId, function (themes) {
-            myAccesableThemes = themes;
+            myAccessibleThemes = themes;
             oMgr.getAllOrganisationIdsOfUserById(userId, function (organisationIds) {
                 var counter = 0;
-                organisationIds.forEach(function (organisationId) {
-                    _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
-                        organisationThemes.forEach(function (theme) {
-                            if (JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0) {
-                                myAccesableThemes.push(theme);
+                if (organisationIds.length == 0) {
+                    callback(myAccessibleThemes);
+                }
+                else {
+                    organisationIds.forEach(function (organisationId) {
+                        _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
+                            organisationThemes.forEach(function (theme) {
+                                if (JSON.stringify(myAccessibleThemes).indexOf(JSON.stringify(theme)) < 0) {
+                                    myAccessibleThemes.push(theme);
+                                }
+                            });
+                            if (++counter == organisationIds.length) {
+                                callback(myAccessibleThemes);
                             }
                         });
-                        if (++counter == organisationIds.length) {
-                            callback(myAccesableThemes);
-                        }
                     });
-                });
+                }
             });
         });
     };
