@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component} from "angular2/core";
 import {Router, RouteParams} from "angular2/router";
 import {NgClass} from "angular2/common";
@@ -5,6 +8,7 @@ import {NgClass} from "angular2/common";
 import {LoadingSpinner} from "../general/loadingSpinner";
 
 import {OrganisationService} from "../../services/organisationService";
+import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
 import {Group} from "../../../backend/model/group";
@@ -14,6 +18,19 @@ import {Theme} from "../../../backend/model/theme";
 @Component({
     selector: 'organisation-detail',
     template: `
+    <div class="modal" id="deleteGroupModal">
+        <div class="modal-content">
+            <h4 class="red-text">{{groupToDelete._name}} verwijderen?</h4>
+            <p>U staat op het punt {{groupToDelete._name}} volledig te verwijderen.<br />
+                Bent u zeker dat u deze groep wil verwijderen uit {{organisation._name}}?"</p>
+        </div>
+
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDelete = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDelete = true">Ja, verwijder</a>
+        </div>
+    </div>
+
     <loading *ngIf="loading"></loading>
     
     <div class="row container" *ngIf="!loading && organisation!=null">
@@ -146,7 +163,6 @@ import {Theme} from "../../../backend/model/theme";
                 </thead>
 
                 <tr *ngFor="#theme of themes" (click)="viewTheme(theme._id)" class="clickable">
-                    <td><a *ngIf="isAdmin(theme)" class="red-text tooltipped" (click)="deleteTheme(theme)" data-position="left" data-tooltip="{{getTooltipText(theme)}}"><i class="material-icons">delete_forever</i></a></td>
                     <td>{{theme._name}}</td>
                     <td>{{theme._description}}</td>
                 </tr>
@@ -167,19 +183,27 @@ import {Theme} from "../../../backend/model/theme";
 
 export class OrganisationDetail {
     private router: Router;
-    private organisation: Organisation;
+    private organisationService: OrganisationService;
+    private userService: UserService;
+    private organisation: Organisation = Organisation.empty();
     private groups: Group[];
     private admins: User[];
     private members: User[];
     private themes: Theme[] = [];
     private loading: boolean = true;
+    private groupToDelete: Group = Group.empty();
+    private doDeleteGrp: boolean = false;
 
-    public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService) {
+    public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService, userService: UserService) {
         var organisationId: string = routeParam.params["id"];
 
         this.router = router;
+        this.organisationService = organisationService;
+        this.userService = userService;
 
         organisationService.getOrganisationById(organisationId).subscribe((organisation: Organisation) => {
+            this.organisation = organisation;
+
             if(organisation._groupIds.length != 0) {
                 organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups: Group[]) => {
                     this.groups = groups;
@@ -201,11 +225,15 @@ export class OrganisationDetail {
             organisationService.getThemesOfOrganisationById(organisationId).subscribe((themes: Theme[]) => {
                 this.themes = themes;
             });
-
-            this.organisation = organisation;
-
-            this.loading = false;
         });
+
+        this.loading = false;
+    }
+
+    private isAdmin(): boolean {
+        var userId: string = this.userService.getUserId();
+
+        return this.organisation._organisatorIds.indexOf(userId) > -1;
     }
 
     //TODO: styling van edit button
@@ -222,6 +250,33 @@ export class OrganisationDetail {
 
     private viewGroup(groupId: string): void {
         this.router.navigate(["/GroupDetail", {id: groupId}]);
+    }
+
+    private deleteGroup(group: Group): void {
+        this.groupToDelete = group;
+
+        $('#deleteGroupModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteGroup();
+            }
+        });
+    }
+
+    private doDeleteGroup(): void {
+        if(this.doDeleteGrp) {
+            this.organisationService.deleteGroupFromOrganisationById(this.groupToDelete._id, this.groupToDelete._organisationId).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteGroupFromArray(this.groupToDelete._id);
+                }
+            });
+        }
+    }
+
+    private deleteGroupFromArray(groupId: string): void {
+        var index = this.groups.findIndex((group: Group) => group._id == groupId);
+
+        this.groups.splice(index, 1);
     }
 
     //TODO: styling van addMember button
