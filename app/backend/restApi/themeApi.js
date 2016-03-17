@@ -1,3 +1,4 @@
+"use strict";
 var userApi_1 = require("./userApi");
 var themeManager_1 = require("../logic/themeManager");
 var card_1 = require("../model/card");
@@ -132,13 +133,21 @@ var ThemeApi = (function () {
             }
         });
     };
-    ThemeApi.getThemesOfOrganisationById = function (organisationId, res) {
-        this.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
-            res.send(themes);
+    ThemeApi.getThemesOfOrganisationById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                themeApi.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
+                    res.send(themes);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     ThemeApi.mgr = new themeManager_1.ThemeManager();
     return ThemeApi;
-})();
+}());
 exports.ThemeApi = ThemeApi;
 //# sourceMappingURL=themeApi.js.map

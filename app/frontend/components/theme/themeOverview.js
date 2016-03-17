@@ -1,5 +1,6 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -63,6 +64,6 @@ var ThemeOverview = (function () {
         __metadata('design:paramtypes', [themeService_1.ThemeService])
     ], ThemeOverview);
     return ThemeOverview;
-})();
+}());
 exports.ThemeOverview = ThemeOverview;
 //# sourceMappingURL=themeOverview.js.map

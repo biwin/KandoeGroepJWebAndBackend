@@ -1,3 +1,4 @@
+"use strict";
 var assert = require('assert');
 var organisationManager_1 = require("../app/backend/logic/organisationManager");
 var userManager_1 = require("../app/backend/logic/userManager");
@@ -36,12 +37,10 @@ describe("OrganisationManager", function () {
                     organisationManager.getOrganisationById(o._id, function (newOrganisation) {
                         assert.equal(organisation._name, newOrganisation._name);
                         organisation = o;
-                        //TODO: check if organisationId is added to _organisatorOf array in User-object
-                        //userManager.getUserById(user._id, (newUser: User) => {
-                        //    assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
-                        //
-                        //    done();
-                        //});
+                        userManager.getUserById(user._id, function (newUser) {
+                            assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
+                            done();
+                        });
                         done();
                     });
                 }

@@ -1,3 +1,4 @@
+"use strict";
 var circleMathToolbox_1 = require("./circleMathToolbox");
 var CircleSessionConstants = (function () {
     function CircleSessionConstants() {
@@ -92,6 +93,6 @@ var CircleSessionConstants = (function () {
         return circleMathToolbox_1.CircleMathToolbox.POS_ON_CIRCLE(this.CENTER, this.CircleRadius(depth), angle, Math.cos);
     };
     return CircleSessionConstants;
-})();
+}());
 exports.CircleSessionConstants = CircleSessionConstants;
 //# sourceMappingURL=circleSessionConstants.js.map

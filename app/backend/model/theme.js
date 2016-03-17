@@ -1,3 +1,4 @@
+"use strict";
 var Theme = (function () {
     function Theme(_name, _description, _organisatorIds, _subThemes, _organisationId, _tags) {
         this._name = _name;
@@ -11,6 +12,6 @@ var Theme = (function () {
         return new Theme("", "", [], [], "", []);
     };
     return Theme;
-})();
+}());
 exports.Theme = Theme;
 //# sourceMappingURL=theme.js.map

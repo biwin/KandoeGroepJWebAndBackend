@@ -20,15 +20,15 @@ import {Snapshot} from "../../../backend/model/snapshot";
 
      <div class="modal" id="{{'m' + circleSession._id}}">
         <div class="modal-content">
-            <h4>Speler toevoegen</h4>
+            <h4>Speler toevoegen?</h4>
             <div class="input-field col s12">
                 <input id="email" type="email" class="validate" [(ngModel)]="email">
                 <label for="email">Email</label>
             </div>
         </div>
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" (click)="doAdd = false">Annuleren</a>
-            <a class="modal-action modal-close waves-effect waves-red btn-flat" (click)="doAdd = true">Toevoegen</a>
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doAdd = false">Annuleren</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doAdd = true">Toevoegen</a>
         </div>
       </div>
 

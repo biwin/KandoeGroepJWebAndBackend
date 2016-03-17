@@ -1,3 +1,4 @@
+"use strict";
 var CircleMathToolbox = (function () {
     function CircleMathToolbox() {
     }
@@ -11,6 +12,6 @@ var CircleMathToolbox = (function () {
         return deg * Math.PI / 180;
     };
     return CircleMathToolbox;
-})();
+}());
 exports.CircleMathToolbox = CircleMathToolbox;
 //# sourceMappingURL=circleMathToolbox.js.map

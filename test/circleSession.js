@@ -1,5 +1,6 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
+"use strict";
 var assert = require('assert');
 var circleSession_1 = require("../app/backend/model/circleSession");
 var circleSessionManager_1 = require("../app/backend/logic/circleSessionManager");

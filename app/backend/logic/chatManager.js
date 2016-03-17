@@ -1,3 +1,4 @@
+"use strict";
 var chatDao_1 = require("../dao/chatDao");
 var userManager_1 = require("./userManager");
 var ChatManager = (function () {
@@ -32,6 +33,6 @@ var ChatManager = (function () {
         });
     };
     return ChatManager;
-})();
+}());
 exports.ChatManager = ChatManager;
 //# sourceMappingURL=chatManager.js.map
