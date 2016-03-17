@@ -138,8 +138,16 @@ export class ThemeApi {
     }
 
     public static getThemesOfOrganisationById(req: Request, res: Response) {
-        this.mgr.getThemesOfOrganisationById(req.params.id, (themes: Theme[]) => {
-            res.send(themes);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                themeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
+                    res.send(themes);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 }

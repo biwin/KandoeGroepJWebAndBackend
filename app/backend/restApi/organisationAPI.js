@@ -7,18 +7,48 @@ var OrganisationAPI = (function () {
     function OrganisationAPI() {
     }
     OrganisationAPI.create = function (req, res) {
-        OrganisationAPI.mgr.createOrganisation(req.body, function (o) {
-            res.send(o);
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisation = req.body;
+                organisation._organisatorIds = [currentUserId];
+                OrganisationAPI.mgr.createOrganisation(req.body, function (o) {
+                    res.send(o);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.find = function (req, res) {
-        OrganisationAPI.mgr.getOrganisationById(req.params.id, function (organisation) {
-            res.send(organisation);
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.getOrganisationById(organisationId, function (organisation) {
+                    res.send(organisation);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.delete = function (req, res) {
-        OrganisationAPI.mgr.removeOrganisationById(req.params.id, function (deleted) {
-            res.send(deleted);
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.removeOrganisationById(organisationId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.getAdmins = function (req, res) {
@@ -34,13 +64,35 @@ var OrganisationAPI = (function () {
         themeApi_1.ThemeApi.getThemesOfOrganisationById(req, res);
     };
     OrganisationAPI.deleteMemberById = function (req, res) {
-        OrganisationAPI.mgr.deleteMemberFromOrganisationById(req.params.memberId, req.params.id, function (deleted) {
-            res.send(deleted);
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var memberId = req.params.memberId;
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.getOrganisationOfGroupById = function (req, res) {
-        OrganisationAPI.mgr.getOrganisationOfGroupById(req.params.id, function (organisation) {
-            res.send(organisation);
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var groupId = req.params.id;
+                OrganisationAPI.mgr.getOrganisationOfGroupById(groupId, function (organisation) {
+                    res.send(organisation);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.getAllOrganisationsOfCurrentUser = function (req, res) {
@@ -49,6 +101,9 @@ var OrganisationAPI = (function () {
                 OrganisationAPI.mgr.getAllOrganisationsOfUserById(currentUserId, function (organisations) {
                     res.send(organisations);
                 });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
             }
         });
     };

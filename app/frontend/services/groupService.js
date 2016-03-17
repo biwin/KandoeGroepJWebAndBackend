@@ -20,16 +20,16 @@ var GroupService = (function () {
         this.http = http;
     }
     GroupService.prototype.createGroup = function (group) {
-        return this.http.post(this.path + "groups/", JSON.stringify(group), true, true, false);
+        return this.http.post(this.path + "groups/", JSON.stringify(group), true, true, true);
     };
     GroupService.prototype.getGroupById = function (groupId) {
-        return this.http.get(this.path + "groups/" + groupId, false, true, false);
+        return this.http.get(this.path + "groups/" + groupId, false, true, true);
     };
     GroupService.prototype.getMembersOfGroupById = function (groupId) {
-        return this.http.get(this.path + "groups/" + groupId + "/members", false, true, false);
+        return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     };
     GroupService.prototype.getOrganisationOfGroupById = function (groupId) {
-        return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, false);
+        return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, true);
     };
     GroupService = __decorate([
         core_1.Injectable(),

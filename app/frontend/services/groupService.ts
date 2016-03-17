@@ -18,18 +18,18 @@ export class GroupService {
     }
 
     createGroup(group: Group): Observable<Group> {
-        return this.http.post(this.path + "groups/", JSON.stringify(group), true, true, false);
+        return this.http.post(this.path + "groups/", JSON.stringify(group), true, true, true);
     }
 
     getGroupById(groupId: string): Observable<Group> {
-        return this.http.get(this.path + "groups/" + groupId, false, true, false);
+        return this.http.get(this.path + "groups/" + groupId, false, true, true);
     }
 
     getMembersOfGroupById(groupId: string): Observable<User[]> {
-        return this.http.get(this.path + "groups/" + groupId + "/members", false, true, false);
+        return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     }
 
     getOrganisationOfGroupById(groupId: string): Observable<Organisation> {
-        return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, false);
+        return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, true);
     }
 }

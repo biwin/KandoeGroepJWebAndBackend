@@ -143,20 +143,44 @@ export class UserApi {
     }
 
     public static getAdminsOfOrganisationById(req: Request, res: Response) {
-        this.manager.getAdminsOfOrganisationById(req.params.id, (admins: User[]) => {
-            res.send(admins);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                UserApi.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
+                    res.send(admins);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static getMembersOfOrganisationById(req: Request, res: Response) {
-        this.manager.getMembersOfOrganisationById(req.params.id, (members: User[]) => {
-            res.send(members);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                UserApi.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
+                    res.send(members);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static getMembersOfGroupById(req: Request, res: Response) {
-        this.manager.getMembersOfGroupById(req.params.id, (members: User[]) => {
-            res.send(members);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                UserApi.manager.getMembersOfGroupById(groupId, (members: User[]) => {
+                    res.send(members);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 }

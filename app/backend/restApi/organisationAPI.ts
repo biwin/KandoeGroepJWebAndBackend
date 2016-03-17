@@ -13,20 +13,49 @@ export class OrganisationAPI {
     private static mgr: OrganisationManager = new OrganisationManager();
 
     public static create(req: Request, res: Response){
-        OrganisationAPI.mgr.createOrganisation(req.body, (o: Organisation) => {
-           res.send(o);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisation: Organisation = req.body;
+                organisation._organisatorIds = [currentUserId];
+
+                OrganisationAPI.mgr.createOrganisation(req.body, (o: Organisation) => {
+                    res.send(o);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static find(req: Request, res: Response) {
-        OrganisationAPI.mgr.getOrganisationById(req.params.id, (organisation: Organisation) => {
-            res.send(organisation);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                OrganisationAPI.mgr.getOrganisationById(organisationId, (organisation: Organisation) => {
+                    res.send(organisation);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static delete(req: Request, res: Response) {
-        OrganisationAPI.mgr.removeOrganisationById(req.params.id, (deleted: boolean) => {
-            res.send(deleted);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                OrganisationAPI.mgr.removeOrganisationById(organisationId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
@@ -47,23 +76,46 @@ export class OrganisationAPI {
     }
 
     public static deleteMemberById(req: Request, res: Response) {
-        OrganisationAPI.mgr.deleteMemberFromOrganisationById(req.params.memberId, req.params.id, (deleted: boolean) => {
-            res.send(deleted);
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var memberId: string = req.params.memberId;
+                var organisationId: string = req.params.id;
+
+                OrganisationAPI.mgr.deleteMemberFromOrganisationById(memberId, organisationId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static getOrganisationOfGroupById(req: Request, res: Response) {
-        OrganisationAPI.mgr.getOrganisationOfGroupById(req.params.id, (organisation: Organisation) => {
-            res.send(organisation)
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                OrganisationAPI.mgr.getOrganisationOfGroupById(groupId, (organisation: Organisation) => {
+                    res.send(organisation);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
     public static getAllOrganisationsOfCurrentUser(req: Request, res: Response) {
-        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) =>{
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
             if(currentUserId != null){
                 OrganisationAPI.mgr.getAllOrganisationsOfUserById(currentUserId, (organisations: Organisation[]) => {
                     res.send(organisations);
                 });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
             }
         });
     }
