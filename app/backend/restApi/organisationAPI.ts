@@ -94,6 +94,12 @@ export class OrganisationAPI {
         });
     }
 
+    public static deleteGroupById(req: Request, res: Response) {
+        req.params.id = req.params.groupId;
+        
+        GroupAPI.delete(req, res);
+    }
+
     public static getOrganisationOfGroupById(req: Request, res: Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
             if (currentUserId != null) {

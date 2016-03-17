@@ -82,6 +82,10 @@ var OrganisationAPI = (function () {
             }
         });
     };
+    OrganisationAPI.deleteGroupById = function (req, res) {
+        req.params.id = req.params.groupId;
+        groupAPI_1.GroupAPI.delete(req, res);
+    };
     OrganisationAPI.getOrganisationOfGroupById = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
