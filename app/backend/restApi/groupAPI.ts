@@ -39,6 +39,24 @@ export class GroupAPI {
         });
     }
 
+    public static delete(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                GroupAPI.mgr.removeGroupById(groupId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
     public static getMembers(req: Request, res: Response) {
         UserApi.getMembersOfGroupById(req, res);
     }

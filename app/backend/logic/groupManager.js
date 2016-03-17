@@ -34,6 +34,8 @@ var GroupManager = (function () {
         this._dao.getGroupById(groupId, callback);
     };
     GroupManager.prototype.removeGroupById = function (groupId, callback) {
+        //TODO: delete groupId from _memberOfGroupIds array in User-objects
+        //TODO: delete groupId from _groupIds array in Organisation-object
         this._dao.deleteGroupById(groupId, callback);
     };
     GroupManager.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {

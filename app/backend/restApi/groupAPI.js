@@ -32,6 +32,24 @@ var GroupAPI = (function () {
             }
         });
     };
+    GroupAPI.delete = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var groupId = req.params.id;
+                GroupAPI.mgr.removeGroupById(groupId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     GroupAPI.getMembers = function (req, res) {
         userApi_1.UserApi.getMembersOfGroupById(req, res);
     };

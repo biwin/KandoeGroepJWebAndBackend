@@ -42,6 +42,8 @@ export class GroupManager {
     }
 
     removeGroupById(groupId: string, callback: (deleted: boolean) => any) {
+        //TODO: delete groupId from _memberOfGroupIds array in User-objects
+        //TODO: delete groupId from _groupIds array in Organisation-object
         this._dao.deleteGroupById(groupId, callback);
     }
 
