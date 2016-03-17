@@ -9,6 +9,7 @@ import {CORE_DIRECTIVES} from "angular2/common";
 import {Theme} from "../../../backend/model/theme";
 import {ThemeCard} from "./themeCard";
 import {ThemeService} from "../../services/themeService";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 
 @Component({
@@ -33,19 +34,7 @@ import {ThemeService} from "../../services/themeService";
                 </a>
             </div>
 
-            <div *ngIf="loading" class="row center margin-top">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                      <div class="circle-clipper left">
-                        <div class="circle"></div>
-                      </div><div class="gap-patch">
-                        <div class="circle"></div>
-                      </div><div class="circle-clipper right">
-                        <div class="circle"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+            <loading *ngIf="loading"></loading>
 
              <p *ngIf="!loading && themes.length==0">Je hebt nog geen thema's.</p>
 
@@ -55,7 +44,7 @@ import {ThemeService} from "../../services/themeService";
             </div>
         </div>
     `,
-    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, ThemeCard]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, ThemeCard, LoadingSpinner]
 })
 export class ThemeOverview {
     private loading:boolean = true;

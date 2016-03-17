@@ -6,6 +6,7 @@ import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'organisations-overview',
@@ -18,19 +19,7 @@ import {Organisation} from "../../../backend/model/organisation";
            </a>
         </div>
 
-        <div *ngIf="loading" class="row center margin-top">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                      <div class="circle-clipper left">
-                        <div class="circle"></div>
-                      </div><div class="gap-patch">
-                        <div class="circle"></div>
-                      </div><div class="circle-clipper right">
-                        <div class="circle"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+        <loading *ngIf="loading"></loading>
 
         <div *ngIf="!loading" class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisations.length!=0">
@@ -53,7 +42,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [ROUTER_DIRECTIVES, NgClass]
+    directives: [ROUTER_DIRECTIVES, NgClass, LoadingSpinner]
 })
 
 export class OrganisationsOverview {

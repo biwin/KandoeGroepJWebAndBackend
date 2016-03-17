@@ -1,7 +1,6 @@
 import {Component, AfterViewInit, Input} from "angular2/core";
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
-import {Router} from "angular2/router";
-import {RouteParams} from "angular2/router";
+import {Router, RouteParams} from "angular2/router";
 
 import {UserService} from "../../services/userService";
 import {ThemeService} from "../../services/themeService";
@@ -12,6 +11,7 @@ import {Group} from "../../../backend/model/group";
 import {Theme} from "../../../backend/model/theme";
 import {TagInput} from "../general/tagInput";
 import {CircleSession} from "../../../backend/model/circleSession";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'circlesession-form',
@@ -19,7 +19,10 @@ import {CircleSession} from "../../../backend/model/circleSession";
     <div class="row container">
     <h5>Nieuw Spel</h5>
 
-    <div class="card formCard"><div class="card-content">
+    <div class="card formCard">
+
+    <loading *ngIf="themesLoading || groupsLoading"></loading>
+    <div *ngIf="!themesLoading && !groupsLoading" class="card-content">
         <form (submit)="OnSubmit()" class="col s12">
       <div class="row">
         <div class="input-field col s3">
@@ -36,23 +39,7 @@ import {CircleSession} from "../../../backend/model/circleSession";
         </div>
       </div>
 
-      <div class="divider"></div>
-
- <!--   <div class="row margin-top">
-    <div class="col s5">
-        <input [(ngModel)]="circleSession._realTime" type="checkbox" id="realtime" />
-        <label for="realtime">Realtime</label>
-     </div>
-    </div>
-
-    <div class="row" id="durationbox">
-     <div class="input-field col s3">
-          <input [(ngModel)]="circleSession._turnTimeMin" id="duration" type="number" min="0" class="validate">
-          <label for="duration">Beurt duur</label>
-     </div>
-    </div>
-
-    <div class="divider"></div>-->
+    <div class="divider"></div>
 
     <div class="row">
     <div class="col input-field s3">
@@ -91,7 +78,7 @@ import {CircleSession} from "../../../backend/model/circleSession";
     </div></div>
   </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput, LoadingSpinner]
 })
 export class CircleSessionForm implements AfterViewInit {
     circleSession:CircleSession = CircleSession.empty();
@@ -99,6 +86,8 @@ export class CircleSessionForm implements AfterViewInit {
     service:CircleSessionService;
     router:Router;
 
+    private groupsLoading:boolean = true;
+    private themesLoading:boolean = true;
 
     private _currentUserId:string;
     private _groups:Group[] = [];
@@ -122,10 +111,6 @@ export class CircleSessionForm implements AfterViewInit {
             min: Date.now()
         });
 
-        $('#realtime').change(()=> {
-            $('#durationbox').toggleClass('hide');
-        });
-
         $('#endpoint').change(()=> {
             $('#turnbox').toggleClass('hide');
         });
@@ -140,15 +125,18 @@ export class CircleSessionForm implements AfterViewInit {
         if (organisationId == null) {
             userService.getAllGroupsOfUser(this._currentUserId).subscribe((grs:Group[]) => {
                 this._groups = grs;
+                this.groupsLoading = false;
             });
         } else {
             organisationService.getGroupsOfOrganisationById(organisationId).subscribe((grs:Group[]) => {
                 this._groups = grs;
+                this.groupsLoading = false;
             });
         }
 
         themeService.getAll().subscribe((ts:Theme[]) => {
             this._themes = ts;
+            this.themesLoading = false;
         });
     }
 
@@ -158,8 +146,9 @@ export class CircleSessionForm implements AfterViewInit {
         if (this.circleSession._realTime)
             this.circleSession._turnTimeMin = null;
 
-        this.circleSession._startDate = $('#startDate').val() + ' ' + $('#time').val();
-
+        var dateString:string = $('#startDate').val() + ' ' + $('#time').val();
+        //make sure the client's timezone is included in the date
+        this.circleSession._startDate = new Date(Date.parse(dateString)).toUTCString();
 
         this.service.create(this.circleSession, this.emailadresses).subscribe((c:CircleSession) => {
             this.router.navigate(['CircleSessionOverview']);
