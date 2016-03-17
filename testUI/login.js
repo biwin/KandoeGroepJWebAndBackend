@@ -3,11 +3,19 @@ module.exports = {
         browser
             .url("http://localhost:8080/#/loginUser")
             .waitForElementVisible('#email', 10000)
-            .setValue('#password', 'testpaswoord')
             .setValue('#email', 'testemail@detesters.eu')
-            .click('#loginButton')
-            .pause(100000)
-            .assert.urlContains('profile')
-            .end();
+            .execute(function () {
+                $('#password').val('test');
+                return true;
+            }, [], function () {
+                browser.click('#loginButton')
+                    .pause(10000)
+                    .getText('#error', function (result) {
+                        if (result.value === 'Email is reeds in gebruik') {
+                            browser.click('#loginButton').pause(10000);
+                        }
+                        browser.assert.urlContains('profile').end();
+                    });
+            });
     }
 };

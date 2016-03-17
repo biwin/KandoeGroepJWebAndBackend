@@ -52,7 +52,7 @@ var CircleSessionService = (function () {
         return this.http.post(this.path + 'circlesessions/' + sessionId + '/positions', JSON.stringify({ _cardId: cardId }), true, true, true);
     };
     CircleSessionService.prototype.stopGame = function (sessionId) {
-        this.http.post(this.path + 'circlesessions/' + sessionId + '/stopGame', "", false, true, true);
+        return this.http.post(this.path + 'circlesessions/' + sessionId + '/stopGame', "", false, true, true);
     };
     CircleSessionService.prototype.getMessages = function (sessionId) {
         return this.http.get(this.path + 'circlesessions/' + sessionId + '/chat', false, true, false);

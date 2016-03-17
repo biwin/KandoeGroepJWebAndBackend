@@ -20,7 +20,11 @@ var ChatManager = (function () {
             var userIds = msgs.map(function (msg) { return msg._userId; });
             _this._uMgr.getUsers(userIds, function (us) {
                 var ms = msgs.map(function (msg) {
-                    msg._userName = us.find(function (u) { return msg._userId === u._id.toString(); })._name;
+                    var a = us.filter(function (u) {
+                        return msg._userId === u._id.toString();
+                    })[0];
+                    if (a != undefined)
+                        msg._userName = a._name;
                     return msg;
                 });
                 callback(ms);

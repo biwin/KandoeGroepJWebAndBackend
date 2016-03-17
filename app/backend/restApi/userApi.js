@@ -87,7 +87,13 @@ var UserApi = (function () {
         var signature = SHA256(header + "." + claim);
         return header + "." + claim + "." + signature;
     };
-    UserApi.getFacebookUser = function (facebookId, email, pictureSmall, pictureLarge, name, registrar, res) {
+    UserApi.getFacebookUser = function (req, res) {
+        var facebookId = req.body._facebookId;
+        var email = req.body._email;
+        var pictureSmall = req.body._pictureSmall;
+        var pictureLarge = req.body._pictureLarge;
+        var name = req.body._name;
+        var registrar = req.body._registrar;
         UserApi.manager.facebookUserExists(facebookId, function (exists) {
             if (exists) {
                 UserApi.manager.getFacebookUser(facebookId, function (u) {

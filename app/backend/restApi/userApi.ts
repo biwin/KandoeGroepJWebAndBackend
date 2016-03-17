@@ -13,7 +13,7 @@ var SHA256 = require("crypto-js/sha256");
 export class UserApi {
     private static manager: UserManager = new UserManager();
 
-    public static createUser(name: string, email: string, password: string, registrar: string, res) {
+    public static createUser(name: string, email: string, password: string, registrar: string, res:Response) {
         UserApi.manager.registerUser(new User(name, email, password, registrar), (u: User) => {
             if (u == null) {
                 res.send({'_message':'nope'});
@@ -27,7 +27,7 @@ export class UserApi {
         });
     }
 
-    public static getUser(email: string, password: string, res) {
+    public static getUser(email: string, password: string, res:Response) {
         UserApi.manager.getUserByEmail(email, (u:User) => {
             if (u == null || u._password != password) {
                 res.send({'_message':'nope'});
@@ -37,14 +37,14 @@ export class UserApi {
         });
     }
 
-    public static getPicture(token, type: string, res) {
+    public static getPicture(token, type: string, res:Response) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
             if (valid) UserApi.manager.getUserById(decodedClaim._id, (u: User) => res.send({'_message': (type == 'small' ? u._pictureSmall : u._pictureLarge) }));
             else res.send({'_message':'nope'});
         });
     }
     
-    public static changeProfile(token, newName: string, newSmallPicture: string, newLargePicture: string, res) {
+    public static changeProfile(token, newName: string, newSmallPicture: string, newLargePicture: string, res:Response) {
         UserApi.isTokenValid(token, (valid: boolean, decodedClaim) => {
             if (valid) {
                 if (decodedClaim._type == 'facebook') {
@@ -84,7 +84,13 @@ export class UserApi {
         return header + "." + claim + "." + signature;
     }
 
-    public static getFacebookUser(facebookId: string, email: string, pictureSmall: string, pictureLarge: string, name: string, registrar: string, res) {
+    public static getFacebookUser(req:Request, res:Response) {
+        var facebookId:string = req.body._facebookId;
+        var email:string = req.body._email;
+        var pictureSmall:string = req.body._pictureSmall;
+        var pictureLarge:string = req.body._pictureLarge;
+        var name:string = req.body._name;
+        var registrar:string = req.body._registrar;
         UserApi.manager.facebookUserExists(facebookId, (exists: boolean) => {
             if (exists) {
                 UserApi.manager.getFacebookUser(facebookId, (u: User) => {
@@ -136,19 +142,19 @@ export class UserApi {
         OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     }
 
-    public static getAdminsOfOrganisationById(organisationId: string, res) {
+    public static getAdminsOfOrganisationById(organisationId: string, res:Response) {
         this.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
             res.send(admins);
         });
     }
 
-    public static getMembersOfOrganisationById(organisationId: string, res) {
+    public static getMembersOfOrganisationById(organisationId: string, res:Response) {
         this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
             res.send(members);
         });
     }
 
-    public static getMembersOfGroupById(groupId: string, res) {
+    public static getMembersOfGroupById(groupId: string, res:Response) {
         this.manager.getMembersOfGroupById(groupId, (members: User[]) => {
             res.send(members);
         });

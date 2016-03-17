@@ -1,11 +1,12 @@
-import {Component} from "angular2/core";
+import {Component, Inject} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
-import {Inject} from "angular2/core";
+import {ROUTER_DIRECTIVES} from "angular2/router";
+
 import {CircleSessionService} from "../../services/circleSessionService";
+
+import {UserService} from "../../services/userService";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {CircleSessionCard} from "./circleSessionCard";
-import {UserService} from "../../services/userService";
-import {ROUTER_DIRECTIVES} from "angular2/router";
 
 @Component({
     selector: 'circlesession-overview',
@@ -45,7 +46,10 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 
 
      <div class="row">
-        <circlesession-card *ngFor="#circleSession of circleSessions" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
+        <div *ngFor="#circleSession of circleSessions">
+             <circlesession-card *ngIf="!circleSession._isStopped" [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
+        </div>
+
      </div>
     </div>
     `,

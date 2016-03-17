@@ -63,7 +63,7 @@ export class CircleSessionService {
     }
 
     stopGame(sessionId:string):Observable<any> {
-        this.http.post(this.path + 'circlesessions/' + sessionId + '/stopGame', "", false, true, true);
+        return this.http.post(this.path + 'circlesessions/' + sessionId + '/stopGame', "", false, true, true);
     }
 
     getMessages(sessionId:string):Observable<ChatMessage[]>{

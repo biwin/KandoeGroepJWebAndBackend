@@ -3,13 +3,14 @@
 
 import {Component, Input, OnChanges} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {Response} from "angular2/http";
+
+import {UserService} from "../../services/userService";
+import {CircleSessionService} from "../../services/circleSessionService";
 
 import {CircleSession} from "../../../backend/model/circleSession";
-import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
-import {UserService} from "../../services/userService";
-import {Response} from "angular2/http";
 
 @Component({
     selector: 'pregame',
