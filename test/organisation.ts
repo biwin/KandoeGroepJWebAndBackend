@@ -49,12 +49,11 @@ describe("OrganisationManager", () => {
 
                         organisation = o;
 
-                        //TODO: check if organisationId is added to _organisatorOf array in User-object
-                        //userManager.getUserById(user._id, (newUser: User) => {
-                        //    assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
-                        //
-                        //    done();
-                        //});
+                        userManager.getUserById(user._id, (newUser: User) => {
+                            assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
+
+                            done();
+                        });
                         done();
                     });
                 } catch(e) {
