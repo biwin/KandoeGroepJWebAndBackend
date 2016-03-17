@@ -3,7 +3,6 @@ import {Router, RouteParams} from "angular2/router";
 import {NgClass} from "angular2/common";
 
 import {OrganisationService} from "../../services/organisationService";
-import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
 import {Group} from "../../../backend/model/group";
@@ -124,7 +123,7 @@ import {Theme} from "../../../backend/model/theme";
         <div id="themesHeader">
             <h5>Thema's</h5>
 
-            <div id="membersMenu">
+            <div id="themesMenu">
                 <a class="btn-floating waves-effect waves-light red" (click)="addTheme()" title="Voeg thema toe">
                     <i class="material-icons">add</i>
                 </a>
