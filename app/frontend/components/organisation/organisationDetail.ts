@@ -82,7 +82,7 @@ import {Theme} from "../../../backend/model/theme";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#admin of admins" (click)="viewMember(admin._id)" class="clickable">
+                <tr *ngFor="#admin of admins" class="clickable">
                     <td>{{admin._name}}</td>
                     <td>{{admin._email}}</td>
                 </tr>
@@ -111,7 +111,7 @@ import {Theme} from "../../../backend/model/theme";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#member of members" (click)="viewMember(member._id)" class="clickable">
+                <tr *ngFor="#member of members" class="clickable">
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -220,12 +220,6 @@ export class OrganisationDetail {
     private addMember(): void {
         //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
         alert("addMember");
-    }
-
-    //TODO: uitwerking viewMember methode
-    private viewMember(userId: string): void {
-        //this.router.navigate(["/UserDetail", {id: userId}]);
-        alert("viewMember: " + userId);
     }
 
     //TODO: styling van addTheme button
