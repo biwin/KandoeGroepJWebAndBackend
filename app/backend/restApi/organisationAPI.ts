@@ -12,48 +12,48 @@ import {Organisation} from "../model/organisation";
 export class OrganisationAPI {
     private static mgr: OrganisationManager = new OrganisationManager();
 
-    public static create(organisation: Organisation, res){
-        this.mgr.createOrganisation(organisation, (o: Organisation) => {
+    public static create(req: Request, res: Response){
+        OrganisationAPI.mgr.createOrganisation(req.body, (o: Organisation) => {
            res.send(o);
         });
     }
 
-    public static find(organisationId: string, res) {
-        this.mgr.getOrganisationById(organisationId, (organisation: Organisation) => {
+    public static find(req: Request, res: Response) {
+        OrganisationAPI.mgr.getOrganisationById(req.params.id, (organisation: Organisation) => {
             res.send(organisation);
         });
     }
 
-    public static delete(organisationId: string, res) {
-        this.mgr.removeOrganisationById(organisationId, (deleted: boolean) => {
+    public static delete(req: Request, res: Response) {
+        OrganisationAPI.mgr.removeOrganisationById(req.params.id, (deleted: boolean) => {
             res.send(deleted);
         });
     }
 
-    public static getAdmins(organisationId: string, res) {
-        UserApi.getAdminsOfOrganisationById(organisationId, res);
+    public static getAdmins(req: Request, res: Response) {
+        UserApi.getAdminsOfOrganisationById(req, res);
     }
 
-    public static getGroups(organisationId: string, res) {
-        GroupAPI.getGroupsOfOrganisationById(organisationId, res);
+    public static getGroups(req: Request, res: Response) {
+        GroupAPI.getGroupsOfOrganisationById(req, res);
     }
 
-    public static getMembers(organisationId: string, res) {
-        UserApi.getMembersOfOrganisationById(organisationId, res);
+    public static getMembers(req: Request, res: Response) {
+        UserApi.getMembersOfOrganisationById(req, res);
     }
 
-    public static getThemes(organisationId: string, res) {
-        ThemeApi.getThemesOfOrganisationById(organisationId, res);
+    public static getThemes(req: Request, res: Response) {
+        ThemeApi.getThemesOfOrganisationById(req, res);
     }
 
-    public static deleteMemberById(organisationId: string, memberId: string, res) {
-        this.mgr.deleteMemberFromOrganisationById(memberId, organisationId, (deleted: boolean) => {
+    public static deleteMemberById(req: Request, res: Response) {
+        OrganisationAPI.mgr.deleteMemberFromOrganisationById(req.params.memberId, req.params.id, (deleted: boolean) => {
             res.send(deleted);
         });
     }
 
-    public static getOrganisationOfGroupById(groupId: string, res) {
-        this.mgr.getOrganisationOfGroupById(groupId, (organisation: Organisation) => {
+    public static getOrganisationOfGroupById(req: Request, res: Response) {
+        OrganisationAPI.mgr.getOrganisationOfGroupById(req.params.id, (organisation: Organisation) => {
             res.send(organisation)
         });
     }
@@ -61,7 +61,7 @@ export class OrganisationAPI {
     public static getAllOrganisationsOfCurrentUser(req: Request, res: Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) =>{
             if(currentUserId != null){
-                this.mgr.getAllOrganisationsOfUserById(currentUserId, (organisations: Organisation[]) => {
+                OrganisationAPI.mgr.getAllOrganisationsOfUserById(currentUserId, (organisations: Organisation[]) => {
                     res.send(organisations);
                 });
             }

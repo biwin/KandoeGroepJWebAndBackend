@@ -144,18 +144,18 @@ var UserApi = (function () {
     UserApi.getAllOrganisationsOfCurrentUser = function (req, res) {
         organisationAPI_1.OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     };
-    UserApi.getAdminsOfOrganisationById = function (organisationId, res) {
-        this.manager.getAdminsOfOrganisationById(organisationId, function (admins) {
+    UserApi.getAdminsOfOrganisationById = function (req, res) {
+        this.manager.getAdminsOfOrganisationById(req.params.id, function (admins) {
             res.send(admins);
         });
     };
-    UserApi.getMembersOfOrganisationById = function (organisationId, res) {
-        this.manager.getMembersOfOrganisationById(organisationId, function (members) {
+    UserApi.getMembersOfOrganisationById = function (req, res) {
+        this.manager.getMembersOfOrganisationById(req.params.id, function (members) {
             res.send(members);
         });
     };
-    UserApi.getMembersOfGroupById = function (groupId, res) {
-        this.manager.getMembersOfGroupById(groupId, function (members) {
+    UserApi.getMembersOfGroupById = function (req, res) {
+        this.manager.getMembersOfGroupById(req.params.id, function (members) {
             res.send(members);
         });
     };

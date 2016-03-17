@@ -5,24 +5,24 @@ var groupManager_1 = require("../logic/groupManager");
 var GroupAPI = (function () {
     function GroupAPI() {
     }
-    GroupAPI.create = function (group, res) {
-        GroupAPI.mgr.createGroup(group, function (g) {
+    GroupAPI.create = function (req, res) {
+        GroupAPI.mgr.createGroup(req.body, function (g) {
             res.send(g);
         });
     };
-    GroupAPI.find = function (groupId, res) {
-        GroupAPI.mgr.getGroupById(groupId, function (group) {
+    GroupAPI.find = function (req, res) {
+        GroupAPI.mgr.getGroupById(req.params.id, function (group) {
             res.send(group);
         });
     };
-    GroupAPI.getMembers = function (groupId, res) {
-        userApi_1.UserApi.getMembersOfGroupById(groupId, res);
+    GroupAPI.getMembers = function (req, res) {
+        userApi_1.UserApi.getMembersOfGroupById(req, res);
     };
-    GroupAPI.getOrganisation = function (groupId, res) {
-        organisationAPI_1.OrganisationAPI.getOrganisationOfGroupById(groupId, res);
+    GroupAPI.getOrganisation = function (req, res) {
+        organisationAPI_1.OrganisationAPI.getOrganisationOfGroupById(req, res);
     };
-    GroupAPI.getGroupsOfOrganisationById = function (organisationId, res) {
-        GroupAPI.mgr.getGroupsOfOrganisationById(organisationId, function (groups) {
+    GroupAPI.getGroupsOfOrganisationById = function (req, res) {
+        GroupAPI.mgr.getGroupsOfOrganisationById(req.params.id, function (groups) {
             res.send(groups);
         });
     };

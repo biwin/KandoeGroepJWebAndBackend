@@ -133,8 +133,8 @@ var ThemeApi = (function () {
             }
         });
     };
-    ThemeApi.getThemesOfOrganisationById = function (organisationId, res) {
-        this.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
+    ThemeApi.getThemesOfOrganisationById = function (req, res) {
+        this.mgr.getThemesOfOrganisationById(req.params.id, function (themes) {
             res.send(themes);
         });
     };

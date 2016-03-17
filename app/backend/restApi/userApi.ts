@@ -142,20 +142,20 @@ export class UserApi {
         OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     }
 
-    public static getAdminsOfOrganisationById(organisationId: string, res:Response) {
-        this.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
+    public static getAdminsOfOrganisationById(req: Request, res: Response) {
+        this.manager.getAdminsOfOrganisationById(req.params.id, (admins: User[]) => {
             res.send(admins);
         });
     }
 
-    public static getMembersOfOrganisationById(organisationId: string, res:Response) {
-        this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
+    public static getMembersOfOrganisationById(req: Request, res: Response) {
+        this.manager.getMembersOfOrganisationById(req.params.id, (members: User[]) => {
             res.send(members);
         });
     }
 
-    public static getMembersOfGroupById(groupId: string, res:Response) {
-        this.manager.getMembersOfGroupById(groupId, (members: User[]) => {
+    public static getMembersOfGroupById(req: Request, res: Response) {
+        this.manager.getMembersOfGroupById(req.params.id, (members: User[]) => {
             res.send(members);
         });
     }

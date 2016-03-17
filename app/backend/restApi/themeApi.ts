@@ -137,8 +137,8 @@ export class ThemeApi {
         });
     }
 
-    public static getThemesOfOrganisationById(organisationId: string, res) {
-        this.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
+    public static getThemesOfOrganisationById(req: Request, res: Response) {
+        this.mgr.getThemesOfOrganisationById(req.params.id, (themes: Theme[]) => {
             res.send(themes);
         });
     }
