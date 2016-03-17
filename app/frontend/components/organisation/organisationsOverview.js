@@ -15,12 +15,14 @@ var userService_1 = require("../../services/userService");
 var OrganisationsOverview = (function () {
     function OrganisationsOverview(router, organisationService, userService) {
         var _this = this;
+        this.loading = true;
         this.organisations = [];
         this.router = router;
         this.organisationService = organisationService;
         this.userService = userService;
         userService.getAllOrganisationsOfCurrentUser().subscribe(function (organisations) {
             _this.organisations = organisations;
+            _this.loading = false;
         });
     }
     OrganisationsOverview.prototype.viewOrganisation = function (organisationId) {
@@ -34,7 +36,7 @@ var OrganisationsOverview = (function () {
     OrganisationsOverview = __decorate([
         core_1.Component({
             selector: 'organisations-overview',
-            template: "\n    <div class=\"row container\">\n        <h5>Mijn organisaties</h5>\n        <div>\n           <a [routerLink]=\"['CreateOrganisation']\" class=\"btn-floating waves-effect waves-light red\" title=\"Cre\u00EBer circlespel\">\n                <i class=\"material-icons\">add</i>\n           </a>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation._id)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"row container\">\n        <h5>Mijn organisaties</h5>\n        <div>\n           <a [routerLink]=\"['CreateOrganisation']\" class=\"btn-floating waves-effect waves-light red\" title=\"Cre\u00EBer circlespel\">\n                <i class=\"material-icons\">add</i>\n           </a>\n        </div>\n\n        <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n\n        <div *ngIf=\"!loading\" class=\"card\" [ngClass]=\"{tableCard: organisations.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisations.length!=0\">\n                <thead>\n                    <tr>\n                        <th></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#organisation of organisations\" class=\"clickable\">\n                    <td><i class=\"material-icons red-text\" (click)=\"deleteOrganisation(organisation._id)\"  title=\"Verwijder {{organisation._name}}\">delete</i></td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._name}}</td>\n                    <td (click)=\"viewOrganisation(organisation._id)\">{{organisation._memberIds.length}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisations.length==0\">Je bent momenteel nog geen lid van een organisatie.</p>\n        </div></div>\n    </div>\n    ",
             directives: [router_1.ROUTER_DIRECTIVES, common_1.NgClass]
         }), 
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])

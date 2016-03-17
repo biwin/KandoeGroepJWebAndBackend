@@ -2,6 +2,10 @@
     padding-left: 240px;
 }
 
+.no-padding-left {
+    padding-left: 0 !important;
+}
+
 nav {
     z-index: 1;
 }
@@ -143,7 +147,7 @@ svg circle.kandoeRing.inner {
 }
 
 .card-action + .card-content.scrollable {
-    max-height: 235px;
+    height: 235px;
 }
 
 #user-list {

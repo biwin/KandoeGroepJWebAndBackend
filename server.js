@@ -36,11 +36,6 @@ app.get('/', function (req, res) {
 });
 
 //region user routes
-//TODO remove?
-app.get('/api/user/get', function (req, res) {
-    UserApi.UserApi.getUser(req.query.id, res);
-});
-
 app.get('/api/user/bulk/:array', UserApi.UserApi.getUsers);
 app.get('/api/user/:id/groups', GroupAPI.GroupAPI.getGroupsOfUserById);
 app.get('/api/user/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfCurrentUser);

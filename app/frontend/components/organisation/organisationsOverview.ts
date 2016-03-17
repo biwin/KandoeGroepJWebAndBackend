@@ -18,7 +18,21 @@ import {Organisation} from "../../../backend/model/organisation";
            </a>
         </div>
 
-        <div class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
+        <div *ngIf="loading" class="row center margin-top">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+        <div *ngIf="!loading" class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisations.length!=0">
                 <thead>
                     <tr>
@@ -43,6 +57,7 @@ import {Organisation} from "../../../backend/model/organisation";
 })
 
 export class OrganisationsOverview {
+    private loading:boolean = true;
     private router: Router;
     private organisationService: OrganisationService;
     private userService: UserService;
@@ -55,6 +70,7 @@ export class OrganisationsOverview {
 
         userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
+            this.loading = false;
         });
     }
 

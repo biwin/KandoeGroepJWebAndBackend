@@ -59,8 +59,6 @@ export class ChatComponent implements OnChanges {
             this.service.getMessages(this.sessionId).subscribe((chatMessages:ChatMessage[]) => {
                 this.messages = chatMessages;
                 this.initComplete = true;
-                //FIXME PLIS
-                $('#message-list').animate({scrollTop:$('#message-list')[0].scrollHeight}, 1000);
             });
         }
     }

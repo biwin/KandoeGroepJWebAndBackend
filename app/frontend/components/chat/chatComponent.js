@@ -41,8 +41,6 @@ var ChatComponent = (function () {
             this.service.getMessages(this.sessionId).subscribe(function (chatMessages) {
                 _this.messages = chatMessages;
                 _this.initComplete = true;
-                //FIXME PLIS
-                $('#message-list').animate({ scrollTop: $('#message-list')[0].scrollHeight }, 1000);
             });
         }
     };

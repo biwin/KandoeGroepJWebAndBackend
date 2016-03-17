@@ -38,7 +38,7 @@ import {CircleSession} from "../../../backend/model/circleSession";
 
       <div class="divider"></div>
 
-    <div class="row margin-top">
+ <!--   <div class="row margin-top">
     <div class="col s5">
         <input [(ngModel)]="circleSession._realTime" type="checkbox" id="realtime" />
         <label for="realtime">Realtime</label>
@@ -52,7 +52,7 @@ import {CircleSession} from "../../../backend/model/circleSession";
      </div>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider"></div>-->
 
     <div class="row">
     <div class="col input-field s3">
@@ -79,13 +79,6 @@ import {CircleSession} from "../../../backend/model/circleSession";
      <div class="input-field col s3">
           <input [(ngModel)]="circleSession._endPoint" id="duration" type="number" min="0" class="validate">
           <label for="turns">Aantal rondes</label>
-     </div>
-    </div>
-
-    <div class="row margin-top">
-    <div class="col s5">
-        <input [(ngModel)]="circleSession._allowComment" type="checkbox" id="allowcomment"/>
-        <label for="allowcomment">Spelers kunnen commentaar geven op kaarten</label>
      </div>
     </div>
 
