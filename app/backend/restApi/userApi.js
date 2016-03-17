@@ -1,3 +1,4 @@
+"use strict";
 var organisationAPI_1 = require("./organisationAPI");
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
@@ -160,6 +161,6 @@ var UserApi = (function () {
     };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;
-})();
+}());
 exports.UserApi = UserApi;
 //# sourceMappingURL=userApi.js.map

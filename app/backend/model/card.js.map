@@ -1,1 +1,1 @@
-{"version":3,"file":"card.js","sourceRoot":"","sources":["card.ts"],"names":["Card","Card.constructor"],"mappings":"AAAA;IAEIA,cAAmBA,KAAaA,EAASA,QAAeA;QAArCC,UAAKA,GAALA,KAAKA,CAAQA;QAASA,aAAQA,GAARA,QAAQA,CAAOA;IAAIA,CAACA;IACjED,WAACA;AAADA,CAACA,AAHD,IAGC;AAHY,YAAI,OAGhB,CAAA"}
+{"version":3,"file":"card.js","sourceRoot":"","sources":["card.ts"],"names":[],"mappings":";AAAA;IAEI,cAAmB,KAAa,EAAS,QAAe;QAArC,UAAK,GAAL,KAAK,CAAQ;QAAS,aAAQ,GAAR,QAAQ,CAAO;IAAI,CAAC;IACjE,WAAC;AAAD,CAAC,AAHD,IAGC;AAHY,YAAI,OAGhB,CAAA"}

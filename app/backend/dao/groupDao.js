@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 var GroupDao = (function () {
@@ -66,6 +67,6 @@ var GroupDao = (function () {
         });
     };
     return GroupDao;
-})();
+}());
 exports.GroupDao = GroupDao;
 //# sourceMappingURL=groupDao.js.map

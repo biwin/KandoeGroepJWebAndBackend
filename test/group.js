@@ -1,3 +1,4 @@
+"use strict";
 var assert = require('assert');
 var groupManager_1 = require("../app/backend/logic/groupManager");
 var organisationManager_1 = require("../app/backend/logic/organisationManager");

@@ -1,3 +1,4 @@
+"use strict";
 var User = (function () {
     function User(_name, _email, _password, _registrar) {
         this._name = _name;
@@ -12,6 +13,6 @@ var User = (function () {
         return new User("", "", "", "");
     };
     return User;
-})();
+}());
 exports.User = User;
 //# sourceMappingURL=user.js.map

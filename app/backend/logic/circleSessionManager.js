@@ -1,3 +1,4 @@
+"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var groupManager_1 = require("./groupManager");
 var themeManager_1 = require("./themeManager");
@@ -293,6 +294,6 @@ var CircleSessionManager = (function () {
         });
     };
     return CircleSessionManager;
-})();
+}());
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

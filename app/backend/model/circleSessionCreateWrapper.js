@@ -1,3 +1,4 @@
+"use strict";
 var CircleSessionCreateWrapper = (function () {
     function CircleSessionCreateWrapper(_circleSession, _userEmailAdresses) {
         this._circleSession = _circleSession;
@@ -7,6 +8,6 @@ var CircleSessionCreateWrapper = (function () {
         return new CircleSessionCreateWrapper(null, []);
     };
     return CircleSessionCreateWrapper;
-})();
+}());
 exports.CircleSessionCreateWrapper = CircleSessionCreateWrapper;
 //# sourceMappingURL=circleSessionCreateWrapper.js.map
