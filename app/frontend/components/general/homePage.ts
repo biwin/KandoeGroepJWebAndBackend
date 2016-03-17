@@ -7,6 +7,9 @@ import {CircleSession} from "../../../backend/model/circleSession";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {CircleSessionCard} from "../circleSession/circleSessionCard";
 import {CircleSessionService} from "../../services/circleSessionService";
+import {SnapshotCard} from "../snapshot/snapshotCard";
+import {Snapshot} from "../../../backend/model/snapshot";
+import {SnapshotService} from "../../services/snapshotService";
 
 @Component({
     selector: 'home-page',
@@ -58,9 +61,17 @@ import {CircleSessionService} from "../../services/circleSessionService";
                 <circlesession-card [circleSession]="circleSession" (onDelete)="deleteCircleSession($event)"></circlesession-card>
             </div>
         </div>
+
+        <h5 *ngIf="!loading && snapshots.length > 0">Snapshots</h5>
+        <div class="row">
+            <div *ngFor="#snapshot of snapshots">
+                <snapshot-card [snapshot]="snapshot"></snapshot-card>
+            </div>
+        </div>
+
      </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCard]
+    directives: [CORE_DIRECTIVES, CircleSessionCard, SnapshotCard]
 })
 
 export class HomePage {
@@ -68,11 +79,13 @@ export class HomePage {
     private circleSessionsPlanned:CircleSession[] = [];
     private circleSessionsStopped:CircleSession[] = [];
 
+    private snapshots:Snapshot[] = [];
+
     private circleService:CircleSessionService;
     private loading:boolean = true;
     private doDelete:boolean = false;
 
-    public constructor(private router: Router, userService:UserService, circleService:CircleSessionService) {
+    public constructor(private router: Router, userService:UserService, circleService:CircleSessionService, snapshotService:SnapshotService) {
         this.circleService = circleService;
         userService.getCircleSessionsOfCurrentUser().subscribe((circleSessions:CircleSession[]) =>{
             circleSessions.forEach((circleSession:CircleSession) => {
@@ -83,6 +96,9 @@ export class HomePage {
                 } else {
                     this.circleSessionsStopped.push(circleSession);
                 }
+            });
+            snapshotService.getAll().subscribe((snapshots:Snapshot[])=> {
+               this.snapshots = snapshots;
             });
             this.loading = false;
         });

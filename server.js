@@ -10,6 +10,7 @@ var bodyParser = require('body-parser'),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
     UserApi = require('./app/backend/restApi/userApi.js'),
     ChatApi = require('./app/backend/restApi/chatApi.js'),
+    SnapshotApi = require('./app/backend/restApi/snapshotApi.js'),
     morgan = require('morgan'),
     server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
     server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -54,6 +55,11 @@ app.get('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.g
 app.post('/api/circlesessions/:id/positions', CircleSessionApi.CircleSessionApi.playCard);
 app.get('/api/circlesessions/:id/chat', ChatApi.ChatApi.getMessages);
 app.post('/api/circlesessions/:id/stopGame', CircleSessionApi.CircleSessionApi.stopGame);
+//endregion
+
+//region snapshot routes
+app.get('/api/snapshots', SnapshotApi.SnapshotApi.findAll);
+app.post('/api/snapshots', SnapshotApi.SnapshotApi.createSnapshot);
 //endregion
 
 //region organisation routes
