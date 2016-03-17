@@ -18,11 +18,11 @@ browser_1.bootstrap(app_component_1.AppComponent, [
     organisationService_1.OrganisationService,
     themeService_1.ThemeService,
     userService_1.UserService,
-    //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
+    core_1.provide('App.BackendPath', { useValue: 'http://localhost:8080/api/' }),
     //provide('App.BackendPath', {useValue: 'http://192.168.0.149:80/api/'}), //LOCAL TESTS (ANDROID)
-    core_1.provide('App.BackendPath', { useValue: 'http://kandoe.be/api/' }),
-    //provide('App.SocketUrl', {useValue: 'http://localhost:8080'}), //LOCAL TESTS
-    core_1.provide('App.SocketUrl', { useValue: 'http://kandoe.be:8000/' }),
+    //provide('App.BackendPath', {useValue: 'http://kandoe.be/api/'}), //PRODUCTION
+    core_1.provide('App.SocketUrl', { useValue: 'http://localhost:8080' }),
+    //provide('App.SocketUrl', {useValue: 'http://kandoe.be:8000/'}), //PRODUCTION
     core_1.provide(router_1.ROUTER_PRIMARY_COMPONENT, { useValue: app_component_1.AppComponent }),
     core_1.provide(router_1.APP_BASE_HREF, { useValue: '/' }),
     core_1.provide(router_1.LocationStrategy, { useClass: router_1.HashLocationStrategy })

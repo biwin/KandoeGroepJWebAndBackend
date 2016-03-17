@@ -119,14 +119,19 @@ var CircleSessionManager = (function () {
         this._dao.getCircleSessionsOfUserById(userId, function (c) {
             var arr = [];
             var i = 0;
-            c.forEach(function (cs) {
-                _this.checkInProgress(cs, function (s) {
-                    arr.push(s == null ? cs : s);
-                    if (++i == c.length) {
-                        callback(arr);
-                    }
+            if (c.length == 0) {
+                callback(arr);
+            }
+            else {
+                c.forEach(function (cs) {
+                    _this.checkInProgress(cs, function (s) {
+                        arr.push(s == null ? cs : s);
+                        if (++i == c.length) {
+                            callback(arr);
+                        }
+                    });
                 });
-            });
+            }
         });
     };
     CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {

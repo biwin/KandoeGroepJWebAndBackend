@@ -1,15 +1,15 @@
 import {Component, Output, Input, EventEmitter, OnInit} from "angular2/core";
-import {Router} from "angular2/router";
 import {Response} from "angular2/http";
+import {Router} from "angular2/router";
 
 import {UserService} from "../../services/userService";
 import {GroupService} from "../../services/groupService";
 import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
 
-import {CircleSession} from "../../../backend/model/circleSession";
 import {Theme} from "../../../backend/model/theme";
 import {Group} from "../../../backend/model/group";
+import {CircleSession} from "../../../backend/model/circleSession";
 
 @Component({
     selector: 'circlesession-card',
@@ -38,7 +38,7 @@ import {Group} from "../../../backend/model/group";
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class=" black-text clickable"><i class="material-icons">do_not_disturb_on</i></a>
+            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class=" black-text clickable"><i class="fa fa-stop-circle"></i></a>
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">

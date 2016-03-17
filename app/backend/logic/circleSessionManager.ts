@@ -128,15 +128,19 @@ export class CircleSessionManager {
             var arr:CircleSession[] = [];
             var i = 0;
 
-            c.forEach((cs:CircleSession) => {
-                this.checkInProgress(cs, (s:CircleSession) => {
-                    arr.push(s == null ? cs : s);
+            if(c.length == 0) {
+                callback(arr);
+            } else {
+                c.forEach((cs:CircleSession) => {
+                    this.checkInProgress(cs, (s:CircleSession) => {
+                        arr.push(s == null ? cs : s);
 
-                    if (++i == c.length) {
-                        callback(arr);
-                    }
+                        if (++i == c.length) {
+                            callback(arr);
+                        }
+                    });
                 });
-            });
+            }
         });
     }
 

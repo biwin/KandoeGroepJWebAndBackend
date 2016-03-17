@@ -2,7 +2,6 @@ import {Component} from 'angular2/core';
 import {RouterOutlet, RouteConfig, ROUTER_DIRECTIVES, Router} from "angular2/router";
 
 import {NavigationBar} from './general/navigationBar';
-import {Footer} from './general/footer';
 import {HomePage} from "./general/homePage";
 
 import {ThemeOverview} from "./theme/themeOverview";

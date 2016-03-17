@@ -83,8 +83,6 @@ var CircleSessionApi = (function () {
         });
     };
     CircleSessionApi.getCircleSessionsOfCurrentUser = function (req, res) {
-        console.log("hi");
-        console.log(req.header('Bearer'));
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
                 CircleSessionApi.mgr.getCircleSessionsOfUserById(currentUserId, function (circleSessions) {
