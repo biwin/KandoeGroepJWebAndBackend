@@ -22,7 +22,7 @@ import {LoadingSpinner} from "../general/loadingSpinner";
     <div class="card formCard">
 
     <loading *ngIf="themesLoading || groupsLoading"></loading>
-    <div [hide]="!themesLoading && !groupsLoading" class="card-content">
+    <div [hidden]="!themesLoading && !groupsLoading" class="card-content">
         <form (submit)="OnSubmit()" class="col s12">
       <div class="row">
         <div class="input-field col s3">
