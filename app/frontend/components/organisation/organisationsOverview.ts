@@ -52,7 +52,7 @@ import {Organisation} from "../../../backend/model/organisation";
                 </thead>
 
                 <tr *ngFor="#organisation of organisations" class="clickable">
-                    <td><a class="red-text tooltipped" (click)="deleteOrganisation(organisation)" data-position="left" data-tooltip="{{getTooltipText(organisation)}}"><i class="material-icons">{{isAdmin(organisation)?"delete_forever":"delete"}}</i></a></td>
+                    <td><i (click)="deleteOrganisation(organisation)" class="material-icons red-text" title="Verwijder {{organisation._name}}">{{isAdmin(organisation)?"delete_forever":"delete"}}</i></td>
                     <td (click)="viewOrganisation(organisation._id)">{{organisation._name}}</td>
                     <td (click)="viewOrganisation(organisation._id)">{{getAmountOfMembers(organisation)}}</td>
                     <td (click)="viewOrganisation(organisation._id)"><i *ngIf="isAdmin(organisation)" class="material-icons green-text">check</i></td>
@@ -96,15 +96,6 @@ export class OrganisationsOverview{
         var userId: string = this.userService.getUserId();
 
         return organisation._organisatorIds.indexOf(userId) > -1;
-    }
-
-    private getTooltipText(organisation: Organisation): string {
-        var tooltipText: string;
-
-        tooltipText = "Verwijder " + organisation._name;
-        tooltipText += this.isAdmin(organisation)?" volledig":"";
-
-        return tooltipText;
     }
 
     //TODO: styling van add button
