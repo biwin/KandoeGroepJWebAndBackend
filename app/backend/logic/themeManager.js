@@ -48,7 +48,25 @@ var ThemeManager = (function () {
         });
     };
     ThemeManager.prototype.getCards = function (themeId, callback) {
-        this._dao.readCards(themeId, callback);
+        var _this = this;
+        this.getTheme(themeId, function (theme) {
+            _this._dao.readCards(themeId, function (cards) {
+                if (theme._subThemes.length > 0) {
+                    var counter = 0;
+                    theme._subThemes.forEach(function (subThemeId) {
+                        _this.getCards(subThemeId, function (subCards) {
+                            cards = cards.concat(subCards);
+                            if (++counter == theme._subThemes.length) {
+                                callback(cards);
+                            }
+                        });
+                    });
+                }
+                else {
+                    callback(cards);
+                }
+            });
+        });
     };
     ThemeManager.prototype.removeCardFromTheme = function (themeId, cardId, callback) {
         this._dao.clearThemeIdOfCard(themeId, cardId, callback);

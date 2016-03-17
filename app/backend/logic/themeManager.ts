@@ -63,7 +63,23 @@ export class ThemeManager {
     }
 
     getCards(themeId: string, callback:(c: Card[]) => any) {
-        this._dao.readCards(themeId, callback);
+        this.getTheme(themeId, (theme:Theme) =>{
+            this._dao.readCards(themeId, (cards:Card[]) =>{
+                if(theme._subThemes.length > 0){
+                    var counter:number = 0;
+                    theme._subThemes.forEach((subThemeId:string) => {
+                        this.getCards(subThemeId, (subCards:Card[]) =>{
+                            cards = cards.concat(subCards);
+                            if(++counter == theme._subThemes.length){
+                                callback(cards);
+                            }
+                        });
+                    });
+                } else {
+                    callback(cards);
+                }
+            });
+        });
     }
 
     removeCardFromTheme(themeId: string, cardId: string, callback:(b: boolean) => any) {

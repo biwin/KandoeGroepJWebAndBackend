@@ -37,7 +37,7 @@ import {CircleSession} from "../../../backend/model/circleSession";
 
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable tooltipped" data-position="bottom" data-tooltip="Speler toevoegen"><i class="material-icons">person_add</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
+            <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable tooltipped" data-position="bottom" data-tooltip="Spel verwijderen"><i class="material-icons">delete</i></a>
         </div>
 
