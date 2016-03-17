@@ -38,7 +38,7 @@ import {Group} from "../../../backend/model/group";
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class=" black-text clickable"><i class="material-icons">do_not_disturb_on</i></a>
+            <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="stopGame()" class=" black-text clickable"><i class="material-icons">do_not_disturb_on</i></a>
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">
