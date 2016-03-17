@@ -1,4 +1,4 @@
-import {Component, Output, Input, EventEmitter, OnInit} from "angular2/core";
+import {Component, Output, Input, EventEmitter, OnInit, AfterViewInit} from "angular2/core";
 import {Response} from "angular2/http";
 import {Router} from "angular2/router";
 
@@ -10,7 +10,6 @@ import {CircleSessionService} from "../../services/circleSessionService";
 import {Theme} from "../../../backend/model/theme";
 import {Group} from "../../../backend/model/group";
 import {CircleSession} from "../../../backend/model/circleSession";
-import {AfterViewInit} from "angular2/core";
 
 @Component({
     selector: 'circlesession-card',
@@ -38,7 +37,7 @@ import {AfterViewInit} from "angular2/core";
 
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable tooltipped" data-position="bottom" data-tooltip="Speler toevoegen"><i class="material-icons">person_add</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
+            <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable tooltipped" data-position="bottom" data-tooltip="Spel verwijderen"><i class="material-icons">delete</i></a>
         </div>
 

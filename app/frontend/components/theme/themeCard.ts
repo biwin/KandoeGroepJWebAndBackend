@@ -63,7 +63,7 @@ import {Theme} from "../../../backend/model/theme";
                     <input #cardname type="text" id="cardname">
                 </div>
                 <div class="col s2 margin-top">
-                    <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" href="#" class="btn-floating"><i class="material-icons">add</i></a>
+                    <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" class="btn-floating"><i class="material-icons">add</i></a>
                 </div>
             </div>
            </div>
@@ -107,7 +107,6 @@ export class ThemeCard implements OnInit {
             this.theme._subThemes.forEach((themeId:string) =>{
                this.service.getTheme(themeId).subscribe((theme:Theme) =>{
                    this.subThemeNames.push(theme._name);
-                   console.log(this.subThemeNames);
                });
             });
         }
