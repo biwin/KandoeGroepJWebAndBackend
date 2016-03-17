@@ -1,15 +1,15 @@
-import {Component, Output, Input, EventEmitter} from "angular2/core";
-import {CircleSession} from "../../../backend/model/circleSession";
-import {ThemeService} from "../../services/themeService";
-import {Theme} from "../../../backend/model/theme";
+import {Component, Output, Input, EventEmitter, OnInit, AfterViewInit} from "angular2/core";
+import {Response} from "angular2/http";
 import {Router} from "angular2/router";
-import {Group} from "../../../backend/model/group";
-import {GroupService} from "../../services/groupService";
-import {CircleSessionService} from "../../services/circleSessionService";
+
 import {UserService} from "../../services/userService";
-import {OnInit} from "angular2/core";
+import {GroupService} from "../../services/groupService";
+import {ThemeService} from "../../services/themeService";
+import {CircleSessionService} from "../../services/circleSessionService";
 
-
+import {Theme} from "../../../backend/model/theme";
+import {Group} from "../../../backend/model/group";
+import {CircleSession} from "../../../backend/model/circleSession";
 
 @Component({
     selector: 'circlesession-card',
@@ -36,25 +36,22 @@ import {OnInit} from "angular2/core";
       <i class="material-icons right green-text padding-5" *ngIf="user === circleSession._currentPlayerId">gamepad</i>
 
       <div *ngIf="iamCreator" class="card-action">
-            <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable"><i class="material-icons">person_add</i></a>
-            <a (click)="deleteCircleSession()" class="red-text clickable"><i class="material-icons">delete</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="stopGame()" class="clickable"><i class="material-icons">stop</i></a>
+            <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable tooltipped" data-position="bottom" data-tooltip="Speler toevoegen"><i class="material-icons">person_add</i></a>
+            <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
+            <a (click)="deleteCircleSession()" class="red-text clickable tooltipped" data-position="bottom" data-tooltip="Spel verwijderen"><i class="material-icons">delete</i></a>
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">
-            <span class="card-title truncate">{{circleSession._name}}</span>
-           <p class="black-text">Start: {{circleSession._startDate}}</p>
-           <p class="black-text">{{circleSession._realTime ? 'Realtime' : 'Uitgesteld'}}</p>
-           <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes'}}</p>
-           <p class="black-text">{{circleSession._allowComment ? 'Commentaar toegelaten op kaarten' : 'Commentaar niet mogelijk op kaarten'}}</p>
-           <p class="black-text">{{circleSession._isStopped ? 'Spel beëindigd' : 'Spel bezig'}}</p>
+            <span class="card-title truncate" [attr.title]="circleSession._name">{{circleSession._name}}</span>
+           <p class="black-text">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>
+           <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>
         </div>
       </div>
       </div>
   `
 })
 
-export class CircleSessionCard implements OnInit {
+export class CircleSessionCard implements OnInit, AfterViewInit {
     @Input() private circleSession:CircleSession;
     @Output() onDelete:EventEmitter<string> = new EventEmitter();
 
@@ -106,8 +103,16 @@ export class CircleSessionCard implements OnInit {
         this.iamCreator = this.userService.getUserId() === this.circleSession._creatorId;
     }
 
+    ngAfterViewInit() {
+        $('.tooltipped').tooltip({delay: 50});
+    }
+
     stopGame() {
-        alert('Stop GAME');
+        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
+            this.circleSession._isStopped = a._isStopped;
+        }, (r:Response) => {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
+        });
     }
 }
 

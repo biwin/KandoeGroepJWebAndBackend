@@ -91,8 +91,6 @@ export class CircleSessionApi {
     }
 
     public static getCircleSessionsOfCurrentUser(req:Request, res:Response) {
-        console.log("hi");
-        console.log(req.header('Bearer'));
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId:string) =>{
            if(currentUserId != null){
                CircleSessionApi.mgr.getCircleSessionsOfUserById(currentUserId, (circleSessions:CircleSession[]) => {

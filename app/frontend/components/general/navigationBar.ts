@@ -8,7 +8,7 @@ import {Response} from "angular2/http";
 @Component({
     selector: 'navigation-bar',
     template: `
-    <nav class="blue" role="navigation">
+    <nav class="blue" [class.no-padding-left]="!service.isLoggedIn()" role="navigation">
        <div class="nav-wrapper container">
         <a id="logo-container" [routerLink]="['Home']" class="brand-logo">KanDoe</a>
             <ul class="right">

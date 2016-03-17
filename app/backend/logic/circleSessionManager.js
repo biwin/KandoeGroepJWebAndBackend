@@ -82,25 +82,30 @@ var CircleSessionManager = (function () {
                         callback(c._currentPlayerId, null, "Not your turn!");
                     }
                     else {
-                        _this._dao.getCardPosition(sessionId, cardId, function (c) {
-                            var newPosition = c._position + 1;
-                            if (newPosition > 5) {
-                                callback(userId, null, "Card already in the middle!");
-                            }
-                            else {
-                                var lastChangedUserId = c._userId;
-                                _this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, function (c) {
-                                    if (c != null) {
-                                        _this.nextPlayer(sessionId, function (roundEnds, newPlayerId) {
-                                            callback(newPlayerId, c);
-                                        });
-                                    }
-                                    else {
-                                        callback(userId, null, "Something went wrong while updating the position");
-                                    }
-                                });
-                            }
-                        });
+                        if (c._isStopped) {
+                            callback(userId, null, "Game is over");
+                        }
+                        else {
+                            _this._dao.getCardPosition(sessionId, cardId, function (c) {
+                                var newPosition = c._position + 1;
+                                if (newPosition > 5) {
+                                    callback(userId, null, "Card already in the middle!");
+                                }
+                                else {
+                                    var lastChangedUserId = c._userId;
+                                    _this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, function (c) {
+                                        if (c != null) {
+                                            _this.nextPlayer(sessionId, function (roundEnds, newPlayerId) {
+                                                callback(newPlayerId, c);
+                                            });
+                                        }
+                                        else {
+                                            callback(userId, null, "Something went wrong while updating the position");
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -114,14 +119,19 @@ var CircleSessionManager = (function () {
         this._dao.getCircleSessionsOfUserById(userId, function (c) {
             var arr = [];
             var i = 0;
-            c.forEach(function (cs) {
-                _this.checkInProgress(cs, function (s) {
-                    arr.push(s == null ? cs : s);
-                    if (++i == c.length) {
-                        callback(arr);
-                    }
+            if (c.length == 0) {
+                callback(arr);
+            }
+            else {
+                c.forEach(function (cs) {
+                    _this.checkInProgress(cs, function (s) {
+                        arr.push(s == null ? cs : s);
+                        if (++i == c.length) {
+                            callback(arr);
+                        }
+                    });
                 });
-            });
+            }
         });
     };
     CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
@@ -153,22 +163,27 @@ var CircleSessionManager = (function () {
                     callback(null, null, "Not your turn!");
                 }
                 else {
-                    _this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, function (cps) {
-                        for (var i = 0; i < cps.length; i++) {
-                            var index = cardIds.indexOf(cps[i]._id);
-                            if (index > -1) {
-                                cardIds.splice(index, 1);
+                    if (c._isStopped) {
+                        callback(null, null, "Game is over");
+                    }
+                    else {
+                        _this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, function (cps) {
+                            for (var i = 0; i < cps.length; i++) {
+                                var index = cardIds.indexOf(cps[i]._id);
+                                if (index > -1) {
+                                    cardIds.splice(index, 1);
+                                }
                             }
-                        }
-                        if (cardIds.length > 0) {
-                            _this._dao.createCardPositions(circleSessionId, cardIds, uId, function () {
+                            if (cardIds.length > 0) {
+                                _this._dao.createCardPositions(circleSessionId, cardIds, uId, function () {
+                                    _this.nextPlayer(circleSessionId, callback);
+                                });
+                            }
+                            else {
                                 _this.nextPlayer(circleSessionId, callback);
-                            });
-                        }
-                        else {
-                            _this.nextPlayer(circleSessionId, callback);
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
             else {
@@ -188,18 +203,23 @@ var CircleSessionManager = (function () {
     };
     CircleSessionManager.prototype.checkInProgress = function (c, callback) {
         var inProgress = c._inProgress;
-        if (c._startDate == null || c._startDate.length !== 16) {
-            c._inProgress = true;
-        }
-        else {
-            var now = new Date(Date.now());
-            var startDate = new Date(Date.parse(c._startDate));
-            c._inProgress = now >= startDate;
-        }
-        if (c._inProgress !== inProgress) {
-            this._dao.updateInProgress(c._id, c._inProgress, function () {
+        if (c._inProgress !== true) {
+            if (c._startDate == null || c._startDate.length !== 16) {
+                c._inProgress = true;
+            }
+            else {
+                var now = new Date(Date.now());
+                var startDate = new Date(Date.parse(c._startDate));
+                c._inProgress = now >= startDate;
+            }
+            if (c._inProgress !== inProgress) {
+                this._dao.updateInProgress(c._id, c._inProgress, function () {
+                    callback(c);
+                });
+            }
+            else {
                 callback(c);
-            });
+            }
         }
         else {
             callback(c);
@@ -222,7 +242,16 @@ var CircleSessionManager = (function () {
             var preGameInProgress = c._isPreGame && !roundEnded;
             _this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, function (success) {
                 if (success) {
-                    callback(roundEnded, newPlayerId);
+                    if (c._endPoint != null && roundEnded && !c._isPreGame) {
+                        var newRoundsLeft = c._endPoint - 1;
+                        var gameStopped = newRoundsLeft <= 0;
+                        _this._dao.updateRounds(circleSessionId, newRoundsLeft, gameStopped, function () {
+                            callback(roundEnded, newPlayerId);
+                        });
+                    }
+                    else {
+                        callback(roundEnded, newPlayerId);
+                    }
                 }
                 else {
                     callback(null, null);

@@ -1,12 +1,13 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 
-import {Theme} from "../../../backend/model/theme";
-import {Component, Input, AfterViewInit, EventEmitter} from "angular2/core";
-import {Card} from "../../../backend/model/card";
+import {Component, Input, AfterViewInit, EventEmitter, Output, OnInit} from "angular2/core";
+
 import {ThemeService} from "../../services/themeService";
-import {Output} from "angular2/core";
-import {OnInit} from "angular2/core";
+
+import {Card} from "../../../backend/model/card";
+import {Theme} from "../../../backend/model/theme";
+
 
 @Component({
     selector: 'theme-card',
@@ -62,7 +63,7 @@ import {OnInit} from "angular2/core";
                     <input #cardname type="text" id="cardname">
                 </div>
                 <div class="col s2 margin-top">
-                    <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" href="#" class="btn-floating"><i class="material-icons">add</i></a>
+                    <a [class.disabled]="cardname.value.trim().length == 0" (click)="addCard(cardname)" class="btn-floating"><i class="material-icons">add</i></a>
                 </div>
             </div>
            </div>
@@ -106,7 +107,6 @@ export class ThemeCard implements OnInit {
             this.theme._subThemes.forEach((themeId:string) =>{
                this.service.getTheme(themeId).subscribe((theme:Theme) =>{
                    this.subThemeNames.push(theme._name);
-                   console.log(this.subThemeNames);
                });
             });
         }

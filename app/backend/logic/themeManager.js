@@ -22,28 +22,51 @@ var ThemeManager = (function () {
     ThemeManager.prototype.getAllThemes = function (userId, callback) {
         var _this = this;
         var oMgr = new organisationManager_1.OrganisationManager();
-        var myAccesableThemes = [];
+        var myAccessibleThemes = [];
         this._dao.readAllThemes(userId, function (themes) {
-            myAccesableThemes = themes;
+            myAccessibleThemes = themes;
             oMgr.getAllOrganisationIdsOfUserById(userId, function (organisationIds) {
                 var counter = 0;
-                organisationIds.forEach(function (organisationId) {
-                    _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
-                        organisationThemes.forEach(function (theme) {
-                            if (JSON.stringify(myAccesableThemes).indexOf(JSON.stringify(theme)) < 0) {
-                                myAccesableThemes.push(theme);
+                if (organisationIds.length == 0) {
+                    callback(myAccessibleThemes);
+                }
+                else {
+                    organisationIds.forEach(function (organisationId) {
+                        _this._dao.readAllThemesByOrganisationId(organisationId, function (organisationThemes) {
+                            organisationThemes.forEach(function (theme) {
+                                if (JSON.stringify(myAccessibleThemes).indexOf(JSON.stringify(theme)) < 0) {
+                                    myAccessibleThemes.push(theme);
+                                }
+                            });
+                            if (++counter == organisationIds.length) {
+                                callback(myAccessibleThemes);
                             }
                         });
-                        if (++counter == organisationIds.length) {
-                            callback(myAccesableThemes);
-                        }
                     });
-                });
+                }
             });
         });
     };
     ThemeManager.prototype.getCards = function (themeId, callback) {
-        this._dao.readCards(themeId, callback);
+        var _this = this;
+        this.getTheme(themeId, function (theme) {
+            _this._dao.readCards(themeId, function (cards) {
+                if (theme._subThemes.length > 0) {
+                    var counter = 0;
+                    theme._subThemes.forEach(function (subThemeId) {
+                        _this.getCards(subThemeId, function (subCards) {
+                            cards = cards.concat(subCards);
+                            if (++counter == theme._subThemes.length) {
+                                callback(cards);
+                            }
+                        });
+                    });
+                }
+                else {
+                    callback(cards);
+                }
+            });
+        });
     };
     ThemeManager.prototype.removeCardFromTheme = function (themeId, cardId, callback) {
         this._dao.clearThemeIdOfCard(themeId, cardId, callback);

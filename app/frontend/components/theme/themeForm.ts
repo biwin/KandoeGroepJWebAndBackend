@@ -81,7 +81,7 @@ export class ThemeForm {
             this._organisations = organisations;
         });
 
-        themeService.getAll().subscribe((themes: Theme[])=>{
+        themeService.getAll().subscribe((themes: Theme[]) => {
            this._themes = themes;
         });
     }
@@ -96,5 +96,6 @@ export class ThemeForm {
                 this.router.navigate(['ThemeOverview']);
             });
         }
+
     }
 }

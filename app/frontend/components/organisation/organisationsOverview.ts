@@ -5,6 +5,8 @@ import {Component} from "angular2/core";
 import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 import {NgClass} from "angular2/common";
 
+import {LoadingSpinner} from "../general/loadingSpinner";
+
 import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
 
@@ -36,7 +38,9 @@ import {Organisation} from "../../../backend/model/organisation";
             </div>
         </div>
 
-        <div class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
+        <loading *ngIf="loading"></loading>
+
+        <div *ngIf="!loading" class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisations.length!=0">
                 <thead>
                     <tr>
@@ -59,7 +63,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [ROUTER_DIRECTIVES, NgClass]
+    directives: [ROUTER_DIRECTIVES, NgClass, LoadingSpinner]
 })
 
 export class OrganisationsOverview {
@@ -67,6 +71,7 @@ export class OrganisationsOverview {
     private organisationService: OrganisationService;
     private userService: UserService;
     private organisations: Organisation[] = [];
+    private loading: boolean = true;
     private organisationToDelete: Organisation = Organisation.empty();
     private contentText: string;
     private isLastAdmin: boolean = false;
@@ -79,6 +84,7 @@ export class OrganisationsOverview {
 
         userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
+            this.loading = false;
         });
     }
 

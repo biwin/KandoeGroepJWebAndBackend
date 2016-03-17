@@ -3,19 +3,20 @@
 
 import {Component, Input, OnChanges} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
+import {Response} from "angular2/http";
+
+import {UserService} from "../../services/userService";
+import {CircleSessionService} from "../../services/circleSessionService";
 
 import {CircleSession} from "../../../backend/model/circleSession";
-import {CircleSessionService} from "../../services/circleSessionService";
 import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
-import {UserService} from "../../services/userService";
-import {Response} from "angular2/http";
 
 @Component({
     selector: 'pregame',
     template: `
         <div class="row container">
-              <div class="fixed-action-btn" id="sessionPreGameSave">
+              <div class="fixed-action-btn" id="sessionPreGameSave" *ngIf="myUserId === circleSession._currentPlayerId">
                 <a (click)="submitCards()" class="btn-floating btn-large red">
                   <i class="large material-icons">arrow_forward</i>
                 </a>
@@ -24,8 +25,8 @@ import {Response} from "angular2/http";
                 </ul>
               </div>
 
-            <h5 class="center-align">Kies de kaarten die belangrijk zijn voor jou!</h5>
             <div *ngIf="myUserId === circleSession._currentPlayerId">
+                <h5 class="center-align">Kies de kaarten die belangrijk zijn voor jou!</h5>
                 <div class="col s12 m4" *ngFor="#card of cards">
                     <div class="card-panel">
                         <span class="truncate">
@@ -37,8 +38,13 @@ import {Response} from "angular2/http";
                    </div>
                 </div>
             </div>
-            <div *ngIf="myUserId !== circleSession._currentPlayerId" class="col s12">
-                <h6>Beurt voorbij! Wacht tot iedereen kaartjes gekozen heeft om het spel te beginnen...</h6>
+            <div *ngIf="myUserId !== circleSession._currentPlayerId" class="center-block">
+                <p class="center-align">
+                    <i class="fa fa-quote-left fa-3x fa-pull-left"></i>
+                    Alles komt op tijd voor hem die wachten kan.
+                    <i class="fa fa-quote-right fa-3x fa-pull-right"></i>
+                </p>
+                <p class="right-align grey-text text-lighten-2">-François Rabelais</p>
             </div>
         </div>
     `,

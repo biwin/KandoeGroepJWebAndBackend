@@ -13,35 +13,35 @@ import {OnChanges} from "angular2/core";
     selector: 'user-login',
     template: `
     <div class="row container">
-        <h5>Gebruiker log in</h5>
-        <div class="card formCard"><div class="card-content">
+        <div class="card formCard col s6 offset-s3"><div class="card-content">
+            <h5>Gebruiker log in</h5>
             <form *ngIf="!service.isLoggedIn()" class="col s12" (ngSubmit)="onLoginSubmit()">
 
-                <div class="row"><div class="input-field col s6">
+                <div class="row"><div class="input-field col s12">
                     <input id="email" type="email" [(ngModel)]="emailString" class="form-control validate" ngControl="_email" required #email="ngForm">
                     <label for="email" data-error="Oops!">Email</label>
                 </div></div>
 
-                <div class="row"><div class="input-field col s6">
+                <div class="row"><div class="input-field col s12">
                     <input id="password" type="password" [(ngModel)]="passwordString" class="form-control validate" pattern="([a-zA-Z0-9]{4,16})" ngControl="_password" required #password="ngForm">
                     <label for="password" data-error="Oops!">Wachtwoord</label>
                 </div></div>
 
-                <div class="row"><div class="col s6">
-                    <p style="color: #FF0000;">{{errorInfo}}</p>
+                <div class="row"><div class="col s12">
+                    <p id="error" style="color: #FF0000;">{{errorInfo}}</p>
                 </div></div>
 
                 <div class="row">
-                    <button (click)="button='login'" type="submit" id="loginButton" class="btn waves-effect teal waves-light col s2"><p>Log in<i class="material-icons right">send</i></p></button>
-                    <button (click)="button='register'" type="submit" id="registerButton" class="btn waves-effect red waves-light col s2 offset-s1"><p>Registreer<i class="material-icons right">send</i></p></button>
+                    <button (click)="button='login'" type="submit" id="loginButton" class="btn waves-effect teal waves-light col s5"><p>Log in<i class="material-icons right">send</i></p></button>
+                    <button (click)="button='register'" type="submit" id="registerButton" class="btn waves-effect red waves-light col s5 offset-s2"><p>Registreer<i class="material-icons right">send</i></p></button>
                 </div>
 
-                <div class="row"><div class="col s6">
-                    <h3>OF</h3>
+                <div class="row"><div class="col s4 offset-s4">
+                    <h3 class="center-align">OF</h3>
                 </div></div>
 
                 <div class="row">
-                    <button (click)="facebookLogin()" id="facebookButton" class="btn waves-effect blue waves-light col s2"><p>Facebook</p></button>
+                    <button (click)="facebookLogin()" id="facebookButton" class="btn waves-effect blue waves-light col s4 offset-s4"><p><i class="fa fa-facebook-official left"></i>Facebook</p></button>
                 </div>
 
             </form>

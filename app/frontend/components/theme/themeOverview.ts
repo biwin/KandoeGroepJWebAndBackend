@@ -3,12 +3,13 @@
 
 
 import {Component, Inject} from "angular2/core";
-import {CORE_DIRECTIVES} from "angular2/common";
 import {ROUTER_DIRECTIVES} from "angular2/router";
+import {CORE_DIRECTIVES} from "angular2/common";
 
 import {Theme} from "../../../backend/model/theme";
 import {ThemeCard} from "./themeCard";
 import {ThemeService} from "../../services/themeService";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 
 @Component({
@@ -26,26 +27,16 @@ import {ThemeService} from "../../services/themeService";
                 </div>
             </div>
 
-            <h5>Jouw thema's</h5>
+            <h5>Mijn thema's</h5>
             <div>
                 <a [routerLink]="['CreateTheme']" class="btn-floating waves-effect waves-light red" title="Creëer thema">
                     <i class="material-icons">add</i>
                 </a>
             </div>
 
-            <div *ngIf="loading" class="row center margin-top">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                      <div class="circle-clipper left">
-                        <div class="circle"></div>
-                      </div><div class="gap-patch">
-                        <div class="circle"></div>
-                      </div><div class="circle-clipper right">
-                        <div class="circle"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+            <loading *ngIf="loading"></loading>
+
+             <p *ngIf="!loading && themes.length==0">Je hebt nog geen thema's.</p>
 
             <div class="row">
                 <theme-card *ngFor="#theme of themes" [theme]="theme" (onDelete)="deleteTheme($event)">
@@ -53,7 +44,7 @@ import {ThemeService} from "../../services/themeService";
             </div>
         </div>
     `,
-    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, ThemeCard]
+    directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, ThemeCard, LoadingSpinner]
 })
 export class ThemeOverview {
     private loading:boolean = true;

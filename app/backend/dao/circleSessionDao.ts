@@ -213,4 +213,12 @@ export class CircleSessionDao {
             });
         });
     }
+
+    updateRounds(circleSessionId:string, newRoundsLeft:number, gameStopped:boolean, callback:() => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('circlesessions').updateOne({_id: new ObjectID(circleSessionId)}, { $set: {_endPoint: newRoundsLeft, _isStopped: gameStopped}}, (err:MongoError, res:UpdateWriteOpResult) => {
+                callback();
+            });
+        });
+    }
 }

@@ -93,24 +93,28 @@ export class CircleSessionManager {
                     if(c._currentPlayerId !== userId) {
                         callback(c._currentPlayerId, null, "Not your turn!");
                     } else {
-                        this._dao.getCardPosition(sessionId, cardId, (c:CardPosition) => {
-                            var newPosition:number = c._position + 1;
-                            if(newPosition > 5) {
-                                callback(userId, null, "Card already in the middle!");
-                            } else {
-                                var lastChangedUserId:string = c._userId;
+                        if(c._isStopped) {
+                            callback(userId, null, "Game is over");
+                        } else {
+                            this._dao.getCardPosition(sessionId, cardId, (c:CardPosition) => {
+                                var newPosition:number = c._position + 1;
+                                if (newPosition > 5) {
+                                    callback(userId, null, "Card already in the middle!");
+                                } else {
+                                    var lastChangedUserId:string = c._userId;
 
-                                this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, (c:CardPosition) => {
-                                    if(c != null) {
-                                        this.nextPlayer(sessionId, (roundEnds:boolean, newPlayerId:string) => {
-                                            callback(newPlayerId, c);
-                                        });
-                                    } else {
-                                        callback(userId, null, "Something went wrong while updating the position");
-                                    }
-                                });
-                            }
-                        });
+                                    this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, (c:CardPosition) => {
+                                        if (c != null) {
+                                            this.nextPlayer(sessionId, (roundEnds:boolean, newPlayerId:string) => {
+                                                callback(newPlayerId, c);
+                                            });
+                                        } else {
+                                            callback(userId, null, "Something went wrong while updating the position");
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 });
             } else {
@@ -124,15 +128,19 @@ export class CircleSessionManager {
             var arr:CircleSession[] = [];
             var i = 0;
 
-            c.forEach((cs:CircleSession) => {
-                this.checkInProgress(cs, (s:CircleSession) => {
-                    arr.push(s == null ? cs : s);
+            if(c.length == 0) {
+                callback(arr);
+            } else {
+                c.forEach((cs:CircleSession) => {
+                    this.checkInProgress(cs, (s:CircleSession) => {
+                        arr.push(s == null ? cs : s);
 
-                    if (++i == c.length) {
-                        callback(arr);
-                    }
+                        if (++i == c.length) {
+                            callback(arr);
+                        }
+                    });
                 });
-            });
+            }
         });
     }
 
@@ -164,22 +172,26 @@ export class CircleSessionManager {
                 if (c._currentPlayerId !== uId) {
                     callback(null, null, "Not your turn!");
                 } else {
-                    this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, (cps:CardPosition[]) => {
-                        for (var i = 0; i < cps.length; i++) {
-                            var index = cardIds.indexOf(cps[i]._id);
-                            if (index > -1) {
-                                cardIds.splice(index, 1);
+                    if(c._isStopped){
+                        callback(null,null,"Game is over")
+                    } else {
+                        this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, (cps:CardPosition[]) => {
+                            for (var i = 0; i < cps.length; i++) {
+                                var index = cardIds.indexOf(cps[i]._id);
+                                if (index > -1) {
+                                    cardIds.splice(index, 1);
+                                }
                             }
-                        }
 
-                        if (cardIds.length > 0) {
-                            this._dao.createCardPositions(circleSessionId, cardIds, uId, () => {
+                            if (cardIds.length > 0) {
+                                this._dao.createCardPositions(circleSessionId, cardIds, uId, () => {
+                                    this.nextPlayer(circleSessionId, callback);
+                                });
+                            } else {
                                 this.nextPlayer(circleSessionId, callback);
-                            });
-                        } else {
-                            this.nextPlayer(circleSessionId, callback);
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             } else {
                 callback(null, null, "The game is not in the pre-game phase.");
@@ -200,19 +212,23 @@ export class CircleSessionManager {
     checkInProgress(c:CircleSession, callback:(circleSession:CircleSession)=>any) {
         var inProgress:boolean = c._inProgress;
 
-        if (c._startDate == null || c._startDate.length !== 16) {
-            c._inProgress = true;
-        } else {
-            var now:Date = new Date(Date.now());
-            var startDate:Date = new Date(Date.parse(c._startDate));
+        if(c._inProgress !== true) {
+            if (c._startDate == null || c._startDate.length !== 16) {
+                c._inProgress = true;
+            } else {
+                var now:Date = new Date(Date.now());
+                var startDate:Date = new Date(Date.parse(c._startDate));
 
-            c._inProgress = now >= startDate;
-        }
+                c._inProgress = now >= startDate;
+            }
 
-        if(c._inProgress !== inProgress) {
-            this._dao.updateInProgress(c._id, c._inProgress, () => {
+            if (c._inProgress !== inProgress) {
+                this._dao.updateInProgress(c._id, c._inProgress, () => {
+                    callback(c);
+                });
+            } else {
                 callback(c);
-            });
+            }
         } else {
             callback(c);
         }
@@ -236,7 +252,16 @@ export class CircleSessionManager {
 
             this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, (success:boolean) => {
                 if (success) {
-                    callback(roundEnded, newPlayerId);
+                    if(c._endPoint != null && roundEnded && !c._isPreGame) {
+                        var newRoundsLeft:number = c._endPoint - 1;
+                        var gameStopped:boolean = newRoundsLeft <= 0;
+
+                        this._dao.updateRounds(circleSessionId, newRoundsLeft, gameStopped, () => {
+                            callback(roundEnded, newPlayerId);
+                        });
+                    } else {
+                        callback(roundEnded, newPlayerId);
+                    }
                 } else {
                     callback(null, null);
                 }
