@@ -15,7 +15,7 @@ import {ChatComponent} from "../chat/chatComponent";
     <div class="side-nav fixed right-aligned" id="user-sidenav">
         <ul id="user-list" class="collection with-header">
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
-            <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === currentPlayerId" [class.lighten-5]="user._id === currentPlayerId">
+            <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === myUserId" [class.lighten-5]="user._id === myUserId">
                 <div class="col s4">
                     <img *ngIf="user._pictureSmall !== undefined" [attr.src]="user._pictureSmall" class="circle responsive-img valign">
                     <i *ngIf="user._pictureSmall === undefined" class="material-icons valign">person</i>
@@ -24,7 +24,7 @@ import {ChatComponent} from "../chat/chatComponent";
                     {{user._name}}
                 </div>
                 <div class="col s1" *ngIf="user._id === currentPlayerId">
-                    <i class="material-icons green-text">gamepad</i>
+                    <i class="fa fa-gamepad fa-lg green-text"></i>
                 </div>
             </li>
         </ul>

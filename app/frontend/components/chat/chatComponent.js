@@ -13,8 +13,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var circleSessionService_1 = require("../../services/circleSessionService");
 var chatMessage_1 = require("../../../backend/model/chatMessage");
+var circleSessionService_1 = require("../../services/circleSessionService");
 var ChatComponent = (function () {
     function ChatComponent(service, socketUrl) {
         var _this = this;
@@ -22,7 +22,8 @@ var ChatComponent = (function () {
         this.messageToSend = "";
         this.initComplete = false;
         this.zone = new core_1.NgZone({ enableLongStackTrace: false });
-        this.socket = io(socketUrl);
+        this.socket = io.connect(socketUrl);
+        console.log('Socket URI: ' + socketUrl);
         this.socket.emit('join session', JSON.stringify({ sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown' }));
         this.socket.on('send message', function (data) { return _this.zone.run(function () {
             _this.messages.push(JSON.parse(data));
@@ -40,8 +41,6 @@ var ChatComponent = (function () {
             this.service.getMessages(this.sessionId).subscribe(function (chatMessages) {
                 _this.messages = chatMessages;
                 _this.initComplete = true;
-                //FIXME PLIS
-                $('#message-list').animate({ scrollTop: $('#message-list')[0].scrollHeight }, 1000);
             });
         }
     };

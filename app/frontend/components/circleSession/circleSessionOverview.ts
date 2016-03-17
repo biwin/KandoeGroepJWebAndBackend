@@ -23,7 +23,7 @@ import {CircleSessionCard} from "./circleSessionCard";
                 </div>
             </div>
 
-            <h5>Jouw spellen</h5>
+            <h5>Mijn spellen</h5>
             <div>
                 <a [routerLink]="['CreateSession']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
                     <i class="material-icons">add</i>
@@ -51,6 +51,8 @@ import {CircleSessionCard} from "./circleSessionCard";
         </div>
 
      </div>
+
+     <p *ngIf="!loading && circleSessions.length == 0">Je doet nog niet mee aan een spel.</p>
     </div>
     `,
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, CircleSessionCard]

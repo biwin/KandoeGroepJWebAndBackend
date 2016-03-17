@@ -119,14 +119,19 @@ var CircleSessionManager = (function () {
         this._dao.getCircleSessionsOfUserById(userId, function (c) {
             var arr = [];
             var i = 0;
-            c.forEach(function (cs) {
-                _this.checkInProgress(cs, function (s) {
-                    arr.push(s == null ? cs : s);
-                    if (++i == c.length) {
-                        callback(arr);
-                    }
+            if (c.length == 0) {
+                callback(arr);
+            }
+            else {
+                c.forEach(function (cs) {
+                    _this.checkInProgress(cs, function (s) {
+                        arr.push(s == null ? cs : s);
+                        if (++i == c.length) {
+                            callback(arr);
+                        }
+                    });
                 });
-            });
+            }
         });
     };
     CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
@@ -237,7 +242,16 @@ var CircleSessionManager = (function () {
             var preGameInProgress = c._isPreGame && !roundEnded;
             _this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, function (success) {
                 if (success) {
-                    callback(roundEnded, newPlayerId);
+                    if (c._endPoint != null && roundEnded && !c._isPreGame) {
+                        var newRoundsLeft = c._endPoint - 1;
+                        var gameStopped = newRoundsLeft <= 0;
+                        _this._dao.updateRounds(circleSessionId, newRoundsLeft, gameStopped, function () {
+                            callback(roundEnded, newPlayerId);
+                        });
+                    }
+                    else {
+                        callback(roundEnded, newPlayerId);
+                    }
                 }
                 else {
                     callback(null, null);

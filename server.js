@@ -1,7 +1,7 @@
 var express = require('express'),
     app = express(),
     http = require('http').Server(app),
-    io = require('socket.io')(http);
+    io = require('socket.io').listen(http);
 
 var bodyParser = require('body-parser'),
     CircleSessionApi = require('./app/backend/restApi/circleSessionApi.js'),
@@ -20,10 +20,10 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Bearer');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Bearer');
+    res.header('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -36,10 +36,6 @@ app.get('/', function (req, res) {
 });
 
 //region user routes
-app.get('/api/user/get', function (req, res) {
-    UserApi.UserApi.getUser(req.query.id, res);
-});
-
 app.get('/api/user/bulk/:array', UserApi.UserApi.getUsers);
 app.get('/api/user/:id/groups', GroupAPI.GroupAPI.getGroupsOfUserById);
 app.get('/api/user/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfCurrentUser);
@@ -134,15 +130,13 @@ app.post('/api/user/login', function (req, res) {
 app.post('/api/user/register', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send("{\"_message\":\"You are already registered\"}");
+        res.send({_message:'You are already registered'});
     } else {
         UserApi.UserApi.createUser(req.body._username, req.body._email, req.body._password, req.body._registrar, res);
     }
 });
 
-app.post('/api/user/login-facebook', function (req, res) {
-    UserApi.UserApi.getFacebookUser(req.body._facebookId, req.body._email, req.body._pictureSmall, req.body._pictureLarge, req.body._name, req.body._registrar, res);
-});
+app.post('/api/user/login-facebook', UserApi.UserApi.getFacebookUser);
 
 app.post('/api/user/change-profile', function (req, res) {
     var token = req.header('Bearer');
@@ -176,7 +170,7 @@ io.on('connection', function (socket) {
     });
     socket.on('send message', function(message) {
         var roomName = Object.keys(socket.rooms).filter(function(room) {
-            return room.startsWith('kandoe-')
+            return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
         ChatApi.ChatApi.addMessage(message, function(b, updatedMessage){
@@ -188,7 +182,7 @@ io.on('connection', function (socket) {
     socket.on('send move', function(message) {
         console.log(message);
         var roomName = Object.keys(socket.rooms).filter(function(room) {
-            return room.startsWith('kandoe-');
+            return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
         io.to(roomName).emit('send move', JSON.stringify(message));

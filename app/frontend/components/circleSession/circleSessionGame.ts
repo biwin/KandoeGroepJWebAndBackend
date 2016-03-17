@@ -1,7 +1,6 @@
-import {Component, Inject, OnChanges, NgZone} from "angular2/core";
-import {CORE_DIRECTIVES, NgFor} from "angular2/common";
+import {Component, Inject,OnChanges, NgZone} from "angular2/core";
+import {CORE_DIRECTIVES} from "angular2/common";
 import {RouteParams} from "angular2/router";
-import {LiteralMap} from "angular2/src/core/change_detection/parser/ast";
 import {Response} from "angular2/http";
 
 import {UserService} from "../../services/userService";
@@ -59,14 +58,14 @@ import {CircleSessionCardOnBoardPipe} from "../../logic/circleSessionCardOnBoard
                 </div>
             </div>
             <div class="row">
-                <circlesession-carddetail *ngFor="#card of cards; #i = index" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
+                <circlesession-carddetail *ngFor="#card of cards; #i = index" [canPlay]="circleSession._currentPlayerId === myUserId" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
             </div>
         </div>
 
         <user-list [currentPlayerId]="circleSession._currentPlayerId" [users]="circleSession._userIds" [circleSessionId]="circleSession._id"></user-list>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame, NgFor],
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, CircleSessionUserList, CircleSessionPreGame],
     pipes: [CircleSessionCardOnBoardPipe]
 })
 
@@ -81,21 +80,22 @@ export class CircleSessionGame {
     private colors:Map<string,string> = new Map<string,string>();
     private socket;
     private zone: NgZone;
+    private myUserId:string;
 
-    constructor(service:CircleSessionService,themeService:ThemeService, @Inject('App.SocketUrl') socketUrl:string, route:RouteParams) {
+    constructor(service:CircleSessionService,themeService:ThemeService, uService:UserService, @Inject('App.SocketUrl') socketUrl:string, route:RouteParams) {
         this.id = route.get('id');
         this.service = service;
+        this.myUserId = uService.getUserId();
 
         service.get(this.id).subscribe((circleSession:CircleSession) => {
             this.circleSession = circleSession;
 
             /*SOCKET UPDATE*/
             this.zone = new NgZone({enableLongStackTrace: false});
-            this.socket = io(socketUrl);
+            this.socket = io.connect(socketUrl);
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);
-                console.log(this.pst);
                 this.pst.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
                 this.pst = this.pst.slice();
             }));

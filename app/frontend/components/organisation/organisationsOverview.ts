@@ -6,19 +6,22 @@ import {OrganisationService} from "../../services/organisationService";
 import {UserService} from "../../services/userService";
 
 import {Organisation} from "../../../backend/model/organisation";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'organisations-overview',
     template: `
     <div class="row container">
-        <h5>Jouw organisaties</h5>
+        <h5>Mijn organisaties</h5>
         <div>
            <a [routerLink]="['CreateOrganisation']" class="btn-floating waves-effect waves-light red" title="Creëer circlespel">
                 <i class="material-icons">add</i>
            </a>
         </div>
 
-        <div class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
+        <loading *ngIf="loading"></loading>
+
+        <div *ngIf="!loading" class="card" [ngClass]="{tableCard: organisations.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisations.length!=0">
                 <thead>
                     <tr>
@@ -39,10 +42,11 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [ROUTER_DIRECTIVES, NgClass]
+    directives: [ROUTER_DIRECTIVES, NgClass, LoadingSpinner]
 })
 
 export class OrganisationsOverview {
+    private loading:boolean = true;
     private router: Router;
     private organisationService: OrganisationService;
     private userService: UserService;
@@ -55,6 +59,7 @@ export class OrganisationsOverview {
 
         userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
+            this.loading = false;
         });
     }
 

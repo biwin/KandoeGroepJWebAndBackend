@@ -25,7 +25,11 @@ export class ChatManager {
             var userIds:string[] = msgs.map((msg:ChatMessage) => msg._userId);
             this._uMgr.getUsers(userIds, (us:User[]) => {
                 var ms:ChatMessage[] = msgs.map((msg:ChatMessage) => {
-                    msg._userName = us.find((u:User) => msg._userId === u._id.toString())._name;
+                    var a = us.filter((u:User) => {
+                        return msg._userId === u._id.toString();
+                    })[0];
+                    if(a != undefined)
+                        msg._userName = a._name;
                     return msg;
                 });
                 callback(ms);

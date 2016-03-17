@@ -11,13 +11,13 @@ import {CircleSessionCard} from "./circleSessionCard";
 @Component({
     selector: 'circlesession-carddetail',
     template: `
-        <div class="col s3">
-      <div class="card hoverable thCard" [attr.title]="card._name" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-        <div class="card-content valign-wrapper">
-            <a class="btn-floating btn waves-effect waves-light" [style.background]="color" (click)="clickButton()"><i class="material-icons">arrow_upward</i></a>
-            <span class="valign center-block center-align">{{card._name}}</span>
-        </div>
-      </div>
+      <div class="col s3">
+          <div class="card hoverable thCard" [attr.title]="card._name" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+            <div class="card-content valign-wrapper">
+                <a *ngIf="canPlay" class="btn-floating btn waves-effect waves-light" [style.background]="color" (click)="clickButton()"><i class="material-icons">arrow_upward</i></a>
+                <span class="valign center-block center-align">{{card._name}}</span>
+            </div>
+          </div>
       </div>
 
     `,
@@ -25,6 +25,7 @@ import {CircleSessionCard} from "./circleSessionCard";
 })
 
 export class CircleSessionCardDetail {
+    @Input() private canPlay:boolean;
     @Input() private card:Card;
     @Input() private color:string = "";
     @Output() private hover:EventEmitter<boolean> = new EventEmitter();
