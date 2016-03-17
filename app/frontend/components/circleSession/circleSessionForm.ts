@@ -149,7 +149,6 @@ export class CircleSessionForm implements AfterViewInit {
         var dateString:string = $('#startDate').val() + ' ' + $('#time').val();
         //make sure the client's timezone is included in the date
         this.circleSession._startDate = new Date(Date.parse(dateString)).toUTCString();
-        console.log(this.circleSession._startDate);
 
         this.service.create(this.circleSession, this.emailadresses).subscribe((c:CircleSession) => {
             this.router.navigate(['CircleSessionOverview']);

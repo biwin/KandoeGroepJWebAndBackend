@@ -42,6 +42,7 @@ var CircleSessionGame = (function () {
             _this.socket.emit('join session', JSON.stringify({ sessionId: _this.circleSession._id || 'Unknown' }));
             _this.socket.on('send move', function (data) { return _this.zone.run(function () {
                 var dataObject = JSON.parse(data);
+                _this.circleSession._currentPlayerId = dataObject._currentPlayerId;
                 _this.pst.find(function (p) { return p._cardId === dataObject._cardId; })._position = dataObject._cardPosition;
                 _this.pst = _this.pst.slice();
             }); });
@@ -79,7 +80,7 @@ var CircleSessionGame = (function () {
                 _this.pst.find(function (p) { return p._cardId === r._updatedCardPosition._cardId; })._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 _this.pst = _this.pst.slice();
-                _this.socket.emit('send move', { _cardId: cardId, _cardPosition: r._updatedCardPosition._position });
+                _this.socket.emit('send move', { _cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId });
             }
         }, function (r) {
             var o = r.json();

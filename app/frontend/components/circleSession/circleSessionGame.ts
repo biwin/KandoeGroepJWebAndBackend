@@ -96,6 +96,7 @@ export class CircleSessionGame {
             this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
             this.socket.on('send move', data => this.zone.run(() => {
                 var dataObject = JSON.parse(data);
+                this.circleSession._currentPlayerId = dataObject._currentPlayerId;
                 this.pst.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
                 this.pst = this.pst.slice();
             }));
@@ -136,7 +137,7 @@ export class CircleSessionGame {
                 this.pst.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
                 //FIXME temporary workaround to force the Pipe to be executed again
                 this.pst = this.pst.slice();
-                this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position});
+                this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId});
             }
         }, (r:Response) => {
             var o:CircleSessionMoveResponse = r.json();

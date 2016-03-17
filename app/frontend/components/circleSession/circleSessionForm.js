@@ -75,7 +75,6 @@ var CircleSessionForm = (function () {
         var dateString = $('#startDate').val() + ' ' + $('#time').val();
         //make sure the client's timezone is included in the date
         this.circleSession._startDate = new Date(Date.parse(dateString)).toUTCString();
-        console.log(this.circleSession._startDate);
         this.service.create(this.circleSession, this.emailadresses).subscribe(function (c) {
             _this.router.navigate(['CircleSessionOverview']);
         });
