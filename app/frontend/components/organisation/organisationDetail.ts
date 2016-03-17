@@ -2,6 +2,8 @@ import {Component} from "angular2/core";
 import {Router, RouteParams} from "angular2/router";
 import {NgClass} from "angular2/common";
 
+import {LoadingSpinner} from "../general/loadingSpinner";
+
 import {OrganisationService} from "../../services/organisationService";
 
 import {Organisation} from "../../../backend/model/organisation";
@@ -12,7 +14,9 @@ import {Theme} from "../../../backend/model/theme";
 @Component({
     selector: 'organisation-detail',
     template: `
-    <div class="row container" *ngIf="organisation != null">
+    <loading *ngIf="loading"></loading>
+    
+    <div class="row container" *ngIf="!loading && organisation!=null">
         <div id="organisationHeader">
             <h5>{{organisation._name}}</h5>
 
@@ -45,16 +49,18 @@ import {Theme} from "../../../backend/model/theme";
             <table class="striped" *ngIf="organisation._groupIds.length!=0">
                 <thead>
                     <tr>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="amountOfMembers"># leden</th>
                         <th data-field="description">Beschrijving</th>
                     </tr>
                 </thead>
 
-                <tr *ngFor="#group of groups" (click)="viewGroup(group._id)" class="clickable">
-                    <td>{{group._name}}</td>
-                    <td>{{group._memberIds.length}}</td>
-                    <td>{{group._description}}</td>
+                <tr *ngFor="#group of groups" class="clickable">
+                    <td><i *ngIf="isAdmin(group)" (click)="deleteGroup(group)" class="material-icons red-text" title="Verwijder {{group._name}}">delete_forever</i></td>
+                    <td (click)="viewGroup(group._id)">{{group._name}}</td>
+                    <td (click)="viewGroup(group._id)">{{group._memberIds.length}}</td>
+                    <td (click)="viewGroup(group._id)">{{group._description}}</td>
                 </tr>
             </table>
 
@@ -140,6 +146,7 @@ import {Theme} from "../../../backend/model/theme";
                 </thead>
 
                 <tr *ngFor="#theme of themes" (click)="viewTheme(theme._id)" class="clickable">
+                    <td><a *ngIf="isAdmin(theme)" class="red-text tooltipped" (click)="deleteTheme(theme)" data-position="left" data-tooltip="{{getTooltipText(theme)}}"><i class="material-icons">delete_forever</i></a></td>
                     <td>{{theme._name}}</td>
                     <td>{{theme._description}}</td>
                 </tr>
@@ -149,13 +156,13 @@ import {Theme} from "../../../backend/model/theme";
         </div></div>
     </div>
 
-    <div class="row container" *ngIf="organisation == null">
+    <div class="row container" *ngIf="!loading && organisation==null">
         <div class="card"><div class="card-content">
             <p>ONGELDIG ID</p>
         </div></div>
     </div>
     `,
-    directives: [NgClass]
+    directives: [NgClass, LoadingSpinner]
 })
 
 export class OrganisationDetail {
@@ -165,6 +172,7 @@ export class OrganisationDetail {
     private admins: User[];
     private members: User[];
     private themes: Theme[] = [];
+    private loading: boolean = true;
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService) {
         var organisationId: string = routeParam.params["id"];
@@ -195,6 +203,8 @@ export class OrganisationDetail {
             });
 
             this.organisation = organisation;
+
+            this.loading = false;
         });
     }
 
