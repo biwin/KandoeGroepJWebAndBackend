@@ -50,4 +50,8 @@ export class OrganisationService {
     deleteMemberFromOrganisationById(userId: string, organisationId: string): Observable<boolean> {
         return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, true);
     }
+
+    deleteGroupFromOrganisationById(groupId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
+    }
 }
