@@ -3,12 +3,8 @@ import {Response} from "angular2/http";
 import {Router} from "angular2/router";
 
 import {UserService} from "../../services/userService";
-import {GroupService} from "../../services/groupService";
-import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
 
-import {Theme} from "../../../backend/model/theme";
-import {Group} from "../../../backend/model/group";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {SnapshotService} from "../../services/snapshotService";
 import {Snapshot} from "../../../backend/model/snapshot";
