@@ -45,18 +45,28 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
 
 
-        <h5>Leden</h5>
+        <div id="membersHeader">
+            <h5>Leden</h5>
+
+            <div id="membersMenu">
+                <a *ngIf="isAdmin()" class="btn-floating waves-effect waves-light red" (click)="addMember()" title="Voeg lid toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
 
         <div class="card" [ngClass]="{tableCard: group._memberIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="group._memberIds.length!=0">
                 <thead>
                     <tr>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="email">E-mail adres</th>
                     </tr>
                 </thead>
 
                 <tr *ngFor="#member of members">
+                    <td><i *ngIf="isAdmin() || isCurrentUser(member._id)" (click)="deleteUser(member, false)" class="material-icons red-text clickable" title="Verwijder {{member._name}}">delete_forever</i></td>
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -115,6 +125,12 @@ export class GroupDetail {
         return this.organisation._organisatorIds.indexOf(userId) > -1;
     }
 
+    private isCurrentUser(userId: string): boolean {
+        var currentUserId: string = this.userService.getUserId();
+
+        return currentUserId == userId;
+    }
+
     private delete(): void {
         $('#deleteGroupModal').openModal({
             opacity: .75,
@@ -130,5 +146,11 @@ export class GroupDetail {
                 this.router.navigate(["/OrganisationDetails", {id: this.group._organisationId}]);
             });
         }
+    }
+
+    //TODO: styling van addMember button
+    //TODO: uitwerking addMember methode
+    private addMember(): void {
+        alert("addMember");
     }
 }
