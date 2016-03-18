@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError, CursorResult, ObjectID} from "mongodb";
+import {MongoClient, Db, MongoError, CursorResult, ObjectID, InsertOneWriteOpResult, DeleteWriteOpResultObject} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
 
@@ -15,7 +15,7 @@ export class GroupDao {
 
     createGroup(group: Group, callback: (newGroup: Group) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').insertOne(group, (error: MongoError, result) => {
+            db.collection('groups').insertOne(group, (error: MongoError, result: InsertOneWriteOpResult) => {
                 if (error != null) {
                     console.log(error.message);
                 }
@@ -51,7 +51,7 @@ export class GroupDao {
 
     deleteGroupById(groupId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('groups').deleteOne({'_id': new ObjectID(groupId)}, (err: MongoError, result) => {
+            db.collection('groups').deleteOne({'_id': new ObjectID(groupId)}, (err: MongoError, result: DeleteWriteOpResultObject) => {
                 db.close();
 
                 callback(result.deletedCount == 1);
@@ -62,6 +62,8 @@ export class GroupDao {
     getGroupsOfOrganisationById(organisationId: string, callback:(groups: Group[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('groups').find({'_organisationId': organisationId}).toArray((err: MongoError, docs: Group[]) => {
+                db.close();
+
                 callback(docs);
             });
         });
@@ -70,6 +72,8 @@ export class GroupDao {
     getGroupsOfUserById(userId:string,callback:(groups: Group[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('groups').find({'_memberIds': { '$in': [userId]}}).toArray((err: MongoError, docs: Group[]) => {
+                db.close();
+
                 callback(docs);
             });
         });
@@ -78,6 +82,8 @@ export class GroupDao {
     getUserIdsInGroup(groupId:string, callback:(users:string[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
             db.collection('groups').find({'_id': new ObjectID(groupId)}).project({'_memberIds': 1, '_id': 0}).limit(1).next((err:MongoError, doc: Group) => {
+                db.close();
+
                 callback(doc._memberIds);
             });
         });

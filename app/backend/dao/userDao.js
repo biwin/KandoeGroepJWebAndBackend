@@ -1,8 +1,8 @@
 "use strict";
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
-var mongodb_2 = require("mongodb");
 var UserDao = (function () {
     function UserDao() {
         this.client = new mongodb_1.MongoClient();
@@ -47,7 +47,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.readUserById = function (userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').find({ '_id': new mongodb_2.ObjectID(userId) }).limit(1).next().then(function (cursor) {
+            db.collection('users').find({ '_id': new mongodb_1.ObjectID(userId) }).limit(1).next().then(function (cursor) {
                 db.close();
                 callback(cursor);
             });
@@ -78,7 +78,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.readGroupById = function (id, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL).then(function (db) {
-            return db.collection('groups').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next();
+            return db.collection('groups').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next();
         }).then(function (cursor) {
             callback(cursor);
         });
@@ -117,7 +117,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.deleteUserById = function (userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').deleteOne({ '_id': new mongodb_2.ObjectID(userId) }, function (err, result) {
+            db.collection('users').deleteOne({ '_id': new mongodb_1.ObjectID(userId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });
@@ -228,9 +228,9 @@ var UserDao = (function () {
     };
     UserDao.prototype.addGroupToOrganisation = function (gId, oId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').updateOne({ '_id': oId }, { $push: { '_groupIds': gId } }, function () {
+            db.collection('organisations').updateOne({ '_id': oId }, { $push: { '_groupIds': gId } }, function (err, result) {
                 db.close();
-                callback();
+                callback(result.modifiedCount == 1);
             });
         });
     };
@@ -305,22 +305,40 @@ var UserDao = (function () {
     };
     UserDao.prototype.addGroupIdToUserById = function (groupId, userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_memberOfGroupIds': groupId } }, function (error, result) {
+            db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $push: { '_memberOfGroupIds': groupId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.removeAllMembersFromGroupById = function (groupId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_memberOfGroupIds': { '$in': [groupId] } }, { $pull: { '_memberOfGroupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    };
+    UserDao.prototype.removeAllUsersFromOrganisationById = function (organisationId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_organisatorOf': { '$in': [organisationId] } }, { $pull: { '_organisatorOf': organisationId } }, function (error, result) {
+                db.collection('users').updateMany({ '_memberOf': { '$in': [organisationId] } }, { $pull: { '_memberOf': organisationId } }, function (error2, result2) {
+                    db.close();
+                    callback(result.modifiedCount == result.matchedCount && result2.modifiedCount == result2.matchedCount);
+                });
             });
         });
     };
     UserDao.prototype.addOrganisationIdToUserById = function (groupId, userId, isOrganisator, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             if (isOrganisator) {
-                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_organisatorOf': groupId } }, function (error, result) {
+                db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $push: { '_organisatorOf': groupId } }, function (error, result) {
                     db.close();
                     callback(result.modifiedCount == 1);
                 });
             }
             else {
-                db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $push: { '_memberOf': groupId } }, function (error, result) {
+                db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $push: { '_memberOf': groupId } }, function (error, result) {
                     db.close();
                     callback(result.modifiedCount == 1);
                 });
@@ -329,7 +347,7 @@ var UserDao = (function () {
     };
     UserDao.prototype.deleteOrganisationFromUserById = function (organisationId, userId, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('users').updateOne({ '_id': new mongodb_2.ObjectID(userId) }, { $pull: { '_memberOf': organisationId } }, function (error, result) {
+            db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $pull: { '_organisatorOf': organisationId, '_memberOf': organisationId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
             });

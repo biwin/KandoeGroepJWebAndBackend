@@ -45,6 +45,7 @@ var GroupDao = (function () {
     GroupDao.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
+                db.close();
                 callback(docs);
             });
         });
@@ -52,6 +53,7 @@ var GroupDao = (function () {
     GroupDao.prototype.getGroupsOfUserById = function (userId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').find({ '_memberIds': { '$in': [userId] } }).toArray(function (err, docs) {
+                db.close();
                 callback(docs);
             });
         });
@@ -59,6 +61,7 @@ var GroupDao = (function () {
     GroupDao.prototype.getUserIdsInGroup = function (groupId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').find({ '_id': new mongodb_1.ObjectID(groupId) }).project({ '_memberIds': 1, '_id': 0 }).limit(1).next(function (err, doc) {
+                db.close();
                 callback(doc._memberIds);
             });
         });

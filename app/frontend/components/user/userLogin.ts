@@ -102,7 +102,7 @@ export class UserLogin {
 
     setLoggedIn(token:string) {
         localStorage.setItem('token', token);
-        this.router.navigate(['Profile']);
+        this.router.navigate(['Home']);
         this.service.notifyLoggedIn();
     }
 

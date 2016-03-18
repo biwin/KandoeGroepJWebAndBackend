@@ -1,6 +1,8 @@
 "use strict";
 var organisationDao_1 = require("../dao/organisationDao");
 var userManager_1 = require("./userManager");
+var groupManager_1 = require("./groupManager");
+var themeManager_1 = require("./themeManager");
 var OrganisationManager = (function () {
     function OrganisationManager() {
         this._dao = new organisationDao_1.OrganisationDao();
@@ -30,7 +32,25 @@ var OrganisationManager = (function () {
         this._dao.getOrganisationById(organisationId, callback);
     };
     OrganisationManager.prototype.removeOrganisationById = function (organisationId, callback) {
-        this._dao.deleteOrganisationById(organisationId, callback);
+        var _this = this;
+        var groupManager = new groupManager_1.GroupManager();
+        var userManager = new userManager_1.UserManager();
+        var themeManager = new themeManager_1.ThemeManager();
+        var groupsDeleted = true;
+        this.getOrganisationById(organisationId, function (organisation) {
+            organisation._groupIds.forEach(function (groupId) {
+                groupManager.removeGroupById(groupId, function (groupDeleted) {
+                    groupsDeleted = groupsDeleted && groupDeleted;
+                });
+            });
+        });
+        userManager.removeAllUsersFromOrganisationById(organisationId, function (usersDeleted) {
+            themeManager.removeAllThemesFromOrganisationById(organisationId, function (themeReferencesDeleted) {
+                _this._dao.deleteOrganisationById(organisationId, function (organisationDeleted) {
+                    callback(groupsDeleted && usersDeleted && themeReferencesDeleted && organisationDeleted);
+                });
+            });
+        });
     };
     OrganisationManager.prototype.deleteMemberFromOrganisationById = function (memberId, organisationId, callback) {
         this._dao.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {
@@ -39,6 +59,13 @@ var OrganisationManager = (function () {
                 callback(deleted);
             });
         });
+    };
+    OrganisationManager.prototype.deleteGroupIdFromOrganisation = function (groupId, callback) {
+        this._dao.deleteGroupIdFromOrganisation(groupId, callback);
+    };
+    OrganisationManager.prototype.deleteThemeFromOrganisationById = function (themeId, organisationId, callback) {
+        var themeManager = new themeManager_1.ThemeManager();
+        themeManager.deleteOrganisationFromThemeById(themeId, callback);
     };
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);

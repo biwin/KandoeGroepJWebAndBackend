@@ -34,7 +34,16 @@ var GroupManager = (function () {
         this._dao.getGroupById(groupId, callback);
     };
     GroupManager.prototype.removeGroupById = function (groupId, callback) {
-        this._dao.deleteGroupById(groupId, callback);
+        var _this = this;
+        var userManager = new userManager_1.UserManager();
+        var organisationManager = new organisationManager_1.OrganisationManager();
+        userManager.removeAllMembersFromGroupById(groupId, function (membersDeleted) {
+            organisationManager.deleteGroupIdFromOrganisation(groupId, function (referencesDeleted) {
+                _this._dao.deleteGroupById(groupId, function (groupDeleted) {
+                    callback(membersDeleted && referencesDeleted && groupDeleted);
+                });
+            });
+        });
     };
     GroupManager.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);

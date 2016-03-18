@@ -1,5 +1,4 @@
 import {Injectable, Inject} from "angular2/core";
-import {Http, Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
 
 import {HttpWrapperService} from "./httpWrapperService";
@@ -20,31 +19,43 @@ export class OrganisationService {
     }
 
     createOrganisation(organisation: Organisation): Observable<Organisation> {
-        return this.http.post(this.path + "organisations", JSON.stringify(organisation), true, true, false);
+        return this.http.post(this.path + "organisations", JSON.stringify(organisation), true, true, true);
     }
 
     getOrganisationById(organisationId: string): Observable<Organisation> {
-        return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId, false, true, true);
+    }
+
+    deleteOrganisationById(organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId, false, false, true);
     }
 
     getAdminsOfOrganisationById(organisationId: string): Observable<User[]> {
-        return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, true);
     }
 
     getGroupsOfOrganisationById(organisationId: string): Observable<Group[]> {
-        return this.http.get(this.path + "organisations/" + organisationId + "/groups", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/groups", false, true, true);
 
     }
 
     getMembersOfOrganisationById(organisationId: string): Observable<User[]> {
-        return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, true);
     }
 
     getThemesOfOrganisationById(organisationId: string): Observable<Theme[]> {
-        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, true);
     }
 
-    deleteMemberFromOrganisationById(userId: string, organisationId: string) {
-        return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, false);
+    deleteMemberFromOrganisationById(userId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, true);
+    }
+
+    deleteGroupFromOrganisationById(groupId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
+    }
+
+    deleteThemeFromOrganisationById(themeId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/themes/" + themeId, false, false, true);
     }
 }

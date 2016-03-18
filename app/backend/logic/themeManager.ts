@@ -1,6 +1,5 @@
 import {ThemeDao} from "../dao/themeDao";
 
-
 import {OrganisationManager} from "./organisationManager";
 
 import {Theme} from "../model/theme";
@@ -109,5 +108,13 @@ export class ThemeManager {
 
     getThemesOfOrganisationById(organisationId: string, callback: (themes: Theme[]) => any) {
         this._dao.getThemesOfOrganisationById(organisationId, callback);
+    }
+
+    removeAllThemesFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this._dao.removeAllThemesFromOrganisationById(organisationId, callback);
+    }
+
+    deleteOrganisationFromThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteOrganisationFromThemeById(themeId, callback);
     }
 }

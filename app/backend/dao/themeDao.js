@@ -112,6 +112,22 @@ var ThemeDao = (function () {
             });
         });
     };
+    ThemeDao.prototype.removeAllThemesFromOrganisationById = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').updateMany({ '_organisationId': organisationId }, { $set: { '_organisationId': null } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    };
+    ThemeDao.prototype.deleteOrganisationFromThemeById = function (themeId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').updateOne({ '_id': new mongodb_1.ObjectID(themeId) }, { $set: { '_organisationId': null } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     return ThemeDao;
 }());
 exports.ThemeDao = ThemeDao;

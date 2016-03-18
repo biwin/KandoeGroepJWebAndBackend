@@ -66,9 +66,6 @@ export class GroupForm implements AfterViewInit {
     }
 
     private OnSubmit() {
-        var userId:string = this.userService.getUserId();
-        this.group._memberIds.push(userId);
-
         this.groupService.createGroup(this.group).subscribe((g: Group) => {
             this.router.navigate(["/GroupDetail", {id: g._id}]);
         });

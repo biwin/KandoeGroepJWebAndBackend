@@ -20,25 +20,34 @@ var OrganisationService = (function () {
         this.http = http;
     }
     OrganisationService.prototype.createOrganisation = function (organisation) {
-        return this.http.post(this.path + "organisations", JSON.stringify(organisation), true, true, false);
+        return this.http.post(this.path + "organisations", JSON.stringify(organisation), true, true, true);
     };
     OrganisationService.prototype.getOrganisationById = function (organisationId) {
-        return this.http.get(this.path + "organisations/" + organisationId, false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId, false, true, true);
+    };
+    OrganisationService.prototype.deleteOrganisationById = function (organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId, false, false, true);
     };
     OrganisationService.prototype.getAdminsOfOrganisationById = function (organisationId) {
-        return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, true);
     };
     OrganisationService.prototype.getGroupsOfOrganisationById = function (organisationId) {
-        return this.http.get(this.path + "organisations/" + organisationId + "/groups", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/groups", false, true, true);
     };
     OrganisationService.prototype.getMembersOfOrganisationById = function (organisationId) {
-        return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/members", false, true, true);
     };
     OrganisationService.prototype.getThemesOfOrganisationById = function (organisationId) {
-        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, false);
+        return this.http.get(this.path + "organisations/" + organisationId + "/themes", false, true, true);
     };
     OrganisationService.prototype.deleteMemberFromOrganisationById = function (userId, organisationId) {
-        return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, false);
+        return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, true);
+    };
+    OrganisationService.prototype.deleteGroupFromOrganisationById = function (groupId, organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
+    };
+    OrganisationService.prototype.deleteThemeFromOrganisationById = function (themeId, organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/themes/" + themeId, false, false, true);
     };
     OrganisationService = __decorate([
         core_1.Injectable(),

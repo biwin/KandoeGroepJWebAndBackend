@@ -133,9 +133,17 @@ var ThemeApi = (function () {
             }
         });
     };
-    ThemeApi.getThemesOfOrganisationById = function (organisationId, res) {
-        this.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
-            res.send(themes);
+    ThemeApi.getThemesOfOrganisationById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                ThemeApi.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
+                    res.send(themes);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     ThemeApi.mgr = new themeManager_1.ThemeManager();

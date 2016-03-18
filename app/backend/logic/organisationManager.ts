@@ -1,6 +1,8 @@
 import {OrganisationDao} from "../dao/organisationDao";
 
 import {UserManager} from "./userManager";
+import {GroupManager} from "./groupManager";
+import {ThemeManager} from "./themeManager";
 
 import {Organisation} from "../model/organisation";
 
@@ -38,7 +40,26 @@ export class OrganisationManager {
     }
 
     removeOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
-        this._dao.deleteOrganisationById(organisationId, callback);
+        var groupManager: GroupManager = new GroupManager();
+        var userManager: UserManager = new UserManager();
+        var themeManager: ThemeManager = new ThemeManager();
+        var groupsDeleted: boolean = true;
+
+        this.getOrganisationById(organisationId, (organisation: Organisation) => {
+            organisation._groupIds.forEach(function(groupId: string) {
+                groupManager.removeGroupById(groupId, (groupDeleted: boolean) => {
+                    groupsDeleted = groupsDeleted && groupDeleted;
+                });
+            });
+        });
+
+        userManager.removeAllUsersFromOrganisationById(organisationId, (usersDeleted: boolean) => {
+            themeManager.removeAllThemesFromOrganisationById(organisationId, (themeReferencesDeleted: boolean) => {
+                this._dao.deleteOrganisationById(organisationId, (organisationDeleted: boolean) => {
+                    callback(groupsDeleted && usersDeleted && themeReferencesDeleted && organisationDeleted);
+                });
+            });
+        });
     }
 
     deleteMemberFromOrganisationById(memberId: string, organisationId: string, callback: (deleted: boolean) => any) {
@@ -49,6 +70,16 @@ export class OrganisationManager {
                 callback(deleted);
             });
         });
+    }
+
+    deleteGroupIdFromOrganisation(groupId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteGroupIdFromOrganisation(groupId, callback);
+    }
+
+    deleteThemeFromOrganisationById(themeId: string, organisationId: string, callback: (deleted: boolean) => any) {
+        var themeManager: ThemeManager = new ThemeManager();
+
+        themeManager.deleteOrganisationFromThemeById(themeId, callback);
     }
 
     addGroupIdToOrganisationById(groupId: string, organisationId: string, callback: (added: boolean) => any) {

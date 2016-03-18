@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var http_1 = require("angular2/http");
+var httpWrapperService_1 = require("./httpWrapperService");
 var GroupService = (function () {
     function GroupService(http, path) {
         this.http = null;
@@ -20,29 +20,24 @@ var GroupService = (function () {
         this.http = http;
     }
     GroupService.prototype.createGroup = function (group) {
-        var header = new http_1.Headers();
-        header.append("Content-Type", "application/json");
-        return this.http.post(this.path + "groups/", JSON.stringify(group), { headers: header }).map(function (res) { return res.json(); });
+        return this.http.post(this.path + "groups/", JSON.stringify(group), true, true, true);
     };
     GroupService.prototype.getGroupById = function (groupId) {
-        var header = new http_1.Headers();
-        header.append("Content-Type", "application/json");
-        return this.http.get(this.path + "groups/" + groupId).map(function (res) { return res.json(); });
+        return this.http.get(this.path + "groups/" + groupId, false, true, true);
+    };
+    GroupService.prototype.deleteGroupById = function (organisationId) {
+        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
     };
     GroupService.prototype.getMembersOfGroupById = function (groupId) {
-        var header = new http_1.Headers();
-        header.append("Content-Type", "application/json");
-        return this.http.get(this.path + "groups/" + groupId + "/members").map(function (res) { return res.json(); });
+        return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     };
     GroupService.prototype.getOrganisationOfGroupById = function (groupId) {
-        var header = new http_1.Headers();
-        header.append("Content-Type", "application/json");
-        return this.http.get(this.path + "groups/" + groupId + "/organisation").map(function (res) { return res.json(); });
+        return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, true);
     };
     GroupService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject("App.BackendPath")), 
-        __metadata('design:paramtypes', [http_1.Http, String])
+        __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], GroupService);
     return GroupService;
 }());
