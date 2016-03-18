@@ -269,7 +269,7 @@ export class UserDao {
         });
     }
 
-    addGroupToOrganisation(gId: string, oId: string, callback: () => any) {
+    addGroupToOrganisation(gId: string, oId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groupIds': gId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
