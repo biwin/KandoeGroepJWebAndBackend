@@ -51,6 +51,10 @@ export class OrganisationManager {
         });
     }
 
+    deleteGroupIdFromOrganisation(groupId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteGroupIdFromOrganisation(groupId, callback);
+    }
+
     addGroupIdToOrganisationById(groupId: string, organisationId: string, callback: (added: boolean) => any) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     }

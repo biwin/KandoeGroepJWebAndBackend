@@ -310,6 +310,14 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.removeAllMembersFromGroupById = function (groupId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_memberOfGroupIds': { '$in': [groupId] } }, { $pull: { '_memberOfGroupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount >= 1);
+            });
+        });
+    };
     UserDao.prototype.addOrganisationIdToUserById = function (groupId, userId, isOrganisator, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             if (isOrganisator) {

@@ -368,6 +368,16 @@ export class UserDao {
         });
     }
 
+    removeAllMembersFromGroupById(groupId: string, callback: (removed: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateMany({'_memberOfGroupIds': {'$in': [groupId]}}, {$pull: {'_memberOfGroupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount >= 1);
+            });
+        });
+    }
+
     addOrganisationIdToUserById(groupId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             if(isOrganisator) {

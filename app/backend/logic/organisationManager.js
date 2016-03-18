@@ -40,6 +40,9 @@ var OrganisationManager = (function () {
             });
         });
     };
+    OrganisationManager.prototype.deleteGroupIdFromOrganisation = function (groupId, callback) {
+        this._dao.deleteGroupIdFromOrganisation(groupId, callback);
+    };
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     };

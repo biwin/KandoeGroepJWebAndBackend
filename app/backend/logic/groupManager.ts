@@ -42,9 +42,16 @@ export class GroupManager {
     }
 
     removeGroupById(groupId: string, callback: (deleted: boolean) => any) {
-        //TODO: delete groupId from _memberOfGroupIds array in User-objects
-        //TODO: delete groupId from _groupIds array in Organisation-object
-        this._dao.deleteGroupById(groupId, callback);
+        var userManager: UserManager = new UserManager();
+        var organisationManager: OrganisationManager = new OrganisationManager();
+
+        userManager.removeAllMembersFromGroupById(groupId, (membersDeleted: boolean) => {
+            organisationManager.deleteGroupIdFromOrganisation(groupId, (referencesDeleted: boolean) => {
+                this._dao.deleteGroupById(groupId, (groupDeleted: boolean) => {
+                    callback(membersDeleted && referencesDeleted && groupDeleted);
+                });
+            });
+        });
     }
 
     getGroupsOfOrganisationById(organisationId: string, callback: (groups: Group[]) => any) {
