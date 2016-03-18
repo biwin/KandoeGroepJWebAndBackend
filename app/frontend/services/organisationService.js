@@ -46,6 +46,9 @@ var OrganisationService = (function () {
     OrganisationService.prototype.deleteGroupFromOrganisationById = function (groupId, organisationId) {
         return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
     };
+    OrganisationService.prototype.deleteThemeFromOrganisationById = function (themeId, organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/themes/" + themeId, false, false, true);
+    };
     OrganisationService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject("App.BackendPath")), 
