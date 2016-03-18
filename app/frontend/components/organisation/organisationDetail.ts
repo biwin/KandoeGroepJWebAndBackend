@@ -18,6 +18,18 @@ import {Theme} from "../../../backend/model/theme";
 @Component({
     selector: 'organisation-detail',
     template: `
+    <div class="modal" id="deleteOrganisationModal">
+        <div class="modal-content">
+            <h4 class="red-text">{{organisation._name}} verwijderen?</h4>
+            <p>U staat op het punt {{organisation._name}} volledig te verwijderen.<br />
+                Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?</p>
+        </div>
+
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteOrg = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteOrg = true">Ja, verwijder</a>
+        </div>
+    </div>
     <div class="modal" id="deleteGroupModal">
         <div class="modal-content">
             <h4 class="red-text">{{groupToDelete._name}} verwijderen?</h4>
@@ -61,8 +73,8 @@ import {Theme} from "../../../backend/model/theme";
             <h5>{{organisation._name}}</h5>
 
             <div id="organisationMenu">
-                <a class="btn-floating waves-effect waves-light red"(click)="edit()" title="Bewerk organisatie">
-                    <i class="material-icons">mode_edit</i>
+                <a *ngIf="isAdmin()" class="btn-floating waves-effect waves-light red" (click)="delete()" title="Verwijder {{organisation._name}}">
+                    <i class="material-icons">delete_forever</i>
                 </a>
             </div>
         </div>
@@ -220,6 +232,7 @@ export class OrganisationDetail {
     private members: User[];
     private themes: Theme[] = [];
     private loading: boolean = true;
+    private doDeleteOrg: boolean = false;
     private groupToDelete: Group = Group.empty();
     private doDeleteGrp: boolean = false;
     private userToDelete: User = User.empty();
@@ -277,11 +290,21 @@ export class OrganisationDetail {
         return currentUserId == userId;
     }
 
-    //TODO: styling van edit button
-    //TODO: uitwerking edit methode
-    private edit(): void {
-        //this.router.navigate(["/EditOrganisation", {id: this.organisation._id}]);
-        alert("Edit");
+    private delete(): void {
+        $('#deleteOrganisationModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteOrganisation();
+            }
+        });
+    }
+
+    private doDeleteOrganisation(): void {
+        if (this.doDeleteOrg) {
+            this.organisationService.deleteOrganisationById(this.organisation._id).subscribe(() => {
+                this.router.navigate(["/OrganisationsOverview"]);
+            });
+        }
     }
 
     //TODO: styling van addGroup button
