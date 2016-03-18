@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component, Output, Input, EventEmitter, OnInit, AfterViewInit} from "angular2/core";
 import {Response} from "angular2/http";
 import {Router} from "angular2/router";
@@ -122,7 +125,7 @@ export class CircleSessionCard implements OnInit, AfterViewInit {
     stopGame() {
         this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
             this.circleSession._isStopped = a._isStopped;
-        }, (r:Response) => {
+        }, (r: Response) => {
             Materialize.toast('Stoppen mislukt', 3000, 'rounded');
         });
     }
