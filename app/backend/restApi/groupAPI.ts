@@ -16,7 +16,7 @@ export class GroupAPI {
                 var group: Group = req.body;
                 group._memberIds = [currentUserId];
 
-                GroupAPI.mgr.createGroup(req.body, (g: Group) => {
+                GroupAPI.mgr.createGroup(group, (g: Group) => {
                     res.send(g);
                 });
             } else {

@@ -10,7 +10,7 @@ var GroupAPI = (function () {
             if (currentUserId != null) {
                 var group = req.body;
                 group._memberIds = [currentUserId];
-                GroupAPI.mgr.createGroup(req.body, function (g) {
+                GroupAPI.mgr.createGroup(group, function (g) {
                     res.send(g);
                 });
             }
