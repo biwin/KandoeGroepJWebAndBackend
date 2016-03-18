@@ -1,3 +1,4 @@
+"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var groupManager_1 = require("./groupManager");
 var themeManager_1 = require("./themeManager");
@@ -242,7 +243,16 @@ var CircleSessionManager = (function () {
             var preGameInProgress = c._isPreGame && !roundEnded;
             _this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, function (success) {
                 if (success) {
-                    callback(roundEnded, newPlayerId);
+                    if (c._endPoint != null && roundEnded && !c._isPreGame) {
+                        var newRoundsLeft = c._endPoint - 1;
+                        var gameStopped = newRoundsLeft <= 0;
+                        _this._dao.updateRounds(circleSessionId, newRoundsLeft, gameStopped, function () {
+                            callback(roundEnded, newPlayerId);
+                        });
+                    }
+                    else {
+                        callback(roundEnded, newPlayerId);
+                    }
                 }
                 else {
                     callback(null, null);
@@ -284,6 +294,6 @@ var CircleSessionManager = (function () {
         });
     };
     return CircleSessionManager;
-})();
+}());
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

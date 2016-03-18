@@ -28,6 +28,7 @@ import {Theme} from "../../../backend/model/theme";
             <p># groepen: {{organisation._groupIds.length}}</p>
             <p># admins: {{organisation._organisatorIds.length}}</p>
             <p># leden: {{organisation._memberIds.length}}</p>
+            <p># thema's: {{themes.length}}</p>
         </div></div>
 
 
@@ -61,6 +62,7 @@ import {Theme} from "../../../backend/model/theme";
             <p *ngIf="organisation._groupIds.length==0">{{organisation._name}} heeft momenteel nog geen groepen.</p>
         </div></div>
 
+
         <div id="adminsHeader">
             <h5>Admins</h5>
 
@@ -87,6 +89,35 @@ import {Theme} from "../../../backend/model/theme";
             </table>
 
             <p *ngIf="organisation._organisatorIds.length==0">{{organisation._name}} heeft momenteel nog geen admins.</p>
+        </div></div>
+
+
+        <div id="membersHeader">
+            <h5>Leden</h5>
+
+            <div id="membersMenu">
+                <a class="btn-floating waves-effect waves-light red" (click)="addMember()" title="Voeg lid toe">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+
+        <div class="card" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
+            <table class="striped" *ngIf="organisation._memberIds.length!=0">
+                <thead>
+                    <tr>
+                        <th data-field="name">Naam</th>
+                        <th data-field="email">E-mail adres</th>
+                    </tr>
+                </thead>
+
+                <tr *ngFor="#member of members" (click)="viewMember(member._id)" class="clickable">
+                    <td>{{member._name}}</td>
+                    <td>{{member._email}}</td>
+                </tr>
+            </table>
+
+            <p *ngIf="organisation._memberIds.length==0">{{organisation._name}} heeft momenteel nog geen leden.</p>
         </div></div>
 
 

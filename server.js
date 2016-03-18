@@ -10,6 +10,7 @@ var bodyParser = require('body-parser'),
     ThemeApi = require('./app/backend/restApi/themeApi.js'),
     UserApi = require('./app/backend/restApi/userApi.js'),
     ChatApi = require('./app/backend/restApi/chatApi.js'),
+    SnapshotApi = require('./app/backend/restApi/snapshotApi.js'),
     morgan = require('morgan'),
     server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
     server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
@@ -36,11 +37,6 @@ app.get('/', function (req, res) {
 });
 
 //region user routes
-//TODO remove?
-app.get('/api/user/get', function (req, res) {
-    UserApi.UserApi.getUser(req.query.id, res);
-});
-
 app.get('/api/user/bulk/:array', UserApi.UserApi.getUsers);
 app.get('/api/user/:id/groups', GroupAPI.GroupAPI.getGroupsOfUserById);
 app.get('/api/user/circlesessions', CircleSessionApi.CircleSessionApi.getCircleSessionsOfCurrentUser);
@@ -61,52 +57,27 @@ app.get('/api/circlesessions/:id/chat', ChatApi.ChatApi.getMessages);
 app.post('/api/circlesessions/:id/stopGame', CircleSessionApi.CircleSessionApi.stopGame);
 //endregion
 
+//region snapshot routes
+app.get('/api/snapshots', SnapshotApi.SnapshotApi.findAll);
+app.post('/api/snapshots', SnapshotApi.SnapshotApi.createSnapshot);
+//endregion
+
 //region organisation routes
-app.get("/api/organisations/:id", function(req, res) {
-    OrganisationAPI.OrganisationAPI.find(req.params.id, res);
-});
-
-app.post("/api/organisations", function(req, res) {
-    OrganisationAPI.OrganisationAPI.create(req.body, res);
-});
-
-app.get("/api/organisations/:id/admins", function(req, res) {
-    OrganisationAPI.OrganisationAPI.getAdmins(req.params.id, res);
-});
-
-app.get("/api/organisations/:id/groups", function(req, res) {
-    OrganisationAPI.OrganisationAPI.getGroups(req.params.id, res);
-});
-
-app.get("/api/organisations/:id/members", function(req, res) {
-    OrganisationAPI.OrganisationAPI.getMembers(req.params.id, res);
-});
-
-app.delete("/api/organisations/:id/members/:memberId", function(req, res) {
-    OrganisationAPI.OrganisationAPI.deleteMemberById(req.params.memberId, req.params.id, res)
-});
-
-app.get("/api/organisations/:id/themes", function(req, res) {
-    OrganisationAPI.OrganisationAPI.getThemes(req.params.id, res);
-});
+app.get("/api/organisations/:id", OrganisationAPI.OrganisationAPI.find);
+app.post("/api/organisations", OrganisationAPI.OrganisationAPI.create);
+app.delete("/api/organisations/:id", OrganisationAPI.OrganisationAPI.delete);
+app.get("/api/organisations/:id/admins", OrganisationAPI.OrganisationAPI.getAdmins);
+app.get("/api/organisations/:id/groups", OrganisationAPI.OrganisationAPI.getGroups);
+app.get("/api/organisations/:id/members", OrganisationAPI.OrganisationAPI.getMembers);
+app.delete("/api/organisations/:id/members/:memberId", OrganisationAPI.OrganisationAPI.deleteMemberById);
+app.get("/api/organisations/:id/themes", OrganisationAPI.OrganisationAPI.getThemes);
 //endregion
 
 //region group routes
-app.get("/api/groups/:id", function(req, res) {
-    GroupAPI.GroupAPI.find(req.params.id, res);
-});
-
-app.post("/api/groups", function(req, res) {
-    GroupAPI.GroupAPI.create(req.body, res);
-});
-
-app.get("/api/groups/:id/members", function(req, res) {
-    GroupAPI.GroupAPI.getMembers(req.params.id, res);
-});
-
-app.get("/api/groups/:id/organisation", function(req, res) {
-    GroupAPI.GroupAPI.getOrganisation(req.params.id, res);
-});
+app.get("/api/groups/:id", GroupAPI.GroupAPI.find);
+app.post("/api/groups", GroupAPI.GroupAPI.create);
+app.get("/api/groups/:id/members", GroupAPI.GroupAPI.getMembers);
+app.get("/api/groups/:id/organisation", GroupAPI.GroupAPI.getOrganisation);
 //endregion
 
 //region theme routes
@@ -185,7 +156,6 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('send move', function(message) {
-        console.log(message);
         var roomName = Object.keys(socket.rooms).filter(function(room) {
             return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];

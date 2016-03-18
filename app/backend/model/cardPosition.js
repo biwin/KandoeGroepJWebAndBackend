@@ -1,3 +1,4 @@
+"use strict";
 var CardPosition = (function () {
     function CardPosition(_sessionId, _cardId, _userId, _userHistory, 
         /* 0 is in the game but not on the board. 1-5 are the rings (5 = the inner ring = end)  */
@@ -10,6 +11,6 @@ var CardPosition = (function () {
         this._lastChanged = _lastChanged;
     }
     return CardPosition;
-})();
+}());
 exports.CardPosition = CardPosition;
 //# sourceMappingURL=cardPosition.js.map

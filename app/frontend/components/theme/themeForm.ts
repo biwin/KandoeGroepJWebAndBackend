@@ -1,21 +1,21 @@
 import {Component} from "angular2/core";
 import {CORE_DIRECTIVES, FORM_DIRECTIVES} from "angular2/common";
-import {Router, ROUTER_DIRECTIVES} from "angular2/router";
+import {Router, RouteParams} from "angular2/router";
 
-import {UserService} from "../../services/userService";
 import {ThemeService} from "../../services/themeService";
+import {UserService} from "../../services/userService";
+
+import {TagInput} from "../general/tagInput";
 
 import {Theme} from "../../../backend/model/theme";
-import {TagInput} from "../general/tagInput";
 import {Organisation} from "../../../backend/model/organisation";
-
-
 
 @Component({
     selector: 'theme-form',
     template: `
     <div class="row container">
         <h5>Nieuw Thema</h5>
+
         <div class="card formCard"><div class="card-content">
             <form (submit)="OnSubmit()" class="col s12">
                 <div class="row"><div class="input-field col s6">
@@ -35,8 +35,9 @@ import {Organisation} from "../../../backend/model/organisation";
                         <option *ngFor="#organisation of _organisations" value="{{organisation._id}}">{{organisation._name}}</option>
                     </select>
                 </div>
+
                 <div class="input-field col s3">
-                    <select class="browser-default" [(ngModel)]="_parentId" id="organisation">
+                    <select class="browser-default" [(ngModel)]="_parentId" id="parentTheme">
                         <option value="" disabled>Subthema van</option>
                         <option value="">Geen</option>
                         <option *ngFor="#theme of _themes" value="{{theme._id}}">{{theme._name}}</option>
@@ -57,33 +58,41 @@ import {Organisation} from "../../../backend/model/organisation";
 })
 
 export class ThemeForm {
-    private theme:Theme = Theme.empty();
-    private service:ThemeService;
-    private router:Router;
-    private _organisations:Organisation[] = [];
-    private _themes:Theme[] = [];
-    private _parentId = "";
+    private router: Router;
+    private themeService: ThemeService;
+    private userService: UserService;
+    private theme: Theme = Theme.empty();
+    private _organisations: Organisation[];
+    private _themes: Theme[] = [];
+    private _parentId: string = "";
 
-    constructor(service:ThemeService, userService:UserService, router:Router) {
-        this.service = service;
+    constructor(router: Router, routeParam: RouteParams, themeService: ThemeService, userService: UserService) {
         this.router = router;
+        this.themeService = themeService;
+        this.userService = userService;
+
+        if(routeParam.params["organisationId"]) {
+            this.theme._organisationId = routeParam.params["organisationId"];
+        } else {
+            this.theme._organisationId = "";
+        }
 
         userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
-             this._organisations = organisations;
+            this._organisations = organisations;
         });
 
-        service.getAll().subscribe((themes:Theme[])=>{
+        themeService.getAll().subscribe((themes: Theme[]) => {
            this._themes = themes;
         });
     }
 
-    private OnSubmit(){
-        if(this._parentId != ""){
-            this.service.createSubTheme(this.theme, this._parentId).subscribe((t:Theme) => {
+    private OnSubmit() {
+        if(this._parentId != "") {
+            this.themeService.createSubTheme(this.theme, this._parentId).subscribe(() => {
                 this.router.navigate(['ThemeOverview']);
             });
         } else {
-            this.service.create(this.theme).subscribe((t:Theme) => {
+            this.themeService.create(this.theme).subscribe(() => {
                 this.router.navigate(['ThemeOverview']);
             });
         }

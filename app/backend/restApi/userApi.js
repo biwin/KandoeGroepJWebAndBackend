@@ -1,3 +1,4 @@
+"use strict";
 var organisationAPI_1 = require("./organisationAPI");
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
@@ -143,23 +144,47 @@ var UserApi = (function () {
     UserApi.getAllOrganisationsOfCurrentUser = function (req, res) {
         organisationAPI_1.OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     };
-    UserApi.getAdminsOfOrganisationById = function (organisationId, res) {
-        this.manager.getAdminsOfOrganisationById(organisationId, function (admins) {
-            res.send(admins);
+    UserApi.getAdminsOfOrganisationById = function (req, res) {
+        UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                UserApi.manager.getAdminsOfOrganisationById(organisationId, function (admins) {
+                    res.send(admins);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
-    UserApi.getMembersOfOrganisationById = function (organisationId, res) {
-        this.manager.getMembersOfOrganisationById(organisationId, function (members) {
-            res.send(members);
+    UserApi.getMembersOfOrganisationById = function (req, res) {
+        UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                UserApi.manager.getMembersOfOrganisationById(organisationId, function (members) {
+                    res.send(members);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
-    UserApi.getMembersOfGroupById = function (groupId, res) {
-        this.manager.getMembersOfGroupById(groupId, function (members) {
-            res.send(members);
+    UserApi.getMembersOfGroupById = function (req, res) {
+        UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var groupId = req.params.id;
+                UserApi.manager.getMembersOfGroupById(groupId, function (members) {
+                    res.send(members);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     UserApi.manager = new userManager_1.UserManager();
     return UserApi;
-})();
+}());
 exports.UserApi = UserApi;
 //# sourceMappingURL=userApi.js.map

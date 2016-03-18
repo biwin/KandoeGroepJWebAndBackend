@@ -137,9 +137,17 @@ export class ThemeApi {
         });
     }
 
-    public static getThemesOfOrganisationById(organisationId: string, res) {
-        this.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
-            res.send(themes);
+    public static getThemesOfOrganisationById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                themeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
+                    res.send(themes);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 }

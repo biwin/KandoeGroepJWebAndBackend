@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -63,6 +64,6 @@ var CircleSessionService = (function () {
         __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], CircleSessionService);
     return CircleSessionService;
-})();
+}());
 exports.CircleSessionService = CircleSessionService;
 //# sourceMappingURL=circleSessionService.js.map

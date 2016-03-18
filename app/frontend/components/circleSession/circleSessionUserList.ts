@@ -24,7 +24,7 @@ import {ChatComponent} from "../chat/chatComponent";
                     {{user._name}}
                 </div>
                 <div class="col s1" *ngIf="user._id === currentPlayerId">
-                    <i class="fa fa-gamepad green-text"></i>
+                    <i class="fa fa-gamepad fa-lg green-text"></i>
                 </div>
             </li>
         </ul>

@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError, ObjectID, CursorResult} from "mongodb";
+import {MongoClient, Db, MongoError, ObjectID, CursorResult, InsertOneWriteOpResult, DeleteWriteOpResultObject, UpdateWriteOpResult} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
 
@@ -15,7 +15,7 @@ export class OrganisationDao {
 
     createOrganisation(organisation: Organisation, callback: (newOrganisation: Organisation) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').insertOne(organisation, (error: MongoError, result) => {
+            db.collection('organisations').insertOne(organisation, (error: MongoError, result: InsertOneWriteOpResult) => {
                 if (error != null) {
                     console.log(error.message);
                 }
@@ -51,7 +51,7 @@ export class OrganisationDao {
 
     deleteOrganisationById(organisationId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').deleteOne({'_id': new ObjectID(organisationId)}, (err: MongoError, result) => {
+            db.collection('organisations').deleteOne({'_id': new ObjectID(organisationId)}, (err: MongoError, result: DeleteWriteOpResultObject) => {
                 db.close();
 
                 callback(result.deletedCount == 1);
@@ -61,7 +61,7 @@ export class OrganisationDao {
 
     deleteMemberFromOrganisationById(memberId: string, organisationId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$pull: {'_memberIds': memberId}}, (error: MongoError, result) => {
+            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$pull: {'_memberIds': memberId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
                 callback(result.modifiedCount == 1);
@@ -71,7 +71,7 @@ export class OrganisationDao {
 
     addGroupIdToOrganisationById(groupId: string, organisationId: string, callback: (added: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_groupIds': groupId}}, (error: MongoError, result) => {
+            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_groupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
                 callback(result.modifiedCount == 1);
@@ -99,11 +99,13 @@ export class OrganisationDao {
         });
     }
 
-    getAllOrganisationIdsOfUserById(userId:string, callback:(organisationIds:string[])=> any) {
+    getAllOrganisationIdsOfUserById(userId: string, callback: (organisationIds: string[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').find({'$or': [{'_organisatorIds': {'$in': [userId]}}, {'_memberIds': {'$in': [userId]}}]}).project({'_id': 1}).toArray((err: MongoError, docs: Organisation[]) => {
-                var ids:string[] = docs.map( o => o._id.toString());
+                var ids: string[] = docs.map( o => o._id.toString());
+
                 db.close();
+
                 callback(ids);
             });
         });

@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -27,6 +28,10 @@ var CircleSessionCardDetail = (function () {
     };
     __decorate([
         core_1.Input(), 
+        __metadata('design:type', Boolean)
+    ], CircleSessionCardDetail.prototype, "canPlay", void 0);
+    __decorate([
+        core_1.Input(), 
         __metadata('design:type', card_1.Card)
     ], CircleSessionCardDetail.prototype, "card", void 0);
     __decorate([
@@ -44,12 +49,12 @@ var CircleSessionCardDetail = (function () {
     CircleSessionCardDetail = __decorate([
         core_1.Component({
             selector: 'circlesession-carddetail',
-            template: "\n        <div class=\"col s3\">\n      <div class=\"card hoverable thCard\" [attr.title]=\"card._name\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n        <div class=\"card-content valign-wrapper\">\n            <a class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\" (click)=\"clickButton()\"><i class=\"material-icons\">arrow_upward</i></a>\n            <span class=\"valign center-block center-align\">{{card._name}}</span>\n        </div>\n      </div>\n      </div>\n\n    ",
+            template: "\n      <div class=\"col s3\">\n          <div class=\"card hoverable thCard\" [attr.title]=\"card._name\" (mouseenter)=\"onMouseEnter()\" (mouseleave)=\"onMouseLeave()\">\n            <div class=\"card-content valign-wrapper\">\n                <a *ngIf=\"canPlay\" class=\"btn-floating btn waves-effect waves-light\" [style.background]=\"color\" (click)=\"clickButton()\"><i class=\"material-icons\">arrow_upward</i></a>\n                <span class=\"valign center-block center-align\">{{card._name}}</span>\n            </div>\n          </div>\n      </div>\n\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])
     ], CircleSessionCardDetail);
     return CircleSessionCardDetail;
-})();
+}());
 exports.CircleSessionCardDetail = CircleSessionCardDetail;
 //# sourceMappingURL=circleSessionCardDetail.js.map

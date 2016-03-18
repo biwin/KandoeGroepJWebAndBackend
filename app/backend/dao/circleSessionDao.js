@@ -1,3 +1,4 @@
+"use strict";
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
@@ -183,7 +184,14 @@ var CircleSessionDao = (function () {
             });
         });
     };
+    CircleSessionDao.prototype.updateRounds = function (circleSessionId, newRoundsLeft, gameStopped, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: { _endPoint: newRoundsLeft, _isStopped: gameStopped } }, function (err, res) {
+                callback();
+            });
+        });
+    };
     return CircleSessionDao;
-})();
+}());
 exports.CircleSessionDao = CircleSessionDao;
 //# sourceMappingURL=circleSessionDao.js.map

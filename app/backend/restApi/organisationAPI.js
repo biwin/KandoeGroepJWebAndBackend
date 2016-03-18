@@ -1,3 +1,4 @@
+"use strict";
 var groupAPI_1 = require("./groupAPI");
 var userApi_1 = require("./userApi");
 var themeApi_1 = require("./themeApi");
@@ -5,50 +6,109 @@ var organisationManager_1 = require("../logic/organisationManager");
 var OrganisationAPI = (function () {
     function OrganisationAPI() {
     }
-    OrganisationAPI.create = function (organisation, res) {
-        this.mgr.createOrganisation(organisation, function (o) {
-            res.send(o);
+    OrganisationAPI.create = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisation = req.body;
+                organisation._organisatorIds = [currentUserId];
+                OrganisationAPI.mgr.createOrganisation(req.body, function (o) {
+                    res.send(o);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
-    OrganisationAPI.find = function (organisationId, res) {
-        this.mgr.getOrganisationById(organisationId, function (organisation) {
-            res.send(organisation);
+    OrganisationAPI.find = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.getOrganisationById(organisationId, function (organisation) {
+                    res.send(organisation);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
-    OrganisationAPI.getAdmins = function (organisationId, res) {
-        userApi_1.UserApi.getAdminsOfOrganisationById(organisationId, res);
-    };
-    OrganisationAPI.getGroups = function (organisationId, res) {
-        groupAPI_1.GroupAPI.getGroupsOfOrganisationById(organisationId, res);
-    };
-    OrganisationAPI.getMembers = function (organisationId, res) {
-        userApi_1.UserApi.getMembersOfOrganisationById(organisationId, res);
-    };
-    OrganisationAPI.getThemes = function (organisationId, res) {
-        themeApi_1.ThemeApi.getThemesOfOrganisationById(organisationId, res);
-    };
-    OrganisationAPI.deleteMemberById = function (organisationId, memberId, res) {
-        this.mgr.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {
-            res.send(deleted);
+    OrganisationAPI.delete = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.removeOrganisationById(organisationId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
-    OrganisationAPI.getOrganisationOfGroupById = function (groupId, res) {
-        this.mgr.getOrganisationOfGroupById(groupId, function (organisation) {
-            res.send(organisation);
+    OrganisationAPI.getAdmins = function (req, res) {
+        userApi_1.UserApi.getAdminsOfOrganisationById(req, res);
+    };
+    OrganisationAPI.getGroups = function (req, res) {
+        groupAPI_1.GroupAPI.getGroupsOfOrganisationById(req, res);
+    };
+    OrganisationAPI.getMembers = function (req, res) {
+        userApi_1.UserApi.getMembersOfOrganisationById(req, res);
+    };
+    OrganisationAPI.getThemes = function (req, res) {
+        themeApi_1.ThemeApi.getThemesOfOrganisationById(req, res);
+    };
+    OrganisationAPI.deleteMemberById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var memberId = req.params.memberId;
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.deleteMemberFromOrganisationById(memberId, organisationId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
+    OrganisationAPI.getOrganisationOfGroupById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var groupId = req.params.id;
+                OrganisationAPI.mgr.getOrganisationOfGroupById(groupId, function (organisation) {
+                    res.send(organisation);
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
         });
     };
     OrganisationAPI.getAllOrganisationsOfCurrentUser = function (req, res) {
-        var _this = this;
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
-                _this.mgr.getAllOrganisationsOfUserById(currentUserId, function (organisations) {
+                OrganisationAPI.mgr.getAllOrganisationsOfUserById(currentUserId, function (organisations) {
                     res.send(organisations);
                 });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
             }
         });
     };
     OrganisationAPI.mgr = new organisationManager_1.OrganisationManager();
     return OrganisationAPI;
-})();
+}());
 exports.OrganisationAPI = OrganisationAPI;
 //# sourceMappingURL=organisationAPI.js.map

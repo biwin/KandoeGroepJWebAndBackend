@@ -1,5 +1,6 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -14,6 +15,7 @@ var router_1 = require("angular2/router");
 var common_1 = require("angular2/common");
 var themeCard_1 = require("./themeCard");
 var themeService_1 = require("../../services/themeService");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var ThemeOverview = (function () {
     function ThemeOverview(service) {
         var _this = this;
@@ -56,12 +58,12 @@ var ThemeOverview = (function () {
     ThemeOverview = __decorate([
         core_1.Component({
             selector: 'theme-overview',
-            template: "\n        <div class=\"container\">\n            <div class=\"modal\" id=\"mDelTheme\">\n                <div class=\"modal-content\">\n                    <h4>Thema verwijderen?</h4>\n                    <p>Bent u zeker dat u dit thema en alle bijhorende kaarten wilt verwijderen?</p>\n                </div>\n                <div class=\"modal-footer\">\n                    <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                    <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n                </div>\n            </div>\n\n            <h5>Mijn thema's</h5>\n            <div>\n                <a [routerLink]=\"['CreateTheme']\" class=\"btn-floating waves-effect waves-light red\" title=\"Cre\u00EBer thema\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n\n            <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"row\">\n                <theme-card *ngFor=\"#theme of themes\" [theme]=\"theme\" (onDelete)=\"deleteTheme($event)\">\n                </theme-card>\n            </div>\n        </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, themeCard_1.ThemeCard]
+            template: "\n        <div class=\"container\">\n            <div class=\"modal\" id=\"mDelTheme\">\n                <div class=\"modal-content\">\n                    <h4>Thema verwijderen?</h4>\n                    <p>Bent u zeker dat u dit thema en alle bijhorende kaarten wilt verwijderen?</p>\n                </div>\n                <div class=\"modal-footer\">\n                    <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                    <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n                </div>\n            </div>\n\n            <h5>Mijn thema's</h5>\n            <div>\n                <a [routerLink]=\"['CreateTheme']\" class=\"btn-floating waves-effect waves-light red\" title=\"Cre\u00EBer thema\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n\n            <loading *ngIf=\"loading\"></loading>\n\n             <p *ngIf=\"!loading && themes.length==0\">Je hebt nog geen thema's.</p>\n\n            <div class=\"row\">\n                <theme-card *ngFor=\"#theme of themes\" [theme]=\"theme\" (onDelete)=\"deleteTheme($event)\">\n                </theme-card>\n            </div>\n        </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, router_1.ROUTER_DIRECTIVES, themeCard_1.ThemeCard, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [themeService_1.ThemeService])
     ], ThemeOverview);
     return ThemeOverview;
-})();
+}());
 exports.ThemeOverview = ThemeOverview;
 //# sourceMappingURL=themeOverview.js.map

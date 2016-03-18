@@ -1,3 +1,4 @@
+"use strict";
 var DaoConstants = (function () {
     function DaoConstants() {
     }
@@ -9,6 +10,6 @@ var DaoConstants = (function () {
         configurable: true
     });
     return DaoConstants;
-})();
+}());
 exports.DaoConstants = DaoConstants;
 //# sourceMappingURL=daoConstants.js.map

@@ -1,15 +1,12 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
-import {MongoClient} from "mongodb";
+
+import {MongoClient, Db, MongoError, ObjectID, CursorResult, UpdateWriteOpResult} from "mongodb";
+
 import {DaoConstants} from "./daoConstants";
+
 import {User} from "../model/user";
-import {MongoCallback} from "mongodb";
-import {Db} from "mongodb";
-import {CursorResult} from "mongodb";
-import {Organisation} from "../model/organisation";
-import {ObjectID} from "mongodb";
 import {Group} from "../model/group";
-import {MongoError} from "mongodb";
-import {Collection} from "mongodb";
+import {Organisation} from "../model/organisation";
 
 export class UserDao {
     private client: MongoClient;
@@ -274,17 +271,19 @@ export class UserDao {
 
     addGroupToOrganisation(gId: string, oId: string, callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groupIds': gId}}, () => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groupIds': gId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
-                callback();
+
+                callback(result.modifiedCount == 1);
             });
         });
     }
 
     addOrganisatorToOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_organisators': uId}}, (err: MongoError, result) => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_organisators': uId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
+
                 callback(result.modifiedCount == 1);
             });
         });
@@ -292,7 +291,7 @@ export class UserDao {
 
     addMemberToOrganisation(oId: string, uId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_memberIds': uId}}, (err: MongoError, result) => {
+            db.collection('organisations').updateOne({'_id': oId}, {$push: {'_memberIds': uId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
@@ -301,7 +300,7 @@ export class UserDao {
 
     setUserOrganisatorOf(uId:string, oId:string, callback:(b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_id': uId}, {$push: {'_organisatorOf': oId}}, (err: MongoError, result) => {
+            db.collection('users').updateOne({'_id': uId}, {$push: {'_organisatorOf': oId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
@@ -310,7 +309,7 @@ export class UserDao {
 
     changeProfileByEmail(email: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result) => {
+            db.collection('users').updateOne({'_email': email}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
                 callback(result.modifiedCount >= 1);
             });
@@ -319,16 +318,16 @@ export class UserDao {
 
     changeProfileByFacebookId(facebookId: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result) => {
+            db.collection('users').updateOne({'_facebookId': facebookId}, {$set: {'_name': newName, '_pictureSmall': newSmallPicture, '_pictureLarge': newLargePicture}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
                 callback(result.modifiedCount >= 1);
             });
         });
     }
 
-    readUsers(ids:ObjectID[], callback:(us:User[])=>any) {
-        this.client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('users').find({'_id': {'$in': ids}}).toArray((err:MongoError, result:User[]) => {
+    readUsers(ids: ObjectID[], callback:(us: User[]) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').find({'_id': {'$in': ids}}).toArray((err: MongoError, result: User[]) => {
                 db.close();
                 callback(result);
             });
@@ -361,7 +360,7 @@ export class UserDao {
 
     addGroupIdToUserById(groupId: string, userId: string, callback: (added: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOfGroupIds': groupId}}, (error: MongoError, result) => {
+            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOfGroupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
                 callback(result.modifiedCount == 1);
@@ -372,13 +371,13 @@ export class UserDao {
     addOrganisationIdToUserById(groupId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             if(isOrganisator) {
-                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_organisatorOf': groupId}}, (error: MongoError, result) => {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_organisatorOf': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                     db.close();
 
                     callback(result.modifiedCount == 1);
                 });
             } else {
-                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOf': groupId}}, (error: MongoError, result) => {
+                db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$push: {'_memberOf': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                     db.close();
 
                     callback(result.modifiedCount == 1);
@@ -389,7 +388,7 @@ export class UserDao {
 
     deleteOrganisationFromUserById(organisationId: string, userId: string, callback: (deleted: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$pull: {'_memberOf': organisationId}}, (error: MongoError, result) => {
+            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$pull: {'_organisatorOf': organisationId, '_memberOf': organisationId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
                 callback(result.modifiedCount == 1);

@@ -29,7 +29,7 @@ import {ChatComponent} from "./chat/chatComponent";
     selector: 'my-app',
     template: `
     <navigation-bar></navigation-bar>
-    <div class="content">
+    <div class="content" [class.no-padding-left]="!service.isLoggedIn()">
         <router-outlet></router-outlet>
     </div>
     `,
@@ -37,7 +37,7 @@ import {ChatComponent} from "./chat/chatComponent";
 })
 
 @RouteConfig([
-    {path: '/hello', as: 'Home', component: HomePage},
+    {path: '/', as: 'Home', component: HomePage},
 
     {path: '/themes', as: 'ThemeOverview', component: ThemeOverview},
     {path: '/createTheme', as: 'CreateTheme', component: ThemeForm},
@@ -54,17 +54,17 @@ import {ChatComponent} from "./chat/chatComponent";
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
 
     {path: '/loginUser', as: 'UserLogin', component: UserLogin},
-    {path: '/profile', as: 'Profile', component: Profile},
-
-    {path: '/chat', as: 'Chatbox', component: ChatComponent}
+    {path: '/profile', as: 'Profile', component: Profile}
 ])
 
 export class AppComponent {
+    private service:UserService;
 
     constructor(private router: Router, userService: UserService) {
+        this.service = userService;
         this.router.subscribe((url) => {
-            if (!userService.isLoggedIn() && (url != 'hello' && url != 'loginUser')) {
-                this.router.navigate(['Home']);
+            if (!userService.isLoggedIn() && url != 'loginUser') {
+                this.router.navigate(['UserLogin']);
             }
         });
     }

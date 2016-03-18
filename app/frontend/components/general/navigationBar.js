@@ -1,4 +1,5 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -48,12 +49,12 @@ var NavigationBar = (function () {
     NavigationBar = __decorate([
         core_1.Component({
             selector: 'navigation-bar',
-            template: "\n    <nav class=\"blue\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" [routerLink]=\"['Home']\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li>\n                    <a [routerLink]=\"service.isLoggedIn() ? ['Profile'] : ['UserLogin']\">\n                            <i *ngIf=\"imageSource == null || imageSource == ''\" style=\"display: inline; vertical-align: middle;\" class=\"material-icons\">face</i>\n                            <img *ngIf=\"imageSource != null && imageSource != ''\" style=\"display: inline; vertical-align: middle; max-width: 50px; max-height: 50px;\" src=\"{{imageSource}}\"/>\n                            <p style=\"display: inline;\">{{usernameString}}</p>\n                    </a>\n                </li>\n            </ul>\n            <ul *ngIf=\"service.isLoggedIn()\" id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Mijn thema's</a></li>\n                <li><a [routerLink]=\"['CircleSessionOverview']\">Mijn spellen</a></li>\n                <li><a [routerLink]=\"['OrganisationsOverview']\">Mijn organisaties</a></li>\n            </ul>\n            <a href=\"#\" id=\"main-nav-toggle\" data-activates=\"slide-out\" class=\"button-collapse\">\n                <i class=\"material-icons\">menu</i>\n            </a>\n       </div>\n    </nav>\n  ",
+            template: "\n    <nav class=\"blue\" [class.no-padding-left]=\"!service.isLoggedIn()\" role=\"navigation\">\n       <div class=\"nav-wrapper container\">\n        <a id=\"logo-container\" [routerLink]=\"['Home']\" class=\"brand-logo\">KanDoe</a>\n            <ul class=\"right\">\n                <li>\n                    <a [routerLink]=\"service.isLoggedIn() ? ['Profile'] : ['UserLogin']\">\n                            <i *ngIf=\"imageSource == null || imageSource == ''\" style=\"display: inline; vertical-align: middle;\" class=\"material-icons\">face</i>\n                            <img *ngIf=\"imageSource != null && imageSource != ''\" style=\"display: inline; vertical-align: middle; max-width: 50px; max-height: 50px;\" src=\"{{imageSource}}\"/>\n                            <p style=\"display: inline;\">{{usernameString}}</p>\n                    </a>\n                </li>\n            </ul>\n            <ul *ngIf=\"service.isLoggedIn()\" id=\"slide-out\" class=\"side-nav fixed\">\n                <li><a [routerLink]=\"['ThemeOverview']\">Mijn thema's</a></li>\n                <li><a [routerLink]=\"['CircleSessionOverview']\">Mijn spellen</a></li>\n                <li><a [routerLink]=\"['OrganisationsOverview']\">Mijn organisaties</a></li>\n            </ul>\n            <a href=\"#\" id=\"main-nav-toggle\" data-activates=\"slide-out\" class=\"button-collapse\">\n                <i class=\"material-icons\">menu</i>\n            </a>\n       </div>\n    </nav>\n  ",
             directives: [router_1.ROUTER_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [userService_1.UserService])
     ], NavigationBar);
     return NavigationBar;
-})();
+}());
 exports.NavigationBar = NavigationBar;
 //# sourceMappingURL=navigationBar.js.map

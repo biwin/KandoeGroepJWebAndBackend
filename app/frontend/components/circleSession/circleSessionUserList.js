@@ -1,4 +1,5 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -41,12 +42,12 @@ var CircleSessionUserList = (function () {
     CircleSessionUserList = __decorate([
         core_1.Component({
             selector: 'user-list',
-            template: "\n    <div class=\"side-nav fixed right-aligned\" id=\"user-sidenav\">\n        <ul id=\"user-list\" class=\"collection with-header\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === myUserId\" [class.lighten-5]=\"user._id === myUserId\">\n                <div class=\"col s4\">\n                    <img *ngIf=\"user._pictureSmall !== undefined\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                    <i *ngIf=\"user._pictureSmall === undefined\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"fa fa-gamepad green-text\"></i>\n                </div>\n            </li>\n        </ul>\n        <chatbox [sessionId]=\"circleSessionId\" [userId]=\"myUserId\"></chatbox>\n     </div>\n  ",
+            template: "\n    <div class=\"side-nav fixed right-aligned\" id=\"user-sidenav\">\n        <ul id=\"user-list\" class=\"collection with-header\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === myUserId\" [class.lighten-5]=\"user._id === myUserId\">\n                <div class=\"col s4\">\n                    <img *ngIf=\"user._pictureSmall !== undefined\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                    <i *ngIf=\"user._pictureSmall === undefined\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"fa fa-gamepad fa-lg green-text\"></i>\n                </div>\n            </li>\n        </ul>\n        <chatbox [sessionId]=\"circleSessionId\" [userId]=\"myUserId\"></chatbox>\n     </div>\n  ",
             directives: [router_1.ROUTER_DIRECTIVES, chatComponent_1.ChatComponent]
         }), 
         __metadata('design:paramtypes', [userService_1.UserService])
     ], CircleSessionUserList);
     return CircleSessionUserList;
-})();
+}());
 exports.CircleSessionUserList = CircleSessionUserList;
 //# sourceMappingURL=circleSessionUserList.js.map

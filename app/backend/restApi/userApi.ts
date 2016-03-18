@@ -142,21 +142,45 @@ export class UserApi {
         OrganisationAPI.getAllOrganisationsOfCurrentUser(req, res);
     }
 
-    public static getAdminsOfOrganisationById(organisationId: string, res:Response) {
-        this.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
-            res.send(admins);
+    public static getAdminsOfOrganisationById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                UserApi.manager.getAdminsOfOrganisationById(organisationId, (admins: User[]) => {
+                    res.send(admins);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
-    public static getMembersOfOrganisationById(organisationId: string, res:Response) {
-        this.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
-            res.send(members);
+    public static getMembersOfOrganisationById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+
+                UserApi.manager.getMembersOfOrganisationById(organisationId, (members: User[]) => {
+                    res.send(members);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 
-    public static getMembersOfGroupById(groupId: string, res:Response) {
-        this.manager.getMembersOfGroupById(groupId, (members: User[]) => {
-            res.send(members);
+    public static getMembersOfGroupById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                UserApi.manager.getMembersOfGroupById(groupId, (members: User[]) => {
+                    res.send(members);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
         });
     }
 }

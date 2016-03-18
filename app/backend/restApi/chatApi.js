@@ -1,3 +1,4 @@
+"use strict";
 var chatManager_1 = require("../logic/chatManager");
 var ChatApi = (function () {
     function ChatApi() {
@@ -14,6 +15,6 @@ var ChatApi = (function () {
     };
     ChatApi.mgr = new chatManager_1.ChatManager();
     return ChatApi;
-})();
+}());
 exports.ChatApi = ChatApi;
 //# sourceMappingURL=chatApi.js.map

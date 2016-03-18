@@ -94,8 +94,8 @@ export class CircleSessionManager {
                         callback(c._currentPlayerId, null, "Not your turn!");
                     } else {
                         if(c._isStopped) {
-                            callback(userId, null, "Game is over")
-                        }else {
+                            callback(userId, null, "Game is over");
+                        } else {
                             this._dao.getCardPosition(sessionId, cardId, (c:CardPosition) => {
                                 var newPosition:number = c._position + 1;
                                 if (newPosition > 5) {
@@ -252,7 +252,16 @@ export class CircleSessionManager {
 
             this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, (success:boolean) => {
                 if (success) {
-                    callback(roundEnded, newPlayerId);
+                    if(c._endPoint != null && roundEnded && !c._isPreGame) {
+                        var newRoundsLeft:number = c._endPoint - 1;
+                        var gameStopped:boolean = newRoundsLeft <= 0;
+
+                        this._dao.updateRounds(circleSessionId, newRoundsLeft, gameStopped, () => {
+                            callback(roundEnded, newPlayerId);
+                        });
+                    } else {
+                        callback(roundEnded, newPlayerId);
+                    }
                 } else {
                     callback(null, null);
                 }
