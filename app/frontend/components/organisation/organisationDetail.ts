@@ -41,6 +41,18 @@ import {Theme} from "../../../backend/model/theme";
             <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteUsr = true">Ja, verwijder</a>
         </div>
     </div>
+    <div class="modal" id="deleteThemeModal">
+        <div class="modal-content">
+            <h4 class="red-text">{{themeToDelete._name}} verwijderen?</h4>
+            <p>U staat op het punt {{themeToDelete._name}} uit {{organisation._name}} te verwijderen.<br />
+                Bent u zeker dat u dit thema uit deze  organisatie wil verwijderen?"</p>
+        </div>
+
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteThm = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteThm = true">Ja, verwijder</a>
+        </div>
+    </div>
 
     <loading *ngIf="loading"></loading>
     
@@ -85,7 +97,7 @@ import {Theme} from "../../../backend/model/theme";
                 </thead>
 
                 <tr *ngFor="#group of groups" class="clickable">
-                    <td><i *ngIf="isAdmin(group)" (click)="deleteGroup(group)" class="material-icons red-text" title="Verwijder {{group._name}}">delete_forever</i></td>
+                    <td><i *ngIf="isAdmin()" (click)="deleteGroup(group)" class="material-icons red-text" title="Verwijder {{group._name}}">delete_forever</i></td>
                     <td (click)="viewGroup(group._id)">{{group._name}}</td>
                     <td (click)="viewGroup(group._id)">{{group._memberIds.length}}</td>
                     <td (click)="viewGroup(group._id)">{{group._description}}</td>
@@ -172,12 +184,14 @@ import {Theme} from "../../../backend/model/theme";
             <table class="striped" *ngIf="themes.length!=0">
                 <thead>
                     <tr>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="description">Beschrijving</th>
                     </tr>
                 </thead>
 
                 <tr *ngFor="#theme of themes" class="clickable">
+                    <td><i *ngIf="isAdmin()" (click)="deleteTheme(theme)" class="material-icons red-text" title="Verwijder {{theme._name}}">delete_forever</i></td>
                     <td>{{theme._name}}</td>
                     <td>{{theme._description}}</td>
                 </tr>
@@ -212,6 +226,8 @@ export class OrganisationDetail {
     private contentText: string;
     private isLastAdmin: boolean = false;
     private doDeleteUsr: boolean = false;
+    private themeToDelete: Theme = Theme.empty();
+    private doDeleteThm: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService, userService: UserService) {
         var organisationId: string = routeParam.params["id"];
@@ -364,5 +380,32 @@ export class OrganisationDetail {
     //TODO: styling van addTheme button
     private addTheme(): void {
         this.router.navigate(["/CreateTheme", {organisationId: this.organisation._id}]);
+    }
+
+    private deleteTheme(theme: Theme): void {
+        this.themeToDelete = theme;
+
+        $('#deleteThemeModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteTheme();
+            }
+        });
+    }
+
+    private doDeleteTheme(): void {
+        if(this.doDeleteThm) {
+            this.organisationService.deleteThemeFromOrganisationById(this.themeToDelete._id, this.organisation._id).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteThemeFromArray(this.themeToDelete._id);
+                }
+            });
+        }
+    }
+
+    private deleteThemeFromArray(themeId: string): void {
+        var index = this.themes.findIndex((theme: Theme) => theme._id == themeId);
+
+        this.themes.splice(index, 1);
     }
 }
