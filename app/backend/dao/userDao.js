@@ -314,7 +314,7 @@ var UserDao = (function () {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').updateMany({ '_memberOfGroupIds': { '$in': [groupId] } }, { $pull: { '_memberOfGroupIds': groupId } }, function (error, result) {
                 db.close();
-                callback(result.modifiedCount >= 1);
+                callback(result.modifiedCount == result.matchedCount);
             });
         });
     };

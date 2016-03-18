@@ -373,7 +373,7 @@ export class UserDao {
             db.collection('users').updateMany({'_memberOfGroupIds': {'$in': [groupId]}}, {$pull: {'_memberOfGroupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
-                callback(result.modifiedCount >= 1);
+                callback(result.modifiedCount == result.matchedCount);
             });
         });
     }
