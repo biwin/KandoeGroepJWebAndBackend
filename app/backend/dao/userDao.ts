@@ -269,7 +269,7 @@ export class UserDao {
         });
     }
 
-    addGroupToOrganisation(gId: string, oId: string, callback: () => any) {
+    addGroupToOrganisation(gId: string, oId: string, callback: (b: boolean) => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').updateOne({'_id': oId}, {$push: {'_groupIds': gId}}, (err: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
@@ -364,6 +364,28 @@ export class UserDao {
                 db.close();
 
                 callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    removeAllMembersFromGroupById(groupId: string, callback: (removed: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateMany({'_memberOfGroupIds': {'$in': [groupId]}}, {$pull: {'_memberOfGroupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    }
+
+    removeAllUsersFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateMany({'_organisatorOf': {'$in': [organisationId]}}, {$pull: {'_organisatorOf': organisationId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.collection('users').updateMany({'_memberOf': {'$in': [organisationId]}}, {$pull: {'_memberOf': organisationId}}, (error2: MongoError, result2: UpdateWriteOpResult) => {
+                    db.close();
+
+                    callback(result.modifiedCount == result.matchedCount && result2.modifiedCount == result2.matchedCount);
+                });
             });
         });
     }

@@ -1,4 +1,7 @@
-import {Component, Inject} from "angular2/core";
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
+import {Component} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 

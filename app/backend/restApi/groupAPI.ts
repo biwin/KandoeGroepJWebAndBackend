@@ -16,7 +16,7 @@ export class GroupAPI {
                 var group: Group = req.body;
                 group._memberIds = [currentUserId];
 
-                GroupAPI.mgr.createGroup(req.body, (g: Group) => {
+                GroupAPI.mgr.createGroup(group, (g: Group) => {
                     res.send(g);
                 });
             } else {
@@ -32,6 +32,24 @@ export class GroupAPI {
 
                 GroupAPI.mgr.getGroupById(groupId, (group: Group) => {
                     res.send(group);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
+    public static delete(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                GroupAPI.mgr.removeGroupById(groupId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Group not found");
+                    }
                 });
             } else {
                 res.status(401).send({error: 'Unauthorized'});

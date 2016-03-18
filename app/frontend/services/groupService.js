@@ -25,6 +25,9 @@ var GroupService = (function () {
     GroupService.prototype.getGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId, false, true, true);
     };
+    GroupService.prototype.deleteGroupById = function (organisationId) {
+        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
+    };
     GroupService.prototype.getMembersOfGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     };

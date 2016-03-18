@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 

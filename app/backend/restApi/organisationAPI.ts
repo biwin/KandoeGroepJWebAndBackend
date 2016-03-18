@@ -2,7 +2,6 @@ import {Request, Response} from "express";
 
 import {GroupAPI} from "./groupAPI";
 import {UserApi} from "./userApi";
-
 import {ThemeApi} from "./themeApi";
 
 import {OrganisationManager} from "../logic/organisationManager";
@@ -82,6 +81,31 @@ export class OrganisationAPI {
                 var organisationId: string = req.params.id;
 
                 OrganisationAPI.mgr.deleteMemberFromOrganisationById(memberId, organisationId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
+    public static deleteGroupById(req: Request, res: Response) {
+        req.params.id = req.params.groupId;
+        
+        GroupAPI.delete(req, res);
+    }
+
+    public static deleteThemeById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var themeId: string = req.params.themeId;
+                var organisationId: string = req.params.id;
+
+                OrganisationAPI.mgr.deleteThemeFromOrganisationById(themeId, organisationId, (deleted: boolean) => {
                     if(deleted) {
                         res.send(deleted);
                     } else {

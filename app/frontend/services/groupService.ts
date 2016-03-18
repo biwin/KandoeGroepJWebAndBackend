@@ -25,6 +25,10 @@ export class GroupService {
         return this.http.get(this.path + "groups/" + groupId, false, true, true);
     }
 
+    deleteGroupById(organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
+    }
+
     getMembersOfGroupById(groupId: string): Observable<User[]> {
         return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     }

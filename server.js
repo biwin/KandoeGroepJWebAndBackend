@@ -69,13 +69,16 @@ app.post("/api/organisations", OrganisationAPI.OrganisationAPI.create);
 app.delete("/api/organisations/:id", OrganisationAPI.OrganisationAPI.delete);
 app.get("/api/organisations/:id/admins", OrganisationAPI.OrganisationAPI.getAdmins);
 app.get("/api/organisations/:id/groups", OrganisationAPI.OrganisationAPI.getGroups);
+app.delete("/api/organisations/:id/groups/:groupId", OrganisationAPI.OrganisationAPI.deleteGroupById);
 app.get("/api/organisations/:id/members", OrganisationAPI.OrganisationAPI.getMembers);
 app.delete("/api/organisations/:id/members/:memberId", OrganisationAPI.OrganisationAPI.deleteMemberById);
 app.get("/api/organisations/:id/themes", OrganisationAPI.OrganisationAPI.getThemes);
+app.delete("/api/organisations/:id/themes/:themeId", OrganisationAPI.OrganisationAPI.deleteThemeById);
 //endregion
 
 //region group routes
 app.get("/api/groups/:id", GroupAPI.GroupAPI.find);
+app.delete("/api/groups/:id", GroupAPI.GroupAPI.delete);
 app.post("/api/groups", GroupAPI.GroupAPI.create);
 app.get("/api/groups/:id/members", GroupAPI.GroupAPI.getMembers);
 app.get("/api/groups/:id/organisation", GroupAPI.GroupAPI.getOrganisation);

@@ -86,7 +86,7 @@ export class UserService {
     }
 
     getAllGroupsOfUser(userId: string): Observable<Group> {
-        return this.http.get(this.path + 'user/' + userId +'/groups', false, true, false);
+        return this.http.get(this.path + 'user/' + userId +'/groups', false, true, true);
     }
 
     getCircleSessionsOfCurrentUser(): Observable<CircleSession[]> {

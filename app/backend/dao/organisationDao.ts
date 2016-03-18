@@ -69,6 +69,16 @@ export class OrganisationDao {
         });
     }
 
+    deleteGroupIdFromOrganisation(groupId: string, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_groupIds': {'$in': [groupId]}}, {$pull: {'_groupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == result.matchedCount && result.matchedCount == 1);
+            });
+        });
+    }
+
     addGroupIdToOrganisationById(groupId: string, organisationId: string, callback: (added: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_groupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {

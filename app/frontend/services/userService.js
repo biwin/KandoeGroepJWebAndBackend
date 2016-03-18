@@ -79,7 +79,7 @@ var UserService = (function () {
         });
     };
     UserService.prototype.getAllGroupsOfUser = function (userId) {
-        return this.http.get(this.path + 'user/' + userId + '/groups', false, true, false);
+        return this.http.get(this.path + 'user/' + userId + '/groups', false, true, true);
     };
     UserService.prototype.getCircleSessionsOfCurrentUser = function () {
         return this.http.get(this.path + 'user/circlesessions', false, true, true);
