@@ -17,7 +17,7 @@ import {CircleSessionCard} from "./circleSessionCard";
     <div class="container">
             <div class="modal" id="mDelCircleSession">
                 <div class="modal-content">
-                    <h4>Spel verwijderen?</h4>
+                    <h4 class="red-text">Spel verwijderen?</h4>
                     <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>
                 </div>
                 <div class="modal-footer">
@@ -55,7 +55,8 @@ import {CircleSessionCard} from "./circleSessionCard";
 
      </div>
 
-     <p *ngIf="!loading && circleSessions.length == 0">Je doet nog niet mee aan een spel.</p>
+     <div *ngIf="!loading && circleSessions.length == 0" class="card"><div class="card-content"><p>Je doet nog niet mee aan een spel.</p></div></div>
+     
     </div>
     `,
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES, CircleSessionCard]

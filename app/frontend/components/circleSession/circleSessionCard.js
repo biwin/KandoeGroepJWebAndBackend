@@ -34,13 +34,24 @@ var CircleSessionCard = (function () {
         this.router.navigate(['/CircleSessionGame', { id: this.circleSession._id }]);
     };
     CircleSessionCard.prototype.makeSnapshot = function () {
+        var _this = this;
         this.snapshotService.createSnapshot(this.circleSession._id).subscribe(function (snapshot) {
             if (snapshot != null) {
                 Materialize.toast('Snapshot aangemaakt', 3000, 'rounded');
+                _this.router.navigate(['/Home']);
             }
             else {
                 Materialize.toast('Snapshot maken mislukt', 3000, 'rounded');
             }
+        });
+    };
+    CircleSessionCard.prototype.stopGame = function () {
+        var _this = this;
+        this.circleService.stopGame(this.circleSession._id).subscribe(function (a) {
+            _this.circleSession._isStopped = a._isStopped;
+            _this.router.navigate(['/Home']);
+        }, function (r) {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
         });
     };
     CircleSessionCard.prototype.addUser = function () {
@@ -69,14 +80,6 @@ var CircleSessionCard = (function () {
     };
     CircleSessionCard.prototype.ngAfterViewInit = function () {
         $('.tooltipped').tooltip({ delay: 50 });
-    };
-    CircleSessionCard.prototype.stopGame = function () {
-        var _this = this;
-        this.circleService.stopGame(this.circleSession._id).subscribe(function (a) {
-            _this.circleSession._isStopped = a._isStopped;
-        }, function (r) {
-            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
-        });
     };
     __decorate([
         core_1.Input(), 

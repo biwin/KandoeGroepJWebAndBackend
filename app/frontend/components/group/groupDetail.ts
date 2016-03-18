@@ -23,7 +23,7 @@ import {Organisation} from "../../../backend/model/organisation";
 
         <div class="modal-footer">
             <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteGrp = false">Nee, ga terug</a>
-            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteGrp = true">Ja, verwijder</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doDeleteGrp = true">Ja, verwijder</a>
         </div>
     </div>
     

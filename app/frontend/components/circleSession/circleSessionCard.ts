@@ -88,9 +88,19 @@ export class CircleSessionCard implements OnInit, AfterViewInit {
         this.snapshotService.createSnapshot(this.circleSession._id).subscribe((snapshot:Snapshot) => {
             if(snapshot != null){
                 Materialize.toast('Snapshot aangemaakt', 3000, 'rounded');
+                this.router.navigate(['/Home']);
             } else {
                 Materialize.toast('Snapshot maken mislukt', 3000, 'rounded');
             }
+        });
+    }
+
+    stopGame() {
+        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
+            this.circleSession._isStopped = a._isStopped;
+            this.router.navigate(['/Home']);
+        }, (r: Response) => {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
         });
     }
 
@@ -120,14 +130,6 @@ export class CircleSessionCard implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         $('.tooltipped').tooltip({delay: 50});
-    }
-
-    stopGame() {
-        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
-            this.circleSession._isStopped = a._isStopped;
-        }, (r: Response) => {
-            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
-        });
     }
 }
 

@@ -47,7 +47,7 @@ var UserLogin = (function () {
     };
     UserLogin.prototype.setLoggedIn = function (token) {
         localStorage.setItem('token', token);
-        this.router.navigate(['Profile']);
+        this.router.navigate(['Home']);
         this.service.notifyLoggedIn();
     };
     UserLogin.prototype.onLoginSubmit = function () {

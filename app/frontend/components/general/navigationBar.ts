@@ -21,8 +21,9 @@ import {Response} from "angular2/http";
                 </li>
             </ul>
             <ul *ngIf="service.isLoggedIn()" id="slide-out" class="side-nav fixed">
-                <li><a [routerLink]="['ThemeOverview']">Mijn thema's</a></li>
+            <li><a [routerLink]="['Home']">Mijn dashboard</a></li>
                 <li><a [routerLink]="['CircleSessionOverview']">Mijn spellen</a></li>
+                <li><a [routerLink]="['ThemeOverview']">Mijn thema's</a></li>
                 <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
             </ul>
             <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse">
