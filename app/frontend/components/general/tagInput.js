@@ -1,8 +1,8 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
@@ -43,7 +43,7 @@ var TagInput = (function () {
     TagInput = __decorate([
         core_1.Component({
             selector: 'tags',
-            template: "\n        <div class=\"input-field col s12\">\n        <div style=\"float:left\">\n          <div class=\"chip\" style=\"position:relative; top:10px;\" *ngFor=\"#tag of tagArray #i = index\">\n            {{tag}}\n             <i class=\"material-icons\" (click)=\"remove(i)\">close</i>\n          </div>\n          </div>\n\n          <span style=\"overflow:hidden; padding-right:5px; display:block;\">\n            <input #txt (keyup)=\"typing($event)\" id=\"tagInput\" type=\"text\" value=\"{{tagArray.length > 0 ? ' ' : ''}}\"/>\n            <label [class.active]=\"tagArray.length > 0 || txt.value.length > 0\" for=\"tagInput\">{{title}}</label>\n          </span>\n        </div>\n    ",
+            template: "\n        <div class=\"input-field col s12\">\n        <div style=\"float:left\">\n          <div class=\"chip\" style=\"position:relative; top:10px;\" *ngFor=\"#tag of tagArray; #i = index\">\n            {{tag}}\n             <i class=\"material-icons\" (click)=\"remove(i)\">close</i>\n          </div>\n          </div>\n\n          <span style=\"overflow:hidden; padding-right:5px; display:block;\">\n            <input #txt (keyup)=\"typing($event)\" id=\"tagInput\" type=\"text\" value=\"{{tagArray.length > 0 ? ' ' : ''}}\"/>\n            <label [class.active]=\"tagArray.length > 0 || txt.value.length > 0\" for=\"tagInput\">{{title}}</label>\n          </span>\n        </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES]
         }), 
         __metadata('design:paramtypes', [])

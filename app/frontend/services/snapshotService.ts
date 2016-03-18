@@ -21,4 +21,8 @@ export class SnapshotService {
     createSnapshot(circleSessionId:string){
         return this.http.post(this.path + 'snapshots', JSON.stringify({_sessionId: circleSessionId}),true,true,true);
     }
+
+    getById(snapshotId:string){
+        return this.http.get(this.path + 'snapshots/' + snapshotId, false,true,true)
+    }
 }

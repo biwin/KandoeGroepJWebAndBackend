@@ -29,4 +29,16 @@ export class SnapshotApi {
            }
         });
     }
+    
+    public static getById(req:Request, res:Response){
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if(currentUserId != null){
+                SnapshotApi.mgr.getById(req.params.id, (snapshot:Snapshot) =>{
+                    res.status(200).send(snapshot);
+                });
+            } else {
+                res.status(401).send({_error: 'Unauthorized'});
+            }
+        });
+    }
 }

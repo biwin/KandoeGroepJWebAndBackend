@@ -142,7 +142,7 @@ export class ThemeApi {
             if (currentUserId != null) {
                 var organisationId: string = req.params.id;
 
-                themeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
+                ThemeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
                     res.send(themes);
                 });
             } else {

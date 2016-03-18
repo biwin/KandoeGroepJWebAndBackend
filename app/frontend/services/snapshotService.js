@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -25,12 +26,15 @@ var SnapshotService = (function () {
     SnapshotService.prototype.createSnapshot = function (circleSessionId) {
         return this.http.post(this.path + 'snapshots', JSON.stringify({ _sessionId: circleSessionId }), true, true, true);
     };
+    SnapshotService.prototype.getById = function (snapshotId) {
+        return this.http.get(this.path + 'snapshots/' + snapshotId, false, true, true);
+    };
     SnapshotService = __decorate([
         core_1.Injectable(),
         __param(1, core_2.Inject('App.BackendPath')), 
         __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], SnapshotService);
     return SnapshotService;
-})();
+}());
 exports.SnapshotService = SnapshotService;
 //# sourceMappingURL=snapshotService.js.map

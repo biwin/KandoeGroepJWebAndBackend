@@ -30,7 +30,9 @@ export class SnapshotManager {
         var gameName:string;
         var playerNames:string[] = [];
         var snapshotCards:SnapshotCardWrapper[] = [];
-        var timestamp:Date = new Date();
+        var date:Date = new Date();
+        var timestamp:string = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+        console.log(timestamp);
 
         this._csManager.getCircleSession(circleSessionId, (circleSession:CircleSession) => {
             gameName = circleSession._name;
@@ -70,5 +72,9 @@ export class SnapshotManager {
 
     getSnapshotsByUserId(userId:string, callback: (snapshots:Snapshot[]) => any){
         this._dao.readSnapshotsByUserId(userId, callback);
+    }
+
+    getById(id:string, callback:(snapshot:Snapshot)=>any) {
+        this._dao.readSnapshotById(id, callback);
     }
 }

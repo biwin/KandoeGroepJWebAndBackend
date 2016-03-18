@@ -1,3 +1,4 @@
+"use strict";
 var snaptshotDao_1 = require("../dao/snaptshotDao");
 var snapshot_1 = require("../model/snapshot");
 var snapshotCardWrapper_1 = require("../model/snapshotCardWrapper");
@@ -18,7 +19,9 @@ var SnapshotManager = (function () {
         var gameName;
         var playerNames = [];
         var snapshotCards = [];
-        var timestamp = new Date();
+        var date = new Date();
+        var timestamp = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+        console.log(timestamp);
         this._csManager.getCircleSession(circleSessionId, function (circleSession) {
             gameName = circleSession._name;
             _this._uManager.getUsers(circleSession._userIds, function (users) {
@@ -48,7 +51,10 @@ var SnapshotManager = (function () {
     SnapshotManager.prototype.getSnapshotsByUserId = function (userId, callback) {
         this._dao.readSnapshotsByUserId(userId, callback);
     };
+    SnapshotManager.prototype.getById = function (id, callback) {
+        this._dao.readSnapshotById(id, callback);
+    };
     return SnapshotManager;
-})();
+}());
 exports.SnapshotManager = SnapshotManager;
 //# sourceMappingURL=snapshotManager.js.map

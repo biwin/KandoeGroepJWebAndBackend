@@ -22,8 +22,7 @@ import {UserLogin} from "./user/userLogin";
 import {Profile} from "./user/profile";
 import {UserService} from "../services/userService";
 
-import {NgZone} from "angular2/core";
-import {ChatComponent} from "./chat/chatComponent";
+import {SnapshotDetail} from "./snapshot/snapshotDetail";
 
 @Component({
     selector: 'my-app',
@@ -54,7 +53,9 @@ import {ChatComponent} from "./chat/chatComponent";
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
 
     {path: '/loginUser', as: 'UserLogin', component: UserLogin},
-    {path: '/profile', as: 'Profile', component: Profile}
+    {path: '/profile', as: 'Profile', component: Profile},
+    
+    {path: '/snapshots/:id', as: 'Snapshot', component: SnapshotDetail}
 ])
 
 export class AppComponent {

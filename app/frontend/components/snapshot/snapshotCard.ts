@@ -1,15 +1,16 @@
-import {Component} from "angular2/core";
-import {Input} from "angular2/core";
-import {Snapshot} from "../../../backend/model/snapshot";
+import {Component, Input} from "angular2/core";
 import {Router} from "angular2/router";
+
+import {Snapshot} from "../../../backend/model/snapshot";
 
 @Component({
     selector: 'snapshot-card',
     template: `
     <div class="col s5">
-         <div class="card hoverable small">
+         <div (click)="openSnapshot()" class="card hoverable clickable">
             <div class="card-content">
-                <p>{{snapshot._gameName}}</p>
+                <h5>{{snapshot._gameName}}</h5>
+                <p>{{snapshot._timestamp}}</p>
             </div>
         </div>
     </div>
@@ -25,4 +26,7 @@ export class SnapshotCard {
         this.router = router;
     }
 
+    openSnapshot() {
+        this.router.navigate(['/Snapshot', {id: this.snapshot._id}]);
+    }
 }

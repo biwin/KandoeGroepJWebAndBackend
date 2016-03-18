@@ -60,6 +60,7 @@ app.post('/api/circlesessions/:id/stopGame', CircleSessionApi.CircleSessionApi.s
 //region snapshot routes
 app.get('/api/snapshots', SnapshotApi.SnapshotApi.findAll);
 app.post('/api/snapshots', SnapshotApi.SnapshotApi.createSnapshot);
+app.get('/api/snapshots/:id', SnapshotApi.SnapshotApi.getById);
 //endregion
 
 //region organisation routes

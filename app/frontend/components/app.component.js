@@ -25,6 +25,7 @@ var groupDetail_1 = require("./group/groupDetail");
 var userLogin_1 = require("./user/userLogin");
 var profile_1 = require("./user/profile");
 var userService_1 = require("../services/userService");
+var snapshotDetail_1 = require("./snapshot/snapshotDetail");
 var AppComponent = (function () {
     function AppComponent(router, userService) {
         var _this = this;
@@ -55,7 +56,8 @@ var AppComponent = (function () {
             { path: '/createGroup', as: 'CreateGroup', component: groupForm_1.GroupForm },
             { path: '/group/:id', as: 'GroupDetail', component: groupDetail_1.GroupDetail },
             { path: '/loginUser', as: 'UserLogin', component: userLogin_1.UserLogin },
-            { path: '/profile', as: 'Profile', component: profile_1.Profile }
+            { path: '/profile', as: 'Profile', component: profile_1.Profile },
+            { path: '/snapshots/:id', as: 'Snapshot', component: snapshotDetail_1.SnapshotDetail }
         ]), 
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], AppComponent);
