@@ -1,3 +1,4 @@
+"use strict";
 var snaptshotDao_1 = require("../dao/snaptshotDao");
 var snapshot_1 = require("../model/snapshot");
 var snapshotCardWrapper_1 = require("../model/snapshotCardWrapper");
@@ -49,6 +50,6 @@ var SnapshotManager = (function () {
         this._dao.readSnapshotsByUserId(userId, callback);
     };
     return SnapshotManager;
-})();
+}());
 exports.SnapshotManager = SnapshotManager;
 //# sourceMappingURL=snapshotManager.js.map

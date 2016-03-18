@@ -1,3 +1,4 @@
+"use strict";
 var SnapshotCardWrapper = (function () {
     function SnapshotCardWrapper(_cardName, _position, _userHistory) {
         this._cardName = _cardName;
@@ -5,6 +6,6 @@ var SnapshotCardWrapper = (function () {
         this._userHistory = _userHistory;
     }
     return SnapshotCardWrapper;
-})();
+}());
 exports.SnapshotCardWrapper = SnapshotCardWrapper;
 //# sourceMappingURL=snapshotCardWrapper.js.map

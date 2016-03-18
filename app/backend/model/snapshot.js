@@ -1,3 +1,4 @@
+"use strict";
 var Snapshot = (function () {
     function Snapshot(_creatorId, _gameName, _playerNames, _cards, _chat, _timestamp) {
         this._creatorId = _creatorId;
@@ -7,6 +8,6 @@ var Snapshot = (function () {
         this._chat = _chat;
     }
     return Snapshot;
-})();
+}());
 exports.Snapshot = Snapshot;
 //# sourceMappingURL=snapshot.js.map

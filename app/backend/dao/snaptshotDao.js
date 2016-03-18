@@ -1,3 +1,4 @@
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 var SnapshotDao = (function () {
@@ -22,6 +23,6 @@ var SnapshotDao = (function () {
         });
     };
     return SnapshotDao;
-})();
+}());
 exports.SnapshotDao = SnapshotDao;
 //# sourceMappingURL=snaptshotDao.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var snapshotManager_1 = require("../logic/snapshotManager");
 var userApi_1 = require("./userApi");
 var SnapshotApi = (function () {
@@ -29,6 +30,6 @@ var SnapshotApi = (function () {
     };
     SnapshotApi.mgr = new snapshotManager_1.SnapshotManager();
     return SnapshotApi;
-})();
+}());
 exports.SnapshotApi = SnapshotApi;
 //# sourceMappingURL=snapshotApi.js.map
