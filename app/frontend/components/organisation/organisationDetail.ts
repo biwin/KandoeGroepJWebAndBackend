@@ -26,8 +26,19 @@ import {Theme} from "../../../backend/model/theme";
         </div>
 
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDelete = false">Nee, ga terug</a>
-            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDelete = true">Ja, verwijder</a>
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteGrp = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteGrp = true">Ja, verwijder</a>
+        </div>
+    </div>
+    <div class="modal" id="deleteUserModal">
+        <div class="modal-content">
+            <h4 class="red-text">{{userToDelete._name}} verwijderen?</h4>
+            <p>{{contentText}}</p>
+        </div>
+
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteUsr = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteUsr = true">Ja, verwijder</a>
         </div>
     </div>
 
@@ -89,7 +100,7 @@ import {Theme} from "../../../backend/model/theme";
             <h5>Admins</h5>
 
             <div id="adminsMenu">
-                <a class="btn-floating waves-effect waves-light red" (click)="addAdmin()" title="Voeg admin toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addMember(true)" title="Voeg admin toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -99,12 +110,14 @@ import {Theme} from "../../../backend/model/theme";
             <table class="striped" *ngIf="organisation._organisatorIds.length!=0">
                 <thead>
                     <tr>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="email">E-mail adres</th>
                     </tr>
                 </thead>
 
                 <tr *ngFor="#admin of admins" class="clickable">
+                    <td><i *ngIf="isCurrentUser(admin._id)" (click)="deleteUser(admin, true)" class="material-icons red-text" title="Verwijder {{admin._name}}">delete_forever</i></td>
                     <td>{{admin._name}}</td>
                     <td>{{admin._email}}</td>
                 </tr>
@@ -118,7 +131,7 @@ import {Theme} from "../../../backend/model/theme";
             <h5>Leden</h5>
 
             <div id="membersMenu">
-                <a class="btn-floating waves-effect waves-light red" (click)="addMember()" title="Voeg lid toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addMember(false)" title="Voeg lid toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -128,12 +141,14 @@ import {Theme} from "../../../backend/model/theme";
             <table class="striped" *ngIf="organisation._memberIds.length!=0">
                 <thead>
                     <tr>
+                        <th style="width: 2%;"></th>
                         <th data-field="name">Naam</th>
                         <th data-field="email">E-mail adres</th>
                     </tr>
                 </thead>
 
                 <tr *ngFor="#member of members" class="clickable">
+                    <td><i *ngIf="isAdmin() || isCurrentUser(member._id)" (click)="deleteUser(member, false)" class="material-icons red-text" title="Verwijder {{member._name}}">delete_forever</i></td>
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -162,7 +177,7 @@ import {Theme} from "../../../backend/model/theme";
                     </tr>
                 </thead>
 
-                <tr *ngFor="#theme of themes" (click)="viewTheme(theme._id)" class="clickable">
+                <tr *ngFor="#theme of themes" class="clickable">
                     <td>{{theme._name}}</td>
                     <td>{{theme._description}}</td>
                 </tr>
@@ -193,6 +208,10 @@ export class OrganisationDetail {
     private loading: boolean = true;
     private groupToDelete: Group = Group.empty();
     private doDeleteGrp: boolean = false;
+    private userToDelete: User = User.empty();
+    private contentText: string;
+    private isLastAdmin: boolean = false;
+    private doDeleteUsr: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService, userService: UserService) {
         var organisationId: string = routeParam.params["id"];
@@ -236,6 +255,12 @@ export class OrganisationDetail {
         return this.organisation._organisatorIds.indexOf(userId) > -1;
     }
 
+    private isCurrentUser(userId: string): boolean {
+        var currentUserId: string = this.userService.getUserId();
+
+        return currentUserId == userId;
+    }
+
     //TODO: styling van edit button
     //TODO: uitwerking edit methode
     private edit(): void {
@@ -265,7 +290,7 @@ export class OrganisationDetail {
 
     private doDeleteGroup(): void {
         if(this.doDeleteGrp) {
-            this.organisationService.deleteGroupFromOrganisationById(this.groupToDelete._id, this.groupToDelete._organisationId).subscribe((deleted: boolean) => {
+            this.organisationService.deleteGroupFromOrganisationById(this.groupToDelete._id, this.organisation._id).subscribe((deleted: boolean) => {
                 if(deleted) {
                     this.deleteGroupFromArray(this.groupToDelete._id);
                 }
@@ -281,9 +306,59 @@ export class OrganisationDetail {
 
     //TODO: styling van addMember button
     //TODO: uitwerking addMember methode
-    private addMember(): void {
+    private addMember(isAdmin: boolean): void {
         //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
         alert("addMember");
+    }
+
+    private deleteUser(user: User, isAdmin: boolean): void {
+        this.userToDelete = user;
+
+        this.isLastAdmin = isAdmin && this.organisation._organisatorIds.length==1;
+
+        if(this.isLastAdmin) {
+            this.contentText = "U staat op het punt " + this.organisation._name + " volledig te verwijderen.\n" +
+                "Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?";
+        } else if (this.isCurrentUser(user._id)) {
+            this.contentText = "U staat op het punt uzelf uit " + this.organisation._name + " te verwijderen.\n" +
+                "Bent u zeker dat u zichzelf uit deze organisatie wil verwijderen?";
+        } else {
+            this.contentText = "U staat op het punt " + this.userToDelete._name + " uit " + this.organisation._name + " te verwijderen.\n" +
+                "Bent u zeker dat u deze persoon wil verwijderen?";
+        }
+
+        $('#deleteUserModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteUser();
+            }
+        });
+    }
+
+    private doDeleteUser(): void {
+        if(this.doDeleteUsr && !this.isLastAdmin) {
+            this.organisationService.deleteMemberFromOrganisationById(this.userToDelete._id, this.organisation._id).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteUserFromArray(this.userToDelete._id);
+                }
+            });
+        } else if (this.doDeleteUsr && this.isLastAdmin) {
+            this.organisationService.deleteOrganisationById(this.organisation._id).subscribe(() => {
+                this.router.navigate(["/OrganisationsOverview"]);
+            })
+        }
+    }
+
+    private deleteUserFromArray(userId: string): void {
+        if(this.isAdmin()) {
+            var index = this.admins.findIndex((user: User) => user._id == userId);
+
+            this.admins.splice(index, 1);
+        } else {
+            var index = this.members.findIndex((user: User) => user._id == userId);
+
+            this.members.splice(index, 1);
+        }
     }
 
     //TODO: styling van addTheme button
