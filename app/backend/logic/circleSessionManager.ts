@@ -10,6 +10,7 @@ import {UserManager} from "./userManager";
 import {User} from "../model/user";
 import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {Card} from "../model/card";
+import {ChatManager} from "./chatManager";
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 
@@ -144,10 +145,6 @@ export class CircleSessionManager {
         });
     }
 
-    removeCircleSessionById(circleSessionId:string, callback:(b:boolean) => any) {
-        this._dao.deleteCircleSessionById(circleSessionId, callback);
-    }
-
     getCircleSessionCards(circleSessionId:string, callback:(wrappers:CircleSessionCardWrapper[]) => any) {
         var tMgr:ThemeManager = new ThemeManager();
         var circleSessionCardWrappers:CircleSessionCardWrapper[] = [];
@@ -203,7 +200,10 @@ export class CircleSessionManager {
         this.getCircleSession(circleSessionId, (c:CircleSession) => {
             if (c._creatorId == currentUserId) {
                 this._dao.deleteCircleSessionById(circleSessionId, (b:boolean) => {
-                    this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+                    this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, (b:boolean) => {
+                        var chatMgr:ChatManager = new ChatManager();
+                        chatMgr.removeChatOfCircleSession(circleSessionId, callback);
+                    });
                 });
             }
         });

@@ -7,9 +7,9 @@ import {HomePage} from "./general/homePage";
 import {ThemeOverview} from "./theme/themeOverview";
 import {ThemeForm} from './theme/themeForm';
 
+import {CircleSessionGameWrapper} from "./circleSession/circleSessionGameWrapper";
 import {CircleSessionOverview} from "./circleSession/circleSessionOverview";
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
-import {CircleSessionGame} from "./circleSession/circleSessionGame";
 
 import {OrganisationsOverview} from "./organisation/organisationsOverview";
 import {OrganisationForm} from "./organisation/organisationForm";
@@ -21,9 +21,6 @@ import {GroupDetail} from "./group/groupDetail";
 import {UserLogin} from "./user/userLogin";
 import {Profile} from "./user/profile";
 import {UserService} from "../services/userService";
-
-import {NgZone} from "angular2/core";
-import {ChatComponent} from "./chat/chatComponent";
 
 @Component({
     selector: 'my-app',
@@ -44,7 +41,7 @@ import {ChatComponent} from "./chat/chatComponent";
 
     {path: '/circlesessions', as: 'CircleSessionOverview', component: CircleSessionOverview},
     {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
-    {path: '/circlesessions/:id', as: 'CircleSessionGame', component: CircleSessionGame},
+    {path: '/circlesessions/:id', as: 'CircleSessionGame', component: CircleSessionGameWrapper},
 
     {path: '/organisations', as: 'OrganisationsOverview', component: OrganisationsOverview},
     {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm},

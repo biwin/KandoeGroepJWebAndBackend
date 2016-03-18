@@ -51,10 +51,13 @@ import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMov
     directives: [CORE_DIRECTIVES]
 })
 export class CircleSessionPreGame implements OnChanges {
-    @Input() circleSession:CircleSession = CircleSession.empty();
+    @Input() circleSession:CircleSession;
+    
     circleService:CircleSessionService;
+    
     cards:CircleSessionCardWrapper[] = [];
     selectedCards:string[] = [];
+    
     myUserId:string;
 
     constructor(cService:CircleSessionService, uService:UserService) {

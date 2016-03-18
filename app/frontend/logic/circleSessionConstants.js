@@ -1,3 +1,4 @@
+"use strict";
 var circleMathToolbox_1 = require("./circleMathToolbox");
 var CircleSessionConstants = (function () {
     function CircleSessionConstants() {
@@ -27,13 +28,6 @@ var CircleSessionConstants = (function () {
     CircleSessionConstants.prototype.CardColor = function (i) {
         return this._colors[i % this._colors.length];
     };
-    Object.defineProperty(CircleSessionConstants.prototype, "HOVERED_COLOR", {
-        get: function () {
-            return "yellow";
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CircleSessionConstants.prototype, "PANEL_DIMENSIONS", {
         get: function () {
             return 800;
@@ -92,6 +86,6 @@ var CircleSessionConstants = (function () {
         return circleMathToolbox_1.CircleMathToolbox.POS_ON_CIRCLE(this.CENTER, this.CircleRadius(depth), angle, Math.cos);
     };
     return CircleSessionConstants;
-})();
+}());
 exports.CircleSessionConstants = CircleSessionConstants;
 //# sourceMappingURL=circleSessionConstants.js.map

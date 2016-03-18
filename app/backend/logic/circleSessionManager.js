@@ -1,8 +1,10 @@
+"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var groupManager_1 = require("./groupManager");
 var themeManager_1 = require("./themeManager");
 var userManager_1 = require("./userManager");
 var circleSessionCardWrapper_1 = require("../model/circleSessionCardWrapper");
+var chatManager_1 = require("./chatManager");
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();
@@ -134,9 +136,6 @@ var CircleSessionManager = (function () {
             }
         });
     };
-    CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
-        this._dao.deleteCircleSessionById(circleSessionId, callback);
-    };
     CircleSessionManager.prototype.getCircleSessionCards = function (circleSessionId, callback) {
         var _this = this;
         var tMgr = new themeManager_1.ThemeManager();
@@ -196,7 +195,10 @@ var CircleSessionManager = (function () {
         this.getCircleSession(circleSessionId, function (c) {
             if (c._creatorId == currentUserId) {
                 _this._dao.deleteCircleSessionById(circleSessionId, function (b) {
-                    _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+                    _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, function (b) {
+                        var chatMgr = new chatManager_1.ChatManager();
+                        chatMgr.removeChatOfCircleSession(circleSessionId, callback);
+                    });
                 });
             }
         });
@@ -293,6 +295,6 @@ var CircleSessionManager = (function () {
         });
     };
     return CircleSessionManager;
-})();
+}());
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

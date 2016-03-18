@@ -4,6 +4,7 @@ import {Db} from "mongodb";
 import {ChatMessage} from "../model/chatMessage";
 import {MongoError} from "mongodb";
 import {InsertOneWriteOpResult} from "mongodb";
+import {DeleteWriteOpResultObject} from "mongodb";
 
 export class ChatDao {
     private _client:MongoClient;
@@ -25,6 +26,14 @@ export class ChatDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
             db.collection('chatmessages').find({_circleSessionId: sessionId}).sort({_timeStamp:1}).toArray((err:MongoError, res:ChatMessage[]) => {
                 callback(res);
+            });
+        });
+    }
+
+    deleteChatOfCircleSession(circleSessionId:string, callback:()=>any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('chatmessages').deleteMany({_circleSessionId: circleSessionId}, () => {
+                callback();
             });
         });
     }

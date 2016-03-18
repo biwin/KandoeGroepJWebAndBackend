@@ -1,3 +1,4 @@
+"use strict";
 var groupAPI_1 = require("./groupAPI");
 var userApi_1 = require("./userApi");
 var themeApi_1 = require("./themeApi");
@@ -49,6 +50,6 @@ var OrganisationAPI = (function () {
     };
     OrganisationAPI.mgr = new organisationManager_1.OrganisationManager();
     return OrganisationAPI;
-})();
+}());
 exports.OrganisationAPI = OrganisationAPI;
 //# sourceMappingURL=organisationAPI.js.map

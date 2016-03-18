@@ -36,4 +36,8 @@ export class ChatManager {
             });
         });
     }
+
+    removeChatOfCircleSession(circleSessionId:string, callback:()=>any) {
+        this._dao.deleteChatOfCircleSession(circleSessionId, callback);
+    }
 }

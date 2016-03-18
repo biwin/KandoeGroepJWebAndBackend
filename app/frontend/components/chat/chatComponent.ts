@@ -40,7 +40,6 @@ export class ChatComponent implements OnChanges {
     public constructor(service:CircleSessionService, @Inject('App.SocketUrl') socketUrl:string) {
         this.zone = new NgZone({enableLongStackTrace: false});
         this.socket = io.connect(socketUrl);
-        console.log('Socket URI: ' + socketUrl);
         this.socket.emit('join session', JSON.stringify({sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown'}));
         this.socket.on('send message', data => this.zone.run(() => {
             this.messages.push(JSON.parse(data));

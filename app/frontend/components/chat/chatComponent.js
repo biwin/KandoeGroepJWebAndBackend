@@ -1,5 +1,6 @@
 /// <reference path="../../../../typings/socket.io.d.ts" />
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -23,7 +24,6 @@ var ChatComponent = (function () {
         this.initComplete = false;
         this.zone = new core_1.NgZone({ enableLongStackTrace: false });
         this.socket = io.connect(socketUrl);
-        console.log('Socket URI: ' + socketUrl);
         this.socket.emit('join session', JSON.stringify({ sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown' }));
         this.socket.on('send message', function (data) { return _this.zone.run(function () {
             _this.messages.push(JSON.parse(data));
@@ -68,6 +68,6 @@ var ChatComponent = (function () {
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, String])
     ], ChatComponent);
     return ChatComponent;
-})();
+}());
 exports.ChatComponent = ChatComponent;
 //# sourceMappingURL=chatComponent.js.map

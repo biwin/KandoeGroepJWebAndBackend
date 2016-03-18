@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -79,6 +80,6 @@ var CircleSessionCard = (function () {
         __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, router_1.Router])
     ], CircleSessionCard);
     return CircleSessionCard;
-})();
+}());
 exports.CircleSessionCard = CircleSessionCard;
 //# sourceMappingURL=circleSessionCard.js.map

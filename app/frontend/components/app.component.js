@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -13,9 +14,9 @@ var navigationBar_1 = require('./general/navigationBar');
 var homePage_1 = require("./general/homePage");
 var themeOverview_1 = require("./theme/themeOverview");
 var themeForm_1 = require('./theme/themeForm');
+var circleSessionGameWrapper_1 = require("./circleSession/circleSessionGameWrapper");
 var circleSessionOverview_1 = require("./circleSession/circleSessionOverview");
 var circleSessionForm_1 = require("./circleSession/circleSessionForm");
-var circleSessionGame_1 = require("./circleSession/circleSessionGame");
 var organisationsOverview_1 = require("./organisation/organisationsOverview");
 var organisationForm_1 = require("./organisation/organisationForm");
 var organisationDetail_1 = require("./organisation/organisationDetail");
@@ -47,7 +48,7 @@ var AppComponent = (function () {
             { path: '/createTheme', as: 'CreateTheme', component: themeForm_1.ThemeForm },
             { path: '/circlesessions', as: 'CircleSessionOverview', component: circleSessionOverview_1.CircleSessionOverview },
             { path: '/createSession', as: 'CreateSession', component: circleSessionForm_1.CircleSessionForm },
-            { path: '/circlesessions/:id', as: 'CircleSessionGame', component: circleSessionGame_1.CircleSessionGame },
+            { path: '/circlesessions/:id', as: 'CircleSessionGame', component: circleSessionGameWrapper_1.CircleSessionGameWrapper },
             { path: '/organisations', as: 'OrganisationsOverview', component: organisationsOverview_1.OrganisationsOverview },
             { path: '/createOrganisation', as: 'CreateOrganisation', component: organisationForm_1.OrganisationForm },
             { path: '/organisation/:id', as: 'OrganisationDetail', component: organisationDetail_1.OrganisationDetail },
@@ -59,6 +60,6 @@ var AppComponent = (function () {
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], AppComponent);
     return AppComponent;
-})();
+}());
 exports.AppComponent = AppComponent;
 //# sourceMappingURL=app.component.js.map

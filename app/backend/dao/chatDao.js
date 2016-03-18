@@ -1,3 +1,4 @@
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 var ChatDao = (function () {
@@ -19,7 +20,14 @@ var ChatDao = (function () {
             });
         });
     };
+    ChatDao.prototype.deleteChatOfCircleSession = function (circleSessionId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('chatmessages').deleteMany({ _circleSessionId: circleSessionId }, function () {
+                callback();
+            });
+        });
+    };
     return ChatDao;
-})();
+}());
 exports.ChatDao = ChatDao;
 //# sourceMappingURL=chatDao.js.map

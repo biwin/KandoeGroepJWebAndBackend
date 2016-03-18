@@ -1,5 +1,6 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -16,7 +17,6 @@ var circleSessionService_1 = require("../../services/circleSessionService");
 var circleSession_1 = require("../../../backend/model/circleSession");
 var CircleSessionPreGame = (function () {
     function CircleSessionPreGame(cService, uService) {
-        this.circleSession = circleSession_1.CircleSession.empty();
         this.cards = [];
         this.selectedCards = [];
         this.circleService = cService;
@@ -80,6 +80,6 @@ var CircleSessionPreGame = (function () {
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, userService_1.UserService])
     ], CircleSessionPreGame);
     return CircleSessionPreGame;
-})();
+}());
 exports.CircleSessionPreGame = CircleSessionPreGame;
 //# sourceMappingURL=circleSessionPreGame.js.map
