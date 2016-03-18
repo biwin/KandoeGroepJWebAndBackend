@@ -74,7 +74,7 @@ export class OrganisationDao {
             db.collection('organisations').updateOne({'_groupIds': {'$in': [groupId]}}, {$pull: {'_groupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount == result.matchedCount && result.matchedCount == 1);
             });
         });
     }

@@ -54,7 +54,7 @@ var OrganisationDao = (function () {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').updateOne({ '_groupIds': { '$in': [groupId] } }, { $pull: { '_groupIds': groupId } }, function (error, result) {
                 db.close();
-                callback(result.modifiedCount == 1);
+                callback(result.modifiedCount == result.matchedCount && result.matchedCount == 1);
             });
         });
     };
