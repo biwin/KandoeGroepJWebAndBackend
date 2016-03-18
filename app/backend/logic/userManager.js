@@ -278,6 +278,9 @@ var UserManager = (function () {
     UserManager.prototype.removeAllMembersFromGroupById = function (groupId, callback) {
         this._dao.removeAllMembersFromGroupById(groupId, callback);
     };
+    UserManager.prototype.removeAllUsersFromOrganisationById = function (organisationId, callback) {
+        this._dao.removeAllUsersFromOrganisationById(organisationId, callback);
+    };
     UserManager.prototype.addOrganisationIdToUserById = function (organisationId, userId, isOrganisator, callback) {
         this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);
     };

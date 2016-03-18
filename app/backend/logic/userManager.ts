@@ -306,6 +306,10 @@ export class UserManager {
         this._dao.removeAllMembersFromGroupById(groupId, callback);
     }
 
+    removeAllUsersFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this._dao.removeAllUsersFromOrganisationById(organisationId, callback);
+    }
+
     addOrganisationIdToUserById(organisationId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {
         this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);
     }

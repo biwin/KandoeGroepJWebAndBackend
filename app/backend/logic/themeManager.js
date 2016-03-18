@@ -94,6 +94,9 @@ var ThemeManager = (function () {
     ThemeManager.prototype.getThemesOfOrganisationById = function (organisationId, callback) {
         this._dao.getThemesOfOrganisationById(organisationId, callback);
     };
+    ThemeManager.prototype.removeAllThemesFromOrganisationById = function (organisationId, callback) {
+        this._dao.removeAllThemesFromOrganisationById(organisationId, callback);
+    };
     return ThemeManager;
 }());
 exports.ThemeManager = ThemeManager;

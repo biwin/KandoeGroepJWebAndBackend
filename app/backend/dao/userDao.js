@@ -318,6 +318,16 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.removeAllUsersFromOrganisationById = function (organisationId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_organisatorOf': { '$in': [organisationId] } }, { $pull: { '_organisatorOf': organisationId } }, function (error, result) {
+                db.collection('users').updateMany({ '_memberOf': { '$in': [organisationId] } }, { $pull: { '_memberOf': organisationId } }, function (error2, result2) {
+                    db.close();
+                    callback(result.modifiedCount == result.matchedCount && result2.modifiedCount == result2.matchedCount);
+                });
+            });
+        });
+    };
     UserDao.prototype.addOrganisationIdToUserById = function (groupId, userId, isOrganisator, callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             if (isOrganisator) {
