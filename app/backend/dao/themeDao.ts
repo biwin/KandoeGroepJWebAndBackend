@@ -150,4 +150,14 @@ export class ThemeDao {
             });
         });
     }
+
+    deleteOrganisationFromThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('themes').updateOne({'_id': new ObjectID(themeId)}, {$set: {'_organisationId': null}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
 }

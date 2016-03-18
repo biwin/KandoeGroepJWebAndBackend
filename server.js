@@ -72,6 +72,7 @@ app.delete("/api/organisations/:id/groups/:groupId", OrganisationAPI.Organisatio
 app.get("/api/organisations/:id/members", OrganisationAPI.OrganisationAPI.getMembers);
 app.delete("/api/organisations/:id/members/:memberId", OrganisationAPI.OrganisationAPI.deleteMemberById);
 app.get("/api/organisations/:id/themes", OrganisationAPI.OrganisationAPI.getThemes);
+app.delete("/api/organisations/:id/themes/:themeId", OrganisationAPI.OrganisationAPI.deleteThemeById);
 //endregion
 
 //region group routes

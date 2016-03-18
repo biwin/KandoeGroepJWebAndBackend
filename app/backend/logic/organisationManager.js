@@ -63,6 +63,10 @@ var OrganisationManager = (function () {
     OrganisationManager.prototype.deleteGroupIdFromOrganisation = function (groupId, callback) {
         this._dao.deleteGroupIdFromOrganisation(groupId, callback);
     };
+    OrganisationManager.prototype.deleteThemeFromOrganisationById = function (themeId, organisationId, callback) {
+        var themeManager = new themeManager_1.ThemeManager();
+        themeManager.deleteOrganisationFromThemeById(themeId, callback);
+    };
     OrganisationManager.prototype.addGroupIdToOrganisationById = function (groupId, organisationId, callback) {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     };

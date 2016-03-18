@@ -113,4 +113,8 @@ export class ThemeManager {
     removeAllThemesFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
         this._dao.removeAllThemesFromOrganisationById(organisationId, callback);
     }
+
+    deleteOrganisationFromThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteOrganisationFromThemeById(themeId, callback);
+    }
 }

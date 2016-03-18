@@ -86,6 +86,25 @@ var OrganisationAPI = (function () {
         req.params.id = req.params.groupId;
         groupAPI_1.GroupAPI.delete(req, res);
     };
+    OrganisationAPI.deleteThemeById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var themeId = req.params.themeId;
+                var organisationId = req.params.id;
+                OrganisationAPI.mgr.deleteThemeFromOrganisationById(themeId, organisationId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     OrganisationAPI.getOrganisationOfGroupById = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
