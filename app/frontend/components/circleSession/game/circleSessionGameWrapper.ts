@@ -1,14 +1,12 @@
 import {Component} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
-import {CircleSession} from "../../../backend/model/circleSession";
+import {CircleSession} from "../../../../backend/model/circleSession";
 import {CircleSessionPreGame} from "./circleSessionPreGame";
 import {CircleSessionGame} from "./circleSessionGame";
 import {CircleSessionUserList} from "./circleSessionUserList";
-import {CircleSessionService} from "../../services/circleSessionService";
-import {ThemeService} from "../../services/themeService";
-import {UserService} from "../../services/userService";
+import {CircleSessionService} from "../../../services/circleSessionService";
 import {RouteParams} from "angular2/router";
-import {LoadingSpinner} from "../general/loadingSpinner";
+import {LoadingSpinner} from "../../general/loadingSpinner";
 
 @Component({
     selector: 'gamewrapper',

@@ -3,11 +3,15 @@ import {Component} from "angular2/core";
 
 import {SnapshotService} from "../../services/snapshotService";
 import {Snapshot} from "../../../backend/model/snapshot";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'snapshot-detail',
     template: `
-    <div class="row container">
+    <loading *ngIf="loading"></loading>
+
+    <div *ngIf="!loading" class="row container">
         <h5>Snapshot</h5>
         
         <div class="card"><div class="card-content">
@@ -74,16 +78,18 @@ import {Snapshot} from "../../../backend/model/snapshot";
         </div>
     </div>
     `,
-    directives: []
+    directives: [CORE_DIRECTIVES, LoadingSpinner]
 })
 
 
 export class SnapshotDetail {
     private snapshot:Snapshot = Snapshot.empty();
+    private loading:boolean = true;
 
     constructor(service:SnapshotService, route:RouteParams) {
         service.getById(route.get('id')).subscribe((snapshot:Snapshot) => {
             this.snapshot = snapshot;
+            this.loading = false;
         });
     }
 }

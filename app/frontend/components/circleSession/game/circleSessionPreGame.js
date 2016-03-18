@@ -1,5 +1,5 @@
-///<reference path="../../../../typings/jquery/jquery.d.ts" />
-///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+///<reference path="../../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../../typings/materialize-css/materialize-css.d.ts"/>
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -12,9 +12,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var userService_1 = require("../../services/userService");
-var circleSessionService_1 = require("../../services/circleSessionService");
-var circleSession_1 = require("../../../backend/model/circleSession");
+var userService_1 = require("../../../services/userService");
+var circleSessionService_1 = require("../../../services/circleSessionService");
+var circleSession_1 = require("../../../../backend/model/circleSession");
 var CircleSessionPreGame = (function () {
     function CircleSessionPreGame(cService, uService) {
         this.cards = [];

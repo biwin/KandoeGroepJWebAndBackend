@@ -1,13 +1,12 @@
-/// <reference path="../../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../../../typings/jquery/jquery.d.ts" />
 
 import {Component, OnChanges, Input} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
-import {Response} from "angular2/http";
 
-import {UserService} from "../../services/userService";
+import {UserService} from "../../../services/userService";
 
-import {User} from "../../../backend/model/user";
-import {ChatComponent} from "../chat/chatComponent";
+import {User} from "../../../../backend/model/user";
+import {ChatComponent} from "../../chat/chatComponent";
 
 @Component({
     selector: 'user-list',

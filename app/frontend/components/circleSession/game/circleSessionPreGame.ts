@@ -1,16 +1,16 @@
-///<reference path="../../../../typings/jquery/jquery.d.ts" />
-///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+///<reference path="../../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../../typings/materialize-css/materialize-css.d.ts"/>
 
 import {Component, Input, OnChanges} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {Response} from "angular2/http";
 
-import {UserService} from "../../services/userService";
-import {CircleSessionService} from "../../services/circleSessionService";
+import {UserService} from "../../../services/userService";
+import {CircleSessionService} from "../../../services/circleSessionService";
 
-import {CircleSession} from "../../../backend/model/circleSession";
-import {CircleSessionCardWrapper} from "../../../backend/model/circleSessionCardWrapper";
-import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
+import {CircleSession} from "../../../../backend/model/circleSession";
+import {CircleSessionCardWrapper} from "../../../../backend/model/circleSessionCardWrapper";
+import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
 
 @Component({
     selector: 'pregame',

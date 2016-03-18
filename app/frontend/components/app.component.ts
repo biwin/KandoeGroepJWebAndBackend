@@ -7,7 +7,7 @@ import {HomePage} from "./general/homePage";
 import {ThemeOverview} from "./theme/themeOverview";
 import {ThemeForm} from './theme/themeForm';
 
-import {CircleSessionGameWrapper} from "./circleSession/circleSessionGameWrapper";
+import {CircleSessionGameWrapper} from "./circleSession/game/circleSessionGameWrapper";
 import {CircleSessionOverview} from "./circleSession/circleSessionOverview";
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
 

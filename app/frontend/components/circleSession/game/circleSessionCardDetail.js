@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var card_1 = require("../../../backend/model/card");
+var card_1 = require("../../../../backend/model/card");
 var CircleSessionCardDetail = (function () {
     function CircleSessionCardDetail() {
         this.color = "";

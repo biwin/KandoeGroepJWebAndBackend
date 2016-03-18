@@ -66,9 +66,9 @@ import {Theme} from "../../../backend/model/theme";
         </div>
     </div>
 
-    <loading *ngIf="loading"></loading>
+    <loading *ngIf="organisationLoading"></loading>
     
-    <div class="row container" *ngIf="!loading && organisation!=null">
+    <div class="row container" *ngIf="!organisationLoading && organisation!=null">
         <div id="organisationHeader">
             <h5>{{organisation._name}}</h5>
 
@@ -78,7 +78,6 @@ import {Theme} from "../../../backend/model/theme";
                 </a>
             </div>
         </div>
-
         <div class="card"><div class="card-content">
             <p># groepen: {{organisation._groupIds.length}}</p>
             <p># admins: {{organisation._organisatorIds.length}}</p>
@@ -96,8 +95,8 @@ import {Theme} from "../../../backend/model/theme";
                 </a>
             </div>
         </div>
-
-        <div class="card" [ngClass]="{tableCard: organisation._groupIds.length!=0}"><div class="card-content">
+        <loading *ngIf="groupsLoading"></loading>
+        <div class="card" *ngIf="!groupsLoading" [ngClass]="{tableCard: organisation._groupIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisation._groupIds.length!=0">
                 <thead>
                     <tr>
@@ -129,8 +128,8 @@ import {Theme} from "../../../backend/model/theme";
                 </a>
             </div>
         </div>
-
-        <div class="card" [ngClass]="{tableCard: organisation._organisatorIds.length!=0}"><div class="card-content">
+        <loading *ngIf="adminsLoading"></loading>
+        <div class="card" *ngIf="!adminsLoading" [ngClass]="{tableCard: organisation._organisatorIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisation._organisatorIds.length!=0">
                 <thead>
                     <tr>
@@ -160,8 +159,8 @@ import {Theme} from "../../../backend/model/theme";
                 </a>
             </div>
         </div>
-
-        <div class="card" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
+        <loading *ngIf="membersLoading"></loading>
+        <div class="card" *ngIf="!membersLoading" [ngClass]="{tableCard: organisation._memberIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="organisation._memberIds.length!=0">
                 <thead>
                     <tr>
@@ -191,8 +190,8 @@ import {Theme} from "../../../backend/model/theme";
                 </a>
             </div>
         </div>
-
-        <div class="card" [ngClass]="{tableCard: themes.length!=0}"><div class="card-content">
+        <loading *ngIf="themesLoading"></loading>
+        <div class="card" *ngIf="!themesLoading" [ngClass]="{tableCard: themes.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="themes.length!=0">
                 <thead>
                     <tr>
@@ -213,7 +212,7 @@ import {Theme} from "../../../backend/model/theme";
         </div></div>
     </div>
 
-    <div class="row container" *ngIf="!loading && organisation==null">
+    <div class="row container" *ngIf="!organisationLoading && organisation==null">
         <div class="card"><div class="card-content">
             <p>ONGELDIG ID</p>
         </div></div>
@@ -231,7 +230,13 @@ export class OrganisationDetail {
     private admins: User[];
     private members: User[];
     private themes: Theme[] = [];
-    private loading: boolean = true;
+
+    private organisationLoading: boolean = true;
+    private groupsLoading:boolean = true;
+    private adminsLoading:boolean = true;
+    private membersLoading:boolean = true;
+    private themesLoading:boolean = true;
+
     private doDeleteOrg: boolean = false;
     private groupToDelete: Group = Group.empty();
     private doDeleteGrp: boolean = false;
@@ -255,27 +260,31 @@ export class OrganisationDetail {
             if(organisation._groupIds.length != 0) {
                 organisationService.getGroupsOfOrganisationById(organisationId).subscribe((groups: Group[]) => {
                     this.groups = groups;
+                    this.groupsLoading = false;
                 });
             }
 
             if(organisation._organisatorIds.length != 0) {
                 organisationService.getAdminsOfOrganisationById(organisationId).subscribe((admins: User[]) => {
                     this.admins = admins;
+                    this.adminsLoading = false;
                 });
             }
 
             if(organisation._memberIds.length != 0) {
                 organisationService.getMembersOfOrganisationById(organisationId).subscribe((members: User[]) => {
                     this.members = members;
+                    this.membersLoading = false;
                 });
             }
 
             organisationService.getThemesOfOrganisationById(organisationId).subscribe((themes: Theme[]) => {
                 this.themes = themes;
+                this.themesLoading = false;
             });
         });
 
-        this.loading = false;
+        this.organisationLoading = false;
     }
 
     private isAdmin(): boolean {

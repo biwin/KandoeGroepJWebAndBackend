@@ -1,4 +1,4 @@
-/// <reference path="../../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../../../typings/jquery/jquery.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
-var userService_1 = require("../../services/userService");
-var chatComponent_1 = require("../chat/chatComponent");
+var userService_1 = require("../../../services/userService");
+var chatComponent_1 = require("../../chat/chatComponent");
 var CircleSessionUserList = (function () {
     function CircleSessionUserList(service) {
         this.users = [];

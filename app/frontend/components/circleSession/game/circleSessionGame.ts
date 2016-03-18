@@ -2,17 +2,17 @@ import {Component, Inject, NgZone, Input, OnInit} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {Response} from "angular2/http";
 
-import {UserService} from "../../services/userService";
-import {ThemeService} from "../../services/themeService";
-import {CircleSessionService} from "../../services/circleSessionService";
+import {UserService} from "../../../services/userService";
+import {ThemeService} from "../../../services/themeService";
+import {CircleSessionService} from "../../../services/circleSessionService";
 
-import {Card} from "../../../backend/model/card";
-import {CardPosition} from "../../../backend/model/cardPosition";
-import {CircleSession} from "../../../backend/model/circleSession";
-import {CircleSessionConstants} from "./../../logic/circleSessionConstants";
+import {Card} from "../../../../backend/model/card";
+import {CardPosition} from "../../../../backend/model/cardPosition";
+import {CircleSession} from "../../../../backend/model/circleSession";
+import {CircleSessionConstants} from "./../../../logic/circleSessionConstants";
 import {CircleSessionCardDetail} from "./circleSessionCardDetail";
-import {CircleSessionMoveResponse} from "../../../backend/model/circleSessionMoveResponse";
-import {CircleSessionCardOnBoardPipe} from "../../logic/circleSessionCardOnBoardPipe";
+import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
+import {CircleSessionCardOnBoardPipe} from "../../../logic/circleSessionCardOnBoardPipe";
 import Socket = SocketIOClient.Socket;
 
 

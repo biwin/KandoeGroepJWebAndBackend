@@ -10,13 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
-var circleSession_1 = require("../../../backend/model/circleSession");
+var circleSession_1 = require("../../../../backend/model/circleSession");
 var circleSessionPreGame_1 = require("./circleSessionPreGame");
 var circleSessionGame_1 = require("./circleSessionGame");
 var circleSessionUserList_1 = require("./circleSessionUserList");
-var circleSessionService_1 = require("../../services/circleSessionService");
+var circleSessionService_1 = require("../../../services/circleSessionService");
 var router_1 = require("angular2/router");
-var loadingSpinner_1 = require("../general/loadingSpinner");
+var loadingSpinner_1 = require("../../general/loadingSpinner");
 var CircleSessionGameWrapper = (function () {
     function CircleSessionGameWrapper(csService, routeParams) {
         var _this = this;
