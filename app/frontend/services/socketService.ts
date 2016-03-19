@@ -2,6 +2,10 @@ import {NgZone, Inject, Injectable} from "angular2/core";
 import Socket = SocketIOClient.Socket;
 import {ChatMessage} from "../../backend/model/chatMessage";
 
+
+/**
+ * Class that is responsible for the WebSocket connection between frontend & backend.
+ */
 @Injectable()
 export class SocketService {
     private zone:NgZone;

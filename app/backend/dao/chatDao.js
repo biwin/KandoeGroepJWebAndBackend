@@ -2,7 +2,7 @@
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
- * Class that is responsible for the connection with the dbb for chatmessages
+ * Class that is responsible for the connection with the db for chatmessages
  */
 var ChatDao = (function () {
     function ChatDao() {

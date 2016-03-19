@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit, NgZone} from "angular2/core";
+import {Component, Input, OnInit, NgZone} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {Response} from "angular2/http";
 

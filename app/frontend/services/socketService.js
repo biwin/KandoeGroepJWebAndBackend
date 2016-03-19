@@ -34,7 +34,10 @@ var SocketService = (function () {
         this.socket.emit('send message', JSON.stringify(message));
     };
     SocketService.prototype.emitCardInit = function (payload) {
-        this.socket.emit('init cards', JSON.S);
+        this.socket.emit('init cards', JSON.stringify(payload));
+    };
+    SocketService.prototype.subscribeToCardInit = function (callback) {
+        this.socket.on('init cards', callback);
     };
     SocketService = __decorate([
         core_1.Injectable(),

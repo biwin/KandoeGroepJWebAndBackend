@@ -1,5 +1,5 @@
 /**
- * Class that provides a toolbox to calcultate where cards on the gameboard should be placed
+ * Class that provides a toolbox to calculate where cards on the gameboard should be placed
  */
 export class CircleMathToolbox {
     public static POS_ON_CIRCLE(center:number, r:number, angle:number, f:(n:number) => number):number {

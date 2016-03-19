@@ -1,7 +1,7 @@
 "use strict";
 var circleMathToolbox_1 = require("./circleMathToolbox");
 /**
- * Class
+ * Class that provides a toolbox that aids with forming the cards on the gameboard
  */
 var CircleSessionOnCircleToolbox = (function () {
     function CircleSessionOnCircleToolbox() {
