@@ -18,6 +18,7 @@ before(function(done: any) {
 });
 
 describe('ThemeManager', () => {
+
     describe('createTheme', () => {
         var user: User;
         var theme: Theme;
@@ -25,7 +26,7 @@ describe('ThemeManager', () => {
         before(function(done: any) {
             this.timeout(0);
 
-            userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password'), (u: User) => {
+            userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password', ""), (u: User) => {
                 try {
                     user = u;
 
@@ -41,13 +42,18 @@ describe('ThemeManager', () => {
 
             theme = new Theme('first', 'This is a sample theme', [user._id]);
             themeManager.createTheme(theme, (t: Theme) => {
-                try {
-                    assert.equal(theme._name, t._name);
+                themeManager.getTheme(t._id, (themeGet:Theme) => {
+                    try {
+                        assert.equal(t._id, themeGet._id);
+                        assert.equal(theme._name, themeGet._name);
+                        assert.deepEqual(theme._organisatorIds, themeGet._organisatorIds);
+                        assert.equal(theme._description, themeGet._description);
 
-                    done();
-                } catch(e) {
-                    done(e);
-                }
+                        done();
+                    } catch(e) {
+                        done(e);
+                    }    
+                })
             });
         });
 
@@ -68,19 +74,52 @@ describe('ThemeManager', () => {
 
     describe('AddCard', () => {
         var card: Card;
+        var theme: Theme;
+        var user:User;
 
         before(function(done: any){
-            card = new Card ('Cafe de vissers', 't1235');
-            done();
+            userManager.registerUser(new User('Enio', 'enio.serluppens@student.kdg.be', 'password', ""), (u: User) => {
+                try {
+                    user = u;
+                    theme = new Theme('Cafes', 'thema van cafes', [u._id]);
+                    themeManager.createTheme(theme, (t:Theme) => {
+                        theme = t;
+                        done();
+                    });
+                } catch(e) {
+                    done(e);
+                }
+            });
         });
 
         it('Card must be added to a theme', function(done: any){
             this.timeout(0);
 
-            themeManager.createCard(card, (c: Card) => {
-                assert.notEqual(c._id, null);
-                done();
+            card = new Card('cafe de vissers', theme._id);
+            
+            themeManager.getTheme(theme._id, (getTheme:Theme) => {
+                themeManager.createCard(card, (c: Card) => {
+                    assert.notEqual(c._id, null);
+                    assert.equal(c._themeId, getTheme._id);
+                    assert.equal(c._name, card._name);
+                    done();
+                });
             });
+            
+        });
+
+        after(function (done: any) {
+            this.timeout(0);
+            try {
+                userManager.removeUserById(user._id, () => {
+                    themeManager.removeThemeById(theme._id, () => {
+                        done();
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
         });
     });
+    
 });

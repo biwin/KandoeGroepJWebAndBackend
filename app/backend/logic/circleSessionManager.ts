@@ -4,20 +4,23 @@ import {ChatManager} from "./chatManager";
 import {UserManager} from "./userManager";
 import {ThemeManager} from "./themeManager";
 import {GroupManager} from "./groupManager";
+import {SnapshotManager} from "./snapshotManager";
 
 import {User} from "../model/user";
 import {Card} from "../model/card";
 import {Group} from "../model/group";
 import {Theme} from "../model/theme";
+import {Snapshot} from "../model/snapshot";
 import {CardPosition} from "../model/cardPosition";
 import {CircleSession} from "../model/circleSession";
 import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
 
+
 /**
  * Class that is responsible for managing what data will be send to the database layer for circlesession. 
  * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
- * Gains information from chatmanager, usermanager, thememanager and groupmanager when needed for an circlesession.
+ * Gains information from chatmanager, usermanager, thememanager, snapshotmanager and groupmanager when needed for an circlesession.
  */
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
@@ -301,7 +304,10 @@ export class CircleSessionManager {
             if(c._creatorId !== userId) {
                 callback(false, "You're not the owner of this session!");
             } else {
-                this._dao.stopGame(sessionId, callback);
+                var snapshotManager:SnapshotManager = new SnapshotManager();
+                snapshotManager.createSnapshot(sessionId, (snapshot:Snapshot) =>{
+                    this._dao.stopGame(sessionId, callback);
+                });
             }
         });
     }

@@ -1,16 +1,15 @@
+/*
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
-/*import assert = require('assert');
+
+import assert = require('assert');
 import e = require("express");
 
-import {timeout} from "rxjs/operator/timeout";
-import {ObjectID} from "mongodb";
-
 import {UserManager} from "../app/backend/logic/userManager";
+import {User} from "../app/backend/model/user";
 import {Group} from "../app/backend/model/group";
 import {Organisation} from "../app/backend/model/organisation";
-import {User} from "../app/backend/model/user";
 
 var userManager:UserManager;
 
@@ -46,8 +45,8 @@ describe('UserManager', () => {
         });
 
     });
-});*/
-/*
+
+
     describe('getUserByName', () => {
         it('Read non-existing user, should return the null', function (done:any) {
             this.timeout(0);
@@ -97,8 +96,7 @@ describe('UserManager', () => {
                 done();
             }
         });
-    });*/
-/*
+    });
     describe('getAllUsers', () => {
         var users = [new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
             new User('Jan', 'jasper.catthoor@student.kdg.be', 'password', 'web'),
@@ -602,7 +600,7 @@ describe('UserManager', () => {
 
     describe('removeGroup', () => {
         var organisation = new Organisation('Organisation', []);
-        var group:Group = new Group(organisation._name, 'Group', 'Description');
+        var group:Group = new Group('Group', 'Description', organisation._id, []);
         before(function (done:any) {
             this.timeout(0);
             try {
@@ -637,7 +635,6 @@ describe('UserManager', () => {
             });
         });
     });
+});
 */
-/*
-});*/
 //# sourceMappingURL=user.js.map

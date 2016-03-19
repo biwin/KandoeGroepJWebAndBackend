@@ -4,11 +4,12 @@ var chatManager_1 = require("./chatManager");
 var userManager_1 = require("./userManager");
 var themeManager_1 = require("./themeManager");
 var groupManager_1 = require("./groupManager");
+var snapshotManager_1 = require("./snapshotManager");
 var circleSessionCardWrapper_1 = require("../model/circleSessionCardWrapper");
 /**
  * Class that is responsible for managing what data will be send to the database layer for circlesession.
  * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
- * Gains information from chatmanager, usermanager, thememanager and groupmanager when needed for an circlesession.
+ * Gains information from chatmanager, usermanager, thememanager, snapshotmanager and groupmanager when needed for an circlesession.
  */
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
@@ -294,7 +295,10 @@ var CircleSessionManager = (function () {
                 callback(false, "You're not the owner of this session!");
             }
             else {
-                _this._dao.stopGame(sessionId, callback);
+                var snapshotManager = new snapshotManager_1.SnapshotManager();
+                snapshotManager.createSnapshot(sessionId, function (snapshot) {
+                    _this._dao.stopGame(sessionId, callback);
+                });
             }
         });
     };
