@@ -22,22 +22,29 @@ var SocketService = (function () {
         this.socket.emit('join session', JSON.stringify({ sessionId: sessionId }));
     };
     SocketService.prototype.subscribeToCardPlay = function (callback) {
-        this.socket.on('send move', callback);
+        var _this = this;
+        this.socket.on('send move', function (data) { return callback(data, _this.zone); });
     };
     SocketService.prototype.emitCardPlay = function (payload) {
         this.socket.emit('send move', payload);
     };
     SocketService.prototype.subscribeToChatReceive = function (callback) {
-        this.socket.on('send message', callback);
+        var _this = this;
+        this.socket.on('send message', function (data) {
+            callback(data, _this.zone);
+        });
     };
     SocketService.prototype.emitChatSend = function (message) {
         this.socket.emit('send message', JSON.stringify(message));
     };
     SocketService.prototype.emitCardInit = function (payload) {
-        this.socket.emit('init cards', JSON.stringify(payload));
+        this.socket.emit('init cards', payload);
     };
     SocketService.prototype.subscribeToCardInit = function (callback) {
-        this.socket.on('init cards', callback);
+        var _this = this;
+        this.socket.on('init cards', function (data) {
+            callback(data, _this.zone);
+        });
     };
     SocketService = __decorate([
         core_1.Injectable(),
