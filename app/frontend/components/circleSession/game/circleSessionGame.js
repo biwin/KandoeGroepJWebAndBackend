@@ -17,7 +17,7 @@ var userService_1 = require("../../../services/userService");
 var themeService_1 = require("../../../services/themeService");
 var circleSessionService_1 = require("../../../services/circleSessionService");
 var circleSession_1 = require("../../../../backend/model/circleSession");
-var circleSessionConstants_1 = require("./../../../logic/circleSessionConstants");
+var circleSessionCardOnCircleToolbox_1 = require("./../../../logic/circleSessionCardOnCircleToolbox");
 var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionCardOnBoardPipe_1 = require("../../../logic/circleSessionCardOnBoardPipe");
 var loadingSpinner_1 = require("../../general/loadingSpinner");
@@ -25,7 +25,7 @@ var CircleSessionGame = (function () {
     function CircleSessionGame(csService, themeService, uService, socketUrl) {
         this.loading = true;
         this.turnInProgress = false;
-        this.constants = new circleSessionConstants_1.CircleSessionConstants();
+        this.constants = new circleSessionCardOnCircleToolbox_1.CircleSessionOnCircleToolbox();
         this.colors = new Map();
         this.circleSession = circleSession_1.CircleSession.empty();
         this.cards = [];

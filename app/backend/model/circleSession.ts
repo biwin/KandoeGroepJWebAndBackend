@@ -10,10 +10,15 @@ export class CircleSession {
                 public _startDate:string,
                 public _realTime:boolean,
                 public _isPreGame:boolean,
+                //amount of rounds untill the session will stop. When null the game is endless and needs to be stopped manualy
                 public _endPoint:number,
+                //true when comments are allowed on cards in the pregame
                 public _allowComment:boolean,
+                //true when the game has been started (current date is pas startdate)
                 public _inProgress:boolean,
+                //true when the game has been stopped manualy or by reaching the endpoint
                 public _isStopped:boolean,
+                //Time a turn can last for one player
                 public _turnTimeMin?:number,
                 public _currentPlayerId?:string) {}
 

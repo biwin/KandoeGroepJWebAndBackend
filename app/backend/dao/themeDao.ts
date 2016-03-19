@@ -7,6 +7,9 @@ import {DaoConstants} from "./daoConstants";
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
 
+/**
+ * Class that is responsible for the connection with the dbb for themes and cards
+ */
 export class ThemeDao {
     private _client: MongoClient;
 

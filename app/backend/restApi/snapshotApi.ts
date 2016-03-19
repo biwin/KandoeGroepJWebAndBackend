@@ -1,8 +1,15 @@
-import {SnapshotManager} from "../logic/snapshotManager";
 import {Response, Request} from "express";
-import {Snapshot} from "../model/snapshot";
+
 import {UserApi} from "./userApi";
 
+import {SnapshotManager} from "../logic/snapshotManager";
+
+import {Snapshot} from "../model/snapshot";
+
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the snapshotmanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class SnapshotApi {
     private static mgr:SnapshotManager = new SnapshotManager();
 

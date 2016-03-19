@@ -9,6 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
+/**
+ * Pipe that will force that only cards that are on the board will be drawn
+ */
 var CircleSessionCardOnBoardPipe = (function () {
     function CircleSessionCardOnBoardPipe() {
     }

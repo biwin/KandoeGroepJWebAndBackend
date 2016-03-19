@@ -4,7 +4,17 @@ var CircleSession = (function () {
         /* _name format: "GroupName - ThemeName" */
         _name, _creatorId, 
         /* _startDate format: yyyy-mm-dd hh:mm */
-        _startDate, _realTime, _isPreGame, _endPoint, _allowComment, _inProgress, _isStopped, _turnTimeMin, _currentPlayerId) {
+        _startDate, _realTime, _isPreGame, 
+        //amount of rounds untill the session will stop. When null the game is endless and needs to be stopped manualy
+        _endPoint, 
+        //true when comments are allowed on cards in the pregame
+        _allowComment, 
+        //true when the game has been started (current date is pas startdate)
+        _inProgress, 
+        //true when the game has been stopped manualy or by reaching the endpoint
+        _isStopped, 
+        //Time a turn can last for one player
+        _turnTimeMin, _currentPlayerId) {
         this._groupId = _groupId;
         this._userIds = _userIds;
         this._themeId = _themeId;

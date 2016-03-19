@@ -8,6 +8,9 @@ import {User} from "../model/user";
 import {Group} from "../model/group";
 import {Organisation} from "../model/organisation";
 
+/**
+ * Class that is responsible for the connection with the dbb for users
+ */
 export class UserDao {
     private client: MongoClient;
 

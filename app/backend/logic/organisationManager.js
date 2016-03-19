@@ -3,6 +3,10 @@ var organisationDao_1 = require("../dao/organisationDao");
 var userManager_1 = require("./userManager");
 var groupManager_1 = require("./groupManager");
 var themeManager_1 = require("./themeManager");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for organisations.
+ * Gains information from usermanager, groupmanager and thememanager when needed for an organisation.
+ */
 var OrganisationManager = (function () {
     function OrganisationManager() {
         this._dao = new organisationDao_1.OrganisationDao();

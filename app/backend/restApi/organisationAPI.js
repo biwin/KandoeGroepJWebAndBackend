@@ -3,6 +3,11 @@ var groupAPI_1 = require("./groupAPI");
 var userApi_1 = require("./userApi");
 var themeApi_1 = require("./themeApi");
 var organisationManager_1 = require("../logic/organisationManager");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the organisationmanager
+ * Uses the groupapi and themapi to get organisation information when needed
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var OrganisationAPI = (function () {
     function OrganisationAPI() {
     }

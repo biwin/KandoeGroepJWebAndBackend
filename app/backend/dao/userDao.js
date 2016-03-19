@@ -2,6 +2,9 @@
 "use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
+/**
+ * Class that is responsible for the connection with the dbb for users
+ */
 var UserDao = (function () {
     function UserDao() {
         this.client = new mongodb_1.MongoClient();

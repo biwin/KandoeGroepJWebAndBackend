@@ -1,6 +1,10 @@
 "use strict";
-var snapshotManager_1 = require("../logic/snapshotManager");
 var userApi_1 = require("./userApi");
+var snapshotManager_1 = require("../logic/snapshotManager");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the snapshotmanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var SnapshotApi = (function () {
     function SnapshotApi() {
     }

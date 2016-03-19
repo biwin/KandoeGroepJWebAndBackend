@@ -1,16 +1,24 @@
-import {CircleSession} from "../model/circleSession";
 import {CircleSessionDao} from "../dao/circleSessionDao";
-import {CardPosition} from "../model/cardPosition";
-import {GroupManager} from "./groupManager";
-import {ThemeManager} from "./themeManager";
-import {Theme} from "../model/theme";
-import {Group} from "../model/group";
-import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
-import {UserManager} from "./userManager";
-import {User} from "../model/user";
-import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
-import {Card} from "../model/card";
+
 import {ChatManager} from "./chatManager";
+import {UserManager} from "./userManager";
+import {ThemeManager} from "./themeManager";
+import {GroupManager} from "./groupManager";
+
+import {User} from "../model/user";
+import {Card} from "../model/card";
+import {Group} from "../model/group";
+import {Theme} from "../model/theme";
+import {CardPosition} from "../model/cardPosition";
+import {CircleSession} from "../model/circleSession";
+import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
+import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
+
+/**
+ * Class that is responsible for managing what data will be send to the database layer for circlesession. 
+ * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, usermanager, thememanager and groupmanager when needed for an circlesession.
+ */
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 

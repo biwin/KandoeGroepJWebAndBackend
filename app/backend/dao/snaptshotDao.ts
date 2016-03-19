@@ -1,12 +1,12 @@
-import {MongoClient} from "mongodb";
-import {Snapshot} from "../model/snapshot";
-import {DaoConstants} from "./daoConstants";
-import {Db} from "mongodb";
-import {MongoError} from "mongodb";
-import {InsertOneWriteOpResult} from "mongodb";
-import {ObjectID} from "mongodb";
-import {CursorResult} from "mongodb";
+import {MongoClient, Db, MongoError, InsertOneWriteOpResult, ObjectID, CursorResult} from "mongodb";
 
+import {DaoConstants} from "./daoConstants";
+
+import {Snapshot} from "../model/snapshot";
+
+/**
+ * Class that is responsible for the connection with the dbb for snapshots
+ */
 export class SnapshotDao {
     private _client: MongoClient;
 

@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Class that contains the Constant_Url to the KanDoe Database
+ */
 var DaoConstants = (function () {
     function DaoConstants() {
     }

@@ -1,6 +1,9 @@
 "use strict";
-var mongodb_1 = require("mongodb");
 var userDao_1 = require("../dao/userDao");
+var mongodb_1 = require("mongodb");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for users
+ */
 var UserManager = (function () {
     function UserManager() {
         this._dao = new userDao_1.UserDao();

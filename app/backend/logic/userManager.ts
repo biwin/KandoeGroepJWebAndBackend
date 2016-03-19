@@ -1,10 +1,14 @@
+import {UserDao} from "../dao/userDao";
+
 import {ObjectID} from "mongodb";
 
-import {UserDao} from "../dao/userDao";
+import {User} from "../model/user";
 import {Group} from "../model/group";
 import {Organisation} from "../model/organisation";
-import {User} from "../model/user";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for users
+ */
 export class UserManager {
     private _dao: UserDao;
 

@@ -1,5 +1,9 @@
 import {CircleMathToolbox} from "./circleMathToolbox";
-export class CircleSessionConstants {
+
+/**
+ * Class that provides a toolbox that aids with forming the cards on the gameboard
+ */
+export class CircleSessionOnCircleToolbox {
     private _colors:string[] = [];
 
     constructor() {

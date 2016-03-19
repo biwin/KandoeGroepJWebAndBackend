@@ -9,7 +9,7 @@ import {CircleSessionService} from "../../../services/circleSessionService";
 import {Card} from "../../../../backend/model/card";
 import {CardPosition} from "../../../../backend/model/cardPosition";
 import {CircleSession} from "../../../../backend/model/circleSession";
-import {CircleSessionConstants} from "./../../../logic/circleSessionConstants";
+import {CircleSessionOnCircleToolbox} from "./../../../logic/circleSessionCardOnCircleToolbox";
 import {CircleSessionCardDetail} from "./circleSessionCardDetail";
 import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
 import {CircleSessionCardOnBoardPipe} from "../../../logic/circleSessionCardOnBoardPipe";
@@ -58,7 +58,7 @@ export class CircleSessionGame implements OnInit {
     private csService:CircleSessionService;
     private tService:ThemeService;
 
-    private constants:CircleSessionConstants = new CircleSessionConstants();
+    private constants:CircleSessionOnCircleToolbox = new CircleSessionOnCircleToolbox();
     private colors:Map<string,string> = new Map<string,string>();
 
     @Input() public circleSession:CircleSession = CircleSession.empty();

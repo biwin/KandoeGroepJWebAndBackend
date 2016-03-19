@@ -1,6 +1,8 @@
 "use strict";
 var CardPosition = (function () {
-    function CardPosition(_sessionId, _cardId, _userId, _userHistory, 
+    function CardPosition(_sessionId, _cardId, _userId, 
+        //list of userIds that have moved this card in this session
+        _userHistory, 
         /* 0 is in the game but not on the board. 1-5 are the rings (5 = the inner ring = end)  */
         _position, _lastChanged) {
         this._sessionId = _sessionId;

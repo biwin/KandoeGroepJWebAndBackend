@@ -1,10 +1,15 @@
 import {Injectable, Inject} from "angular2/core";
-import {Response, Headers} from "angular2/http";
 import {Observable} from "rxjs/Observable";
-import {HttpWrapperService} from "./httpWrapperService";
-import {Theme} from "../../backend/model/theme";
-import {Card} from "../../backend/model/card";
 
+import {HttpWrapperService} from "./httpWrapperService";
+
+import {Card} from "../../backend/model/card";
+import {Theme} from "../../backend/model/theme";
+
+/**
+ * Class that is responsible for a link between the frontend and the backend for themes.
+ * Uses the theme routes in the server.js file
+ */
 @Injectable()
 export class ThemeService {
     private http: HttpWrapperService = null;

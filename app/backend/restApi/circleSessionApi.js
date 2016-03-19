@@ -1,7 +1,11 @@
 "use strict";
-var circleSessionManager_1 = require("../logic/circleSessionManager");
 var userApi_1 = require("./userApi");
+var circleSessionManager_1 = require("../logic/circleSessionManager");
 var circleSessionMoveResponse_1 = require("../model/circleSessionMoveResponse");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the circlesessionmanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var CircleSessionApi = (function () {
     function CircleSessionApi() {
     }

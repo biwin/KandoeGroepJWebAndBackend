@@ -1,6 +1,8 @@
 "use strict";
 var ChatMessage = (function () {
-    function ChatMessage(_userId, _message, _circleSessionId, _timestamp, _userName) {
+    function ChatMessage(_userId, _message, _circleSessionId, _timestamp, 
+        //optional userName to show in frontend
+        _userName) {
         this._userId = _userId;
         this._message = _message;
         this._circleSessionId = _circleSessionId;
