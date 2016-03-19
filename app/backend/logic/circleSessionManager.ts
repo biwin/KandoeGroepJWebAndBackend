@@ -162,7 +162,8 @@ export class CircleSessionManager {
                 var a:number = 0;
                 cards.forEach((c:Card) => {
                     this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean ) => {
-                        circleSessionCardWrappers.push(new CircleSessionCardWrapper(c, b));
+                        var wrapper: CircleSessionCardWrapper = new CircleSessionCardWrapper(c, b, c._id);
+                        circleSessionCardWrappers.push(wrapper);
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);
                         }

@@ -150,7 +150,8 @@ var CircleSessionManager = (function () {
                 var a = 0;
                 cards.forEach(function (c) {
                     _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
-                        circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
+                        var wrapper = new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b, c._id);
+                        circleSessionCardWrappers.push(wrapper);
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);
                         }
