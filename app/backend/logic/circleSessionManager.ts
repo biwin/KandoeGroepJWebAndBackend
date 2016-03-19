@@ -102,9 +102,7 @@ export class CircleSessionManager {
                                 if (newPosition > 5) {
                                     callback(userId, null, "Card already in the middle!");
                                 } else {
-                                    var lastChangedUserId:string = c._userId;
-
-                                    this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, (c:CardPosition) => {
+                                    this._dao.updateCardPosition(sessionId, cardId, userId, c._userId, newPosition, (c:CardPosition) => {
                                         if (c != null) {
                                             this.nextPlayer(sessionId, (roundEnds:boolean, newPlayerId:string) => {
                                                 callback(newPlayerId, c);

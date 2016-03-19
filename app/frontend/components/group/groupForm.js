@@ -14,10 +14,13 @@ var router_1 = require("angular2/router");
 var groupService_1 = require("../../services/groupService");
 var userService_1 = require("../../services/userService");
 var group_1 = require("../../../backend/model/group");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var GroupForm = (function () {
     function GroupForm(router, routeParam, groupService, userService) {
         var _this = this;
         this.group = group_1.Group.empty();
+        this.submitting = false;
+        this.loading = true;
         this.router = router;
         this.groupService = groupService;
         this.userService = userService;
@@ -29,10 +32,12 @@ var GroupForm = (function () {
         }
         userService.getAllOrganisationsOfCurrentUser().subscribe(function (organisations) {
             _this.organisations = organisations;
+            _this.loading = false;
         });
     }
     GroupForm.prototype.OnSubmit = function () {
         var _this = this;
+        this.submitting = true;
         this.groupService.createGroup(this.group).subscribe(function (g) {
             _this.router.navigate(["/GroupDetail", { id: g._id }]);
         });
@@ -43,8 +48,8 @@ var GroupForm = (function () {
     GroupForm = __decorate([
         core_1.Component({
             selector: 'group-form',
-            template: "\n    <div class=\"row container\">\n        <h5>Maak nieuwe groep aan</h5>\n\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <form (submit)=\"OnSubmit()\" class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input [(ngModel)]=\"group._name\" id=\"name\" type=\"text\">\n                    <label for=\"name\">Naam</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <textarea [(ngModel)]=\"group._description\" id=\"description\" class=\"materialize-textarea\"></textarea>\n                    <label for=\"description\">Beschrijving</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s3\">\n                    <select class=\"browser-default\" [(ngModel)]=\"group._organisationId\" id=\"organisation\">\n                        <option value=\"\" disabled>Organisatie</option>\n                        <option *ngFor=\"#organisation of organisations\" value=\"{{organisation._id}}\">{{organisation._name}}</option>\n                    </select>\n\n                </div></div>\n\n                <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n            </form>\n        </div></div>\n    </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES]
+            template: "\n    <loading *ngIf=\"loading || submitting\"></loading>\n    <div *ngIf=\"!loading && !submitting\" class=\"row container\">\n        <h5>Maak nieuwe groep aan</h5>\n\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <form (submit)=\"OnSubmit()\" class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input [(ngModel)]=\"group._name\" id=\"name\" type=\"text\">\n                    <label for=\"name\">Naam</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <textarea [(ngModel)]=\"group._description\" id=\"description\" class=\"materialize-textarea\"></textarea>\n                    <label for=\"description\">Beschrijving</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s3\">\n                    <select class=\"browser-default\" [(ngModel)]=\"group._organisationId\" id=\"organisation\">\n                        <option value=\"\" disabled>Organisatie</option>\n                        <option *ngFor=\"#organisation of organisations\" value=\"{{organisation._id}}\">{{organisation._name}}</option>\n                    </select>\n\n                </div></div>\n\n                <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n            </form>\n        </div></div>\n    </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams, groupService_1.GroupService, userService_1.UserService])
     ], GroupForm);

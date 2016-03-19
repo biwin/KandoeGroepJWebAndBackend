@@ -34,7 +34,6 @@ import {Snapshot} from "../../../backend/model/snapshot";
 
 
       <div class="card hoverable small">
-      <i class="fa fa-gamepad fa-lg green-text right padding-5" *ngIf="user === circleSession._currentPlayerId"></i>
 
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable tooltipped" data-position="bottom" data-tooltip="Speler toevoegen"><i class="material-icons">person_add</i></a>
@@ -44,9 +43,11 @@ import {Snapshot} from "../../../backend/model/snapshot";
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">
+            <i class="fa fa-gamepad fa-lg green-text right padding-5" *ngIf="user === circleSession._currentPlayerId && !circleSession._isStopped"></i>
             <span class="card-title truncate" [attr.title]="circleSession._name">{{circleSession._name}}</span>
-           <p class="black-text">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>
-           <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>
+            <p class="black-text" *ngIf="!circleSession._isStopped">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>
+            <p class="black-text" *ngIf="!circleSession._isStopped">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>
+            <p class="black-text" *ngIf="circleSession._isStopped">Spel afgesloten!</p>
         </div>
       </div>
       </div>

@@ -11,11 +11,13 @@ import {CircleSessionService} from "../../../services/circleSessionService";
 import {CircleSession} from "../../../../backend/model/circleSession";
 import {CircleSessionCardWrapper} from "../../../../backend/model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
+import {LoadingSpinner} from "../../general/loadingSpinner";
 
 @Component({
     selector: 'pregame',
     template: `
-        <div class="row container">
+        <loading *ngIf="submitting || loading"></loading>
+        <div [hidden]="submitting || loading" class="row container">
               <div class="fixed-action-btn" id="sessionPreGameSave" *ngIf="myUserId === circleSession._currentPlayerId">
                 <a (click)="submitCards()" class="btn-floating btn-large red">
                   <i class="large material-icons">arrow_forward</i>
@@ -48,10 +50,13 @@ import {CircleSessionMoveResponse} from "../../../../backend/model/circleSession
             </div>
         </div>
     `,
-    directives: [CORE_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, LoadingSpinner]
 })
 export class CircleSessionPreGame implements OnChanges {
     @Input() circleSession:CircleSession;
+    
+    private loading:boolean = true;
+    private submitting:boolean = false;
     
     circleService:CircleSessionService;
     
@@ -68,6 +73,7 @@ export class CircleSessionPreGame implements OnChanges {
     ngOnChanges() {
         if (this.circleSession._id != undefined && this.circleSession._id.length > 0) {
             this.circleService.getCircleSessionCards(this.circleSession._id).subscribe((wrappers:CircleSessionCardWrapper[])=> {
+                this.loading = false;
                 this.cards = wrappers;
                 $('.tooltipped').tooltip({delay: 50});
             });
@@ -92,6 +98,7 @@ export class CircleSessionPreGame implements OnChanges {
     }
 
     submitCards() {
+        this.submitting = true;
         this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
             if (r._error == null) {
                 this.circleSession._currentPlayerId = r._currentPlayerId;
@@ -103,12 +110,13 @@ export class CircleSessionPreGame implements OnChanges {
                     return c;
                 });
                 this.selectedCards.splice(0, this.selectedCards.length);
+                this.submitting = false;
             }
-            Materialize.toast('Done', 3000, 'rounded');
         }, (r:Response) => {
             var o:CircleSessionMoveResponse = r.json();
             Materialize.toast(o._error, 3000, 'rounded');
             console.error('Error while adding card to game...: ' + o._error);
+            this.submitting = false;
         });
     }
 }

@@ -20,8 +20,11 @@ var circleSession_1 = require("../../../../backend/model/circleSession");
 var circleSessionConstants_1 = require("./../../../logic/circleSessionConstants");
 var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionCardOnBoardPipe_1 = require("../../../logic/circleSessionCardOnBoardPipe");
+var loadingSpinner_1 = require("../../general/loadingSpinner");
 var CircleSessionGame = (function () {
     function CircleSessionGame(csService, themeService, uService, socketUrl) {
+        this.loading = true;
+        this.turnInProgress = false;
         this.constants = new circleSessionConstants_1.CircleSessionConstants();
         this.colors = new Map();
         this.circleSession = circleSession_1.CircleSession.empty();
@@ -45,6 +48,7 @@ var CircleSessionGame = (function () {
                 });
                 _this.tService.getCardsByIds(cps.map(function (c) { return c._cardId; })).subscribe(function (cs) {
                     _this.cards = cs;
+                    _this.loading = false;
                 });
                 _this.positions = _this.positions.slice();
             }
@@ -72,7 +76,9 @@ var CircleSessionGame = (function () {
     };
     CircleSessionGame.prototype.playCard = function (cardId) {
         var _this = this;
+        this.turnInProgress = true;
         this.csService.playCard(this.circleSession._id, cardId).subscribe(function (r) {
+            _this.turnInProgress = false;
             _this.circleSession._currentPlayerId = r._currentPlayerId;
             if (r._updatedCardPosition != null) {
                 _this.positions.find(function (p) { return p._cardId === r._updatedCardPosition._cardId; })._position = r._updatedCardPosition._position;
@@ -80,6 +86,7 @@ var CircleSessionGame = (function () {
                 _this.socket.emit('send move', { _cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId });
             }
         }, function (r) {
+            _this.turnInProgress = false;
             var o = r.json();
             console.error('Error while playing card...: ' + o._error);
             Materialize.toast(o._error, 3000, 'rounded');
@@ -92,8 +99,8 @@ var CircleSessionGame = (function () {
     CircleSessionGame = __decorate([
         core_1.Component({
             selector: 'circlesession-game',
-            template: "\n            <div class=\"row margin-top\">\n                <div class=\"col s6 offset-s3\">\n                    <svg [attr.viewBox]=\"constants.VIEWBOX\">\n                        <!-- Draw Kandoe board circles -->\n                        <circle *ngFor=\"#filled of constants.RINGS; #i = index\"\n                                [attr.r]=\"constants.CircleRadius(i+1)\"\n                                [attr.stroke-width]=\"constants.RING_WIDTH\"\n                                [attr.cy]=\"constants.CENTER\" [attr.cx]=\"constants.CENTER\"\n                                id=\"circle-{{i+1}}\" class=\"kandoeRing\" [class.inner]=\"filled\"/>\n\n                        <circle *ngFor=\"#bol of positions | onBoardCards; #i = index\"\n                                [class.hoveredBall]=\"bol._cardId != null && hoveredCardId === bol._cardId\"\n                                [id]=\"bol._cardId\"\n                                [attr.r]=\"35\"\n                                [attr.fill]=\"colors.get(bol._cardId)\"\n                                [attr.cy]=\"constants.YPOS_CIRCLE(bol._position, (1 / positions.length) * i)\"\n                                [attr.cx]=\"constants.XPOS_CIRCLE(bol._position, (1 / positions.length) * i)\" />\n                    </svg>\n                </div>\n            </div>\n            <div class=\"row\">\n                <circlesession-carddetail *ngFor=\"#card of cards\" [canPlay]=\"circleSession._currentPlayerId === myUserId\" [card]=\"card\" [color]=\"colors.get(card._id)\" (hover)=\"hover(card._id, $event)\" (playCard)=\"playCard($event)\"></circlesession-carddetail>\n            </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, circleSessionCardDetail_1.CircleSessionCardDetail],
+            template: "\n            <loading *ngIf=\"loading\"></loading>\n            <div *ngIf=\"!loading\" class=\"row margin-top\">\n                <div class=\"col s6 offset-s3\">\n                    <svg [attr.viewBox]=\"constants.VIEWBOX\">\n                        <!-- Draw Kandoe board circles -->\n                        <circle *ngFor=\"#filled of constants.RINGS; #i = index\"\n                                [attr.r]=\"constants.CircleRadius(i+1)\"\n                                [attr.stroke-width]=\"constants.RING_WIDTH\"\n                                [attr.cy]=\"constants.CENTER\" [attr.cx]=\"constants.CENTER\"\n                                id=\"circle-{{i+1}}\" class=\"kandoeRing\" [class.inner]=\"filled\"/>\n\n                        <circle *ngFor=\"#bol of positions | onBoardCards; #i = index\"\n                                [class.hoveredBall]=\"bol._cardId != null && hoveredCardId === bol._cardId\"\n                                [id]=\"bol._cardId\"\n                                [attr.r]=\"35\"\n                                [attr.fill]=\"colors.get(bol._cardId)\"\n                                [attr.cy]=\"constants.YPOS_CIRCLE(bol._position, (1 / positions.length) * i)\"\n                                [attr.cx]=\"constants.XPOS_CIRCLE(bol._position, (1 / positions.length) * i)\" />\n                    </svg>\n                </div>\n            </div>\n            <div *ngIf=\"!loading\" class=\"row\">\n                <circlesession-carddetail *ngFor=\"#card of cards\" [canPlay]=\"circleSession._currentPlayerId === myUserId && !turnInProgress\" [card]=\"card\" [color]=\"colors.get(card._id)\" (hover)=\"hover(card._id, $event)\" (playCard)=\"playCard($event)\"></circlesession-carddetail>\n            </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, circleSessionCardDetail_1.CircleSessionCardDetail, loadingSpinner_1.LoadingSpinner],
             pipes: [circleSessionCardOnBoardPipe_1.CircleSessionCardOnBoardPipe]
         }),
         __param(3, core_1.Inject('App.SocketUrl')), 

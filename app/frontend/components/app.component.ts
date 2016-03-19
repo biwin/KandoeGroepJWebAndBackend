@@ -27,7 +27,7 @@ import {SnapshotDetail} from "./snapshot/snapshotDetail";
 @Component({
     selector: 'my-app',
     template: `
-    <navigation-bar></navigation-bar>
+    <navigation-bar [padRight]="padRight"></navigation-bar>
     <div class="content" [class.no-padding-left]="!service.isLoggedIn()">
         <router-outlet></router-outlet>
     </div>
@@ -60,6 +60,7 @@ import {SnapshotDetail} from "./snapshot/snapshotDetail";
 
 export class AppComponent {
     private service:UserService;
+    private padRight:boolean = false;
 
     constructor(private router: Router, userService: UserService) {
         this.service = userService;

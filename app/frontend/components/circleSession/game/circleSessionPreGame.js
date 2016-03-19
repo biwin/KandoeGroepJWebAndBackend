@@ -15,8 +15,11 @@ var common_1 = require("angular2/common");
 var userService_1 = require("../../../services/userService");
 var circleSessionService_1 = require("../../../services/circleSessionService");
 var circleSession_1 = require("../../../../backend/model/circleSession");
+var loadingSpinner_1 = require("../../general/loadingSpinner");
 var CircleSessionPreGame = (function () {
     function CircleSessionPreGame(cService, uService) {
+        this.loading = true;
+        this.submitting = false;
         this.cards = [];
         this.selectedCards = [];
         this.circleService = cService;
@@ -26,6 +29,7 @@ var CircleSessionPreGame = (function () {
         var _this = this;
         if (this.circleSession._id != undefined && this.circleSession._id.length > 0) {
             this.circleService.getCircleSessionCards(this.circleSession._id).subscribe(function (wrappers) {
+                _this.loading = false;
                 _this.cards = wrappers;
                 $('.tooltipped').tooltip({ delay: 50 });
             });
@@ -48,6 +52,7 @@ var CircleSessionPreGame = (function () {
     };
     CircleSessionPreGame.prototype.submitCards = function () {
         var _this = this;
+        this.submitting = true;
         this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe(function (r) {
             if (r._error == null) {
                 _this.circleSession._currentPlayerId = r._currentPlayerId;
@@ -59,12 +64,13 @@ var CircleSessionPreGame = (function () {
                     return c;
                 });
                 _this.selectedCards.splice(0, _this.selectedCards.length);
+                _this.submitting = false;
             }
-            Materialize.toast('Done', 3000, 'rounded');
         }, function (r) {
             var o = r.json();
             Materialize.toast(o._error, 3000, 'rounded');
             console.error('Error while adding card to game...: ' + o._error);
+            _this.submitting = false;
         });
     };
     __decorate([
@@ -74,8 +80,8 @@ var CircleSessionPreGame = (function () {
     CircleSessionPreGame = __decorate([
         core_1.Component({
             selector: 'pregame',
-            template: "\n        <div class=\"row container\">\n              <div class=\"fixed-action-btn\" id=\"sessionPreGameSave\" *ngIf=\"myUserId === circleSession._currentPlayerId\">\n                <a (click)=\"submitCards()\" class=\"btn-floating btn-large red\">\n                  <i class=\"large material-icons\">arrow_forward</i>\n                </a>\n                <ul>\n                  <li><a (click)=\"clear()\" class=\"btn-floating orange\"><i class=\"material-icons\">undo</i></a></li>\n                </ul>\n              </div>\n\n            <div *ngIf=\"myUserId === circleSession._currentPlayerId\">\n                <h5 class=\"center-align\">Kies de kaarten die belangrijk zijn voor jou!</h5>\n                <div class=\"col s12 m4\" *ngFor=\"#card of cards\">\n                    <div class=\"card-panel\">\n                        <span class=\"truncate\">\n                            <a (click)=\"selectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) < 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light blue\"><i class=\"material-icons\">add</i></a>\n                            <a (click)=\"unselectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) >= 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light red\"><i class=\"material-icons\">remove</i></a>\n                            <a *ngIf=\"card.inPlay\" class=\"z-depth-0 btn-floating btn disabled-with-tooltip tooltipped\" data-position=\"bottom\" data-delay=\"50\" data-tooltip=\"Deze kaart is al door een andere speler gekozen.\"><i class=\"material-icons\">remove</i></a>\n                            <span class=\"center-align\">  {{card.card._name}}</span>\n                        </span>\n                   </div>\n                </div>\n            </div>\n            <div *ngIf=\"myUserId !== circleSession._currentPlayerId\" class=\"center-block\">\n                <p class=\"center-align\">\n                    <i class=\"fa fa-quote-left fa-3x fa-pull-left\"></i>\n                    Alles komt op tijd voor hem die wachten kan.\n                    <i class=\"fa fa-quote-right fa-3x fa-pull-right\"></i>\n                </p>\n                <p class=\"right-align grey-text text-lighten-2\">-Fran\u00E7ois Rabelais</p>\n            </div>\n        </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES]
+            template: "\n        <loading *ngIf=\"submitting || loading\"></loading>\n        <div [hidden]=\"submitting || loading\" class=\"row container\">\n              <div class=\"fixed-action-btn\" id=\"sessionPreGameSave\" *ngIf=\"myUserId === circleSession._currentPlayerId\">\n                <a (click)=\"submitCards()\" class=\"btn-floating btn-large red\">\n                  <i class=\"large material-icons\">arrow_forward</i>\n                </a>\n                <ul>\n                  <li><a (click)=\"clear()\" class=\"btn-floating orange\"><i class=\"material-icons\">undo</i></a></li>\n                </ul>\n              </div>\n\n            <div *ngIf=\"myUserId === circleSession._currentPlayerId\">\n                <h5 class=\"center-align\">Kies de kaarten die belangrijk zijn voor jou!</h5>\n                <div class=\"col s12 m4\" *ngFor=\"#card of cards\">\n                    <div class=\"card-panel\">\n                        <span class=\"truncate\">\n                            <a (click)=\"selectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) < 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light blue\"><i class=\"material-icons\">add</i></a>\n                            <a (click)=\"unselectCard(card.card._id)\" *ngIf=\"!card.inPlay && selectedCards.indexOf(card.card._id) >= 0\" class=\"z-depth-0 btn-floating btn waves-effect waves-light red\"><i class=\"material-icons\">remove</i></a>\n                            <a *ngIf=\"card.inPlay\" class=\"z-depth-0 btn-floating btn disabled-with-tooltip tooltipped\" data-position=\"bottom\" data-delay=\"50\" data-tooltip=\"Deze kaart is al door een andere speler gekozen.\"><i class=\"material-icons\">remove</i></a>\n                            <span class=\"center-align\">  {{card.card._name}}</span>\n                        </span>\n                   </div>\n                </div>\n            </div>\n            <div *ngIf=\"myUserId !== circleSession._currentPlayerId\" class=\"center-block\">\n                <p class=\"center-align\">\n                    <i class=\"fa fa-quote-left fa-3x fa-pull-left\"></i>\n                    Alles komt op tijd voor hem die wachten kan.\n                    <i class=\"fa fa-quote-right fa-3x fa-pull-right\"></i>\n                </p>\n                <p class=\"right-align grey-text text-lighten-2\">-Fran\u00E7ois Rabelais</p>\n            </div>\n        </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, userService_1.UserService])
     ], CircleSessionPreGame);

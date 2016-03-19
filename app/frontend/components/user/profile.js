@@ -12,10 +12,13 @@ var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var userService_1 = require("../../services/userService");
 var common_1 = require("angular2/common");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var Profile = (function () {
     function Profile(router, service) {
         var _this = this;
         this.service = service;
+        this.submitting = false;
+        this.loading = true;
         this.router = router;
         var token = localStorage.getItem('token');
         if (token == null || token == "") {
@@ -23,13 +26,19 @@ var Profile = (function () {
         }
         else {
             this.usernameString = service.getUsername();
-            service.getImageLinks(function (smallImageLink, largeImageLink) { _this.smallImageLinkString = smallImageLink; _this.largeImageLinkString = largeImageLink; });
+            service.getImageLinks(function (smallImageLink, largeImageLink) {
+                _this.smallImageLinkString = smallImageLink;
+                _this.largeImageLinkString = largeImageLink;
+                _this.loading = false;
+            });
             service.getUserPicture('large').subscribe(function (url) { return _this.imageSource = url; });
         }
     }
     Profile.prototype.onChangeDetailsSubmit = function () {
         var _this = this;
+        this.submitting = true;
         this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe(function (token) {
+            _this.submitting = false;
             if (token != null) {
                 if (token != "nope") {
                     localStorage.setItem('token', token);
@@ -47,8 +56,8 @@ var Profile = (function () {
     Profile = __decorate([
         core_1.Component({
             selector: 'profile',
-            template: "\n        <div class=\"row container\">\n            <h5>Profiel</h5>\n            <div class=\"card formCard\">\n                <div class=\"card-content\">\n                    <form *ngIf=\"service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onChangeDetailsSubmit()\">\n                        <img style=\"max-width: 200px; max-height: 200px;\" src=\"{{imageSource}}\" />\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"smallImageLink\" [(ngModel)]=\"smallImageLinkString\" type=\"text\" class=\"form-control validate\" ngControl=\"_smallImageLink\" required #smallImageLink=\"ngForm\">\n                            <label for=\"smallImageLink\" [class.active]=\"smallImageLinkString\" data-error=\"Oops!\">Naam afbeelding</label>\n                        </div></div>\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"largeImageLink\" [(ngModel)]=\"largeImageLinkString\" type=\"text\" class=\"form-control validate\" ngControl=\"_largeImageLink\" required #largeImageLink=\"ngForm\">\n                            <label for=\"largeImageLink\" [class.active]=\"largeImageLinkString\" data-error=\"Oops!\">Profiel afbeelding</label>\n                        </div></div>\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"username\" [(ngModel)]=\"usernameString\" type=\"text\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_username\" required #username=\"ngForm\">\n                            <label for=\"username\" [class.active]=\"usernameString\" data-error=\"Oops!\">Gebruikersnaam</label>\n                        </div></div>\n\n                        <div class=\"row\">\n                            <button type=\"submit\" id=\"submitButton\" class=\"btn waves-effect teal waves-light col s2\"><p>Submit<i class=\"material-icons right\">send</i></p></button>\n                        </div>\n\n                        <div class=\"row\">\n                            <button (click)=\"logout()\" class=\"btn waves-effect waves-light col s2 red\"><p>Log uit</p></button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    ",
-            directives: [common_1.NgIf]
+            template: "\n        <loading *ngIf=\"loading || submitting\"></loading>\n        <div [hidden]=\"loading || submitting\" class=\"row container\">\n            <h5>Profiel</h5>\n            <div class=\"card formCard\">\n                <div class=\"card-content\">\n                    <form *ngIf=\"service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onChangeDetailsSubmit()\">\n                        <img style=\"max-width: 200px; max-height: 200px;\" src=\"{{imageSource}}\" />\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"smallImageLink\" [(ngModel)]=\"smallImageLinkString\" type=\"text\" class=\"form-control validate\" ngControl=\"_smallImageLink\" required #smallImageLink=\"ngForm\">\n                            <label for=\"smallImageLink\" [class.active]=\"smallImageLinkString\" data-error=\"Oops!\">Naam afbeelding</label>\n                        </div></div>\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"largeImageLink\" [(ngModel)]=\"largeImageLinkString\" type=\"text\" class=\"form-control validate\" ngControl=\"_largeImageLink\" required #largeImageLink=\"ngForm\">\n                            <label for=\"largeImageLink\" [class.active]=\"largeImageLinkString\" data-error=\"Oops!\">Profiel afbeelding</label>\n                        </div></div>\n\n                        <div class=\"row\"><div class=\"input-field col s6\">\n                            <input id=\"username\" [(ngModel)]=\"usernameString\" type=\"text\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_username\" required #username=\"ngForm\">\n                            <label for=\"username\" [class.active]=\"usernameString\" data-error=\"Oops!\">Gebruikersnaam</label>\n                        </div></div>\n\n                        <div class=\"row\">\n                            <button type=\"submit\" id=\"submitButton\" class=\"btn waves-effect teal waves-light col s2\"><p>Submit<i class=\"material-icons right\">send</i></p></button>\n                        </div>\n\n                        <div class=\"row\">\n                            <button (click)=\"logout()\" class=\"btn waves-effect waves-light col s2 red\"><p>Log uit</p></button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    ",
+            directives: [common_1.NgIf, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], Profile);

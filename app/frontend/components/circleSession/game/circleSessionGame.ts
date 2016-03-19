@@ -14,12 +14,14 @@ import {CircleSessionCardDetail} from "./circleSessionCardDetail";
 import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
 import {CircleSessionCardOnBoardPipe} from "../../../logic/circleSessionCardOnBoardPipe";
 import Socket = SocketIOClient.Socket;
+import {LoadingSpinner} from "../../general/loadingSpinner";
 
 
 @Component({
     selector: 'circlesession-game',
     template: `
-            <div class="row margin-top">
+            <loading *ngIf="loading"></loading>
+            <div *ngIf="!loading" class="row margin-top">
                 <div class="col s6 offset-s3">
                     <svg [attr.viewBox]="constants.VIEWBOX">
                         <!-- Draw Kandoe board circles -->
@@ -39,15 +41,17 @@ import Socket = SocketIOClient.Socket;
                     </svg>
                 </div>
             </div>
-            <div class="row">
-                <circlesession-carddetail *ngFor="#card of cards" [canPlay]="circleSession._currentPlayerId === myUserId" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
+            <div *ngIf="!loading" class="row">
+                <circlesession-carddetail *ngFor="#card of cards" [canPlay]="circleSession._currentPlayerId === myUserId && !turnInProgress" [card]="card" [color]="colors.get(card._id)" (hover)="hover(card._id, $event)" (playCard)="playCard($event)"></circlesession-carddetail>
             </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCardDetail],
+    directives: [CORE_DIRECTIVES, CircleSessionCardDetail, LoadingSpinner],
     pipes: [CircleSessionCardOnBoardPipe]
 })
 
 export class CircleSessionGame implements OnInit {
+    private loading:boolean = true;
+    private turnInProgress:boolean = false;
     private socket:Socket;
     private socketUrl:string;
     private zone: NgZone;
@@ -84,6 +88,7 @@ export class CircleSessionGame implements OnInit {
 
                 this.tService.getCardsByIds(cps.map((c:CardPosition) => c._cardId)).subscribe((cs:Card[]) => {
                     this.cards = cs;
+                    this.loading = false;
                 });
 
                 this.positions = this.positions.slice();
@@ -112,7 +117,10 @@ export class CircleSessionGame implements OnInit {
     }
 
     playCard(cardId:string) {
+        this.turnInProgress = true;
+
         this.csService.playCard(this.circleSession._id, cardId).subscribe((r:CircleSessionMoveResponse) => {
+            this.turnInProgress = false;
             this.circleSession._currentPlayerId = r._currentPlayerId;
             if(r._updatedCardPosition != null) {
                 this.positions.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
@@ -120,6 +128,7 @@ export class CircleSessionGame implements OnInit {
                 this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId});
             }
         }, (r:Response) => {
+            this.turnInProgress = false;
             var o:CircleSessionMoveResponse = r.json();
             console.error('Error while playing card...: ' + o._error);
             Materialize.toast(o._error, 3000, 'rounded');

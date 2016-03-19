@@ -13,9 +13,11 @@ var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var userService_1 = require("../../../services/userService");
 var chatComponent_1 = require("../../chat/chatComponent");
+var loadingSpinner_1 = require("../../general/loadingSpinner");
 var CircleSessionUserList = (function () {
     function CircleSessionUserList(service) {
         this.users = [];
+        this.initComplete = false;
         this.service = service;
         this.myUserId = service.getUserId();
     }
@@ -24,6 +26,7 @@ var CircleSessionUserList = (function () {
         if (this.userIds != undefined && this.userIds.length > 0 && this.users.length == 0) {
             this.service.getUsers(this.userIds).subscribe(function (us) {
                 us.forEach(function (u) { return _this.users.push(u); });
+                _this.initComplete = true;
             });
         }
     };
@@ -42,8 +45,8 @@ var CircleSessionUserList = (function () {
     CircleSessionUserList = __decorate([
         core_1.Component({
             selector: 'user-list',
-            template: "\n    <div class=\"side-nav fixed right-aligned\" id=\"user-sidenav\">\n        <ul id=\"user-list\" class=\"collection with-header\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === myUserId\" [class.lighten-5]=\"user._id === myUserId\">\n                <div class=\"col s4\">\n                    <img *ngIf=\"user._pictureSmall !== undefined\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                    <i *ngIf=\"user._pictureSmall === undefined\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"fa fa-gamepad fa-lg green-text\"></i>\n                </div>\n            </li>\n        </ul>\n        <chatbox [sessionId]=\"circleSessionId\" [userId]=\"myUserId\"></chatbox>\n     </div>\n  ",
-            directives: [router_1.ROUTER_DIRECTIVES, chatComponent_1.ChatComponent]
+            template: "\n    <div class=\"side-nav fixed right-aligned\" id=\"user-sidenav\">\n        <loading *ngIf=\"!initComplete\"></loading>\n        <ul id=\"user-list\" *ngIf=\"initComplete\" class=\"collection with-header\">\n            <li class=\"users-heading collection-header valign-wrapper\"><h4 class=\"valign center-block\"><i class=\"material-icons\">people</i> Spelers</h4></li>\n            <li class=\"collection-item row valign-wrapper\" *ngFor=\"#user of users\" [class.blue]=\"user._id === myUserId\" [class.lighten-5]=\"user._id === myUserId\">\n                <div class=\"col s4\">\n                    <img *ngIf=\"user._pictureSmall !== undefined\" [attr.src]=\"user._pictureSmall\" class=\"circle responsive-img valign\">\n                    <i *ngIf=\"user._pictureSmall === undefined\" class=\"material-icons valign\">person</i>\n                </div>\n                <div class=\"col s7\">\n                    {{user._name}}\n                </div>\n                <div class=\"col s1\" *ngIf=\"user._id === currentPlayerId\">\n                    <i class=\"fa fa-gamepad fa-lg green-text\"></i>\n                </div>\n            </li>\n        </ul>\n        <chatbox [sessionId]=\"circleSessionId\" [userId]=\"myUserId\"></chatbox>\n     </div>\n  ",
+            directives: [router_1.ROUTER_DIRECTIVES, chatComponent_1.ChatComponent, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [userService_1.UserService])
     ], CircleSessionUserList);

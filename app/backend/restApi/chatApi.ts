@@ -6,7 +6,7 @@ import {Request} from "express";
 export class ChatApi {
     private static mgr:ChatManager = new ChatManager();
 
-    public static addMessage(message:string, callback:(isSaved:boolean, updatedMessage:ChatMessage) => any){
+    public static addMessage(message:string, callback:(updatedMessage:ChatMessage) => any){
         var messageObject:ChatMessage = JSON.parse(message);
         ChatApi.mgr.addMessage(messageObject, callback);
     }

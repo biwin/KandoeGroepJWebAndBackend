@@ -7,11 +7,13 @@ import {UserService} from "../../services/userService";
 
 import {Group} from "../../../backend/model/group";
 import {Organisation} from "../../../backend/model/organisation";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'group-form',
     template: `
-    <div class="row container">
+    <loading *ngIf="loading || submitting"></loading>
+    <div *ngIf="!loading && !submitting" class="row container">
         <h5>Maak nieuwe groep aan</h5>
 
         <div class="card formCard"><div class="card-content">
@@ -39,7 +41,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, LoadingSpinner]
 })
 
 export class GroupForm implements AfterViewInit {
@@ -48,6 +50,9 @@ export class GroupForm implements AfterViewInit {
     userService: UserService;
     private group: Group = Group.empty();
     private organisations: Organisation[];
+
+    private submitting:boolean = false;
+    private loading:boolean = true;
 
     public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
         this.router = router;
@@ -62,10 +67,12 @@ export class GroupForm implements AfterViewInit {
 
         userService.getAllOrganisationsOfCurrentUser().subscribe((organisations: Organisation[]) => {
             this.organisations = organisations;
+            this.loading = false;
         });
     }
 
     private OnSubmit() {
+        this.submitting = true;
         this.groupService.createGroup(this.group).subscribe((g: Group) => {
             this.router.navigate(["/GroupDetail", {id: g._id}]);
         });

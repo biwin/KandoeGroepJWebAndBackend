@@ -101,7 +101,7 @@ app.post('/api/user/login', function (req, res) {
     console.log(req.body);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send({_message:'You are already logged in'});
+        res.send({_message: 'You are already logged in'});
     } else {
         UserApi.UserApi.getUser(req.body._email, req.body._password, res);
     }
@@ -110,7 +110,7 @@ app.post('/api/user/login', function (req, res) {
 app.post('/api/user/register', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send({_message:'You are already registered'});
+        res.send({_message: 'You are already registered'});
     } else {
         UserApi.UserApi.createUser(req.body._username, req.body._email, req.body._password, req.body._registrar, res);
     }
@@ -123,7 +123,7 @@ app.post('/api/user/change-profile', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.changeProfile(token, req.body._username, req.body._smallPicture, req.body._largePicture, res);
     } else {
-        res.send("{\"_message\":\"You are not logged in\"}");
+        res.send({_message:"You are not logged in"});
     }
 });
 
@@ -132,7 +132,7 @@ app.post('/api/user/get-picture', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.getPicture(token, req.body._type, res);
     } else {
-        res.send("{\"_message\":\"You are not logged in\"}");
+        res.send({_message:"You are not logged in"});
     }
 });
 
@@ -148,19 +148,17 @@ io.on('connection', function (socket) {
         var sessionId = object.sessionId;
         socket.join("kandoe-" + sessionId);
     });
-    socket.on('send message', function(message) {
-        var roomName = Object.keys(socket.rooms).filter(function(room) {
+    socket.on('send message', function (message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
             return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
-        ChatApi.ChatApi.addMessage(message, function(b, updatedMessage){
-            if(b === true) {
-                io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
-            }
+        ChatApi.ChatApi.addMessage(message, function (updatedMessage) {
+            io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
         });
     });
-    socket.on('send move', function(message) {
-        var roomName = Object.keys(socket.rooms).filter(function(room) {
+    socket.on('send move', function (message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
             return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
@@ -170,5 +168,5 @@ io.on('connection', function (socket) {
 //endregion Socket.io
 
 http.listen(server_port, server_ip_address, function () {
-    console.log("Started listening to "+server_ip_address+" on port "+server_port+"!");
+    console.log("Started listening to " + server_ip_address + " on port " + server_port + "!");
 });

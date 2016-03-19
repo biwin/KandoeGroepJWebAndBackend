@@ -8,11 +8,14 @@ import {NgIf} from "angular2/common";
 import {CircleSessionForm} from "../circleSession/circleSessionForm";
 import {Response} from "angular2/http";
 import {OnChanges} from "angular2/core";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'user-login',
     template: `
-    <div class="row container">
+    <loading *ngIf="callInProgress"></loading>
+
+    <div [hidden]="callInProgress" class="row container">
         <div class="card formCard col s6 offset-s3"><div class="card-content">
             <h5>Gebruiker log in</h5>
             <form *ngIf="!service.isLoggedIn()" class="col s12" (ngSubmit)="onLoginSubmit()">
@@ -59,10 +62,12 @@ import {OnChanges} from "angular2/core";
         </div></div>
     </div>
     `,
-    directives: [NgIf]
+    directives: [NgIf, LoadingSpinner]
 })
 
 export class UserLogin {
+    private callInProgress:boolean = false;
+    
     private router: Router;
     private passwordString: string;
     private emailString: string;
@@ -84,10 +89,12 @@ export class UserLogin {
     }
 
     facebookLogin() {
+        this.callInProgress = true;
         FB.login((res) => {
             if (res.authResponse) {
                 this.getFacebookStandardData((id, name, email, pictureSmall, pictureLarge) => {
                     this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe((token: string) => {
+                        this.callInProgress = false;
                         if (token != null) {
                             if (token == "nope") this.errorInfo = "Error";
                             else this.setLoggedIn(token);
@@ -107,6 +114,7 @@ export class UserLogin {
     }
 
     onLoginSubmit() {
+        this.callInProgress = true;
         if (this.button == "login") {
             this.service.getUser(this.emailString, this.passwordString).subscribe((token: string) => {
                 if (token != null) {

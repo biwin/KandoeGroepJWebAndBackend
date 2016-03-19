@@ -30,6 +30,7 @@ var AppComponent = (function () {
     function AppComponent(router, userService) {
         var _this = this;
         this.router = router;
+        this.padRight = false;
         this.service = userService;
         this.router.subscribe(function (url) {
             if (!userService.isLoggedIn() && url != 'loginUser') {
@@ -40,7 +41,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            template: "\n    <navigation-bar></navigation-bar>\n    <div class=\"content\" [class.no-padding-left]=\"!service.isLoggedIn()\">\n        <router-outlet></router-outlet>\n    </div>\n    ",
+            template: "\n    <navigation-bar [padRight]=\"padRight\"></navigation-bar>\n    <div class=\"content\" [class.no-padding-left]=\"!service.isLoggedIn()\">\n        <router-outlet></router-outlet>\n    </div>\n    ",
             directives: [navigationBar_1.NavigationBar, router_1.ROUTER_DIRECTIVES, router_1.RouterOutlet]
         }),
         router_1.RouteConfig([

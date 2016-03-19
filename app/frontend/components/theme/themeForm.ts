@@ -9,11 +9,13 @@ import {TagInput} from "../general/tagInput";
 
 import {Theme} from "../../../backend/model/theme";
 import {Organisation} from "../../../backend/model/organisation";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'theme-form',
     template: `
-    <div class="row container">
+    <loading *ngIf="loading || submitting"></loading>
+    <div [hidden]="loading || submitting" class="row container">
         <h5>Nieuw Thema</h5>
 
         <div class="card formCard"><div class="card-content">
@@ -54,7 +56,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, TagInput, LoadingSpinner]
 })
 
 export class ThemeForm {

@@ -16,6 +16,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var core_1 = require("angular2/core");
 var chatMessage_1 = require("../../../backend/model/chatMessage");
 var circleSessionService_1 = require("../../services/circleSessionService");
+var common_1 = require("angular2/common");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var ChatComponent = (function () {
     function ChatComponent(service, socketUrl) {
         var _this = this;
@@ -27,6 +29,7 @@ var ChatComponent = (function () {
         this.socket.emit('join session', JSON.stringify({ sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown' }));
         this.socket.on('send message', function (data) { return _this.zone.run(function () {
             _this.messages.push(JSON.parse(data));
+            _this.scrollToBottom();
         }); });
         this.service = service;
     }
@@ -41,14 +44,20 @@ var ChatComponent = (function () {
             this.service.getMessages(this.sessionId).subscribe(function (chatMessages) {
                 _this.messages = chatMessages;
                 _this.initComplete = true;
+                setTimeout(scrollToBottom, 1000);
             });
         }
     };
     ChatComponent.prototype.submit = function () {
-        if (this.initComplete) {
+        if (this.initComplete && this.messageToSend.trim().length > 0) {
             this.socket.emit('send message', JSON.stringify(new chatMessage_1.ChatMessage(this.userId || 'Unknown', this.messageToSend || 'Unknown', this.sessionId, new Date())));
             this.messageToSend = "";
         }
+    };
+    ChatComponent.prototype.scrollToBottom = function () {
+        $('#message-list').animate({
+            scrollTop: $('#message-list')[0].scrollHeight
+        }, 500);
     };
     __decorate([
         core_1.Input(), 
@@ -61,8 +70,8 @@ var ChatComponent = (function () {
     ChatComponent = __decorate([
         core_1.Component({
             selector: 'chatbox',
-            template: "\n    <div class=\"container\">\n        <div class=\"row\" id=\"message-list\">\n            <p *ngFor=\"#message of messages\">{{message._userName}}: {{message._message}}</p>\n         </div>\n         <div class=\"row\" id=\"sendbox\">\n                <div class=\"input-field col s12\">\n                    <input [(ngModel)]=\"messageToSend\" (keyup)=\"typing($event)\" placeholder=\"Typ een bericht...\" type=\"text\" autocomplete=\"off\"/>\n                </div>\n            </div>\n        </div>\n    ",
-            directives: []
+            template: "\n    <loading *ngIf=\"!initComplete\"></loading>\n    <div [hidden]=\"!initComplete\">\n        <div class=\"row\" id=\"message-list\">\n            <p *ngFor=\"#message of messages\">{{message._userName}}: {{message._message}}</p>\n         </div>\n         <div class=\"row\" id=\"sendbox\">\n                <div class=\"input-field col s12\">\n                    <input [(ngModel)]=\"messageToSend\" (keyup)=\"typing($event)\" placeholder=\"Typ een bericht...\" type=\"text\" autocomplete=\"off\"/>\n                </div>\n            </div>\n     </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, loadingSpinner_1.LoadingSpinner]
         }),
         __param(1, core_1.Inject('App.SocketUrl')), 
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, String])
