@@ -1,7 +1,11 @@
 "use strict";
 var groupDao_1 = require("../dao/groupDao");
-var organisationManager_1 = require("./organisationManager");
 var userManager_1 = require("./userManager");
+var organisationManager_1 = require("./organisationManager");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for groups.
+ * Gains information from usermanager and organisationmanager when needed for a group.
+ */
 var GroupManager = (function () {
     function GroupManager() {
         this._dao = new groupDao_1.GroupDao();

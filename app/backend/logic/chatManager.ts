@@ -1,10 +1,16 @@
-import {ChatMessage} from "../model/chatMessage";
 import {ChatDao} from "../dao/chatDao";
+
 import {UserManager} from "./userManager";
-import {User} from "../model/user";
 import {CircleSessionManager} from "./circleSessionManager";
+
+import {User} from "../model/user";
+import {ChatMessage} from "../model/chatMessage";
 import {CircleSession} from "../model/circleSession";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for chatmessages
+ * Gains information from usermanager and circlesessionmanager when needed for a chatmessage.
+ */
 export class ChatManager {
     private _dao:ChatDao;
     private _uMgr:UserManager = new UserManager();

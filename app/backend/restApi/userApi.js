@@ -3,6 +3,10 @@ var organisationAPI_1 = require("./organisationAPI");
 var userManager_1 = require("../logic/userManager");
 var user_1 = require("../model/user");
 var SHA256 = require("crypto-js/sha256");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the usermanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var UserApi = (function () {
     function UserApi() {
     }

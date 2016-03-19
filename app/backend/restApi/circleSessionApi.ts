@@ -1,12 +1,18 @@
-import {CircleSession} from "../model/circleSession";
-import {CircleSessionManager} from "../logic/circleSessionManager";
-import {CardPosition} from "../model/cardPosition";
-import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
-import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {Response, Request} from "express";
+
 import {UserApi} from "./userApi";
+
+import {CircleSessionManager} from "../logic/circleSessionManager";
+
+import {CardPosition} from "../model/cardPosition";
+import {CircleSession} from "../model/circleSession";
+import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../model/circleSessionMoveResponse";
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the circlesessionmanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class CircleSessionApi {
     private static mgr:CircleSessionManager = new CircleSessionManager();
 

@@ -1,10 +1,15 @@
 "use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
-var groupManager_1 = require("./groupManager");
-var themeManager_1 = require("./themeManager");
-var userManager_1 = require("./userManager");
-var circleSessionCardWrapper_1 = require("../model/circleSessionCardWrapper");
 var chatManager_1 = require("./chatManager");
+var userManager_1 = require("./userManager");
+var themeManager_1 = require("./themeManager");
+var groupManager_1 = require("./groupManager");
+var circleSessionCardWrapper_1 = require("../model/circleSessionCardWrapper");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for circlesession.
+ * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, usermanager, thememanager and groupmanager when needed for an circlesession.
+ */
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();

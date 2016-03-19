@@ -13,6 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var httpWrapperService_1 = require("./httpWrapperService");
+/**
+ * Class that is responsible for a link between the frontend and the backend for users.
+ * Uses the user routes in the server.js file
+ */
 var UserService = (function () {
     function UserService(http, path) {
         this.http = null;

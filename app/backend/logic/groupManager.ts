@@ -1,10 +1,14 @@
 import {GroupDao} from "../dao/groupDao";
 
-import {OrganisationManager} from "./organisationManager";
 import {UserManager} from "./userManager";
+import {OrganisationManager} from "./organisationManager";
 
 import {Group} from "../model/group";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for groups.
+ * Gains information from usermanager and organisationmanager when needed for a group.
+ */
 export class GroupManager {
     private _dao: GroupDao;
 

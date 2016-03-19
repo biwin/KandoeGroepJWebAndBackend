@@ -1,18 +1,21 @@
-import {Injectable} from "angular2/core";
-import {Http} from "angular2/http";
-import {Inject} from "angular2/core";
-import {Observable} from "rxjs/Observable";
-import {Response} from "angular2/http";
-import {Headers} from "angular2/http";
+import {Injectable,Inject} from "angular2/core";
 import "rxjs/add/operator/map";
-import {CircleSession} from "../../backend/model/circleSession";
-import {CircleSessionCreateWrapper} from "../../backend/model/circleSessionCreateWrapper";
-import {CircleSessionCardWrapper} from "../../backend/model/circleSessionCardWrapper";
-import {HttpWrapperService} from "./httpWrapperService";
-import {CircleSessionMoveResponse} from "../../backend/model/circleSessionMoveResponse";
-import {ChatMessage} from "../../backend/model/chatMessage";
-import {CardPosition} from "../../backend/model/cardPosition";
+import {Observable} from "rxjs/Observable";
 
+import {HttpWrapperService} from "./httpWrapperService";
+
+import {ChatMessage} from "../../backend/model/chatMessage";
+
+import {CardPosition} from "../../backend/model/cardPosition";
+import {CircleSession} from "../../backend/model/circleSession";
+import {CircleSessionCardWrapper} from "../../backend/model/circleSessionCardWrapper";
+import {CircleSessionMoveResponse} from "../../backend/model/circleSessionMoveResponse";
+import {CircleSessionCreateWrapper} from "../../backend/model/circleSessionCreateWrapper";
+
+/**
+ * Class that is responsible for a link between the frontend and the backend for circleSessions.
+ * Uses the circlesessions routes in the server.js file
+ */
 @Injectable()
 export class CircleSessionService {
     private http:HttpWrapperService = null;

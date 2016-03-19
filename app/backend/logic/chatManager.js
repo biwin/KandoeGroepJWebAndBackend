@@ -2,6 +2,10 @@
 var chatDao_1 = require("../dao/chatDao");
 var userManager_1 = require("./userManager");
 var circleSessionManager_1 = require("./circleSessionManager");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for chatmessages
+ * Gains information from usermanager and circlesessionmanager when needed for a chatmessage.
+ */
 var ChatManager = (function () {
     function ChatManager() {
         this._uMgr = new userManager_1.UserManager();

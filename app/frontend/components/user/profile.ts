@@ -18,7 +18,7 @@ import {LoadingSpinner} from "../general/loadingSpinner";
 
                         <div class="row"><div class="input-field col s6">
                             <input id="smallImageLink" [(ngModel)]="smallImageLinkString" type="text" class="form-control validate" ngControl="_smallImageLink" required #smallImageLink="ngForm">
-                            <label for="smallImageLink" [class.active]="smallImageLinkString" data-error="Oops!">Naam afbeelding</label>
+                            <label for="smallImageLink" [class.active]="smallImageLinkString" data-error="Oops!">Gebruikers afbeelding</label>
                         </div></div>
 
                         <div class="row"><div class="input-field col s6">

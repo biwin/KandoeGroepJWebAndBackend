@@ -6,6 +6,10 @@ import {ThemeManager} from "./themeManager";
 
 import {Organisation} from "../model/organisation";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for organisations. 
+ * Gains information from usermanager, groupmanager and thememanager when needed for an organisation.
+ */
 export class OrganisationManager {
     private _dao: OrganisationDao;
 

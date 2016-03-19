@@ -1,11 +1,16 @@
 "use strict";
 var snaptshotDao_1 = require("../dao/snaptshotDao");
-var snapshot_1 = require("../model/snapshot");
-var snapshotCardWrapper_1 = require("../model/snapshotCardWrapper");
-var circleSessionManager_1 = require("./circleSessionManager");
-var userManager_1 = require("./userManager");
-var themeManager_1 = require("./themeManager");
 var chatManager_1 = require("./chatManager");
+var themeManager_1 = require("./themeManager");
+var circleSessionManager_1 = require("./circleSessionManager");
+var snapshot_1 = require("../model/snapshot");
+var userManager_1 = require("./userManager");
+var snapshotCardWrapper_1 = require("../model/snapshotCardWrapper");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for snapshots
+ * Uses SnapshotCardWrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, circlesessionmanager and thememanager when needed for a snapshot.
+ */
 var SnapshotManager = (function () {
     function SnapshotManager() {
         this._dao = new snaptshotDao_1.SnapshotDao();

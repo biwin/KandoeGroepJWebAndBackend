@@ -1,16 +1,23 @@
 import {SnapshotDao} from "../dao/snaptshotDao";
-import {Snapshot} from "../model/snapshot";
-import {SnapshotCardWrapper} from "../model/snapshotCardWrapper";
-import {CircleSessionManager} from "./circleSessionManager";
-import {CircleSession} from "../model/circleSession";
-import {UserManager} from "./userManager";
-import {User} from "../model/user";
-import {CardPosition} from "../model/cardPosition";
-import {ThemeManager} from "./themeManager";
-import {Card} from "../model/card";
-import {ChatManager} from "./chatManager";
-import {ChatMessage} from "../model/chatMessage";
 
+import {ChatManager} from "./chatManager";
+import {ThemeManager} from "./themeManager";
+import {CircleSessionManager} from "./circleSessionManager";
+
+import {User} from "../model/user";
+import {Card} from "../model/card";
+import {Snapshot} from "../model/snapshot";
+import {ChatMessage} from "../model/chatMessage";
+import {UserManager} from "./userManager";
+import {CardPosition} from "../model/cardPosition";
+import {CircleSession} from "../model/circleSession";
+import {SnapshotCardWrapper} from "../model/snapshotCardWrapper";
+
+/**
+ * Class that is responsible for managing what data will be send to the database layer for snapshots
+ * Uses SnapshotCardWrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, circlesessionmanager and thememanager when needed for a snapshot.
+ */
 export class SnapshotManager {
     private _dao:SnapshotDao;
     private _csManager:CircleSessionManager;

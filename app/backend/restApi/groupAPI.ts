@@ -7,6 +7,11 @@ import {GroupManager} from "../logic/groupManager";
 
 import {Group} from "../model/group";
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the groupmanager
+ * Uses the organisationApi to get group information when needed
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class GroupAPI {
     private static mgr: GroupManager = new GroupManager();
 

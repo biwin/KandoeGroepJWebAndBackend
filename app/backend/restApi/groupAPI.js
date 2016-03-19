@@ -2,6 +2,11 @@
 var userApi_1 = require("./userApi");
 var organisationAPI_1 = require("./organisationAPI");
 var groupManager_1 = require("../logic/groupManager");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the groupmanager
+ * Uses the organisationApi to get group information when needed
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var GroupAPI = (function () {
     function GroupAPI() {
     }

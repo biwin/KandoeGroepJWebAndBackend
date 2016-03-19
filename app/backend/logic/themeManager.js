@@ -1,6 +1,10 @@
 "use strict";
 var themeDao_1 = require("../dao/themeDao");
 var organisationManager_1 = require("./organisationManager");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for snapshots
+ * Gains information from organisationmanager when needed for a theme.
+ */
 var ThemeManager = (function () {
     function ThemeManager() {
         this._dao = new themeDao_1.ThemeDao();

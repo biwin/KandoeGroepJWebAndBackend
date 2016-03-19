@@ -6,6 +6,9 @@ import {DaoConstants} from "./daoConstants";
 
 import {Organisation} from "../model/organisation";
 
+/**
+ * Class that is responsible for the connection with the dbb for organisations
+ */
 export class OrganisationDao {
     private _client: MongoClient;
 

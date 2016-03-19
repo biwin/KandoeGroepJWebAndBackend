@@ -12,10 +12,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
-var core_2 = require("angular2/core");
 require("rxjs/add/operator/map");
-var circleSessionCreateWrapper_1 = require("../../backend/model/circleSessionCreateWrapper");
 var httpWrapperService_1 = require("./httpWrapperService");
+var circleSessionCreateWrapper_1 = require("../../backend/model/circleSessionCreateWrapper");
+/**
+ * Class that is responsible for a link between the frontend and the backend for circleSessions.
+ * Uses the circlesessions routes in the server.js file
+ */
 var CircleSessionService = (function () {
     function CircleSessionService(http, path) {
         this.http = null;
@@ -60,7 +63,7 @@ var CircleSessionService = (function () {
     };
     CircleSessionService = __decorate([
         core_1.Injectable(),
-        __param(1, core_2.Inject('App.BackendPath')), 
+        __param(1, core_1.Inject('App.BackendPath')), 
         __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], CircleSessionService);
     return CircleSessionService;

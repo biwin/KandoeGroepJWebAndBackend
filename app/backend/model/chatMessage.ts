@@ -4,7 +4,7 @@ export class ChatMessage {
                 public _message: string, 
                 public _circleSessionId: string, 
                 public _timestamp: Date, 
+                //optional userName to show in frontend
                 public _userName?:string) {
-        
     }
 }

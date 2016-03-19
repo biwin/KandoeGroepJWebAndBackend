@@ -8,6 +8,11 @@ import {OrganisationManager} from "../logic/organisationManager";
 
 import {Organisation} from "../model/organisation";
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the organisationmanager
+ * Uses the groupapi and themapi to get organisation information when needed
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class OrganisationAPI {
     private static mgr: OrganisationManager = new OrganisationManager();
 

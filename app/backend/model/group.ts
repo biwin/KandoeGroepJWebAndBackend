@@ -5,7 +5,6 @@ export class Group {
                 public _description: string,
                 public _organisationId: string,
                 public _memberIds: string[]) {
-
     }
 
     public static empty(): Group{
