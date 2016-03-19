@@ -94,8 +94,7 @@ var CircleSessionManager = (function () {
                                     callback(userId, null, "Card already in the middle!");
                                 }
                                 else {
-                                    var lastChangedUserId = c._userId;
-                                    _this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, function (c) {
+                                    _this._dao.updateCardPosition(sessionId, cardId, userId, c._userId, newPosition, function (c) {
                                         if (c != null) {
                                             _this.nextPlayer(sessionId, function (roundEnds, newPlayerId) {
                                                 callback(newPlayerId, c);

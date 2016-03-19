@@ -164,6 +164,13 @@ io.on('connection', function (socket) {
 
         io.to(roomName).emit('send move', JSON.stringify(message));
     });
+    socket.on('init cards', function(message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
+            return room.lastIndexOf('kandoe-', 0) === 0;
+        })[0];
+
+        io.to(roomName).emit('init cards', JSON.stringify(message));
+    });
 });
 //endregion Socket.io
 
