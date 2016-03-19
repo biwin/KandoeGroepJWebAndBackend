@@ -1,4 +1,4 @@
-import {Component, Inject, NgZone, Input, OnInit} from "angular2/core";
+import {Component, Input, OnInit, NgZone} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {Response} from "angular2/http";
 
@@ -13,8 +13,8 @@ import {CircleSessionOnCircleToolbox} from "./../../../logic/circleSessionCardOn
 import {CircleSessionCardDetail} from "./circleSessionCardDetail";
 import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
 import {CircleSessionCardOnBoardPipe} from "../../../logic/circleSessionCardOnBoardPipe";
-import Socket = SocketIOClient.Socket;
 import {LoadingSpinner} from "../../general/loadingSpinner";
+import {SocketService} from "../../../services/socketService";
 
 
 @Component({
@@ -52,34 +52,33 @@ import {LoadingSpinner} from "../../general/loadingSpinner";
 export class CircleSessionGame implements OnInit {
     private loading:boolean = true;
     private turnInProgress:boolean = false;
-    private socket:Socket;
-    private socketUrl:string;
-    private zone: NgZone;
     private csService:CircleSessionService;
     private tService:ThemeService;
+    private webSocket:SocketService;
 
     private constants:CircleSessionOnCircleToolbox = new CircleSessionOnCircleToolbox();
     private colors:Map<string,string> = new Map<string,string>();
 
-    @Input() public circleSession:CircleSession = CircleSession.empty();
+    @Input()
+    public circleSession:CircleSession = CircleSession.empty();
     private cards:Card[] = [];
     private positions:CardPosition[] = [];
     private hoveredCardId:string = "";
 
     private myUserId:string;
 
-    constructor(csService:CircleSessionService,themeService:ThemeService, uService:UserService, @Inject('App.SocketUrl') socketUrl:string) {
+    constructor(csService:CircleSessionService, themeService:ThemeService, uService:UserService, webSocket:SocketService) {
         this.csService = csService;
         this.tService = themeService;
+        this.webSocket = webSocket;
         this.myUserId = uService.getUserId();
-        this.socketUrl = socketUrl;
     }
 
     ngOnInit() {
         this.prepareWebsocket(this.socketUrl);
 
         this.csService.getCardPositionsOfSession(this.circleSession._id).subscribe((cps:CardPosition[]) => {
-            if(cps.length > 0) {
+            if (cps.length > 0) {
                 cps.forEach((c:CardPosition) => {
                     this.positions.push(c);
                     var i:number = this.positions.length - 1;
@@ -96,20 +95,20 @@ export class CircleSessionGame implements OnInit {
         });
     }
 
-    private prepareWebsocket(socketUrl:string) {
-        this.zone = new NgZone({enableLongStackTrace: false});
-        this.socket = io.connect(socketUrl);
-        this.socket.emit('join session', JSON.stringify({sessionId: this.circleSession._id || 'Unknown'}));
-        this.socket.on('send move', data => this.zone.run(() => {
-            var dataObject = JSON.parse(data);
-            this.circleSession._currentPlayerId = dataObject._currentPlayerId;
-            this.positions.find((p: CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
-            this.positions = this.positions.slice();
-        }));
+    private prepareWebsocket() {
+        this.webSocket.joinSession(this.circleSession._id || 'Unknown');
+        this.webSocket.subscribeToCardPlay((data:any, zone:NgZone) => {
+            zone.run(() => {
+                var dataObject = JSON.parse(data);
+                this.circleSession._currentPlayerId = dataObject._currentPlayerId;
+                this.positions.find((p:CardPosition) => p._cardId === dataObject._cardId)._position = dataObject._cardPosition;
+                this.positions = this.positions.slice();
+            });
+        });
     }
 
     hover(id:string, mouseover:boolean) {
-        if(mouseover) {
+        if (mouseover) {
             this.hoveredCardId = id;
         } else {
             this.hoveredCardId = "";
@@ -122,10 +121,14 @@ export class CircleSessionGame implements OnInit {
         this.csService.playCard(this.circleSession._id, cardId).subscribe((r:CircleSessionMoveResponse) => {
             this.turnInProgress = false;
             this.circleSession._currentPlayerId = r._currentPlayerId;
-            if(r._updatedCardPosition != null) {
+            if (r._updatedCardPosition != null) {
                 this.positions.find((p:CardPosition) => p._cardId === r._updatedCardPosition._cardId)._position = r._updatedCardPosition._position;
                 this.positions = this.positions.slice();
-                this.socket.emit('send move', {_cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId});
+                this.webSocket.emitCardPlay({
+                    _cardId: cardId,
+                    _cardPosition: r._updatedCardPosition._position,
+                    _currentPlayerId: r._currentPlayerId
+                });
             }
         }, (r:Response) => {
             this.turnInProgress = false;

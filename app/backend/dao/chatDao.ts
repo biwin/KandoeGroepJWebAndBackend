@@ -1,13 +1,9 @@
 import {MongoClient, MongoError, InsertOneWriteOpResult, Db} from "mongodb";
-
 import {DaoConstants} from "./daoConstants";
-
 import {ChatMessage} from "../model/chatMessage";
 
-
-
 /**
- * Class that is responsible for the connection with the dbb for chatmessages
+ * Class that is responsible for the connection with the db for chatmessages
  */
 export class ChatDao {
     private _client:MongoClient;

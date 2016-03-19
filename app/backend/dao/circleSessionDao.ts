@@ -2,10 +2,8 @@
 import {MongoClient, MongoError, InsertOneWriteOpResult, Db, DeleteWriteOpResultObject, InsertWriteOpResult, ObjectID,CursorResult} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
-
 import {CircleSession} from "../model/circleSession";
 import {CardPosition} from "../model/cardPosition";
-
 
 /**
  * Class that is responsible for the connection with the dbb for circlesessions and cardpositions

@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var core_1 = require("angular2/core");
 var common_1 = require("angular2/common");
 var userService_1 = require("../../../services/userService");
@@ -21,8 +18,9 @@ var circleSessionCardOnCircleToolbox_1 = require("./../../../logic/circleSession
 var circleSessionCardDetail_1 = require("./circleSessionCardDetail");
 var circleSessionCardOnBoardPipe_1 = require("../../../logic/circleSessionCardOnBoardPipe");
 var loadingSpinner_1 = require("../../general/loadingSpinner");
+var socketService_1 = require("../../../services/socketService");
 var CircleSessionGame = (function () {
-    function CircleSessionGame(csService, themeService, uService, socketUrl) {
+    function CircleSessionGame(csService, themeService, uService, webSocket) {
         this.loading = true;
         this.turnInProgress = false;
         this.constants = new circleSessionCardOnCircleToolbox_1.CircleSessionOnCircleToolbox();
@@ -33,8 +31,8 @@ var CircleSessionGame = (function () {
         this.hoveredCardId = "";
         this.csService = csService;
         this.tService = themeService;
+        this.webSocket = webSocket;
         this.myUserId = uService.getUserId();
-        this.socketUrl = socketUrl;
     }
     CircleSessionGame.prototype.ngOnInit = function () {
         var _this = this;
@@ -54,17 +52,17 @@ var CircleSessionGame = (function () {
             }
         });
     };
-    CircleSessionGame.prototype.prepareWebsocket = function (socketUrl) {
+    CircleSessionGame.prototype.prepareWebsocket = function () {
         var _this = this;
-        this.zone = new core_1.NgZone({ enableLongStackTrace: false });
-        this.socket = io.connect(socketUrl);
-        this.socket.emit('join session', JSON.stringify({ sessionId: this.circleSession._id || 'Unknown' }));
-        this.socket.on('send move', function (data) { return _this.zone.run(function () {
-            var dataObject = JSON.parse(data);
-            _this.circleSession._currentPlayerId = dataObject._currentPlayerId;
-            _this.positions.find(function (p) { return p._cardId === dataObject._cardId; })._position = dataObject._cardPosition;
-            _this.positions = _this.positions.slice();
-        }); });
+        this.webSocket.joinSession(this.circleSession._id || 'Unknown');
+        this.webSocket.subscribeToCardPlay(function (data, zone) {
+            zone.run(function () {
+                var dataObject = JSON.parse(data);
+                _this.circleSession._currentPlayerId = dataObject._currentPlayerId;
+                _this.positions.find(function (p) { return p._cardId === dataObject._cardId; })._position = dataObject._cardPosition;
+                _this.positions = _this.positions.slice();
+            });
+        });
     };
     CircleSessionGame.prototype.hover = function (id, mouseover) {
         if (mouseover) {
@@ -83,7 +81,11 @@ var CircleSessionGame = (function () {
             if (r._updatedCardPosition != null) {
                 _this.positions.find(function (p) { return p._cardId === r._updatedCardPosition._cardId; })._position = r._updatedCardPosition._position;
                 _this.positions = _this.positions.slice();
-                _this.socket.emit('send move', { _cardId: cardId, _cardPosition: r._updatedCardPosition._position, _currentPlayerId: r._currentPlayerId });
+                _this.webSocket.emitCardPlay({
+                    _cardId: cardId,
+                    _cardPosition: r._updatedCardPosition._position,
+                    _currentPlayerId: r._currentPlayerId
+                });
             }
         }, function (r) {
             _this.turnInProgress = false;
@@ -102,9 +104,8 @@ var CircleSessionGame = (function () {
             template: "\n            <loading *ngIf=\"loading\"></loading>\n            <div *ngIf=\"!loading\" class=\"row margin-top\">\n                <div class=\"col s6 offset-s3\">\n                    <svg [attr.viewBox]=\"constants.VIEWBOX\">\n                        <!-- Draw Kandoe board circles -->\n                        <circle *ngFor=\"#filled of constants.RINGS; #i = index\"\n                                [attr.r]=\"constants.CircleRadius(i+1)\"\n                                [attr.stroke-width]=\"constants.RING_WIDTH\"\n                                [attr.cy]=\"constants.CENTER\" [attr.cx]=\"constants.CENTER\"\n                                id=\"circle-{{i+1}}\" class=\"kandoeRing\" [class.inner]=\"filled\"/>\n\n                        <circle *ngFor=\"#bol of positions | onBoardCards; #i = index\"\n                                [class.hoveredBall]=\"bol._cardId != null && hoveredCardId === bol._cardId\"\n                                [id]=\"bol._cardId\"\n                                [attr.r]=\"35\"\n                                [attr.fill]=\"colors.get(bol._cardId)\"\n                                [attr.cy]=\"constants.YPOS_CIRCLE(bol._position, (1 / positions.length) * i)\"\n                                [attr.cx]=\"constants.XPOS_CIRCLE(bol._position, (1 / positions.length) * i)\" />\n                    </svg>\n                </div>\n            </div>\n            <div *ngIf=\"!loading\" class=\"row\">\n                <circlesession-carddetail *ngFor=\"#card of cards\" [canPlay]=\"circleSession._currentPlayerId === myUserId && !turnInProgress\" [card]=\"card\" [color]=\"colors.get(card._id)\" (hover)=\"hover(card._id, $event)\" (playCard)=\"playCard($event)\"></circlesession-carddetail>\n            </div>\n    ",
             directives: [common_1.CORE_DIRECTIVES, circleSessionCardDetail_1.CircleSessionCardDetail, loadingSpinner_1.LoadingSpinner],
             pipes: [circleSessionCardOnBoardPipe_1.CircleSessionCardOnBoardPipe]
-        }),
-        __param(3, core_1.Inject('App.SocketUrl')), 
-        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, themeService_1.ThemeService, userService_1.UserService, String])
+        }), 
+        __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, themeService_1.ThemeService, userService_1.UserService, socketService_1.SocketService])
     ], CircleSessionGame);
     return CircleSessionGame;
 }());

@@ -12,6 +12,7 @@ import {OrganisationService} from "../services/organisationService";
 import {ThemeService} from "../services/themeService";
 import {UserService} from "../services/userService";
 import {SnapshotService} from "../services/snapshotService";
+import {SocketService} from "../services/socketService";
 
 bootstrap(AppComponent, [
     ROUTER_PROVIDERS,
@@ -24,6 +25,7 @@ bootstrap(AppComponent, [
     ThemeService,
     UserService,
     SnapshotService,
+    SocketService,
 
     //provide('App.BackendPath', {useValue: 'http://localhost:8080/api/'}), //LOCAL TESTS
     //provide('App.BackendPath', {useValue: 'http://192.168.0.149:80/api/'}), //LOCAL TESTS (ANDROID)

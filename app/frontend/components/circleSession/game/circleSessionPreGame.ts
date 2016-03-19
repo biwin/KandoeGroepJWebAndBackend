@@ -1,7 +1,7 @@
 ///<reference path="../../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../../typings/materialize-css/materialize-css.d.ts"/>
 
-import {Component, Input, OnChanges} from "angular2/core";
+import {Component, Input, OnChanges, NgZone} from "angular2/core";
 import {CORE_DIRECTIVES} from "angular2/common";
 import {Response} from "angular2/http";
 
@@ -12,6 +12,7 @@ import {CircleSession} from "../../../../backend/model/circleSession";
 import {CircleSessionCardWrapper} from "../../../../backend/model/circleSessionCardWrapper";
 import {CircleSessionMoveResponse} from "../../../../backend/model/circleSessionMoveResponse";
 import {LoadingSpinner} from "../../general/loadingSpinner";
+import {SocketService} from "../../../services/socketService";
 
 @Component({
     selector: 'pregame',
@@ -57,6 +58,7 @@ export class CircleSessionPreGame implements OnChanges {
     
     private loading:boolean = true;
     private submitting:boolean = false;
+    private webSocket:SocketService;
     
     circleService:CircleSessionService;
     
@@ -65,13 +67,15 @@ export class CircleSessionPreGame implements OnChanges {
     
     myUserId:string;
 
-    constructor(cService:CircleSessionService, uService:UserService) {
+    constructor(cService:CircleSessionService, uService:UserService, webSocket:SocketService) {
         this.circleService = cService;
         this.myUserId = uService.getUserId();
+        this.webSocket = webSocket;
     }
 
     ngOnChanges() {
         if (this.circleSession._id != undefined && this.circleSession._id.length > 0) {
+            this.prepareWebSocket();
             this.circleService.getCircleSessionCards(this.circleSession._id).subscribe((wrappers:CircleSessionCardWrapper[])=> {
                 this.loading = false;
                 this.cards = wrappers;
@@ -101,6 +105,12 @@ export class CircleSessionPreGame implements OnChanges {
         this.submitting = true;
         this.circleService.initCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
             if (r._error == null) {
+                this.webSocket.emitCardInit({
+                    _currentPlayerId: r._currentPlayerId,
+                    _cards: this.selectedCards,
+                    _roundEnded: r._roundEnded
+                });
+                
                 this.circleSession._currentPlayerId = r._currentPlayerId;
                 if (r._roundEnded === true)
                     this.circleSession._isPreGame = false;
@@ -117,6 +127,22 @@ export class CircleSessionPreGame implements OnChanges {
             Materialize.toast(o._error, 3000, 'rounded');
             console.error('Error while adding card to game...: ' + o._error);
             this.submitting = false;
+        });
+    }
+
+    private prepareWebSocket() {
+        this.webSocket.joinSession(this.circleSession._id || 'Unknown');
+        this.webSocket.subscribeToCardInit((data:any, zone:NgZone) => {
+            zone.run(() => {
+                var dataObject:any = JSON.parse(data);
+                this.circleSession._isPreGame = !dataObject._roundEnded;
+                this.circleSession._currentPlayerId = dataObject._currentPlayerId;
+                this.cards = this.cards.map((c:CircleSessionCardWrapper) => {
+                    if(dataObject._cards.indexOf(c.card._id) > -1)
+                        c.inPlay = true;
+                    return c;
+                });
+            });
         });
     }
 }
