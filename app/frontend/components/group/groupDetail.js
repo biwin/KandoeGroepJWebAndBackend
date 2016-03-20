@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -21,7 +22,8 @@ var GroupDetail = (function () {
         this.group = group_1.Group.empty();
         this.members = [];
         this.organisation = organisation_1.Organisation.empty();
-        this.loading = true;
+        this.groupLoading = true;
+        this.membersLoading = true;
         this.doDeleteGrp = false;
         var groupId = routeParam.params["id"];
         this.router = router;
@@ -32,12 +34,16 @@ var GroupDetail = (function () {
             if (group._memberIds.length != 0) {
                 groupService.getMembersOfGroupById(groupId).subscribe(function (members) {
                     _this.members = members;
+                    _this.membersLoading = false;
                 });
+            }
+            else {
+                _this.membersLoading = false;
             }
             groupService.getOrganisationOfGroupById(groupId).subscribe(function (organisation) {
                 _this.organisation = organisation;
             });
-            _this.loading = false;
+            _this.groupLoading = false;
         });
     }
     GroupDetail.prototype.isAdmin = function () {
@@ -73,12 +79,12 @@ var GroupDetail = (function () {
     GroupDetail = __decorate([
         core_1.Component({
             selector: 'group-detail',
-            template: "\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{group._name}} verwijderen?</h4>\n            <p>U staat op het punt {{group._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    \n    <loading *ngIf=\"loading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!loading && group!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{group._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{group._memberIds.length}}\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember()\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\" [ngClass]=\"{tableCard: group._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"group._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteUser(member, false)\" class=\"material-icons red-text clickable\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"group._memberIds.length==0\">De groep \"{{group._name}}\" van organisatie \"{{organisation._name}}\" heeft momenteel nog geen leden.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!loading && group==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{group._name}} verwijderen?</h4>\n            <p>U staat op het punt {{group._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    \n    <loading *ngIf=\"groupLoading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!groupLoading && group!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{group._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{group._memberIds.length}}\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember()\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"groupLoading\"></loading>\n        <div *ngIf=\"!groupLoading\" class=\"card\" [ngClass]=\"{tableCard: group._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"group._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteUser(member, false)\" class=\"material-icons red-text clickable\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"group._memberIds.length==0\">De groep \"{{group._name}}\" van organisatie \"{{organisation._name}}\" heeft momenteel nog geen leden.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!groupLoading && group==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
             directives: [common_1.NgClass, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams, groupService_1.GroupService, userService_1.UserService])
     ], GroupDetail);
     return GroupDetail;
-})();
+}());
 exports.GroupDetail = GroupDetail;
 //# sourceMappingURL=groupDetail.js.map

@@ -27,9 +27,9 @@ import {Organisation} from "../../../backend/model/organisation";
         </div>
     </div>
     
-    <loading *ngIf="loading"></loading>
+    <loading *ngIf="groupLoading"></loading>
     
-    <div class="row container" *ngIf="!loading && group!=null">
+    <div class="row container" *ngIf="!groupLoading && group!=null">
         <div id="organisationHeader">
             <h5>{{group._name}}</h5>
 
@@ -54,8 +54,8 @@ import {Organisation} from "../../../backend/model/organisation";
                 </a>
             </div>
         </div>
-
-        <div class="card" [ngClass]="{tableCard: group._memberIds.length!=0}"><div class="card-content">
+        <loading *ngIf="groupLoading"></loading>
+        <div *ngIf="!groupLoading" class="card" [ngClass]="{tableCard: group._memberIds.length!=0}"><div class="card-content">
             <table class="striped" *ngIf="group._memberIds.length!=0">
                 <thead>
                     <tr>
@@ -76,7 +76,7 @@ import {Organisation} from "../../../backend/model/organisation";
         </div></div>
     </div>
 
-    <div class="row container" *ngIf="!loading && group==null">
+    <div class="row container" *ngIf="!groupLoading && group==null">
         <div class="card"><div class="card-content">
             <p>ONGELDIG ID</p>
         </div></div>
@@ -92,7 +92,8 @@ export class GroupDetail {
     private group: Group = Group.empty();
     private members: User[] = [];
     private organisation: Organisation = Organisation.empty();
-    private loading: boolean = true;
+    private groupLoading: boolean = true;
+    private membersLoading: boolean = true;
     private doDeleteGrp: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
@@ -108,14 +109,17 @@ export class GroupDetail {
             if(group._memberIds.length != 0) {
                 groupService.getMembersOfGroupById(groupId).subscribe((members: User[]) => {
                     this.members = members;
+                    this.membersLoading = false;
                 });
+            } else {
+                this.membersLoading = false;
             }
 
             groupService.getOrganisationOfGroupById(groupId).subscribe((organisation: Organisation) => {
                 this.organisation = organisation;
             });
 
-            this.loading = false;
+            this.groupLoading = false;
         });
     }
 
