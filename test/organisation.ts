@@ -6,9 +6,13 @@ import assert = require('assert');
 
 import {OrganisationManager} from "../app/backend/logic/organisationManager";
 import {UserManager} from "../app/backend/logic/userManager";
+import {GroupManager} from "../app/backend/logic/groupManager";
+import {ThemeManager} from "../app/backend/logic/themeManager";
 
 import {Organisation} from "../app/backend/model/organisation";
 import {User} from "../app/backend/model/user";
+import {Group} from "../app/backend/model/group";
+import {Theme} from "../app/backend/model/theme";
 
 var organisationManager: OrganisationManager;
 var userManager: UserManager;
@@ -25,7 +29,7 @@ describe("OrganisationManager", () => {
         var organisation: Organisation;
         var user: User;
 
-        before(function (done: any) {
+        before(function(done: any) {
             this.timeout(0);
 
             user = new User("MichaelDeBoey", "michael.deboey@student.kdg.be", "password", "test");
@@ -66,7 +70,7 @@ describe("OrganisationManager", () => {
             });
         });
 
-        after(function (done: any) {
+        after(function(done: any) {
             this.timeout(0);
 
             try {
@@ -84,7 +88,7 @@ describe("OrganisationManager", () => {
     describe("createOrganisationTwice", () => {
         var organisation: Organisation;
 
-        before(function (done: any) {
+        before(function(done: any) {
             this.timeout(0);
 
             organisationManager.createOrganisation(new Organisation("Delhaize", []), (o: Organisation) => {
@@ -113,7 +117,7 @@ describe("OrganisationManager", () => {
             });
         });
 
-        after(function (done: any) {
+        after(function(done: any) {
             this.timeout(0);
 
             try {
@@ -125,4 +129,108 @@ describe("OrganisationManager", () => {
             }
         });
     });
+    
+    describe("removeOrganisationById", () => {
+        var organisation: Organisation;
+        var admin: User;
+        var member: User;
+        var group: Group;
+        var theme: Theme;
+        
+        var groupManager: GroupManager = new GroupManager();
+        var themeManager: ThemeManager = new ThemeManager();
+        
+        before(function(done: any) {
+            this.timeout(0);
+
+            organisation = new Organisation("Delhaize", []);
+            admin = new User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
+            member = new User("Michaël2", "michael.deboey.2@student.kdg.be", "password", "test");
+            group = new Group("Voeding", "Ploeg voeding", "", []);
+            theme = new Theme("Nieuwe producten", "", []);
+            
+            userManager.deleteTestUsers(() => {
+                userManager.registerUser(admin, (u: User) => {
+                    admin = u;
+                    organisation._organisatorIds.push(u._id);
+
+                    organisationManager.createOrganisation(organisation, (o: Organisation) => {
+                        organisation = o;
+                        group._organisationId = organisation._id;
+                        theme._organisationId = organisation._id;
+
+                        userManager.registerUser(member, (u2: User) => {
+                            member = u2;
+
+                            organisationManager.addUserByEmailToOrganisationById(member._email, false, organisation._id, () => {
+                                groupManager.createGroup(group, (g: Group) => {
+                                    group = g;
+                                    
+                                    themeManager.createTheme(theme, (t: Theme) => {
+                                        theme = t;
+                                        
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        
+        it("Delete organisation, should also delete all groups and delete the references from users and themes", function(done: any) {
+            this.timeout(0);
+            
+            organisationManager.removeOrganisationById(organisation._id, () => {
+                try {
+                    organisationManager.getOrganisationById(organisation._id, (o: Organisation) => {
+                        assert.ok(o == null, "Organisation should be deleted, database should return null");
+
+                        userManager.getUserById(admin._id, (u: User) => {
+                            assert.ok(u._organisatorOf.indexOf(organisation._id) < 0, "Reference in _organisatorOf array User-object should be deleted");
+
+                            userManager.getUserById(member._id, (u2: User) => {
+                                assert.ok(u2._memberOf.indexOf(organisation._id) < 0, "Reference in _memberOf array User-object should be deleted");
+                                
+                                groupManager.getGroupById(group._id, (g: Group) => {
+                                    assert.ok(g == null, "Group should be deleted, database should return null");
+                                    
+                                    themeManager.getTheme(theme._id, (t: Theme) => {
+                                        assert.ok(t._organisationId == null, "Reference of _organisationId in Theme-object should be deleted (= null)");
+                                        
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                } catch (e) {
+                    done(e);
+                }
+            });
+        });
+        
+        after(function(done: any) {
+            this.timeout(0);
+
+            try {
+                userManager.removeUserById(admin._id, () => {
+                    userManager.removeUserById(member._id, () => {
+                        themeManager.removeThemeById(theme._id, () => {
+                            done();
+                        });
+                    });
+                });
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+});
+
+after(function(done: any) {
+    userManager.deleteTestUsers(() => {
+        done();
+    })
 });
