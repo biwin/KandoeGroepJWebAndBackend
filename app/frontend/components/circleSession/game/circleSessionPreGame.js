@@ -83,10 +83,15 @@ var CircleSessionPreGame = (function () {
     };
     CircleSessionPreGame.prototype.prepareWebSocket = function () {
         var _this = this;
+        console.log("JASPER HI");
         this.webSocket.joinSession(this.circleSession._id || 'Unknown');
+        console.log("JASPER HI2");
         this.webSocket.subscribeToCardInit(function (data, zone) {
+            console.log("JASPER HI3");
             zone.run(function () {
+                console.log("JASPER HI4");
                 var dataObject = JSON.parse(data);
+                console.log("JASPER HI5");
                 _this.circleSession._isPreGame = !dataObject._roundEnded;
                 _this.circleSession._currentPlayerId = dataObject._currentPlayerId;
                 _this.cards = _this.cards.map(function (c) {

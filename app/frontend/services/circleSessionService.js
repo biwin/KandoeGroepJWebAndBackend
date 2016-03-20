@@ -42,6 +42,7 @@ var CircleSessionService = (function () {
     };
     CircleSessionService.prototype.initCards = function (circlesessionId, selectedCards) {
         return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards), true, true, true);
+        //nitCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
     };
     CircleSessionService.prototype.deleteCircleSession = function (circleSessionId) {
         return this.http.delete(this.path + 'circlesessions/' + circleSessionId, false, false, true);

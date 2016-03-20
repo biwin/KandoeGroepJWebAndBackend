@@ -41,11 +41,15 @@ var SocketService = (function () {
         this.socket.emit('send message', JSON.stringify(message));
     };
     SocketService.prototype.emitCardInit = function (payload) {
+        console.log("JASPER IS WAT1");
         this.socket.emit('init cards', payload);
+        console.log("JASPER IS WAT2");
     };
     SocketService.prototype.subscribeToCardInit = function (callback) {
         var _this = this;
+        console.log("JASPER 1");
         this.socket.on('init cards', function (data) {
+            console.log("JASPER 2: " + JSON.stringify(data));
             callback(data, _this.zone);
         });
     };

@@ -160,10 +160,11 @@ export class CircleSessionManager {
         this._dao.readCircleSession(circleSessionId, (c:CircleSession) => {
             tMgr.getCards(c._themeId, (cards:Card[]) => {
                 var a:number = 0;
-                if (cards.length > 0) {
+                if(cards.length > 0) {
                     cards.forEach((c:Card) => {
                         this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean) => {
-                            circleSessionCardWrappers.push(new CircleSessionCardWrapper(c, b));
+                            var wrapper:CircleSessionCardWrapper = new CircleSessionCardWrapper(c, b, c._id);
+                            circleSessionCardWrappers.push(wrapper);
                             if (++a == cards.length) {
                                 callback(circleSessionCardWrappers);
                             }
@@ -183,7 +184,7 @@ export class CircleSessionManager {
                     callback(null, null, "Not your turn!");
                 } else {
                     if (c._isStopped) {
-                        callback(null, null, "Game is over")
+                        callback(null, null, "Game is over");
                     } else {
                         this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, (cps:CardPosition[]) => {
                             for (var i = 0; i < cps.length; i++) {

@@ -45,8 +45,9 @@ export class CircleSessionService {
         return this.http.get(this.path + 'circlesessions/' + circleSessionId + '/cards', false,true,false);
     }
 
-    initCards(circlesessionId:string, selectedCards:string[]):Observable<CircleSessionMoveResponse> {
+    initCards(circlesessionId: string, selectedCards: string[]): Observable<CircleSessionMoveResponse> {
         return this.http.post(this.path + 'circlesessions/' + circlesessionId + '/cards', JSON.stringify(selectedCards),true,true,true);
+        //nitCards(this.circleSession._id, this.selectedCards).subscribe((r:CircleSessionMoveResponse) => {
     }
 
     deleteCircleSession(circleSessionId:string):Observable<string> {
