@@ -1,3 +1,4 @@
+"use strict";
 var groupDao_1 = require("../dao/groupDao");
 var userManager_1 = require("./userManager");
 var organisationManager_1 = require("./organisationManager");
@@ -48,6 +49,24 @@ var GroupManager = (function () {
             });
         });
     };
+    GroupManager.prototype.addUserByEmailToGroupById = function (newUserMail, groupId, callback) {
+        var _this = this;
+        var userManager = new userManager_1.UserManager();
+        this.getGroupById(groupId, function (group) {
+            userManager.getUserIdForUserByEmail(newUserMail, function (userId) {
+                if (group._memberIds.indexOf(userId) < 0) {
+                    _this._dao.addUserIdToGroupById(userId, groupId, function (userAdded) {
+                        userManager.addGroupIdToUserById(groupId, userId, function (referenceAdded) {
+                            callback(userAdded && referenceAdded, userId);
+                        });
+                    });
+                }
+                else {
+                    callback(false, null);
+                }
+            });
+        });
+    };
     GroupManager.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);
     };
@@ -58,6 +77,6 @@ var GroupManager = (function () {
         this._dao.getUserIdsInGroup(groupId, callback);
     };
     return GroupManager;
-})();
+}());
 exports.GroupManager = GroupManager;
 //# sourceMappingURL=groupManager.js.map

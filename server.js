@@ -80,6 +80,7 @@ app.delete("/api/organisations/:id/themes/:themeId", OrganisationAPI.Organisatio
 //region group routes
 app.get("/api/groups/:id", GroupAPI.GroupAPI.find);
 app.delete("/api/groups/:id", GroupAPI.GroupAPI.delete);
+app.post('/api/groups/:id', GroupAPI.GroupAPI.addUserByEmail);
 app.post("/api/groups", GroupAPI.GroupAPI.create);
 app.get("/api/groups/:id/members", GroupAPI.GroupAPI.getMembers);
 app.get("/api/groups/:id/organisation", GroupAPI.GroupAPI.getOrganisation);

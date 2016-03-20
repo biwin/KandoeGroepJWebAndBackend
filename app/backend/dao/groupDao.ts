@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 
-import {MongoClient, Db, MongoError, CursorResult, ObjectID, InsertOneWriteOpResult, DeleteWriteOpResultObject} from "mongodb";
+import {MongoClient, Db, MongoError, CursorResult, ObjectID, InsertOneWriteOpResult, DeleteWriteOpResultObject, UpdateWriteOpResult} from "mongodb";
 
 import {DaoConstants} from "./daoConstants";
 
@@ -61,6 +61,16 @@ export class GroupDao {
             });
         });
     }
+    
+    addUserIdToGroupById(userId: string, groupId: string, callback: (added: boolean) => any)  {
+    this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+        db.collection('groups').updateOne({'_id': new ObjectID(groupId)}, {$push: {'_memberIds': userId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+            db.close();
+
+            callback(result.modifiedCount == 1);
+        });
+    });
+}
 
     getGroupsOfOrganisationById(organisationId: string, callback:(groups: Group[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {

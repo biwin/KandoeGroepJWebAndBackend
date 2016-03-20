@@ -58,6 +58,24 @@ export class GroupManager {
         });
     }
 
+    addUserByEmailToGroupById(newUserMail, groupId, callback: (added: boolean, userId: string) => any) {
+        var userManager = new UserManager();
+
+        this.getGroupById(groupId, (group: Group) => {
+            userManager.getUserIdForUserByEmail(newUserMail, (userId: string) => {
+                if(group._memberIds.indexOf(userId) < 0) {
+                    this._dao.addUserIdToGroupById(userId, groupId, (userAdded: boolean) => {
+                        userManager.addGroupIdToUserById(groupId, userId, (referenceAdded: boolean) => {
+                            callback(userAdded && referenceAdded, userId);
+                        });
+                    });
+                } else {
+                    callback(false, null);
+                }
+            });
+        });
+    }
+
     getGroupsOfOrganisationById(organisationId: string, callback: (groups: Group[]) => any) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);
     }

@@ -62,6 +62,25 @@ export class GroupAPI {
         });
     }
 
+    public static addUserByEmail(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+                var newUserMail: string = req.body.email;
+
+                GroupAPI.mgr.addUserByEmailToGroupById(newUserMail, groupId, (added: boolean, userId: string) => {
+                    if(userId != null) {
+                        res.send(userId);
+                    } else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
     public static getMembers(req: Request, res: Response) {
         UserApi.getMembersOfGroupById(req, res);
     }

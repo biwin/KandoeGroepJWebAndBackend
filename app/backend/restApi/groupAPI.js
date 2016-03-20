@@ -1,3 +1,4 @@
+"use strict";
 var userApi_1 = require("./userApi");
 var organisationAPI_1 = require("./organisationAPI");
 var groupManager_1 = require("../logic/groupManager");
@@ -54,6 +55,25 @@ var GroupAPI = (function () {
             }
         });
     };
+    GroupAPI.addUserByEmail = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var groupId = req.params.id;
+                var newUserMail = req.body.email;
+                GroupAPI.mgr.addUserByEmailToGroupById(newUserMail, groupId, function (added, userId) {
+                    if (userId != null) {
+                        res.send(userId);
+                    }
+                    else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     GroupAPI.getMembers = function (req, res) {
         userApi_1.UserApi.getMembersOfGroupById(req, res);
     };
@@ -88,6 +108,6 @@ var GroupAPI = (function () {
     };
     GroupAPI.mgr = new groupManager_1.GroupManager();
     return GroupAPI;
-})();
+}());
 exports.GroupAPI = GroupAPI;
 //# sourceMappingURL=groupAPI.js.map

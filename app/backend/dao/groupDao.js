@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -44,6 +45,14 @@ var GroupDao = (function () {
             });
         });
     };
+    GroupDao.prototype.addUserIdToGroupById = function (userId, groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').updateOne({ '_id': new mongodb_1.ObjectID(groupId) }, { $push: { '_memberIds': userId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     GroupDao.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
@@ -69,6 +78,6 @@ var GroupDao = (function () {
         });
     };
     return GroupDao;
-})();
+}());
 exports.GroupDao = GroupDao;
 //# sourceMappingURL=groupDao.js.map
