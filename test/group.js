@@ -23,13 +23,15 @@ describe("GroupManager", function () {
         before(function (done) {
             this.timeout(0);
             user = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
-            userManager.registerUser(user, function (u) {
-                user = u;
-                organisation = new organisation_1.Organisation("Delhaize", []);
-                organisation._organisatorIds.push(u._id);
-                organisationManager.createOrganisation(organisation, function (o) {
-                    organisation = o;
-                    done();
+            userManager.deleteTestUsers(function () {
+                userManager.registerUser(user, function (u) {
+                    user = u;
+                    organisation = new organisation_1.Organisation("Delhaize", []);
+                    organisation._organisatorIds.push(u._id);
+                    organisationManager.createOrganisation(organisation, function (o) {
+                        organisation = o;
+                        done();
+                    });
                 });
             });
         });
