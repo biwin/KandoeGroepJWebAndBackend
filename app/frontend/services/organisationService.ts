@@ -34,6 +34,10 @@ export class OrganisationService {
         return this.http.delete(this.path + "organisations/" + organisationId, false, false, true);
     }
 
+    addUserByEmailToOrganisationById(newUserMail: string, isAdmin: boolean, organisationId: string): Observable<string> {
+        return this.http.post(this.path + 'organisations/' + organisationId, JSON.stringify({'email': newUserMail, 'isAdmin': isAdmin}), true, false, true);
+    }
+
     getAdminsOfOrganisationById(organisationId: string): Observable<User[]> {
         return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, true);
     }

@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -31,6 +32,9 @@ var OrganisationService = (function () {
     OrganisationService.prototype.deleteOrganisationById = function (organisationId) {
         return this.http.delete(this.path + "organisations/" + organisationId, false, false, true);
     };
+    OrganisationService.prototype.addUserByEmailToOrganisationById = function (newUserMail, isAdmin, organisationId) {
+        return this.http.post(this.path + 'organisations/' + organisationId, JSON.stringify({ 'email': newUserMail, 'isAdmin': isAdmin }), true, false, true);
+    };
     OrganisationService.prototype.getAdminsOfOrganisationById = function (organisationId) {
         return this.http.get(this.path + "organisations/" + organisationId + "/admins", false, true, true);
     };
@@ -58,6 +62,6 @@ var OrganisationService = (function () {
         __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], OrganisationService);
     return OrganisationService;
-})();
+}());
 exports.OrganisationService = OrganisationService;
 //# sourceMappingURL=organisationService.js.map
