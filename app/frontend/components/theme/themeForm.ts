@@ -51,7 +51,7 @@ import {LoadingSpinner} from "../general/loadingSpinner";
                     <tags [title]="'Tags (splits met een puntkomma)'" [tagArray]="theme._tags"></tags>
                 </div>
 
-                <button type="submit" class="waves-effect waves-light btn red"><i class="material-icons center">add</i></button>
+                <button type="submit" id="submit" class="waves-effect waves-light btn red"><i class="material-icons center">add</i></button>
             </form>
         </div></div>
     </div>
