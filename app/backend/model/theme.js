@@ -1,4 +1,3 @@
-"use strict";
 var Theme = (function () {
     function Theme(_name, _description, 
         //List contains the creator 
@@ -18,6 +17,6 @@ var Theme = (function () {
         return new Theme("", "", [], [], "", []);
     };
     return Theme;
-}());
+})();
 exports.Theme = Theme;
 //# sourceMappingURL=theme.js.map

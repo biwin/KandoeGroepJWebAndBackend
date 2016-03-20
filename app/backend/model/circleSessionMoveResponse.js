@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Class that gives a simple model to combine and action and a Cardpositions.
  * Used to send back to the frontend when a game move has been done.
@@ -12,6 +11,6 @@ var CircleSessionMoveResponse = (function () {
         this._updatedCardPosition = _updatedCardPosition;
     }
     return CircleSessionMoveResponse;
-}());
+})();
 exports.CircleSessionMoveResponse = CircleSessionMoveResponse;
 //# sourceMappingURL=circleSessionMoveResponse.js.map

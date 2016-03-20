@@ -1,6 +1,5 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -93,6 +92,6 @@ var HomePage = (function () {
         __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, snapshotService_1.SnapshotService])
     ], HomePage);
     return HomePage;
-}());
+})();
 exports.HomePage = HomePage;
 //# sourceMappingURL=homePage.js.map

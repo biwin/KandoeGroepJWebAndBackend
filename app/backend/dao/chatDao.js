@@ -1,4 +1,3 @@
-"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -31,6 +30,6 @@ var ChatDao = (function () {
         });
     };
     return ChatDao;
-}());
+})();
 exports.ChatDao = ChatDao;
 //# sourceMappingURL=chatDao.js.map

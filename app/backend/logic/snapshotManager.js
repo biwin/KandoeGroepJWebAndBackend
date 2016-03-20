@@ -1,4 +1,3 @@
-"use strict";
 var snaptshotDao_1 = require("../dao/snaptshotDao");
 var chatManager_1 = require("./chatManager");
 var themeManager_1 = require("./themeManager");
@@ -60,6 +59,6 @@ var SnapshotManager = (function () {
         this._dao.readSnapshotById(id, callback);
     };
     return SnapshotManager;
-}());
+})();
 exports.SnapshotManager = SnapshotManager;
 //# sourceMappingURL=snapshotManager.js.map
