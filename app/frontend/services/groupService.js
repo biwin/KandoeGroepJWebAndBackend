@@ -42,7 +42,7 @@ var GroupService = (function () {
         return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, true);
     };
     GroupService.prototype.deleteMemberFromGroupById = function (userId, groupId) {
-        return this.http.delete(this.path + "organisations/" + groupId + "/members/" + userId, false, false, true);
+        return this.http.delete(this.path + "groups/" + groupId + "/members/" + userId, false, false, true);
     };
     GroupService = __decorate([
         core_1.Injectable(),
