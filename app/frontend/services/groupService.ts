@@ -33,6 +33,10 @@ export class GroupService {
         return this.http.delete(this.path + "group/" + organisationId, false, false, true);
     }
 
+    addMemberByEmailToGroupById(newUserMail: string, organisationId: string): Observable<string> {
+        return this.http.post(this.path + 'organisations/' + organisationId, JSON.stringify({'email': newUserMail, 'isAdmin': isAdmin}), true, false, true);
+    }
+
     getMembersOfGroupById(groupId: string): Observable<User[]> {
         return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     }

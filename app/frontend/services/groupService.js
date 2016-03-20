@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -31,6 +32,9 @@ var GroupService = (function () {
     GroupService.prototype.deleteGroupById = function (organisationId) {
         return this.http.delete(this.path + "group/" + organisationId, false, false, true);
     };
+    GroupService.prototype.addMemberByEmailToGroupById = function (newUserMail, organisationId) {
+        return this.http.post(this.path + 'organisations/' + organisationId, JSON.stringify({ 'email': newUserMail, 'isAdmin': isAdmin }), true, false, true);
+    };
     GroupService.prototype.getMembersOfGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);
     };
@@ -43,6 +47,6 @@ var GroupService = (function () {
         __metadata('design:paramtypes', [httpWrapperService_1.HttpWrapperService, String])
     ], GroupService);
     return GroupService;
-})();
+}());
 exports.GroupService = GroupService;
 //# sourceMappingURL=groupService.js.map
