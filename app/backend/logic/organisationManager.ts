@@ -25,7 +25,7 @@ export class OrganisationManager {
                 this._dao.createOrganisation(organisation, (newOrganisation: Organisation) => {
                     var userManager: UserManager = new UserManager();
 
-                    userManager.addOrganisationIdToUserById(newOrganisation._id, newOrganisation._memberIds[0], true, () => {
+                    userManager.addOrganisationIdToUserById(newOrganisation._id, newOrganisation._organisatorIds[0], true, () => {
                         callback(newOrganisation);
                     });
                 });

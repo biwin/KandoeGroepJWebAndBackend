@@ -20,7 +20,7 @@ var OrganisationManager = (function () {
             else {
                 _this._dao.createOrganisation(organisation, function (newOrganisation) {
                     var userManager = new userManager_1.UserManager();
-                    userManager.addOrganisationIdToUserById(newOrganisation._id, newOrganisation._memberIds[0], true, function () {
+                    userManager.addOrganisationIdToUserById(newOrganisation._id, newOrganisation._organisatorIds[0], true, function () {
                         callback(newOrganisation);
                     });
                 });
