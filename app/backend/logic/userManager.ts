@@ -321,4 +321,10 @@ export class UserManager {
     deleteOrganisationFromUserById(organisationId: string, userId: string, callback: (deleted: boolean) => any) {
         this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
     }
+
+    getUserIdForUserByEmail(email: string, callback: (userId: string) => any) {
+        this.getUserByEmail(email, (user: User) => {
+            callback(user._id);
+        });
+    }
 }

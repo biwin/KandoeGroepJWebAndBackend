@@ -1,3 +1,4 @@
+"use strict";
 var groupAPI_1 = require("./groupAPI");
 var userApi_1 = require("./userApi");
 var themeApi_1 = require("./themeApi");
@@ -109,6 +110,26 @@ var OrganisationAPI = (function () {
             }
         });
     };
+    OrganisationAPI.addUserByEmail = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var organisationId = req.params.id;
+                var newUserMail = req.body.email;
+                var isAdmin = req.body.isAdmin;
+                OrganisationAPI.mgr.addUserByEmailToOrganisationById(newUserMail, isAdmin, organisationId, function (added, userId) {
+                    if (userId != null) {
+                        res.send(userId);
+                    }
+                    else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     OrganisationAPI.getOrganisationOfGroupById = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
@@ -136,6 +157,6 @@ var OrganisationAPI = (function () {
     };
     OrganisationAPI.mgr = new organisationManager_1.OrganisationManager();
     return OrganisationAPI;
-})();
+}());
 exports.OrganisationAPI = OrganisationAPI;
 //# sourceMappingURL=organisationAPI.js.map

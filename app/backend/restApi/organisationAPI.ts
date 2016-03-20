@@ -122,6 +122,26 @@ export class OrganisationAPI {
             }
         });
     }
+    
+    public static addUserByEmail(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var organisationId: string = req.params.id;
+                var newUserMail: string = req.body.email;
+                var isAdmin: boolean = req.body.isAdmin;
+
+                OrganisationAPI.mgr.addUserByEmailToOrganisationById(newUserMail, isAdmin, organisationId, (added: boolean, userId: string) => {
+                    if(userId != null) {
+                        res.send(userId);
+                    } else {
+                        res.status(404).send("Organisation not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
 
     public static getOrganisationOfGroupById(req: Request, res: Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {

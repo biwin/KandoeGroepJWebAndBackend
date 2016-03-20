@@ -92,6 +92,24 @@ export class OrganisationDao {
         });
     }
 
+    addUserIdToOrganisationById(userId: string, isAdmin: boolean, organisationId: string, callback: (added: boolean) => any)  {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            if(isAdmin) {
+                db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_organisatorIds': userId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            } else {
+                db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$push: {'_memberIds': userId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                    db.close();
+
+                    callback(result.modifiedCount == 1);
+                });
+            }
+        });
+    }
+
     getOrganisationOfGroupById(groupId: string, callback: (organisation: Organisation) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').find({'_groupIds': {'$in': [groupId]}}).limit(1).next().then((cursor: CursorResult) => {

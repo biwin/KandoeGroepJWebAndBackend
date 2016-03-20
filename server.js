@@ -67,6 +67,7 @@ app.get('/api/snapshots/:id', SnapshotApi.SnapshotApi.getById);
 app.get("/api/organisations/:id", OrganisationAPI.OrganisationAPI.find);
 app.post("/api/organisations", OrganisationAPI.OrganisationAPI.create);
 app.delete("/api/organisations/:id", OrganisationAPI.OrganisationAPI.delete);
+app.post('/api/organisations/:id', OrganisationAPI.OrganisationAPI.addUserByEmail);
 app.get("/api/organisations/:id/admins", OrganisationAPI.OrganisationAPI.getAdmins);
 app.get("/api/organisations/:id/groups", OrganisationAPI.OrganisationAPI.getGroups);
 app.delete("/api/organisations/:id/groups/:groupId", OrganisationAPI.OrganisationAPI.deleteGroupById);

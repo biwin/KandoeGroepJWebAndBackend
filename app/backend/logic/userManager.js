@@ -1,3 +1,4 @@
+"use strict";
 var userDao_1 = require("../dao/userDao");
 var mongodb_1 = require("mongodb");
 /**
@@ -289,7 +290,12 @@ var UserManager = (function () {
     UserManager.prototype.deleteOrganisationFromUserById = function (organisationId, userId, callback) {
         this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
     };
+    UserManager.prototype.getUserIdForUserByEmail = function (email, callback) {
+        this.getUserByEmail(email, function (user) {
+            callback(user._id);
+        });
+    };
     return UserManager;
-})();
+}());
 exports.UserManager = UserManager;
 //# sourceMappingURL=userManager.js.map

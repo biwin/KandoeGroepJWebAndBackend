@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -68,6 +69,22 @@ var OrganisationDao = (function () {
             });
         });
     };
+    OrganisationDao.prototype.addUserIdToOrganisationById = function (userId, isAdmin, organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            if (isAdmin) {
+                db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $push: { '_organisatorIds': userId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
+            else {
+                db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $push: { '_memberIds': userId } }, function (error, result) {
+                    db.close();
+                    callback(result.modifiedCount == 1);
+                });
+            }
+        });
+    };
     OrganisationDao.prototype.getOrganisationOfGroupById = function (groupId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').find({ '_groupIds': { '$in': [groupId] } }).limit(1).next().then(function (cursor) {
@@ -94,6 +111,6 @@ var OrganisationDao = (function () {
         });
     };
     return OrganisationDao;
-})();
+}());
 exports.OrganisationDao = OrganisationDao;
 //# sourceMappingURL=organisationDao.js.map

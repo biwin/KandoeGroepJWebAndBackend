@@ -90,6 +90,24 @@ export class OrganisationManager {
         this._dao.addGroupIdToOrganisationById(groupId, organisationId, callback);
     }
 
+    addUserByEmailToOrganisationById(newUserMail, isAdmin, organisationId, callback: (added: boolean, userId: string) => any) {
+        var userManager = new UserManager();
+        
+        this.getOrganisationById(organisationId, (organisation: Organisation) => {
+            userManager.getUserIdForUserByEmail(newUserMail, (userId: string) => {
+                if(isAdmin && organisation._organisatorIds.indexOf(userId)<0 || !isAdmin && organisation._memberIds.indexOf(userId)<0) {
+                    this._dao.addUserIdToOrganisationById(userId, isAdmin, organisationId, (userAdded: boolean) => {
+                        userManager.addOrganisationIdToUserById(organisationId, userId, isAdmin, (referenceAdded: boolean) => {
+                            callback(userAdded && referenceAdded, userId);
+                        });
+                    });
+                } else {
+                    callback(false, null);
+                }
+            });
+        });
+    }
+
     getOrganisationOfGroupById(groupId: string, callback: (organisation: Organisation) => any) {
         this._dao.getOrganisationOfGroupById(groupId, callback);
     }
