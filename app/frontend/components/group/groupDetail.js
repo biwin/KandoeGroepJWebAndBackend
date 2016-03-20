@@ -1,3 +1,5 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -40,8 +42,8 @@ var GroupDetail = (function () {
     }
     GroupDetail.prototype.loadMembers = function () {
         var _this = this;
-        if (group._memberIds.length != 0) {
-            groupService.getMembersOfGroupById(groupId).subscribe(function (members) {
+        if (this.group._memberIds.length != 0) {
+            this.groupService.getMembersOfGroupById(this.group._id).subscribe(function (members) {
                 _this.members = members;
                 _this.membersLoading = false;
             });

@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component} from "angular2/core";
 import {Router, RouteParams} from "angular2/router";
 import {NgClass} from "angular2/common";
@@ -117,8 +120,8 @@ export class GroupDetail {
     }
 
     private loadMembers(): void {
-        if(group._memberIds.length != 0) {
-            groupService.getMembersOfGroupById(groupId).subscribe((members: User[]) => {
+        if(this.group._memberIds.length != 0) {
+            this.groupService.getMembersOfGroupById(this.group._id).subscribe((members: User[]) => {
                 this.members = members;
                 this.membersLoading = false;
             });
