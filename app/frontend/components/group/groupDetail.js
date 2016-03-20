@@ -17,6 +17,7 @@ var loadingSpinner_1 = require("../general/loadingSpinner");
 var groupService_1 = require("../../services/groupService");
 var userService_1 = require("../../services/userService");
 var group_1 = require("../../../backend/model/group");
+var user_1 = require("../../../backend/model/user");
 var organisation_1 = require("../../../backend/model/organisation");
 var GroupDetail = (function () {
     function GroupDetail(router, routeParam, groupService, userService) {
@@ -26,6 +27,9 @@ var GroupDetail = (function () {
         this.organisation = organisation_1.Organisation.empty();
         this.groupLoading = true;
         this.membersLoading = true;
+        this.memberToDelete = user_1.User.empty();
+        this.isLastAdmin = false;
+        this.doDeleteMmbr = false;
         this.doDeleteGrp = false;
         var groupId = routeParam.params["id"];
         this.router = router;
@@ -108,10 +112,59 @@ var GroupDetail = (function () {
         this.membersLoading = true;
         this.loadMembers();
     };
+    //TODO: styling van deleteMember button
+    GroupDetail.prototype.deleteMember = function (user, isAdmin) {
+        var _this = this;
+        this.memberToDelete = user;
+        this.isLastAdmin = isAdmin && this.organisation._organisatorIds.length == 1;
+        if (this.isLastAdmin) {
+            this.contentText = "U staat op het punt " + this.group._name + " volledig te verwijderen.\n" +
+                "Bent u zeker dat u deze groep wil verwijderen?";
+        }
+        else if (this.isCurrentUser(user._id)) {
+            this.contentText = "U staat op het punt uzelf uit " + this.group._name + " te verwijderen.\n" +
+                "Bent u zeker dat u zichzelf uit deze groep wil verwijderen?";
+        }
+        else {
+            this.contentText = "U staat op het punt " + this.memberToDelete._name + " uit " + this.group._name + " te verwijderen.\n" +
+                "Bent u zeker dat u deze persoon wil verwijderen?";
+        }
+        $('#deleteMemberModal').openModal({
+            opacity: .75,
+            complete: function () {
+                _this.doDeleteMember();
+            }
+        });
+    };
+    GroupDetail.prototype.doDeleteMember = function () {
+        var _this = this;
+        if (this.doDeleteMmbr && !this.isLastAdmin) {
+            this.groupService.deleteMemberFromGroupById(this.memberToDelete._id, this.group._id).subscribe(function (deleted) {
+                if (deleted) {
+                    _this.deleteMemberFromArray(_this.memberToDelete._id);
+                }
+            });
+        }
+        else if (this.doDeleteMmbr && this.isLastAdmin) {
+            this.groupService.deleteGroupById(this.group._id).subscribe(function () {
+                _this.router.navigate(["/OrganisationsOverview"]);
+            });
+        }
+    };
+    GroupDetail.prototype.deleteMemberFromArray = function (userId) {
+        if (this.isAdmin()) {
+            var index = this.admins.findIndex(function (user) { return user._id == userId; });
+            this.admins.splice(index, 1);
+        }
+        else {
+            var index = this.members.findIndex(function (user) { return user._id == userId; });
+            this.members.splice(index, 1);
+        }
+    };
     GroupDetail = __decorate([
         core_1.Component({
             selector: 'group-detail',
-            template: "\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{group._name}} verwijderen?</h4>\n            <p>U staat op het punt {{group._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    \n    <loading *ngIf=\"groupLoading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!groupLoading && group!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{group._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{group._memberIds.length}}\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember()\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"groupLoading\"></loading>\n        <div *ngIf=\"!groupLoading\" class=\"card\" [ngClass]=\"{tableCard: group._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"group._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteUser(member, false)\" class=\"material-icons red-text clickable\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"group._memberIds.length==0\">De groep \"{{group._name}}\" van organisatie \"{{organisation._name}}\" heeft momenteel nog geen leden.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!groupLoading && group==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"modal\" id=\"deleteMemberModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{memberToDelete._name}} verwijderen?</h4>\n            <p>{{contentText}}</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteMmbr = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteMmbr = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{group._name}} verwijderen?</h4>\n            <p>U staat op het punt {{group._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    \n    <loading *ngIf=\"groupLoading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!groupLoading && group!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{group._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n\n        <div class=\"card\"><div class=\"card-content\">\n            # leden: {{group._memberIds.length}}\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember()\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"groupLoading\"></loading>\n        <div *ngIf=\"!groupLoading\" class=\"card\" [ngClass]=\"{tableCard: group._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"group._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteMember(member)\" class=\"material-icons red-text clickable\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"group._memberIds.length==0\">De groep \"{{group._name}}\" van organisatie \"{{organisation._name}}\" heeft momenteel nog geen leden.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!groupLoading && group==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
             directives: [common_1.NgClass, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams, groupService_1.GroupService, userService_1.UserService])

@@ -17,6 +17,17 @@ import {Organisation} from "../../../backend/model/organisation";
 @Component({
     selector: 'group-detail',
     template: `
+    <div class="modal" id="deleteMemberModal">
+        <div class="modal-content">
+            <h4 class="red-text">{{memberToDelete._name}} verwijderen?</h4>
+            <p>{{contentText}}</p>
+        </div>
+
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDeleteMmbr = false">Nee, ga terug</a>
+            <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteMmbr = true">Ja, verwijder</a>
+        </div>
+    </div>
     <div class="modal" id="deleteGroupModal">
         <div class="modal-content">
             <h4 class="red-text">{{group._name}} verwijderen?</h4>
@@ -69,7 +80,7 @@ import {Organisation} from "../../../backend/model/organisation";
                 </thead>
 
                 <tr *ngFor="#member of members">
-                    <td><i *ngIf="isAdmin() || isCurrentUser(member._id)" (click)="deleteUser(member, false)" class="material-icons red-text clickable" title="Verwijder {{member._name}}">delete_forever</i></td>
+                    <td><i *ngIf="isAdmin() || isCurrentUser(member._id)" (click)="deleteMember(member)" class="material-icons red-text clickable" title="Verwijder {{member._name}}">delete_forever</i></td>
                     <td>{{member._name}}</td>
                     <td>{{member._email}}</td>
                 </tr>
@@ -97,6 +108,11 @@ export class GroupDetail {
     private organisation: Organisation = Organisation.empty();
     private groupLoading: boolean = true;
     private membersLoading: boolean = true;
+
+    private memberToDelete: User = User.empty();
+    private contentText: string;
+    private isLastAdmin: boolean = false;
+    private doDeleteMmbr: boolean = false;
     private doDeleteGrp: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
@@ -190,5 +206,56 @@ export class GroupDetail {
         this.membersLoading = true;
         
         this.loadMembers();
+    }
+
+    //TODO: styling van deleteMember button
+    private deleteMember(user: User, isAdmin: boolean): void {
+        this.memberToDelete = user;
+
+        this.isLastAdmin = isAdmin && this.organisation._organisatorIds.length==1;
+
+        if(this.isLastAdmin) {
+            this.contentText = "U staat op het punt " + this.group._name + " volledig te verwijderen.\n" +
+                "Bent u zeker dat u deze groep wil verwijderen?";
+        } else if (this.isCurrentUser(user._id)) {
+            this.contentText = "U staat op het punt uzelf uit " + this.group._name + " te verwijderen.\n" +
+                "Bent u zeker dat u zichzelf uit deze groep wil verwijderen?";
+        } else {
+            this.contentText = "U staat op het punt " + this.memberToDelete._name + " uit " + this.group._name + " te verwijderen.\n" +
+                "Bent u zeker dat u deze persoon wil verwijderen?";
+        }
+
+        $('#deleteMemberModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doDeleteMember();
+            }
+        });
+    }
+
+    private doDeleteMember(): void {
+        if(this.doDeleteMmbr && !this.isLastAdmin) {
+            this.groupService.deleteMemberFromGroupById(this.memberToDelete._id, this.group._id).subscribe((deleted: boolean) => {
+                if(deleted) {
+                    this.deleteMemberFromArray(this.memberToDelete._id);
+                }
+            });
+        } else if (this.doDeleteMmbr && this.isLastAdmin) {
+            this.groupService.deleteGroupById(this.group._id).subscribe(() => {
+                this.router.navigate(["/OrganisationsOverview"]);
+            });
+        }
+    }
+
+    private deleteMemberFromArray(userId: string): void {
+        if(this.isAdmin()) {
+            var index = this.admins.findIndex((user: User) => user._id == userId);
+
+            this.admins.splice(index, 1);
+        } else {
+            var index = this.members.findIndex((user: User) => user._id == userId);
+
+            this.members.splice(index, 1);
+        }
     }
 }
