@@ -106,14 +106,7 @@ export class GroupDetail {
         groupService.getGroupById(groupId).subscribe((group: Group) => {
             this.group = group;
 
-            if(group._memberIds.length != 0) {
-                groupService.getMembersOfGroupById(groupId).subscribe((members: User[]) => {
-                    this.members = members;
-                    this.membersLoading = false;
-                });
-            } else {
-                this.membersLoading = false;
-            }
+            this.loadMembers();
 
             groupService.getOrganisationOfGroupById(groupId).subscribe((organisation: Organisation) => {
                 this.organisation = organisation;
@@ -121,6 +114,17 @@ export class GroupDetail {
 
             this.groupLoading = false;
         });
+    }
+
+    private loadMembers(): void {
+        if(group._memberIds.length != 0) {
+            groupService.getMembersOfGroupById(groupId).subscribe((members: User[]) => {
+                this.members = members;
+                this.membersLoading = false;
+            });
+        } else {
+            this.membersLoading = false;
+        }
     }
 
     private isAdmin(): boolean {
@@ -153,8 +157,35 @@ export class GroupDetail {
     }
 
     //TODO: styling van addMember button
-    //TODO: uitwerking addMember methode
     private addMember(): void {
-        alert("addMember");
+        $('#addMemberModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doAddMember();
+            }
+        });
+    }
+
+    private doAddMember(): void {
+        if(this.doAddMembr) {
+            this.groupService.addMemberByEmailToGroupById(this.newUserEmail, this.group._id).subscribe((userId: string) => {
+                if(userId != null) {
+                    Materialize.toast("Lid toegevoegd.", 3000, 'rounded');
+                    
+                    this.addMemberToArray(userId);
+                } else {
+                    Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+                }
+            }, (err: any) => {
+                Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+            });
+        }
+    }
+
+    private addMemberToArray(userId: string): void {
+        this.group._memberIds.push(userId);
+        this.membersLoading = true;
+        
+        this.loadMembers();
     }
 }

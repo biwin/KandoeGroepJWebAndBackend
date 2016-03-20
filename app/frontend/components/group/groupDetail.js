@@ -31,21 +31,25 @@ var GroupDetail = (function () {
         this.userService = userService;
         groupService.getGroupById(groupId).subscribe(function (group) {
             _this.group = group;
-            if (group._memberIds.length != 0) {
-                groupService.getMembersOfGroupById(groupId).subscribe(function (members) {
-                    _this.members = members;
-                    _this.membersLoading = false;
-                });
-            }
-            else {
-                _this.membersLoading = false;
-            }
+            _this.loadMembers();
             groupService.getOrganisationOfGroupById(groupId).subscribe(function (organisation) {
                 _this.organisation = organisation;
             });
             _this.groupLoading = false;
         });
     }
+    GroupDetail.prototype.loadMembers = function () {
+        var _this = this;
+        if (group._memberIds.length != 0) {
+            groupService.getMembersOfGroupById(groupId).subscribe(function (members) {
+                _this.members = members;
+                _this.membersLoading = false;
+            });
+        }
+        else {
+            this.membersLoading = false;
+        }
+    };
     GroupDetail.prototype.isAdmin = function () {
         var userId = this.userService.getUserId();
         return this.organisation._organisatorIds.indexOf(userId) > -1;
@@ -72,9 +76,35 @@ var GroupDetail = (function () {
         }
     };
     //TODO: styling van addMember button
-    //TODO: uitwerking addMember methode
     GroupDetail.prototype.addMember = function () {
-        alert("addMember");
+        var _this = this;
+        $('#addMemberModal').openModal({
+            opacity: .75,
+            complete: function () {
+                _this.doAddMember();
+            }
+        });
+    };
+    GroupDetail.prototype.doAddMember = function () {
+        var _this = this;
+        if (this.doAddMembr) {
+            this.groupService.addMemberByEmailToGroupById(this.newUserEmail, this.group._id).subscribe(function (userId) {
+                if (userId != null) {
+                    Materialize.toast("Lid toegevoegd.", 3000, 'rounded');
+                    _this.addMemberToArray(userId);
+                }
+                else {
+                    Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+                }
+            }, function (err) {
+                Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+            });
+        }
+    };
+    GroupDetail.prototype.addMemberToArray = function (userId) {
+        this.group._memberIds.push(userId);
+        this.membersLoading = true;
+        this.loadMembers();
     };
     GroupDetail = __decorate([
         core_1.Component({
