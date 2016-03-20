@@ -64,7 +64,7 @@ export class OrganisationDao {
 
     deleteMemberFromOrganisationById(memberId: string, organisationId: string, callback: (deleted: boolean) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
-            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$pull: {'_memberIds': memberId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+            db.collection('organisations').updateOne({'_id': new ObjectID(organisationId)}, {$pull: {'_memberIds': memberId, '_organisatorIds': memberId}}, (error: MongoError, result: UpdateWriteOpResult) => {
                 db.close();
 
                 callback(result.modifiedCount == 1);

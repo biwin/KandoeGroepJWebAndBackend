@@ -47,7 +47,7 @@ var OrganisationDao = (function () {
     };
     OrganisationDao.prototype.deleteMemberFromOrganisationById = function (memberId, organisationId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $pull: { '_memberIds': memberId } }, function (error, result) {
+            db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $pull: { '_memberIds': memberId, '_organisatorIds': memberId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
             });
