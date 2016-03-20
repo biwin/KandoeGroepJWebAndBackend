@@ -22,7 +22,7 @@ export class OrganisationAPI {
                 var organisation: Organisation = req.body;
                 organisation._organisatorIds = [currentUserId];
 
-                OrganisationAPI.mgr.createOrganisation(req.body, (o: Organisation) => {
+                OrganisationAPI.mgr.createOrganisation(organisation, (o: Organisation) => {
                     res.send(o);
                 });
             } else {

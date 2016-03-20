@@ -16,7 +16,7 @@ var OrganisationAPI = (function () {
             if (currentUserId != null) {
                 var organisation = req.body;
                 organisation._organisatorIds = [currentUserId];
-                OrganisationAPI.mgr.createOrganisation(req.body, function (o) {
+                OrganisationAPI.mgr.createOrganisation(organisation, function (o) {
                     res.send(o);
                 });
             }
