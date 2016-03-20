@@ -1,4 +1,3 @@
-"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var chatManager_1 = require("./chatManager");
 var userManager_1 = require("./userManager");
@@ -304,6 +303,6 @@ var CircleSessionManager = (function () {
         });
     };
     return CircleSessionManager;
-}());
+})();
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

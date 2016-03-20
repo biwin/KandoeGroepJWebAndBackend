@@ -1,4 +1,3 @@
-"use strict";
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
@@ -194,6 +193,6 @@ var CircleSessionDao = (function () {
         });
     };
     return CircleSessionDao;
-}());
+})();
 exports.CircleSessionDao = CircleSessionDao;
 //# sourceMappingURL=circleSessionDao.js.map

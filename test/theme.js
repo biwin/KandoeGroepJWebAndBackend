@@ -1,4 +1,3 @@
-"use strict";
 var assert = require('assert');
 var themeManager_1 = require("../app/backend/logic/themeManager");
 var userManager_1 = require("../app/backend/logic/userManager");

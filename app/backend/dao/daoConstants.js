@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Class that contains the Constant_Url to the KanDoe Database
  */
@@ -13,6 +12,6 @@ var DaoConstants = (function () {
         configurable: true
     });
     return DaoConstants;
-}());
+})();
 exports.DaoConstants = DaoConstants;
 //# sourceMappingURL=daoConstants.js.map

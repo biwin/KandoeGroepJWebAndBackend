@@ -1,5 +1,4 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
-"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -132,6 +131,6 @@ var ThemeDao = (function () {
         });
     };
     return ThemeDao;
-}());
+})();
 exports.ThemeDao = ThemeDao;
 //# sourceMappingURL=themeDao.js.map

@@ -1,4 +1,3 @@
-"use strict";
 var circleMathToolbox_1 = require("./circleMathToolbox");
 /**
  * Class that provides a toolbox that aids with forming the cards on the gameboard
@@ -89,6 +88,6 @@ var CircleSessionOnCircleToolbox = (function () {
         return circleMathToolbox_1.CircleMathToolbox.POS_ON_CIRCLE(this.CENTER, this.CircleRadius(depth), angle, Math.cos);
     };
     return CircleSessionOnCircleToolbox;
-}());
+})();
 exports.CircleSessionOnCircleToolbox = CircleSessionOnCircleToolbox;
 //# sourceMappingURL=circleSessionCardOnCircleToolbox.js.map

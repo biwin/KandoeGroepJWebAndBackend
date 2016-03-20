@@ -1,4 +1,4 @@
-/*
+
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
@@ -16,6 +16,7 @@ var userManager:UserManager;
 before(function(done: any) {
     this.timeout(0);
     userManager = new UserManager();
+    done();
 });
 
 describe('UserManager', () => {
@@ -221,8 +222,8 @@ describe('UserManager', () => {
         });
     });
     //endregion
-
-    describe('createOrganisation', () => {
+});
+ /*   describe('createOrganisation', () => {
         var jasper:User = new User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         var rob:User = new User('Rob', 'rob.hendrickx@student.kdg.be', 'password', 'web');
         var users = [jasper._id, rob._id];
@@ -417,10 +418,6 @@ describe('UserManager', () => {
         });
     });
 
-
-
-
-
     describe('removeUserFromOrganisation', () => {
         var user:User = new User('Michael', 'michael.deboey@student.kdg.be', 'password', 'web');
         var organisation:Organisation = new Organisation('Organisation', [user._id]);
@@ -462,8 +459,6 @@ describe('UserManager', () => {
         });
     });
 
-
-
     describe('removeOrganisation', () => {
         var organisation:Organisation = new Organisation('Organisation', []);
         before(function (done:any) {
@@ -487,8 +482,7 @@ describe('UserManager', () => {
                 done(e);
             }
         });
-    });
-
+    })
 
     describe('removeUserFromGroupById', () => {
         var jan:User;
@@ -597,7 +591,6 @@ describe('UserManager', () => {
 
     });
 
-
     describe('removeGroup', () => {
         var organisation = new Organisation('Organisation', []);
         var group:Group = new Group('Group', 'Description', organisation._id, []);
@@ -634,6 +627,6 @@ describe('UserManager', () => {
                 });
             });
         });
-    });
-});
-*/
+    });*/
+
+

@@ -1,4 +1,3 @@
-"use strict";
 var CircleSession = (function () {
     function CircleSession(_groupId, _userIds, _themeId, 
         /* _name format: "GroupName - ThemeName" */
@@ -34,6 +33,6 @@ var CircleSession = (function () {
         return new CircleSession("", [], "", "", "", "", false, true, null, true, false, false);
     };
     return CircleSession;
-}());
+})();
 exports.CircleSession = CircleSession;
 //# sourceMappingURL=circleSession.js.map

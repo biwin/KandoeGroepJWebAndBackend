@@ -1,4 +1,3 @@
-"use strict";
 var Group = (function () {
     function Group(_name, _description, _organisationId, _memberIds) {
         this._name = _name;
@@ -10,6 +9,6 @@ var Group = (function () {
         return new Group("", "", "", []);
     };
     return Group;
-}());
+})();
 exports.Group = Group;
 //# sourceMappingURL=group.js.map
