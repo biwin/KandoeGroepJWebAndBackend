@@ -1,3 +1,4 @@
+"use strict";
 var CardPosition = (function () {
     function CardPosition(_sessionId, _cardId, _userId, 
         //list of userIds that have moved this card in this session
@@ -12,6 +13,6 @@ var CardPosition = (function () {
         this._lastChanged = _lastChanged;
     }
     return CardPosition;
-})();
+}());
 exports.CardPosition = CardPosition;
 //# sourceMappingURL=cardPosition.js.map

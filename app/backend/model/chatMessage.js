@@ -1,3 +1,4 @@
+"use strict";
 var ChatMessage = (function () {
     function ChatMessage(_userId, _message, _circleSessionId, _timestamp, 
         //optional userName to show in frontend
@@ -9,6 +10,6 @@ var ChatMessage = (function () {
         this._userName = _userName;
     }
     return ChatMessage;
-})();
+}());
 exports.ChatMessage = ChatMessage;
 //# sourceMappingURL=chatMessage.js.map

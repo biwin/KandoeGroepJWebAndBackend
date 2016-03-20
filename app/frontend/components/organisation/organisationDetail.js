@@ -1,5 +1,6 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -215,6 +216,6 @@ var OrganisationDetail = (function () {
         __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams, organisationService_1.OrganisationService, userService_1.UserService])
     ], OrganisationDetail);
     return OrganisationDetail;
-})();
+}());
 exports.OrganisationDetail = OrganisationDetail;
 //# sourceMappingURL=organisationDetail.js.map

@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Class that gives a simple model to gain the needed information of a card and it's position in a game.
  * Used for snapshots. Full name and position are saved.
@@ -10,6 +11,6 @@ var SnapshotCardWrapper = (function () {
         this._userHistory = _userHistory;
     }
     return SnapshotCardWrapper;
-})();
+}());
 exports.SnapshotCardWrapper = SnapshotCardWrapper;
 //# sourceMappingURL=snapshotCardWrapper.js.map

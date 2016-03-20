@@ -1,6 +1,7 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
 /// <reference path="../typings/express/express.d.ts" />
+"use strict";
 var assert = require('assert');
 var userManager_1 = require("../app/backend/logic/userManager");
 var user_1 = require("../app/backend/model/user");

@@ -1,3 +1,4 @@
+"use strict";
 var userDao_1 = require("../dao/userDao");
 var mongodb_1 = require("mongodb");
 /**
@@ -293,6 +294,6 @@ var UserManager = (function () {
         this._dao.deleteTestUsers(callback);
     };
     return UserManager;
-})();
+}());
 exports.UserManager = UserManager;
 //# sourceMappingURL=userManager.js.map

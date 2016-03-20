@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -47,6 +48,6 @@ var OrganisationForm = (function () {
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])
     ], OrganisationForm);
     return OrganisationForm;
-})();
+}());
 exports.OrganisationForm = OrganisationForm;
 //# sourceMappingURL=organisationForm.js.map

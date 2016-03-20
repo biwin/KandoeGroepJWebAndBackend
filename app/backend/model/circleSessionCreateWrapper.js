@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Class that gives a simple model to combine a circlesession and a list of emails.
  * When creating a team a list of emails can be provided.
@@ -12,6 +13,6 @@ var CircleSessionCreateWrapper = (function () {
         return new CircleSessionCreateWrapper(null, []);
     };
     return CircleSessionCreateWrapper;
-})();
+}());
 exports.CircleSessionCreateWrapper = CircleSessionCreateWrapper;
 //# sourceMappingURL=circleSessionCreateWrapper.js.map

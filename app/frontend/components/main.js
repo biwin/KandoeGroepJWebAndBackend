@@ -1,3 +1,4 @@
+"use strict";
 var browser_1 = require("angular2/platform/browser");
 var core_1 = require("angular2/core");
 var http_1 = require("angular2/http");

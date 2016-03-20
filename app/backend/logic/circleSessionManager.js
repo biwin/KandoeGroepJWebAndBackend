@@ -1,3 +1,4 @@
+"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var chatManager_1 = require("./chatManager");
 var userManager_1 = require("./userManager");
@@ -150,7 +151,8 @@ var CircleSessionManager = (function () {
                 if (cards.length > 0) {
                     cards.forEach(function (c) {
                         _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
-                            circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
+                            var wrapper = new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b);
+                            circleSessionCardWrappers.push(wrapper);
                             if (++a == cards.length) {
                                 callback(circleSessionCardWrappers);
                             }
@@ -307,6 +309,6 @@ var CircleSessionManager = (function () {
         });
     };
     return CircleSessionManager;
-})();
+}());
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

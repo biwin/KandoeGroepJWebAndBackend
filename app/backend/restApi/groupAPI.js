@@ -1,3 +1,4 @@
+"use strict";
 var userApi_1 = require("./userApi");
 var organisationAPI_1 = require("./organisationAPI");
 var groupManager_1 = require("../logic/groupManager");
@@ -88,6 +89,6 @@ var GroupAPI = (function () {
     };
     GroupAPI.mgr = new groupManager_1.GroupManager();
     return GroupAPI;
-})();
+}());
 exports.GroupAPI = GroupAPI;
 //# sourceMappingURL=groupAPI.js.map

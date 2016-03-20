@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -94,6 +95,6 @@ var OrganisationDao = (function () {
         });
     };
     return OrganisationDao;
-})();
+}());
 exports.OrganisationDao = OrganisationDao;
 //# sourceMappingURL=organisationDao.js.map

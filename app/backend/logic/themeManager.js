@@ -1,3 +1,4 @@
+"use strict";
 var themeDao_1 = require("../dao/themeDao");
 var organisationManager_1 = require("./organisationManager");
 /**
@@ -104,6 +105,6 @@ var ThemeManager = (function () {
         this._dao.deleteOrganisationFromThemeById(themeId, callback);
     };
     return ThemeManager;
-})();
+}());
 exports.ThemeManager = ThemeManager;
 //# sourceMappingURL=themeManager.js.map

@@ -1,5 +1,4 @@
 import assert = require('assert');
-
 import {ThemeManager} from "../app/backend/logic/themeManager";
 import {UserManager} from "../app/backend/logic/userManager";
 
@@ -18,7 +17,6 @@ before(function(done: any) {
 });
 
 describe('ThemeManager', () => {
-
     describe('createTheme', () => {
         var user: User;
         var theme: Theme;
@@ -121,5 +119,4 @@ describe('ThemeManager', () => {
             }
         });
     });
-    
 });

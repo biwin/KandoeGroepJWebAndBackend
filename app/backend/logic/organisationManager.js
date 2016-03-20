@@ -1,3 +1,4 @@
+"use strict";
 var organisationDao_1 = require("../dao/organisationDao");
 var userManager_1 = require("./userManager");
 var groupManager_1 = require("./groupManager");
@@ -83,6 +84,6 @@ var OrganisationManager = (function () {
         this._dao.getAllOrganisationIdsOfUserById(userId, callback);
     };
     return OrganisationManager;
-})();
+}());
 exports.OrganisationManager = OrganisationManager;
 //# sourceMappingURL=organisationManager.js.map

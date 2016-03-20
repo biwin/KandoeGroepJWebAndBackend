@@ -1,3 +1,4 @@
+"use strict";
 var chatDao_1 = require("../dao/chatDao");
 var userManager_1 = require("./userManager");
 var circleSessionManager_1 = require("./circleSessionManager");
@@ -50,6 +51,6 @@ var ChatManager = (function () {
         this._dao.deleteChatOfCircleSession(circleSessionId, callback);
     };
     return ChatManager;
-})();
+}());
 exports.ChatManager = ChatManager;
 //# sourceMappingURL=chatManager.js.map

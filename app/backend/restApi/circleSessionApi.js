@@ -1,3 +1,4 @@
+"use strict";
 var userApi_1 = require("./userApi");
 var circleSessionManager_1 = require("../logic/circleSessionManager");
 var circleSessionMoveResponse_1 = require("../model/circleSessionMoveResponse");
@@ -144,6 +145,6 @@ var CircleSessionApi = (function () {
     };
     CircleSessionApi.mgr = new circleSessionManager_1.CircleSessionManager();
     return CircleSessionApi;
-})();
+}());
 exports.CircleSessionApi = CircleSessionApi;
 //# sourceMappingURL=circleSessionApi.js.map
