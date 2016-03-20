@@ -48,7 +48,6 @@ describe("OrganisationManager", function () {
                             assert.ok(newUser._organisatorOf.indexOf(organisation._id) > -1);
                             done();
                         });
-                        done();
                     });
                 }
                 catch (e) {

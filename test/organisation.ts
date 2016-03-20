@@ -62,7 +62,6 @@ describe("OrganisationManager", () => {
 
                             done();
                         });
-                        done();
                     });
                 } catch(e) {
                     done(e);
