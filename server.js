@@ -83,6 +83,7 @@ app.delete("/api/groups/:id", GroupAPI.GroupAPI.delete);
 app.post('/api/groups/:id', GroupAPI.GroupAPI.addUserByEmail);
 app.post("/api/groups", GroupAPI.GroupAPI.create);
 app.get("/api/groups/:id/members", GroupAPI.GroupAPI.getMembers);
+app.delete("/api/organisations/:id/members/:memberId", GroupAPI.GroupAPI.deleteMemberById);
 app.get("/api/groups/:id/organisation", GroupAPI.GroupAPI.getOrganisation);
 //endregion
 

@@ -422,9 +422,19 @@ export class UserDao {
         });
     }
 
-    deleteTestUsers(callback:()=>any) {
+    deleteGroupFromUserById(groupId: string, userId: string, callback: (deleted: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('users').updateOne({'_id': new ObjectID(userId)}, {$pull: {'_memberOfGroupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    deleteTestUsers(callback: () => any) {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
-            db.collection('users').deleteMany({_registrar: 'test'}, (err:MongoError, res:DeleteWriteOpResultObject) => {
+            db.collection('users').deleteMany({_registrar: 'test'}, (err: MongoError, res: DeleteWriteOpResultObject) => {
                 callback();
             });
         });

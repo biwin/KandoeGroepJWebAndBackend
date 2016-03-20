@@ -322,6 +322,10 @@ export class UserManager {
         this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
     }
 
+    deleteGroupFromUserById(groupId: string, userId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteGroupFromUserById(groupId, userId, callback);
+    }
+
     deleteTestUsers(callback:()=>any) {
         this._dao.deleteTestUsers(callback);
     }

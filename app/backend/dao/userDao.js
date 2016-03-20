@@ -355,6 +355,14 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.deleteGroupFromUserById = function (groupId, userId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $pull: { '_memberOfGroupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     UserDao.prototype.deleteTestUsers = function (callback) {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').deleteMany({ _registrar: 'test' }, function (err, res) {

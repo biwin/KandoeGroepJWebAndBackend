@@ -89,6 +89,25 @@ export class GroupAPI {
         OrganisationAPI.getOrganisationOfGroupById(req, res);
     }
 
+    public static deleteMemberById(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var memberId: string = req.params.memberId;
+                var groupId: string = req.params.id;
+
+                GroupAPI.mgr.deleteMemberFromGroupById(memberId, groupId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
     public static getGroupsOfOrganisationById(req: Request, res: Response) {
         UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
             if (currentUserId != null) {

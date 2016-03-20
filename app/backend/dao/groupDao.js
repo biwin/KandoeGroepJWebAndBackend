@@ -45,6 +45,14 @@ var GroupDao = (function () {
             });
         });
     };
+    GroupDao.prototype.deleteMemberFromGroupById = function (memberId, groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('groups').updateOne({ '_id': new mongodb_1.ObjectID(groupId) }, { $pull: { '_memberIds': memberId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
+            });
+        });
+    };
     GroupDao.prototype.addUserIdToGroupById = function (userId, groupId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').updateOne({ '_id': new mongodb_1.ObjectID(groupId) }, { $push: { '_memberIds': userId } }, function (error, result) {

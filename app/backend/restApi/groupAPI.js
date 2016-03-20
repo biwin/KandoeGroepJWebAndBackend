@@ -80,6 +80,25 @@ var GroupAPI = (function () {
     GroupAPI.getOrganisation = function (req, res) {
         organisationAPI_1.OrganisationAPI.getOrganisationOfGroupById(req, res);
     };
+    GroupAPI.deleteMemberById = function (req, res) {
+        userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
+            if (currentUserId != null) {
+                var memberId = req.params.memberId;
+                var groupId = req.params.id;
+                GroupAPI.mgr.deleteMemberFromGroupById(memberId, groupId, function (deleted) {
+                    if (deleted) {
+                        res.send(deleted);
+                    }
+                    else {
+                        res.status(404).send("Group not found");
+                    }
+                });
+            }
+            else {
+                res.status(401).send({ error: 'Unauthorized' });
+            }
+        });
+    };
     GroupAPI.getGroupsOfOrganisationById = function (req, res) {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {

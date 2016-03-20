@@ -58,6 +58,16 @@ export class GroupManager {
         });
     }
 
+    deleteMemberFromGroupById(memberId: string, groupId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteMemberFromGroupById(memberId, groupId, (memberDeleted: boolean) => {
+            var userManager: UserManager = new UserManager();
+
+            userManager.deleteGroupFromUserById(groupId, memberId, (referenceDeleted: boolean) => {
+                callback(referenceDeleted && memberDeleted);
+            });
+        });
+    }
+
     addUserByEmailToGroupById(newUserMail, groupId, callback: (added: boolean, userId: string) => any) {
         var userManager = new UserManager();
 

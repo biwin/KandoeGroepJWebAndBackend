@@ -61,6 +61,16 @@ export class GroupDao {
             });
         });
     }
+
+    deleteMemberFromGroupById(memberId: string, groupId: string, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('groups').updateOne({'_id': new ObjectID(groupId)}, {$pull: {'_memberIds': memberId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
+            });
+        });
+    }
     
     addUserIdToGroupById(userId: string, groupId: string, callback: (added: boolean) => any)  {
     this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {

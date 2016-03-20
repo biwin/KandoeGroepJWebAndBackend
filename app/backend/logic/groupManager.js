@@ -49,6 +49,14 @@ var GroupManager = (function () {
             });
         });
     };
+    GroupManager.prototype.deleteMemberFromGroupById = function (memberId, groupId, callback) {
+        this._dao.deleteMemberFromGroupById(memberId, groupId, function (memberDeleted) {
+            var userManager = new userManager_1.UserManager();
+            userManager.deleteGroupFromUserById(groupId, memberId, function (referenceDeleted) {
+                callback(referenceDeleted && memberDeleted);
+            });
+        });
+    };
     GroupManager.prototype.addUserByEmailToGroupById = function (newUserMail, groupId, callback) {
         var _this = this;
         var userManager = new userManager_1.UserManager();
