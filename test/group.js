@@ -121,5 +121,75 @@ describe("GroupManager", function () {
             }
         });
     });
+    describe("removeGroupById", function () {
+        var organisation;
+        var group;
+        var member1;
+        var member2;
+        before(function (done) {
+            this.timeout(0);
+            organisation = new organisation_1.Organisation("Delhaize", []);
+            group = new group_1.Group("Voeding", "Ploeg voeding", "", []);
+            member1 = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
+            member2 = new user_1.User("Michaël2", "michael.deboey.2@student.kdg.be", "password", "test");
+            userManager.deleteTestUsers(function () {
+                userManager.registerUser(member1, function (u1) {
+                    member1 = u1;
+                    userManager.registerUser(member2, function (u2) {
+                        member2 = u2;
+                        organisationManager.createOrganisation(organisation, function (o) {
+                            organisation = o;
+                            groupManager.createGroup(group, function (g) {
+                                group = g;
+                                groupManager.addUserByEmailToGroupById(member1._email, group._id, function () {
+                                    groupManager.addUserByEmailToGroupById(member2._email, group._id, function () {
+                                        done();
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        it("Delete group, should also the references from users", function (done) {
+            this.timeout(0);
+            groupManager.removeGroupById(group._id, function () {
+                try {
+                    groupManager.getGroupById(group._id, function (g) {
+                        assert.ok(g == null, "Group should be deleted, database should return null");
+                        userManager.getUserById(member1._id, function (u1) {
+                            assert.ok(u1._memberOfGroupIds.indexOf(group._id) < 0, "Reference in _memberOfGroupIds array of User-object should be deleted");
+                            userManager.getUserById(member2._id, function (u2) {
+                                assert.ok(u2._memberOfGroupIds.indexOf(group._id) < 0, "Reference in _memberOfGroupIds array of User-object should be deleted");
+                                done();
+                            });
+                        });
+                    });
+                }
+                catch (e) {
+                    done(e);
+                }
+            });
+        });
+        after(function (done) {
+            this.timeout(0);
+            try {
+                userManager.removeUserById(member1._id, function () {
+                    userManager.removeUserById(member2._id, function () {
+                        done();
+                    });
+                });
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
+});
+after(function (done) {
+    userManager.deleteTestUsers(function () {
+        done();
+    });
 });
 //# sourceMappingURL=group.js.map
