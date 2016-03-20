@@ -1,5 +1,6 @@
 ///<reference path="../../../../typings/jquery/jquery.d.ts" />
 ///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
-var router_1 = require("angular2/router");
 var userService_1 = require("../../services/userService");
 var common_1 = require("angular2/common");
 var circleSessionCard_1 = require("../circleSession/circleSessionCard");
@@ -18,10 +18,10 @@ var circleSessionService_1 = require("../../services/circleSessionService");
 var snapshotCard_1 = require("../snapshot/snapshotCard");
 var snapshotService_1 = require("../../services/snapshotService");
 var about_1 = require("./about");
+var loadingSpinner_1 = require("./loadingSpinner");
 var HomePage = (function () {
-    function HomePage(router, userService, circleService, snapshotService) {
+    function HomePage(userService, circleService, snapshotService) {
         var _this = this;
-        this.router = router;
         this.circleSessionsInProgress = [];
         this.circleSessionsPlanned = [];
         this.circleSessionsStopped = [];
@@ -87,12 +87,12 @@ var HomePage = (function () {
     HomePage = __decorate([
         core_1.Component({
             selector: 'home-page',
-            template: "\n    <div class=\"container\">\n\n            <div class=\"modal\" id=\"mDelCircleSession\">\n                <div class=\"modal-content\">\n                    <h4>Spel verwijderen?</h4>\n                    <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>\n                </div>\n                <div class=\"modal-footer\">\n                    <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                    <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n                </div>\n            </div>\n\n        <div *ngIf=\"loading\" class=\"row center margin-top\">\n                <div class=\"preloader-wrapper big active\">\n                    <div class=\"spinner-layer spinner-blue-only\">\n                      <div class=\"circle-clipper left\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"gap-patch\">\n                        <div class=\"circle\"></div>\n                      </div><div class=\"circle-clipper right\">\n                        <div class=\"circle\"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n            \n         <about-card *ngIf=\"!loading && circleSessionsInProgress.length <= 0 && circleSessionsPlanned.length <= 0 && circleSessionsStopped.length <= 0 && snapshots.length <= 0\"></about-card>\n\n        <h5 *ngIf=\"!loading && circleSessionsInProgress.length > 0\">Bezig</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsInProgress\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && circleSessionsPlanned.length > 0\">Gepland</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsPlanned\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && circleSessionsStopped.length > 0\">Gestopt</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsStopped\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && snapshots.length > 0\">Snapshots</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#snapshot of snapshots\">\n                <snapshot-card [snapshot]=\"snapshot\"></snapshot-card>\n            </div>\n        </div>\n\n     </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, circleSessionCard_1.CircleSessionCard, snapshotCard_1.SnapshotCard, about_1.About]
+            template: "\n    <div class=\"container\">\n        <div class=\"modal\" id=\"mDelCircleSession\">\n                <div class=\"modal-content\">\n                    <h4>Spel verwijderen?</h4>\n                    <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>\n                </div>\n                <div class=\"modal-footer\">\n                    <a class=\"modal-action modal-close waves-effect waves-green btn-flat\" (click)=\"doDelete = false\">Nee, ga terug</a>\n                    <a class=\"modal-action modal-close waves-effect waves-red btn-flat\" (click)=\"doDelete = true\">Ja, verwijder</a>\n                </div>\n            </div>\n\n        <loading *ngIf=\"loading\"></loading>\n            \n        <about-card *ngIf=\"!loading && circleSessionsInProgress.length <= 0 && circleSessionsPlanned.length <= 0 && circleSessionsStopped.length <= 0 && snapshots.length <= 0\"></about-card>\n\n        <h5 *ngIf=\"!loading && circleSessionsInProgress.length > 0\">Bezig</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsInProgress\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && circleSessionsPlanned.length > 0\">Gepland</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsPlanned\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && circleSessionsStopped.length > 0\">Gestopt</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#circleSession of circleSessionsStopped\">\n                <circlesession-card [circleSession]=\"circleSession\" (onDelete)=\"deleteCircleSession($event)\"></circlesession-card>\n            </div>\n        </div>\n\n        <h5 *ngIf=\"!loading && snapshots.length > 0\">Snapshots</h5>\n        <div class=\"row\">\n            <div *ngFor=\"#snapshot of snapshots\">\n                <snapshot-card [snapshot]=\"snapshot\"></snapshot-card>\n            </div>\n        </div>\n\n     </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, circleSessionCard_1.CircleSessionCard, snapshotCard_1.SnapshotCard, about_1.About, loadingSpinner_1.LoadingSpinner]
         }), 
-        __metadata('design:paramtypes', [router_1.Router, userService_1.UserService, circleSessionService_1.CircleSessionService, snapshotService_1.SnapshotService])
+        __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, snapshotService_1.SnapshotService])
     ], HomePage);
     return HomePage;
-})();
+}());
 exports.HomePage = HomePage;
 //# sourceMappingURL=homePage.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -61,6 +62,6 @@ var Profile = (function () {
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], Profile);
     return Profile;
-})();
+}());
 exports.Profile = Profile;
 //# sourceMappingURL=profile.js.map

@@ -1,3 +1,4 @@
+"use strict";
 var Organisation = (function () {
     function Organisation(_name, _memberIds) {
         this._name = _name;
@@ -9,6 +10,6 @@ var Organisation = (function () {
         return new Organisation("", []);
     };
     return Organisation;
-})();
+}());
 exports.Organisation = Organisation;
 //# sourceMappingURL=organisation.js.map

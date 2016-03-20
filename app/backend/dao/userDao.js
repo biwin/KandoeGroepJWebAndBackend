@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -354,7 +355,14 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.deleteTestUsers = function (callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').deleteMany({ _registrar: 'test' }, function (err, res) {
+                callback();
+            });
+        });
+    };
     return UserDao;
-})();
+}());
 exports.UserDao = UserDao;
 //# sourceMappingURL=userDao.js.map

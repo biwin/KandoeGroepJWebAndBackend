@@ -65,22 +65,14 @@ export class CircleSessionApi {
     }
 
     public static initCardsForSession(req:Request, res:Response) {
-        console.log("JASPER: " + JSON.stringify(req.body) + " - " + JSON.stringify(req.body.values));
         UserApi.getCurrentUserId(req.header('Bearer'), (uId:string) => {
-            console.log("JASPER2: " + uId);
             if(uId != null) {
                 var circleSessionId:string = req.params.id;
-                console.log("JASPER3: " + circleSessionId + " - " + req.params.id);
-                var cardIds:string[] = req.body.values == null ? req.body : req.body.values;
-                console.log("JASPER4: " + cardIds);
-                console.log("JASPER5: " + (req.body.values == null ? req.body : req.body.values));
+                var cardIds:string[] = req.body;
                 CircleSessionApi.mgr.initCardsForSession(uId, circleSessionId, cardIds, (preGameEnded:boolean, currentUserId:string, err?:string) => {
                     if (err != undefined || err != null) {
-                        console.log("JASPER ERROR IS HERE: " + err);
                         res.status(400).send(new CircleSessionMoveResponse(err));
                     } else {
-                        //TODO notify active clients using WebSocket
-                        console.log("JASPER WE GOT HERE MAN : " + preGameEnded + " - " + currentUserId);
                         res.status(200).send(new CircleSessionMoveResponse(null, preGameEnded, currentUserId));
                     }
                 });

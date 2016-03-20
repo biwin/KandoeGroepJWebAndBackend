@@ -8,11 +8,11 @@ import {Group} from "../app/backend/model/group";
 import {Organisation} from "../app/backend/model/organisation";
 import {User} from "../app/backend/model/user";
 
-var groupManager: GroupManager;
-var organisationManager: OrganisationManager;
-var userManager: UserManager;
+var groupManager:GroupManager;
+var organisationManager:OrganisationManager;
+var userManager:UserManager;
 
-before(function(done: any) {
+before(function (done:any) {
     groupManager = new GroupManager();
     organisationManager = new OrganisationManager();
     userManager = new UserManager();
@@ -22,59 +22,60 @@ before(function(done: any) {
 
 describe("GroupManager", () => {
     describe("createGroup", () => {
-        var group: Group;
-        var organisation: Organisation;
-        var user: User;
+        var group:Group;
+        var organisation:Organisation;
+        var user:User;
 
-        before(function (done: any) {
+        before(function (done:any) {
             this.timeout(0);
 
             user = new User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
+            userManager.deleteTestUsers(() => {
+                userManager.registerUser(user, (u:User) => {
+                    user = u;
 
-            userManager.registerUser(user, (u: User) => {
-                user = u;
+                    organisation = new Organisation("Delhaize", []);
+                    organisation._organisatorIds.push(u._id);
 
-                organisation = new Organisation("Delhaize", []);
-                organisation._organisatorIds.push(u._id);
+                    organisationManager.createOrganisation(organisation, (o:Organisation) => {
+                        organisation = o;
 
-                organisationManager.createOrganisation(organisation, (o: Organisation) => {
-                    organisation = o;
-
-                    done();
+                        done();
+                    });
                 });
             });
         });
 
-        it("Create group, should return group from database", function(done: any) {
+        it("Create group, should return group from database", function (done:any) {
             this.timeout(0);
 
             group = new Group("Voeding", "Ploeg voeding", organisation._id, [user._id]);
-            groupManager.createGroup(group, (g: Group) => {
+            groupManager.createGroup(group, (g:Group) => {
                 try {
-                    groupManager.getGroupById(g._id, (newGroup: Group) => {
+                    groupManager.getGroupById(g._id, (newGroup:Group) => {
                         assert.equal(group._name, newGroup._name);
                         assert.equal(group._description, newGroup._description);
                         assert.equal(group._organisationId, newGroup._organisationId);
 
                         group = g;
 
-                        organisationManager.getOrganisationById(organisation._id, (newOrganisation: Organisation) => {
+                        organisationManager.getOrganisationById(organisation._id, (newOrganisation:Organisation) => {
                             assert.ok(newOrganisation._groupIds.indexOf(group._id) > -1);
 
-                            userManager.getUserById(user._id, (newUser: User) => {
+                            userManager.getUserById(user._id, (newUser:User) => {
                                 assert.ok(newUser._memberOfGroupIds.indexOf(group._id) > -1);
 
                                 done();
                             });
                         });
                     });
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
             });
         });
 
-        after(function (done: any) {
+        after(function (done:any) {
             this.timeout(0);
 
             try {
@@ -92,45 +93,45 @@ describe("GroupManager", () => {
     });
 
     describe("createGroupTwice", () => {
-        var organisation: Organisation;
-        var group: Group;
+        var organisation:Organisation;
+        var group:Group;
 
-        before(function (done: any) {
+        before(function (done:any) {
             this.timeout(0);
 
             organisation = new Organisation("Delhaize", []);
 
-            organisationManager.createOrganisation(organisation, (newOrganisation: Organisation) => {
+            organisationManager.createOrganisation(organisation, (newOrganisation:Organisation) => {
                 organisation = newOrganisation;
 
-                groupManager.createGroup(new Group("Voeding", "Ploeg voeding", newOrganisation._id, []), (g: Group) => {
+                groupManager.createGroup(new Group("Voeding", "Ploeg voeding", newOrganisation._id, []), (g:Group) => {
                     try {
                         group = g;
 
                         done();
-                    } catch(e) {
+                    } catch (e) {
                         done(e);
                     }
                 });
             });
         });
 
-        it("Create group with the same name in the same organisation, should return null from database", function(done: any) {
+        it("Create group with the same name in the same organisation, should return null from database", function (done:any) {
             this.timeout(0);
 
             var group2 = new Group("Voeding", "Ploeg voeding", organisation._id, []);
-            groupManager.createGroup(group2, (g: Group) => {
+            groupManager.createGroup(group2, (g:Group) => {
                 try {
                     assert.equal(g, null);
 
                     done();
-                } catch(e) {
+                } catch (e) {
                     done(e);
                 }
             });
         });
 
-        after(function (done: any) {
+        after(function (done:any) {
             this.timeout(0);
 
             try {

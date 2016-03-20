@@ -18,7 +18,7 @@ import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
 
 
 /**
- * Class that is responsible for managing what data will be send to the database layer for circlesession. 
+ * Class that is responsible for managing what data will be send to the database layer for circlesession.
  * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
  * Gains information from chatmanager, usermanager, thememanager, snapshotmanager and groupmanager when needed for an circlesession.
  */
@@ -90,7 +90,7 @@ export class CircleSessionManager {
 
     getCircleSession(id:string, callback:(c:CircleSession) => any) {
         this._dao.readCircleSession(id, (cs:CircleSession) => {
-            if(cs != null) {
+            if (cs != null) {
                 this.checkInProgress(cs, callback);
             } else {
                 callback(null);
@@ -102,10 +102,10 @@ export class CircleSessionManager {
         this._dao.cardPositionExists(sessionId, cardId, (exists:boolean) => {
             if (exists) {
                 this._dao.readCircleSession(sessionId, (c:CircleSession) => {
-                    if(c._currentPlayerId !== userId) {
+                    if (c._currentPlayerId !== userId) {
                         callback(c._currentPlayerId, null, "Not your turn!");
                     } else {
-                        if(c._isStopped) {
+                        if (c._isStopped) {
                             callback(userId, null, "Game is over");
                         } else {
                             this._dao.getCardPosition(sessionId, cardId, (c:CardPosition) => {
@@ -138,7 +138,7 @@ export class CircleSessionManager {
             var arr:CircleSession[] = [];
             var i = 0;
 
-            if(c.length == 0) {
+            if (c.length == 0) {
                 callback(arr);
             } else {
                 c.forEach((cs:CircleSession) => {
@@ -160,15 +160,19 @@ export class CircleSessionManager {
         this._dao.readCircleSession(circleSessionId, (c:CircleSession) => {
             tMgr.getCards(c._themeId, (cards:Card[]) => {
                 var a:number = 0;
-                cards.forEach((c:Card) => {
-                    this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean ) => {
-                        var wrapper: CircleSessionCardWrapper = new CircleSessionCardWrapper(c, b, c._id);
-                        circleSessionCardWrappers.push(wrapper);
-                        if (++a == cards.length) {
-                            callback(circleSessionCardWrappers);
-                        }
+                if(cards.length > 0) {
+                    cards.forEach((c:Card) => {
+                        this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean) => {
+                            var wrapper:CircleSessionCardWrapper = new CircleSessionCardWrapper(c, b);
+                            circleSessionCardWrappers.push(wrapper);
+                            if (++a == cards.length) {
+                                callback(circleSessionCardWrappers);
+                            }
+                        });
                     });
-                });
+                } else {
+                    callback(circleSessionCardWrappers);
+                }
             })
         });
     }
@@ -179,8 +183,8 @@ export class CircleSessionManager {
                 if (c._currentPlayerId !== uId) {
                     callback(null, null, "Not your turn!");
                 } else {
-                    if(c._isStopped){
-                        callback(null,null,"Game is over")
+                    if (c._isStopped) {
+                        callback(null, null, "Game is over");
                     } else {
                         this._dao.getCardPositionsForCardIds(circleSessionId, cardIds, (cps:CardPosition[]) => {
                             for (var i = 0; i < cps.length; i++) {
@@ -222,7 +226,7 @@ export class CircleSessionManager {
     checkInProgress(c:CircleSession, callback:(circleSession:CircleSession)=>any) {
         var inProgress:boolean = c._inProgress;
 
-        if(c._inProgress !== true) {
+        if (c._inProgress !== true) {
             if (c._startDate == null || c._startDate.length !== 16) {
                 c._inProgress = true;
             } else {
@@ -262,7 +266,7 @@ export class CircleSessionManager {
 
             this._dao.updateCurrentPlayer(circleSessionId, newPlayerId, preGameInProgress, (success:boolean) => {
                 if (success) {
-                    if(c._endPoint != null && roundEnded && !c._isPreGame) {
+                    if (c._endPoint != null && roundEnded && !c._isPreGame) {
                         var newRoundsLeft:number = c._endPoint - 1;
                         var gameStopped:boolean = newRoundsLeft <= 0;
 
@@ -302,11 +306,11 @@ export class CircleSessionManager {
 
     stopGame(sessionId:string, userId:string, callback:(stopped:boolean, err?:string) => any) {
         this.getCircleSession(sessionId, (c:CircleSession) => {
-            if(c._creatorId !== userId) {
+            if (c._creatorId !== userId) {
                 callback(false, "You're not the owner of this session!");
             } else {
                 var snapshotManager:SnapshotManager = new SnapshotManager();
-                snapshotManager.createSnapshot(sessionId, (snapshot:Snapshot) =>{
+                snapshotManager.createSnapshot(c._creatorId, sessionId, (snapshot:Snapshot) => {
                     this._dao.stopGame(sessionId, callback);
                 });
             }

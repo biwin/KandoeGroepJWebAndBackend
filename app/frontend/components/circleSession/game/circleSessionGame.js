@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -35,7 +36,7 @@ var CircleSessionGame = (function () {
     }
     CircleSessionGame.prototype.ngOnInit = function () {
         var _this = this;
-        this.prepareWebsocket(this.socketUrl);
+        this.prepareWebsocket();
         this.csService.getCardPositionsOfSession(this.circleSession._id).subscribe(function (cps) {
             if (cps.length > 0) {
                 cps.forEach(function (c) {
@@ -107,6 +108,6 @@ var CircleSessionGame = (function () {
         __metadata('design:paramtypes', [circleSessionService_1.CircleSessionService, themeService_1.ThemeService, userService_1.UserService, socketService_1.SocketService])
     ], CircleSessionGame);
     return CircleSessionGame;
-})();
+}());
 exports.CircleSessionGame = CircleSessionGame;
 //# sourceMappingURL=circleSessionGame.js.map

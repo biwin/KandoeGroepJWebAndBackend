@@ -1,3 +1,4 @@
+"use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
 var chatManager_1 = require("./chatManager");
 var userManager_1 = require("./userManager");
@@ -147,15 +148,20 @@ var CircleSessionManager = (function () {
         this._dao.readCircleSession(circleSessionId, function (c) {
             tMgr.getCards(c._themeId, function (cards) {
                 var a = 0;
-                cards.forEach(function (c) {
-                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
-                        var wrapper = new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b, c._id);
-                        circleSessionCardWrappers.push(wrapper);
-                        if (++a == cards.length) {
-                            callback(circleSessionCardWrappers);
-                        }
+                if (cards.length > 0) {
+                    cards.forEach(function (c) {
+                        _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
+                            var wrapper = new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b);
+                            circleSessionCardWrappers.push(wrapper);
+                            if (++a == cards.length) {
+                                callback(circleSessionCardWrappers);
+                            }
+                        });
                     });
-                });
+                }
+                else {
+                    callback(circleSessionCardWrappers);
+                }
             });
         });
     };
@@ -296,13 +302,13 @@ var CircleSessionManager = (function () {
             }
             else {
                 var snapshotManager = new snapshotManager_1.SnapshotManager();
-                snapshotManager.createSnapshot(sessionId, function (snapshot) {
+                snapshotManager.createSnapshot(c._creatorId, sessionId, function (snapshot) {
                     _this._dao.stopGame(sessionId, callback);
                 });
             }
         });
     };
     return CircleSessionManager;
-})();
+}());
 exports.CircleSessionManager = CircleSessionManager;
 //# sourceMappingURL=circleSessionManager.js.map

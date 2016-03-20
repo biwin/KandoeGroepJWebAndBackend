@@ -1,3 +1,4 @@
+"use strict";
 var userApi_1 = require("./userApi");
 var themeManager_1 = require("../logic/themeManager");
 var card_1 = require("../model/card");
@@ -151,6 +152,6 @@ var ThemeApi = (function () {
     };
     ThemeApi.mgr = new themeManager_1.ThemeManager();
     return ThemeApi;
-})();
+}());
 exports.ThemeApi = ThemeApi;
 //# sourceMappingURL=themeApi.js.map

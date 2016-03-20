@@ -1,4 +1,5 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
 /**
@@ -123,7 +124,7 @@ var ThemeDao = (function () {
         });
     };
     ThemeDao.prototype.deleteOrganisationFromThemeById = function (themeId, callback) {
-        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').updateOne({ '_id': new mongodb_1.ObjectID(themeId) }, { $set: { '_organisationId': null } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
@@ -131,6 +132,6 @@ var ThemeDao = (function () {
         });
     };
     return ThemeDao;
-})();
+}());
 exports.ThemeDao = ThemeDao;
 //# sourceMappingURL=themeDao.js.map

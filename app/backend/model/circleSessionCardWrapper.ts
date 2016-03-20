@@ -5,5 +5,5 @@ import {Card} from "./card";
  */
 export class CircleSessionCardWrapper {
     constructor(public card:Card, 
-                public inPlay:boolean, public cardId: string) {}
+                public inPlay:boolean) {}
 }
