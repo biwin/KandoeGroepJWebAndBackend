@@ -7,27 +7,26 @@ var card_1 = require("../app/backend/model/card");
 var user_1 = require("../app/backend/model/user");
 var themeManager;
 var userManager;
+var user;
 before(function (done) {
+    this.timeout(0);
     themeManager = new themeManager_1.ThemeManager();
     userManager = new userManager_1.UserManager();
-    done();
+    userManager.deleteTestUsers(function () {
+        userManager.registerUser(new user_1.User('Enio', 'test@robhendrickx.be', 'password', "test"), function (u) {
+            try {
+                user = u;
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
 });
 describe('ThemeManager', function () {
     describe('createTheme', function () {
-        var user;
         var theme;
-        before(function (done) {
-            this.timeout(0);
-            userManager.registerUser(new user_1.User('Enio', 'enio.serluppens@student.kdg.be', 'password', ""), function (u) {
-                try {
-                    user = u;
-                    done();
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
-        });
         it('Create theme, should return theme from database', function (done) {
             this.timeout(0);
             theme = new theme_1.Theme('first', 'This is a sample theme', [user._id]);
@@ -49,10 +48,8 @@ describe('ThemeManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                userManager.removeUserById(user._id, function () {
-                    themeManager.removeThemeById(theme._id, function () {
-                        done();
-                    });
+                themeManager.removeThemeById(theme._id, function () {
+                    done();
                 });
             }
             catch (e) {
@@ -63,21 +60,17 @@ describe('ThemeManager', function () {
     describe('AddCard', function () {
         var card;
         var theme;
-        var user;
         before(function (done) {
-            userManager.registerUser(new user_1.User('Enio', 'enio.serluppens@student.kdg.be', 'password', ""), function (u) {
-                try {
-                    user = u;
-                    theme = new theme_1.Theme('Cafes', 'thema van cafes', [u._id]);
-                    themeManager.createTheme(theme, function (t) {
-                        theme = t;
-                        done();
-                    });
-                }
-                catch (e) {
-                    done(e);
-                }
-            });
+            try {
+                theme = new theme_1.Theme('Cafes', 'thema van cafes', [user._id]);
+                themeManager.createTheme(theme, function (t) {
+                    theme = t;
+                    done();
+                });
+            }
+            catch (e) {
+                done(e);
+            }
         });
         it('Card must be added to a theme', function (done) {
             this.timeout(0);
@@ -94,16 +87,19 @@ describe('ThemeManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                userManager.removeUserById(user._id, function () {
-                    themeManager.removeThemeById(theme._id, function () {
-                        done();
-                    });
+                themeManager.removeThemeById(theme._id, function () {
+                    done();
                 });
             }
             catch (e) {
                 done(e);
             }
         });
+    });
+});
+after(function (done) {
+    userManager.deleteTestUsers(function () {
+        done();
     });
 });
 //# sourceMappingURL=theme.js.map
