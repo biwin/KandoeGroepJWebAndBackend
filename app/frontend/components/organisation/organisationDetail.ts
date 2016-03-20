@@ -262,6 +262,8 @@ export class OrganisationDetail {
                     this.groups = groups;
                     this.groupsLoading = false;
                 });
+            } else {
+                this.groupsLoading = false;
             }
 
             if(organisation._organisatorIds.length != 0) {
@@ -269,6 +271,8 @@ export class OrganisationDetail {
                     this.admins = admins;
                     this.adminsLoading = false;
                 });
+            } else {
+                this.adminsLoading = false;
             }
 
             if(organisation._memberIds.length != 0) {
@@ -276,6 +280,8 @@ export class OrganisationDetail {
                     this.members = members;
                     this.membersLoading = false;
                 });
+            } else {
+                this.membersLoading = false;
             }
 
             organisationService.getThemesOfOrganisationById(organisationId).subscribe((themes: Theme[]) => {
