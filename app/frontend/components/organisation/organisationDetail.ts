@@ -65,6 +65,21 @@ import {Theme} from "../../../backend/model/theme";
             <a class="modal-action modal-close waves-effect waves-greens btn-flat green-text" (click)="doDeleteThm = true">Ja, verwijder</a>
         </div>
     </div>
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <h4>{{headerText}} toevoegen?</h4>
+            
+            <div class="input-field col s12">
+                <input id="email" type="email" class="validate" [(ngModel)]="newUserEmail">
+                <label for="email">Email</label>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doAddUsr = false">Annuleren</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doAddUsr = true">Toevoegen</a>
+        </div>
+    </div>
 
     <loading *ngIf="organisationLoading"></loading>
     
@@ -123,7 +138,7 @@ import {Theme} from "../../../backend/model/theme";
             <h5>Admins</h5>
 
             <div id="adminsMenu">
-                <a class="btn-floating waves-effect waves-light red" (click)="addMember(true)" title="Voeg admin toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addUser(true)" title="Voeg admin toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -154,7 +169,7 @@ import {Theme} from "../../../backend/model/theme";
             <h5>Leden</h5>
 
             <div id="membersMenu">
-                <a class="btn-floating waves-effect waves-light red" (click)="addMember(false)" title="Voeg lid toe">
+                <a class="btn-floating waves-effect waves-light red" (click)="addUser(false)" title="Voeg lid toe">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -246,6 +261,9 @@ export class OrganisationDetail {
     private doDeleteUsr: boolean = false;
     private themeToDelete: Theme = Theme.empty();
     private doDeleteThm: boolean = false;
+    private headerText: string;
+    private newUserEmail: string = "";
+    private doAddUsr: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, organisationService: OrganisationService, userService: UserService) {
         var organisationId: string = routeParam.params["id"];
@@ -266,23 +284,9 @@ export class OrganisationDetail {
                 this.groupsLoading = false;
             }
 
-            if(organisation._organisatorIds.length != 0) {
-                organisationService.getAdminsOfOrganisationById(organisationId).subscribe((admins: User[]) => {
-                    this.admins = admins;
-                    this.adminsLoading = false;
-                });
-            } else {
-                this.adminsLoading = false;
-            }
+            this.loadAdmins();
 
-            if(organisation._memberIds.length != 0) {
-                organisationService.getMembersOfOrganisationById(organisationId).subscribe((members: User[]) => {
-                    this.members = members;
-                    this.membersLoading = false;
-                });
-            } else {
-                this.membersLoading = false;
-            }
+            this.loadMembers();
 
             organisationService.getThemesOfOrganisationById(organisationId).subscribe((themes: Theme[]) => {
                 this.themes = themes;
@@ -291,6 +295,28 @@ export class OrganisationDetail {
         });
 
         this.organisationLoading = false;
+    }
+
+    private loadAdmins(): void {
+        if(this.organisation._organisatorIds.length != 0) {
+            this.organisationService.getAdminsOfOrganisationById(this.organisation._id).subscribe((admins: User[]) => {
+                this.admins = admins;
+                this.adminsLoading = false;
+            });
+        } else {
+            this.adminsLoading = false;
+        }
+    }
+
+    private loadMembers(): void {
+        if(this.organisation._memberIds.length != 0) {
+            this.organisationService.getMembersOfOrganisationById(this.organisation._id).subscribe((members: User[]) => {
+                this.members = members;
+                this.membersLoading = false;
+            });
+        } else {
+            this.membersLoading = false;
+        }
     }
 
     private isAdmin(): boolean {
@@ -358,11 +384,49 @@ export class OrganisationDetail {
         this.groups.splice(index, 1);
     }
 
-    //TODO: styling van addMember button
-    //TODO: uitwerking addMember methode
-    private addMember(isAdmin: boolean): void {
-        //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
-        alert("addMember");
+    //TODO: styling van addMember/addAdmin button
+    private addUser(isAdmin: boolean): void {
+        if(isAdmin) {
+            this.headerText = "Admin";
+        } else {
+            this.headerText = "Lid";
+        }
+
+        $('#addUserModal').openModal({
+            opacity: .75,
+            complete: () => {
+                this.doAddUser(isAdmin);
+            }
+        });
+    }
+
+    private doAddUser(isAdmin: boolean): void {
+        if(this.doAddUsr) {
+            var soort: string = (isAdmin)?"Admin":"Lid";
+            
+            this.organisationService.addUserByEmailToOrganisationById(this.newUserEmail, isAdmin, this.organisation._id).subscribe((userId: string) => {
+                if(userId != null) {
+                    Materialize.toast(soort + " toegevoegd.", 3000, 'rounded');
+                    this.addUserToArray(userId, isAdmin);
+                } else {
+                    Materialize.toast(soort + " toevoegen mislukt.", 3000, 'rounded');
+                }
+            }, (err: any) => {
+                Materialize.toast(soort + " toevoegen mislukt.", 3000, 'rounded');
+            });
+        }
+    }
+
+    private addUserToArray(userId: string, isAdmin: boolean): void {
+        if(isAdmin) {
+            this.organisation._organisatorIds.push(userId);
+            this.adminsLoading = true;
+            this.loadAdmins();
+        } else {
+            this.organisation._memberIds.push(userId);
+            this.membersLoading = true;
+            this.loadMembers();
+        }
     }
 
     private deleteUser(user: User, isAdmin: boolean): void {
@@ -399,7 +463,7 @@ export class OrganisationDetail {
         } else if (this.doDeleteUsr && this.isLastAdmin) {
             this.organisationService.deleteOrganisationById(this.organisation._id).subscribe(() => {
                 this.router.navigate(["/OrganisationsOverview"]);
-            })
+            });
         }
     }
 

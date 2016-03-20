@@ -38,6 +38,8 @@ var OrganisationDetail = (function () {
         this.doDeleteUsr = false;
         this.themeToDelete = theme_1.Theme.empty();
         this.doDeleteThm = false;
+        this.newUserEmail = "";
+        this.doAddUsr = false;
         var organisationId = routeParam.params["id"];
         this.router = router;
         this.organisationService = organisationService;
@@ -53,24 +55,8 @@ var OrganisationDetail = (function () {
             else {
                 _this.groupsLoading = false;
             }
-            if (organisation._organisatorIds.length != 0) {
-                organisationService.getAdminsOfOrganisationById(organisationId).subscribe(function (admins) {
-                    _this.admins = admins;
-                    _this.adminsLoading = false;
-                });
-            }
-            else {
-                _this.adminsLoading = false;
-            }
-            if (organisation._memberIds.length != 0) {
-                organisationService.getMembersOfOrganisationById(organisationId).subscribe(function (members) {
-                    _this.members = members;
-                    _this.membersLoading = false;
-                });
-            }
-            else {
-                _this.membersLoading = false;
-            }
+            _this.loadAdmins();
+            _this.loadMembers();
             organisationService.getThemesOfOrganisationById(organisationId).subscribe(function (themes) {
                 _this.themes = themes;
                 _this.themesLoading = false;
@@ -78,6 +64,30 @@ var OrganisationDetail = (function () {
         });
         this.organisationLoading = false;
     }
+    OrganisationDetail.prototype.loadAdmins = function () {
+        var _this = this;
+        if (this.organisation._organisatorIds.length != 0) {
+            this.organisationService.getAdminsOfOrganisationById(this.organisation._id).subscribe(function (admins) {
+                _this.admins = admins;
+                _this.adminsLoading = false;
+            });
+        }
+        else {
+            this.adminsLoading = false;
+        }
+    };
+    OrganisationDetail.prototype.loadMembers = function () {
+        var _this = this;
+        if (this.organisation._memberIds.length != 0) {
+            this.organisationService.getMembersOfOrganisationById(this.organisation._id).subscribe(function (members) {
+                _this.members = members;
+                _this.membersLoading = false;
+            });
+        }
+        else {
+            this.membersLoading = false;
+        }
+    };
     OrganisationDetail.prototype.isAdmin = function () {
         var userId = this.userService.getUserId();
         return this.organisation._organisatorIds.indexOf(userId) > -1;
@@ -134,11 +144,50 @@ var OrganisationDetail = (function () {
         var index = this.groups.findIndex(function (group) { return group._id == groupId; });
         this.groups.splice(index, 1);
     };
-    //TODO: styling van addMember button
-    //TODO: uitwerking addMember methode
-    OrganisationDetail.prototype.addMember = function (isAdmin) {
-        //this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
-        alert("addMember");
+    //TODO: styling van addMember/addAdmin button
+    OrganisationDetail.prototype.addUser = function (isAdmin) {
+        var _this = this;
+        if (isAdmin) {
+            this.headerText = "Admin";
+        }
+        else {
+            this.headerText = "Lid";
+        }
+        $('#addUserModal').openModal({
+            opacity: .75,
+            complete: function () {
+                _this.doAddUser(isAdmin);
+            }
+        });
+    };
+    OrganisationDetail.prototype.doAddUser = function (isAdmin) {
+        var _this = this;
+        if (this.doAddUsr) {
+            var soort = (isAdmin) ? "Admin" : "Lid";
+            this.organisationService.addUserByEmailToOrganisationById(this.newUserEmail, isAdmin, this.organisation._id).subscribe(function (userId) {
+                if (userId != null) {
+                    Materialize.toast(soort + " toegevoegd.", 3000, 'rounded');
+                    _this.addUserToArray(userId, isAdmin);
+                }
+                else {
+                    Materialize.toast(soort + " toevoegen mislukt.", 3000, 'rounded');
+                }
+            }, function (err) {
+                Materialize.toast(soort + " toevoegen mislukt.", 3000, 'rounded');
+            });
+        }
+    };
+    OrganisationDetail.prototype.addUserToArray = function (userId, isAdmin) {
+        if (isAdmin) {
+            this.organisation._organisatorIds.push(userId);
+            this.adminsLoading = true;
+            this.loadAdmins();
+        }
+        else {
+            this.organisation._memberIds.push(userId);
+            this.membersLoading = true;
+            this.loadMembers();
+        }
     };
     OrganisationDetail.prototype.deleteUser = function (user, isAdmin) {
         var _this = this;
@@ -219,7 +268,7 @@ var OrganisationDetail = (function () {
     OrganisationDetail = __decorate([
         core_1.Component({
             selector: 'organisation-detail',
-            template: "\n    <div class=\"modal\" id=\"deleteOrganisationModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{organisation._name}} verwijderen?</h4>\n            <p>U staat op het punt {{organisation._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteOrg = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteOrg = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{groupToDelete._name}} verwijderen?</h4>\n            <p>U staat op het punt {{groupToDelete._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen uit {{organisation._name}}?\"</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteUserModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{userToDelete._name}} verwijderen?</h4>\n            <p>{{contentText}}</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteUsr = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteUsr = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteThemeModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{themeToDelete._name}} verwijderen?</h4>\n            <p>U staat op het punt {{themeToDelete._name}} uit {{organisation._name}} te verwijderen.<br />\n                Bent u zeker dat u dit thema uit deze  organisatie wil verwijderen?\"</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteThm = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteThm = true\">Ja, verwijder</a>\n        </div>\n    </div>\n\n    <loading *ngIf=\"organisationLoading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!organisationLoading && organisation!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{organisation._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n        <div class=\"card\"><div class=\"card-content\">\n            <p># groepen: {{organisation._groupIds.length}}</p>\n            <p># admins: {{organisation._organisatorIds.length}}</p>\n            <p># leden: {{organisation._memberIds.length}}</p>\n            <p># thema's: {{themes.length}}</p>\n        </div></div>\n\n\n        <div id=\"groupsHeader\">\n            <h5>Groepen</h5>\n\n            <div id=\"groupsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addGroup()\" title=\"Voeg groep toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"groupsLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!groupsLoading\" [ngClass]=\"{tableCard: organisation._groupIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._groupIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                        <th data-field=\"description\">Beschrijving</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#group of groups\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin()\" (click)=\"deleteGroup(group)\" class=\"material-icons red-text\" title=\"Verwijder {{group._name}}\">delete_forever</i></td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._name}}</td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._memberIds.length}}</td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._description}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._groupIds.length==0\">{{organisation._name}} heeft momenteel nog geen groepen.</p>\n        </div></div>\n\n\n        <div id=\"adminsHeader\">\n            <h5>Admins</h5>\n\n            <div id=\"adminsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember(true)\" title=\"Voeg admin toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"adminsLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!adminsLoading\" [ngClass]=\"{tableCard: organisation._organisatorIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._organisatorIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#admin of admins\" class=\"clickable\">\n                    <td><i *ngIf=\"isCurrentUser(admin._id)\" (click)=\"deleteUser(admin, true)\" class=\"material-icons red-text\" title=\"Verwijder {{admin._name}}\">delete_forever</i></td>\n                    <td>{{admin._name}}</td>\n                    <td>{{admin._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._organisatorIds.length==0\">{{organisation._name}} heeft momenteel nog geen admins.</p>\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addMember(false)\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"membersLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!membersLoading\" [ngClass]=\"{tableCard: organisation._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteUser(member, false)\" class=\"material-icons red-text\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._memberIds.length==0\">{{organisation._name}} heeft momenteel nog geen leden.</p>\n        </div></div>\n\n\n        <div id=\"themesHeader\">\n            <h5>Thema's</h5>\n\n            <div id=\"themesMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addTheme()\" title=\"Voeg thema toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"themesLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!themesLoading\" [ngClass]=\"{tableCard: themes.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"themes.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"description\">Beschrijving</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#theme of themes\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin()\" (click)=\"deleteTheme(theme)\" class=\"material-icons red-text\" title=\"Verwijder {{theme._name}}\">delete_forever</i></td>\n                    <td>{{theme._name}}</td>\n                    <td>{{theme._description}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"themes.length==0\">{{organisation._name}} heeft momenteel nog geen thema's.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!organisationLoading && organisation==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
+            template: "\n    <div class=\"modal\" id=\"deleteOrganisationModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{organisation._name}} verwijderen?</h4>\n            <p>U staat op het punt {{organisation._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u alle groepen, thema's en sessies van deze organisatie wil verwijderen?</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteOrg = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteOrg = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteGroupModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{groupToDelete._name}} verwijderen?</h4>\n            <p>U staat op het punt {{groupToDelete._name}} volledig te verwijderen.<br />\n                Bent u zeker dat u deze groep wil verwijderen uit {{organisation._name}}?\"</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteGrp = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteGrp = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteUserModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{userToDelete._name}} verwijderen?</h4>\n            <p>{{contentText}}</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteUsr = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteUsr = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"deleteThemeModal\">\n        <div class=\"modal-content\">\n            <h4 class=\"red-text\">{{themeToDelete._name}} verwijderen?</h4>\n            <p>U staat op het punt {{themeToDelete._name}} uit {{organisation._name}} te verwijderen.<br />\n                Bent u zeker dat u dit thema uit deze  organisatie wil verwijderen?\"</p>\n        </div>\n\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doDeleteThm = false\">Nee, ga terug</a>\n            <a class=\"modal-action modal-close waves-effect waves-greens btn-flat green-text\" (click)=\"doDeleteThm = true\">Ja, verwijder</a>\n        </div>\n    </div>\n    <div class=\"modal\" id=\"addUserModal\">\n        <div class=\"modal-content\">\n            <h4>{{headerText}} toevoegen?</h4>\n            \n            <div class=\"input-field col s12\">\n                <input id=\"email\" type=\"email\" class=\"validate\" [(ngModel)]=\"newUserEmail\">\n                <label for=\"email\">Email</label>\n            </div>\n        </div>\n        \n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doAddUsr = false\">Annuleren</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doAddUsr = true\">Toevoegen</a>\n        </div>\n    </div>\n\n    <loading *ngIf=\"organisationLoading\"></loading>\n    \n    <div class=\"row container\" *ngIf=\"!organisationLoading && organisation!=null\">\n        <div id=\"organisationHeader\">\n            <h5>{{organisation._name}}</h5>\n\n            <div id=\"organisationMenu\">\n                <a *ngIf=\"isAdmin()\" class=\"btn-floating waves-effect waves-light red\" (click)=\"delete()\" title=\"Verwijder {{organisation._name}}\">\n                    <i class=\"material-icons\">delete_forever</i>\n                </a>\n            </div>\n        </div>\n        <div class=\"card\"><div class=\"card-content\">\n            <p># groepen: {{organisation._groupIds.length}}</p>\n            <p># admins: {{organisation._organisatorIds.length}}</p>\n            <p># leden: {{organisation._memberIds.length}}</p>\n            <p># thema's: {{themes.length}}</p>\n        </div></div>\n\n\n        <div id=\"groupsHeader\">\n            <h5>Groepen</h5>\n\n            <div id=\"groupsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addGroup()\" title=\"Voeg groep toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"groupsLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!groupsLoading\" [ngClass]=\"{tableCard: organisation._groupIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._groupIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"amountOfMembers\"># leden</th>\n                        <th data-field=\"description\">Beschrijving</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#group of groups\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin()\" (click)=\"deleteGroup(group)\" class=\"material-icons red-text\" title=\"Verwijder {{group._name}}\">delete_forever</i></td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._name}}</td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._memberIds.length}}</td>\n                    <td (click)=\"viewGroup(group._id)\">{{group._description}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._groupIds.length==0\">{{organisation._name}} heeft momenteel nog geen groepen.</p>\n        </div></div>\n\n\n        <div id=\"adminsHeader\">\n            <h5>Admins</h5>\n\n            <div id=\"adminsMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addUser(true)\" title=\"Voeg admin toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"adminsLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!adminsLoading\" [ngClass]=\"{tableCard: organisation._organisatorIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._organisatorIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#admin of admins\" class=\"clickable\">\n                    <td><i *ngIf=\"isCurrentUser(admin._id)\" (click)=\"deleteUser(admin, true)\" class=\"material-icons red-text\" title=\"Verwijder {{admin._name}}\">delete_forever</i></td>\n                    <td>{{admin._name}}</td>\n                    <td>{{admin._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._organisatorIds.length==0\">{{organisation._name}} heeft momenteel nog geen admins.</p>\n        </div></div>\n\n\n        <div id=\"membersHeader\">\n            <h5>Leden</h5>\n\n            <div id=\"membersMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addUser(false)\" title=\"Voeg lid toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"membersLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!membersLoading\" [ngClass]=\"{tableCard: organisation._memberIds.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"organisation._memberIds.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"email\">E-mail adres</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#member of members\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin() || isCurrentUser(member._id)\" (click)=\"deleteUser(member, false)\" class=\"material-icons red-text\" title=\"Verwijder {{member._name}}\">delete_forever</i></td>\n                    <td>{{member._name}}</td>\n                    <td>{{member._email}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"organisation._memberIds.length==0\">{{organisation._name}} heeft momenteel nog geen leden.</p>\n        </div></div>\n\n\n        <div id=\"themesHeader\">\n            <h5>Thema's</h5>\n\n            <div id=\"themesMenu\">\n                <a class=\"btn-floating waves-effect waves-light red\" (click)=\"addTheme()\" title=\"Voeg thema toe\">\n                    <i class=\"material-icons\">add</i>\n                </a>\n            </div>\n        </div>\n        <loading *ngIf=\"themesLoading\"></loading>\n        <div class=\"card\" *ngIf=\"!themesLoading\" [ngClass]=\"{tableCard: themes.length!=0}\"><div class=\"card-content\">\n            <table class=\"striped\" *ngIf=\"themes.length!=0\">\n                <thead>\n                    <tr>\n                        <th style=\"width: 2%;\"></th>\n                        <th data-field=\"name\">Naam</th>\n                        <th data-field=\"description\">Beschrijving</th>\n                    </tr>\n                </thead>\n\n                <tr *ngFor=\"#theme of themes\" class=\"clickable\">\n                    <td><i *ngIf=\"isAdmin()\" (click)=\"deleteTheme(theme)\" class=\"material-icons red-text\" title=\"Verwijder {{theme._name}}\">delete_forever</i></td>\n                    <td>{{theme._name}}</td>\n                    <td>{{theme._description}}</td>\n                </tr>\n            </table>\n\n            <p *ngIf=\"themes.length==0\">{{organisation._name}} heeft momenteel nog geen thema's.</p>\n        </div></div>\n    </div>\n\n    <div class=\"row container\" *ngIf=\"!organisationLoading && organisation==null\">\n        <div class=\"card\"><div class=\"card-content\">\n            <p>ONGELDIG ID</p>\n        </div></div>\n    </div>\n    ",
             directives: [common_1.NgClass, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams, organisationService_1.OrganisationService, userService_1.UserService])
