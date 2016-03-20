@@ -73,7 +73,6 @@ export class CircleSessionApi {
                     if (err != undefined || err != null) {
                         res.status(400).send(new CircleSessionMoveResponse(err));
                     } else {
-                        //TODO notify active clients using WebSocket
                         res.status(200).send(new CircleSessionMoveResponse(null, preGameEnded, currentUserId));
                     }
                 });

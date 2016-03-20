@@ -290,6 +290,9 @@ var UserManager = (function () {
     UserManager.prototype.deleteOrganisationFromUserById = function (organisationId, userId, callback) {
         this._dao.deleteOrganisationFromUserById(organisationId, userId, callback);
     };
+    UserManager.prototype.deleteTestUsers = function (callback) {
+        this._dao.deleteTestUsers(callback);
+    };
     return UserManager;
 }());
 exports.UserManager = UserManager;

@@ -355,6 +355,13 @@ var UserDao = (function () {
             });
         });
     };
+    UserDao.prototype.deleteTestUsers = function (callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').deleteMany({ _registrar: 'test' }, function (err, res) {
+                callback();
+            });
+        });
+    };
     return UserDao;
 }());
 exports.UserDao = UserDao;

@@ -148,14 +148,19 @@ var CircleSessionManager = (function () {
         this._dao.readCircleSession(circleSessionId, function (c) {
             tMgr.getCards(c._themeId, function (cards) {
                 var a = 0;
-                cards.forEach(function (c) {
-                    _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
-                        circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
-                        if (++a == cards.length) {
-                            callback(circleSessionCardWrappers);
-                        }
+                if (cards.length > 0) {
+                    cards.forEach(function (c) {
+                        _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
+                            circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
+                            if (++a == cards.length) {
+                                callback(circleSessionCardWrappers);
+                            }
+                        });
                     });
-                });
+                }
+                else {
+                    callback(circleSessionCardWrappers);
+                }
             });
         });
     };
@@ -296,7 +301,7 @@ var CircleSessionManager = (function () {
             }
             else {
                 var snapshotManager = new snapshotManager_1.SnapshotManager();
-                snapshotManager.createSnapshot(sessionId, function (snapshot) {
+                snapshotManager.createSnapshot(c._creatorId, sessionId, function (snapshot) {
                     _this._dao.stopGame(sessionId, callback);
                 });
             }

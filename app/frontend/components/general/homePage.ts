@@ -14,13 +14,13 @@ import {SnapshotCard} from "../snapshot/snapshotCard";
 import {Snapshot} from "../../../backend/model/snapshot";
 import {SnapshotService} from "../../services/snapshotService";
 import {About} from "./about";
+import {LoadingSpinner} from "./loadingSpinner";
 
 @Component({
     selector: 'home-page',
     template: `
     <div class="container">
-
-            <div class="modal" id="mDelCircleSession">
+        <div class="modal" id="mDelCircleSession">
                 <div class="modal-content">
                     <h4>Spel verwijderen?</h4>
                     <p>Bent u zeker dat u dit spel en alle bijhorende zetten wilt verwijderen?</p>
@@ -31,21 +31,9 @@ import {About} from "./about";
                 </div>
             </div>
 
-        <div *ngIf="loading" class="row center margin-top">
-                <div class="preloader-wrapper big active">
-                    <div class="spinner-layer spinner-blue-only">
-                      <div class="circle-clipper left">
-                        <div class="circle"></div>
-                      </div><div class="gap-patch">
-                        <div class="circle"></div>
-                      </div><div class="circle-clipper right">
-                        <div class="circle"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
+        <loading *ngIf="loading"></loading>
             
-         <about-card *ngIf="!loading && circleSessionsInProgress.length <= 0 && circleSessionsPlanned.length <= 0 && circleSessionsStopped.length <= 0 && snapshots.length <= 0"></about-card>
+        <about-card *ngIf="!loading && circleSessionsInProgress.length <= 0 && circleSessionsPlanned.length <= 0 && circleSessionsStopped.length <= 0 && snapshots.length <= 0"></about-card>
 
         <h5 *ngIf="!loading && circleSessionsInProgress.length > 0">Bezig</h5>
         <div class="row">
@@ -77,7 +65,7 @@ import {About} from "./about";
 
      </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCard, SnapshotCard, About]
+    directives: [CORE_DIRECTIVES, CircleSessionCard, SnapshotCard, About, LoadingSpinner]
 })
 
 export class HomePage {
@@ -91,7 +79,7 @@ export class HomePage {
     private loading:boolean = true;
     private doDelete:boolean = false;
 
-    public constructor(private router: Router, userService:UserService, circleService:CircleSessionService, snapshotService:SnapshotService) {
+    public constructor(userService:UserService, circleService:CircleSessionService, snapshotService:SnapshotService) {
         this.circleService = circleService;
         userService.getCircleSessionsOfCurrentUser().subscribe((circleSessions:CircleSession[]) =>{
             circleSessions.forEach((circleSession:CircleSession) => {

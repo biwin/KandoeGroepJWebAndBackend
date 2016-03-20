@@ -12,6 +12,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 var core_1 = require("angular2/core");
+/**
+ * Class that is responsible for the WebSocket connection between frontend & backend.
+ */
 var SocketService = (function () {
     function SocketService(socketUrl) {
         this.socketUrl = socketUrl;

@@ -7,6 +7,7 @@ import {DaoConstants} from "./daoConstants";
 import {User} from "../model/user";
 import {Group} from "../model/group";
 import {Organisation} from "../model/organisation";
+import {DeleteWriteOpResultObject} from "mongodb";
 
 /**
  * Class that is responsible for the connection with the dbb for users
@@ -417,6 +418,14 @@ export class UserDao {
                 db.close();
 
                 callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    deleteTestUsers(callback:()=>any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db:Db) => {
+            db.collection('users').deleteMany({_registrar: 'test'}, (err:MongoError, res:DeleteWriteOpResultObject) => {
+                callback();
             });
         });
     }

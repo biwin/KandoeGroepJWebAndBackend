@@ -36,7 +36,7 @@ var CircleSessionGame = (function () {
     }
     CircleSessionGame.prototype.ngOnInit = function () {
         var _this = this;
-        this.prepareWebsocket(this.socketUrl);
+        this.prepareWebsocket();
         this.csService.getCardPositionsOfSession(this.circleSession._id).subscribe(function (cps) {
             if (cps.length > 0) {
                 cps.forEach(function (c) {

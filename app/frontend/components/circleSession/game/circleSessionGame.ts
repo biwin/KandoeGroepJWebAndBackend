@@ -75,7 +75,7 @@ export class CircleSessionGame implements OnInit {
     }
 
     ngOnInit() {
-        this.prepareWebsocket(this.socketUrl);
+        this.prepareWebsocket();
 
         this.csService.getCardPositionsOfSession(this.circleSession._id).subscribe((cps:CardPosition[]) => {
             if (cps.length > 0) {

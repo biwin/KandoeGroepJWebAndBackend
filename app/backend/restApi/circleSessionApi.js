@@ -64,7 +64,6 @@ var CircleSessionApi = (function () {
                         res.status(400).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(err));
                     }
                     else {
-                        //TODO notify active clients using WebSocket
                         res.status(200).send(new circleSessionMoveResponse_1.CircleSessionMoveResponse(null, preGameEnded, currentUserId));
                     }
                 });
