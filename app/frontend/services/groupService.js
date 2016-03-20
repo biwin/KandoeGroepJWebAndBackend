@@ -41,6 +41,9 @@ var GroupService = (function () {
     GroupService.prototype.getOrganisationOfGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId + "/organisation", false, true, true);
     };
+    GroupService.prototype.deleteMemberFromGroupById = function (userId, groupId) {
+        return this.http.delete(this.path + "organisations/" + groupId + "/members/" + userId, false, false, true);
+    };
     GroupService = __decorate([
         core_1.Injectable(),
         __param(1, core_1.Inject("App.BackendPath")), 
