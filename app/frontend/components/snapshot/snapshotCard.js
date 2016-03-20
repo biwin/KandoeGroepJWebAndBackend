@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,25 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("angular2/core");
-var core_2 = require("angular2/core");
-var snapshot_1 = require("../../../backend/model/snapshot");
 var router_1 = require("angular2/router");
+var snapshot_1 = require("../../../backend/model/snapshot");
 var SnapshotCard = (function () {
     function SnapshotCard(router) {
         this.router = router;
     }
+    SnapshotCard.prototype.openSnapshot = function () {
+        this.router.navigate(['/Snapshot', { id: this.snapshot._id }]);
+    };
     __decorate([
-        core_2.Input(), 
+        core_1.Input(), 
         __metadata('design:type', snapshot_1.Snapshot)
     ], SnapshotCard.prototype, "snapshot", void 0);
     SnapshotCard = __decorate([
         core_1.Component({
             selector: 'snapshot-card',
-            template: "\n    <div class=\"col s5\">\n         <div class=\"card hoverable small\">\n            <div class=\"card-content\">\n                <p>{{snapshot._gameName}}</p>\n            </div>\n        </div>\n    </div>\n  "
+            template: "\n    <div class=\"col s5\">\n         <div (click)=\"openSnapshot()\" class=\"card hoverable clickable\">\n            <div class=\"card-content\">\n                <h5>{{snapshot._gameName}}</h5>\n                <p>{{snapshot._timestamp}}</p>\n            </div>\n        </div>\n    </div>\n  "
         }), 
         __metadata('design:paramtypes', [router_1.Router])
     ], SnapshotCard);
     return SnapshotCard;
-})();
+}());
 exports.SnapshotCard = SnapshotCard;
 //# sourceMappingURL=snapshotCard.js.map

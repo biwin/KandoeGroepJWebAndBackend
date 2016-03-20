@@ -52,7 +52,7 @@ import {Organisation} from "../../../backend/model/organisation";
                 </thead>
 
                 <tr *ngFor="#organisation of organisations" class="clickable">
-                    <td><i class="material-icons red-text" (click)="deleteOrganisation(organisation)"  title="Verwijder {{organisation._name}}">{{isAdmin(organisation)?"delete_forever":"delete"}}</i></td>
+                    <td><i (click)="deleteOrganisation(organisation)" class="material-icons red-text" title="Verwijder {{organisation._name}}">{{isAdmin(organisation)?"delete_forever":"delete"}}</i></td>
                     <td (click)="viewOrganisation(organisation._id)">{{organisation._name}}</td>
                     <td (click)="viewOrganisation(organisation._id)">{{getAmountOfMembers(organisation)}}</td>
                     <td (click)="viewOrganisation(organisation._id)"><i *ngIf="isAdmin(organisation)" class="material-icons green-text">check</i></td>
@@ -66,7 +66,7 @@ import {Organisation} from "../../../backend/model/organisation";
     directives: [ROUTER_DIRECTIVES, NgClass, LoadingSpinner]
 })
 
-export class OrganisationsOverview {
+export class OrganisationsOverview{
     private router: Router;
     private organisationService: OrganisationService;
     private userService: UserService;

@@ -1,6 +1,10 @@
 import {PipeTransform, Pipe} from "angular2/core";
+
 import {CardPosition} from "../../backend/model/cardPosition";
 
+/**
+ * Pipe that will force that only cards that are on the board will be drawn
+ */
 @Pipe({
     name: 'onBoardCards'
 })

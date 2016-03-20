@@ -2,6 +2,9 @@
 "use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
+/**
+ * Class that is responsible for the connection with the dbb for organisations
+ */
 var OrganisationDao = (function () {
     function OrganisationDao() {
         this._client = new mongodb_1.MongoClient();
@@ -47,6 +50,14 @@ var OrganisationDao = (function () {
             db.collection('organisations').updateOne({ '_id': new mongodb_1.ObjectID(organisationId) }, { $pull: { '_memberIds': memberId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    OrganisationDao.prototype.deleteGroupIdFromOrganisation = function (groupId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('organisations').updateOne({ '_groupIds': { '$in': [groupId] } }, { $pull: { '_groupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == result.matchedCount && result.matchedCount == 1);
             });
         });
     };

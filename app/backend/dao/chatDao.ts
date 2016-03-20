@@ -1,10 +1,10 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, MongoError, InsertOneWriteOpResult, Db} from "mongodb";
 import {DaoConstants} from "./daoConstants";
-import {Db} from "mongodb";
 import {ChatMessage} from "../model/chatMessage";
-import {MongoError} from "mongodb";
-import {InsertOneWriteOpResult} from "mongodb";
 
+/**
+ * Class that is responsible for the connection with the db for chatmessages
+ */
 export class ChatDao {
     private _client:MongoClient;
 
@@ -13,18 +13,26 @@ export class ChatDao {
     }
 
     addMessage(message:ChatMessage, callback:(b:boolean) => any) {
-        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) =>{
-           db.collection('chatmessages').insertOne(message, (err:MongoError, res:InsertOneWriteOpResult) =>{
-               db.close();
-               callback(res.insertedCount == 1);
-           });
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('chatmessages').insertOne(message, (err:MongoError, res:InsertOneWriteOpResult) => {
+                db.close();
+                callback(res.insertedCount == 1);
+            });
         });
     }
 
     readMessages(sessionId:string, callback:(msgs:ChatMessage[]) => any) {
         this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
-            db.collection('chatmessages').find({_circleSessionId: sessionId}).sort({_timeStamp:1}).toArray((err:MongoError, res:ChatMessage[]) => {
+            db.collection('chatmessages').find({_circleSessionId: sessionId}).sort({_timeStamp: 1}).toArray((err:MongoError, res:ChatMessage[]) => {
                 callback(res);
+            });
+        });
+    }
+
+    deleteChatOfCircleSession(circleSessionId:string, callback:()=>any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err:any, db:Db) => {
+            db.collection('chatmessages').deleteMany({_circleSessionId: circleSessionId}, () => {
+                callback();
             });
         });
     }

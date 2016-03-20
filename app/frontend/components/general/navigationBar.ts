@@ -1,14 +1,13 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 
-import {Component, AfterViewInit} from "angular2/core";
+import {Component, AfterViewInit, Input} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 import {UserService} from "../../services/userService";
-import {Response} from "angular2/http";
 
 @Component({
     selector: 'navigation-bar',
     template: `
-    <nav class="blue" [class.no-padding-left]="!service.isLoggedIn()" role="navigation">
+    <nav class="blue" [class.padding-right-users]="padRight" [class.no-padding-left]="!service.isLoggedIn()" role="navigation">
        <div class="nav-wrapper container">
         <a id="logo-container" [routerLink]="['Home']" class="brand-logo">KanDoe</a>
             <ul class="right">
@@ -21,8 +20,9 @@ import {Response} from "angular2/http";
                 </li>
             </ul>
             <ul *ngIf="service.isLoggedIn()" id="slide-out" class="side-nav fixed">
-                <li><a [routerLink]="['ThemeOverview']">Mijn thema's</a></li>
+            <li><a [routerLink]="['Home']">Mijn dashboard</a></li>
                 <li><a [routerLink]="['CircleSessionOverview']">Mijn spellen</a></li>
+                <li><a [routerLink]="['ThemeOverview']">Mijn thema's</a></li>
                 <li><a [routerLink]="['OrganisationsOverview']">Mijn organisaties</a></li>
             </ul>
             <a href="#" id="main-nav-toggle" data-activates="slide-out" class="button-collapse">
@@ -35,10 +35,13 @@ import {Response} from "angular2/http";
 })
 
 export class NavigationBar implements AfterViewInit {
+    @Input() padRight:boolean;
     private imageSource: string;
     private usernameString: string;
+    private service:UserService;
 
-    constructor(private service: UserService) {
+    constructor(service: UserService) {
+        this.service = service;
         service.subscribeMe(this);
         if (this.service.isLoggedIn()) {
             this.service.getUserPicture('small').subscribe((url: string) => this.imageSource = url);

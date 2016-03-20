@@ -1,8 +1,16 @@
-import {ChatMessage} from "../model/chatMessage";
 import {ChatDao} from "../dao/chatDao";
-import {UserManager} from "./userManager";
-import {User} from "../model/user";
 
+import {UserManager} from "./userManager";
+import {CircleSessionManager} from "./circleSessionManager";
+
+import {User} from "../model/user";
+import {ChatMessage} from "../model/chatMessage";
+import {CircleSession} from "../model/circleSession";
+
+/**
+ * Class that is responsible for managing what data will be send to the database layer for chatmessages
+ * Gains information from usermanager and circlesessionmanager when needed for a chatmessage.
+ */
 export class ChatManager {
     private _dao:ChatDao;
     private _uMgr:UserManager = new UserManager();
@@ -11,12 +19,22 @@ export class ChatManager {
         this._dao = new ChatDao();
     }
 
-    addMessage(message:ChatMessage, callback:(isSaved:boolean, updateMessage:ChatMessage) => any) {
-        this._dao.addMessage(message, (b:boolean) => {
-            this._uMgr.getUserById(message._userId, (u:User) => {
-                message._userName = u._name;
-                callback(b, message);
-            });
+    addMessage(message:ChatMessage, callback:(updateMessage:ChatMessage) => any) {
+        var cMgr:CircleSessionManager = new CircleSessionManager();
+
+        cMgr.getCircleSession(message._circleSessionId, (c:CircleSession) => {
+            if(!c._isStopped) {
+                this._dao.addMessage(message, (b:boolean) => {
+                    this._uMgr.getUserById(message._userId, (u:User) => {
+                        message._userName = u._name;
+                        callback(message);
+                    });
+                });
+            } else {
+                message._message = "Couldn't process message. Game has already been stopped...";
+                message._userName = "Server";
+                callback(message);
+            }
         });
     }
 
@@ -35,5 +53,9 @@ export class ChatManager {
                 callback(ms);
             });
         });
+    }
+
+    removeChatOfCircleSession(circleSessionId:string, callback:()=>any) {
+        this._dao.deleteChatOfCircleSession(circleSessionId, callback);
     }
 }

@@ -6,6 +6,9 @@ import {DaoConstants} from "./daoConstants";
 
 import {Organisation} from "../model/organisation";
 
+/**
+ * Class that is responsible for the connection with the dbb for organisations
+ */
 export class OrganisationDao {
     private _client: MongoClient;
 
@@ -65,6 +68,16 @@ export class OrganisationDao {
                 db.close();
 
                 callback(result.modifiedCount == 1);
+            });
+        });
+    }
+
+    deleteGroupIdFromOrganisation(groupId: string, callback: (deleted: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('organisations').updateOne({'_groupIds': {'$in': [groupId]}}, {$pull: {'_groupIds': groupId}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == result.matchedCount && result.matchedCount == 1);
             });
         });
     }

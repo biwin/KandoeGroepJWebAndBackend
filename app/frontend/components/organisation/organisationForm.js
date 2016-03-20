@@ -14,8 +14,10 @@ var router_1 = require("angular2/router");
 var organisationService_1 = require("../../services/organisationService");
 var organisation_1 = require("../../../backend/model/organisation");
 var userService_1 = require("../../services/userService");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var OrganisationForm = (function () {
     function OrganisationForm(router, organisationService, userService) {
+        this.submitting = false;
         this.organisation = organisation_1.Organisation.empty();
         this.showError = false;
         this.router = router;
@@ -24,6 +26,7 @@ var OrganisationForm = (function () {
     }
     OrganisationForm.prototype.OnSubmit = function () {
         var _this = this;
+        this.submitting = true;
         var userId = this.userService.getUserId();
         this.organisation._organisatorIds.push(userId);
         this.organisationService.createOrganisation(this.organisation).subscribe(function (o) {
@@ -39,8 +42,8 @@ var OrganisationForm = (function () {
     OrganisationForm = __decorate([
         core_1.Component({
             selector: 'organisation-form',
-            template: "\n    <div class=\"row container\">\n        <h5>Maak nieuwe organisatie aan</h5>\n\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <p *ngIf=\"showError\" class=\"error red-text\">Er bestaat reeds een organisatie met de naam {{organisation._name}}. Gelieve een andere naam te kiezen.</p>\n        \n            <form (submit)=\"OnSubmit()\" class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input [(ngModel)]=\"organisation._name\" id=\"name\" type=\"text\">\n                    <label for=\"name\">Naam</label>\n                </div></div>\n\n                <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n            </form>\n        </div></div>\n    </div>\n    ",
-            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES]
+            template: "\n    <loading *ngIf=\"submitting\"></loading>\n    <div [hidden]=\"submitting\" class=\"row container\">\n        <h5>Maak nieuwe organisatie aan</h5>\n\n        <div class=\"card formCard\"><div class=\"card-content\">\n            <p *ngIf=\"showError\" class=\"error red-text\">Er bestaat reeds een organisatie met de naam {{organisation._name}}. Gelieve een andere naam te kiezen.</p>\n        \n            <form (submit)=\"OnSubmit()\" class=\"col s12\">\n                <div class=\"row\"><div class=\"input-field col s6\">\n                    <input [(ngModel)]=\"organisation._name\" id=\"name\" type=\"text\">\n                    <label for=\"name\">Naam</label>\n                </div></div>\n\n                <button type=\"submit\" class=\"waves-effect waves-light btn red\"><i class=\"material-icons center\">add</i></button>\n            </form>\n        </div></div>\n    </div>\n    ",
+            directives: [common_1.CORE_DIRECTIVES, common_1.FORM_DIRECTIVES, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, organisationService_1.OrganisationService, userService_1.UserService])
     ], OrganisationForm);

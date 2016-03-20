@@ -1,8 +1,6 @@
 import {Request, Response} from "express";
 
-import {GroupAPI} from "./groupAPI";
 import {OrganisationAPI} from "./organisationAPI";
-import {CircleSessionApi} from "./circleSessionApi";
 
 import {UserManager} from "../logic/userManager";
 
@@ -10,6 +8,10 @@ import {User} from "../model/user";
 
 var SHA256 = require("crypto-js/sha256");
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the usermanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class UserApi {
     private static manager: UserManager = new UserManager();
 

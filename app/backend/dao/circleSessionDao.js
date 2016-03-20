@@ -2,8 +2,10 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
-var mongodb_2 = require("mongodb");
 var cardPosition_1 = require("../model/cardPosition");
+/**
+ * Class that is responsible for the connection with the dbb for circlesessions and cardpositions
+ */
 var CircleSessionDao = (function () {
     function CircleSessionDao() {
         this._client = new mongodb_1.MongoClient();
@@ -38,7 +40,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.readCircleSession = function (id, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').find({ '_id': new mongodb_2.ObjectID(id) }).limit(1).next(function (err, cursor) {
+            db.collection('circlesessions').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next(function (err, cursor) {
                 db.close();
                 callback(cursor);
             });
@@ -107,7 +109,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.deleteCircleSessionById = function (circleSessionId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').deleteOne({ '_id': new mongodb_2.ObjectID(circleSessionId) }, function (err, result) {
+            db.collection('circlesessions').deleteOne({ '_id': new mongodb_1.ObjectID(circleSessionId) }, function (err, result) {
                 db.close();
                 callback(result.deletedCount == 1);
             });
@@ -143,7 +145,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.addUserToCircleSession = function (circleSessionId, userId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').updateOne({ '_id': new mongodb_2.ObjectID(circleSessionId) }, {
+            db.collection('circlesessions').updateOne({ '_id': new mongodb_1.ObjectID(circleSessionId) }, {
                 $push: { '_userIds': userId }
             }, function (err, result) {
                 db.close();
@@ -153,7 +155,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.updateCurrentPlayer = function (circleSessionId, newPlayerId, preGameInProgress, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_1.ObjectID(circleSessionId) }, { $set: {
                     _currentPlayerId: newPlayerId,
                     _isPreGame: preGameInProgress,
                 } }, function (err, res) {
@@ -164,7 +166,7 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.updateInProgress = function (circleSessionId, inProgress, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: { _inProgress: inProgress } }, function (err, res) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_1.ObjectID(circleSessionId) }, { $set: { _inProgress: inProgress } }, function (err, res) {
                 db.close();
                 callback();
             });
@@ -179,14 +181,14 @@ var CircleSessionDao = (function () {
     };
     CircleSessionDao.prototype.stopGame = function (sessionId, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(sessionId) }, { $set: { _isStopped: true } }, function (err, res) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_1.ObjectID(sessionId) }, { $set: { _isStopped: true } }, function (err, res) {
                 callback(res.modifiedCount == 1);
             });
         });
     };
     CircleSessionDao.prototype.updateRounds = function (circleSessionId, newRoundsLeft, gameStopped, callback) {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
-            db.collection('circlesessions').updateOne({ _id: new mongodb_2.ObjectID(circleSessionId) }, { $set: { _endPoint: newRoundsLeft, _isStopped: gameStopped } }, function (err, res) {
+            db.collection('circlesessions').updateOne({ _id: new mongodb_1.ObjectID(circleSessionId) }, { $set: { _endPoint: newRoundsLeft, _isStopped: gameStopped } }, function (err, res) {
                 callback();
             });
         });

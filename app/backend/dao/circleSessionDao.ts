@@ -1,19 +1,13 @@
 /// <reference path="../../../typings/mongodb/mongodb.d.ts" />
-import {MongoClient} from "mongodb";
-import {CircleSession} from "../model/circleSession";
+import {MongoClient, MongoError, InsertOneWriteOpResult, Db, DeleteWriteOpResultObject, InsertWriteOpResult, ObjectID,CursorResult} from "mongodb";
+
 import {DaoConstants} from "./daoConstants";
-import {Db} from "mongodb";
-import {CursorResult} from "mongodb";
-import {MongoError} from "mongodb";
-import {InsertOneWriteOpResult} from "mongodb";
-import {ObjectID} from "mongodb";
+import {CircleSession} from "../model/circleSession";
 import {CardPosition} from "../model/cardPosition";
-import {UpdateWriteOpResult} from "mongodb";
-import {DeleteWriteOpResultObject} from "mongodb";
-import {Card} from "../model/card";
-import {InsertWriteOpResult} from "mongodb";
 
-
+/**
+ * Class that is responsible for the connection with the dbb for circlesessions and cardpositions
+ */
 export class CircleSessionDao {
     private _client:MongoClient;
 

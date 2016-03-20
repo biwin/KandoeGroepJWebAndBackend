@@ -7,9 +7,9 @@ import {HomePage} from "./general/homePage";
 import {ThemeOverview} from "./theme/themeOverview";
 import {ThemeForm} from './theme/themeForm';
 
+import {CircleSessionGameWrapper} from "./circleSession/game/circleSessionGameWrapper";
 import {CircleSessionOverview} from "./circleSession/circleSessionOverview";
 import {CircleSessionForm} from "./circleSession/circleSessionForm";
-import {CircleSessionGame} from "./circleSession/circleSessionGame";
 
 import {OrganisationsOverview} from "./organisation/organisationsOverview";
 import {OrganisationForm} from "./organisation/organisationForm";
@@ -22,13 +22,12 @@ import {UserLogin} from "./user/userLogin";
 import {Profile} from "./user/profile";
 import {UserService} from "../services/userService";
 
-import {NgZone} from "angular2/core";
-import {ChatComponent} from "./chat/chatComponent";
+import {SnapshotDetail} from "./snapshot/snapshotDetail";
 
 @Component({
     selector: 'my-app',
     template: `
-    <navigation-bar></navigation-bar>
+    <navigation-bar [padRight]="padRight"></navigation-bar>
     <div class="content" [class.no-padding-left]="!service.isLoggedIn()">
         <router-outlet></router-outlet>
     </div>
@@ -44,7 +43,7 @@ import {ChatComponent} from "./chat/chatComponent";
 
     {path: '/circlesessions', as: 'CircleSessionOverview', component: CircleSessionOverview},
     {path: '/createSession', as: 'CreateSession', component: CircleSessionForm},
-    {path: '/circlesessions/:id', as: 'CircleSessionGame', component: CircleSessionGame},
+    {path: '/circlesessions/:id', as: 'CircleSessionGame', component: CircleSessionGameWrapper},
 
     {path: '/organisations', as: 'OrganisationsOverview', component: OrganisationsOverview},
     {path: '/createOrganisation', as: 'CreateOrganisation', component: OrganisationForm},
@@ -54,11 +53,14 @@ import {ChatComponent} from "./chat/chatComponent";
     {path: '/group/:id', as: 'GroupDetail', component: GroupDetail},
 
     {path: '/loginUser', as: 'UserLogin', component: UserLogin},
-    {path: '/profile', as: 'Profile', component: Profile}
+    {path: '/profile', as: 'Profile', component: Profile},
+    
+    {path: '/snapshots/:id', as: 'Snapshot', component: SnapshotDetail}
 ])
 
 export class AppComponent {
     private service:UserService;
+    private padRight:boolean = false;
 
     constructor(private router: Router, userService: UserService) {
         this.service = userService;

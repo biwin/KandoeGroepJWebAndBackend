@@ -1,9 +1,10 @@
+import {Http, Headers, Response, RequestOptionsArgs, RequestOptions} from "angular2/http";
 import {Inject, Injectable} from "angular2/core";
 import {Observable} from "rxjs/Observable";
-import {User} from "../../backend/model/user";
-import {Http, Headers, Response, RequestOptionsArgs, RequestOptions} from "angular2/http";
-import {RequestMethod} from "angular2/http";
 
+/**
+ * Class that provides a wrapping for Http requests that will be used in the services to send data to the backend.
+ */
 @Injectable()
 export class HttpWrapperService {
     private http: Http = null;

@@ -1,14 +1,13 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component, Output, Input, EventEmitter, OnInit, AfterViewInit} from "angular2/core";
 import {Response} from "angular2/http";
 import {Router} from "angular2/router";
 
 import {UserService} from "../../services/userService";
-import {GroupService} from "../../services/groupService";
-import {ThemeService} from "../../services/themeService";
 import {CircleSessionService} from "../../services/circleSessionService";
 
-import {Theme} from "../../../backend/model/theme";
-import {Group} from "../../../backend/model/group";
 import {CircleSession} from "../../../backend/model/circleSession";
 import {SnapshotService} from "../../services/snapshotService";
 import {Snapshot} from "../../../backend/model/snapshot";
@@ -35,19 +34,20 @@ import {Snapshot} from "../../../backend/model/snapshot";
 
 
       <div class="card hoverable small">
-      <i class="fa fa-gamepad fa-lg green-text right padding-5" *ngIf="user === circleSession._currentPlayerId"></i>
 
       <div *ngIf="iamCreator" class="card-action">
             <a *ngIf="!circleSession._inProgress" (click)="addUser()" class="black-text clickable tooltipped" data-position="bottom" data-tooltip="Speler toevoegen"><i class="material-icons">person_add</i></a>
-            <a *ngIf="circleSession._inProgress" (click)="makeSnapshot()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Snapshot maken"><i class="material-icons">photo_camera</i></a>
+            <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="makeSnapshot()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Snapshot maken"><i class="material-icons">photo_camera</i></a>
             <a *ngIf="circleSession._inProgress && !circleSession._isStopped" (click)="stopGame()" class="amber-text text-darken-3 clickable tooltipped" data-position="bottom" data-tooltip="Spel stoppen"><i class="material-icons">gavel</i></a>
             <a (click)="deleteCircleSession()" class="red-text clickable tooltipped" data-position="bottom" data-tooltip="Spel verwijderen"><i class="material-icons">delete</i></a>
         </div>
 
         <div (click)="openCard()" class="card-content clickable scrollable">
+            <i class="fa fa-gamepad fa-lg green-text right padding-5" *ngIf="user === circleSession._currentPlayerId && !circleSession._isStopped"></i>
             <span class="card-title truncate" [attr.title]="circleSession._name">{{circleSession._name}}</span>
-           <p class="black-text">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>
-           <p class="black-text">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>
+            <p class="black-text" *ngIf="!circleSession._isStopped">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>
+            <p class="black-text" *ngIf="!circleSession._isStopped">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>
+            <p class="black-text" *ngIf="circleSession._isStopped">Spel afgesloten!</p>
         </div>
       </div>
       </div>
@@ -89,9 +89,19 @@ export class CircleSessionCard implements OnInit, AfterViewInit {
         this.snapshotService.createSnapshot(this.circleSession._id).subscribe((snapshot:Snapshot) => {
             if(snapshot != null){
                 Materialize.toast('Snapshot aangemaakt', 3000, 'rounded');
+                this.router.navigate(['/Home']);
             } else {
                 Materialize.toast('Snapshot maken mislukt', 3000, 'rounded');
             }
+        });
+    }
+
+    stopGame() {
+        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
+            this.circleSession._isStopped = a._isStopped;
+                this.router.navigate(['/Home']);
+        }, (r: Response) => {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
         });
     }
 
@@ -121,14 +131,6 @@ export class CircleSessionCard implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         $('.tooltipped').tooltip({delay: 50});
-    }
-
-    stopGame() {
-        this.circleService.stopGame(this.circleSession._id).subscribe((a:any) =>{
-            this.circleSession._isStopped = a._isStopped;
-        }, (r:Response) => {
-            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
-        });
     }
 }
 

@@ -4,11 +4,13 @@ import {Router} from "angular2/router";
 import {OrganisationService} from "../../services/organisationService";
 import {Organisation} from "../../../backend/model/organisation";
 import {UserService} from "../../services/userService";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'organisation-form',
     template: `
-    <div class="row container">
+    <loading *ngIf="submitting"></loading>
+    <div [hidden]="submitting" class="row container">
         <h5>Maak nieuwe organisatie aan</h5>
 
         <div class="card formCard"><div class="card-content">
@@ -25,10 +27,12 @@ import {UserService} from "../../services/userService";
         </div></div>
     </div>
     `,
-    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES]
+    directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, LoadingSpinner]
 })
 
 export class OrganisationForm {
+    private submitting:boolean = false;
+
     private router: Router;
     private organisationService: OrganisationService;
     private userService: UserService;
@@ -42,6 +46,7 @@ export class OrganisationForm {
     }
 
     private OnSubmit(){
+        this.submitting = true;
         var userId: string = this.userService.getUserId();
         this.organisation._organisatorIds.push(userId);
 

@@ -1,10 +1,14 @@
 import {GroupDao} from "../dao/groupDao";
 
-import {OrganisationManager} from "./organisationManager";
 import {UserManager} from "./userManager";
+import {OrganisationManager} from "./organisationManager";
 
 import {Group} from "../model/group";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for groups.
+ * Gains information from usermanager and organisationmanager when needed for a group.
+ */
 export class GroupManager {
     private _dao: GroupDao;
 
@@ -42,7 +46,16 @@ export class GroupManager {
     }
 
     removeGroupById(groupId: string, callback: (deleted: boolean) => any) {
-        this._dao.deleteGroupById(groupId, callback);
+        var userManager: UserManager = new UserManager();
+        var organisationManager: OrganisationManager = new OrganisationManager();
+
+        userManager.removeAllMembersFromGroupById(groupId, (membersDeleted: boolean) => {
+            organisationManager.deleteGroupIdFromOrganisation(groupId, (referencesDeleted: boolean) => {
+                this._dao.deleteGroupById(groupId, (groupDeleted: boolean) => {
+                    callback(membersDeleted && referencesDeleted && groupDeleted);
+                });
+            });
+        });
     }
 
     getGroupsOfOrganisationById(organisationId: string, callback: (groups: Group[]) => any) {

@@ -1,3 +1,7 @@
+/// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
+/// <reference path="../typings/express/express.d.ts" />
+
 import assert = require('assert');
 
 import {OrganisationManager} from "../app/backend/logic/organisationManager";

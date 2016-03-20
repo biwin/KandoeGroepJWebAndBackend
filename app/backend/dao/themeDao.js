@@ -2,6 +2,9 @@
 "use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
+/**
+ * Class that is responsible for the connection with the dbb for themes and cards
+ */
 var ThemeDao = (function () {
     function ThemeDao() {
         this._client = new mongodb_1.MongoClient();
@@ -109,6 +112,22 @@ var ThemeDao = (function () {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('themes').find({ '_organisationId': organisationId }).toArray(function (err, docs) {
                 callback(docs);
+            });
+        });
+    };
+    ThemeDao.prototype.removeAllThemesFromOrganisationById = function (organisationId, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').updateMany({ '_organisationId': organisationId }, { $set: { '_organisationId': null } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    };
+    ThemeDao.prototype.deleteOrganisationFromThemeById = function (themeId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('themes').updateOne({ '_id': new mongodb_1.ObjectID(themeId) }, { $set: { '_organisationId': null } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == 1);
             });
         });
     };

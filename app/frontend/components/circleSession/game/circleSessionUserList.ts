@@ -1,19 +1,20 @@
-/// <reference path="../../../../typings/jquery/jquery.d.ts" />
+/// <reference path="../../../../../typings/jquery/jquery.d.ts" />
 
 import {Component, OnChanges, Input} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
-import {Response} from "angular2/http";
 
-import {UserService} from "../../services/userService";
+import {UserService} from "../../../services/userService";
 
-import {User} from "../../../backend/model/user";
-import {ChatComponent} from "../chat/chatComponent";
+import {User} from "../../../../backend/model/user";
+import {ChatComponent} from "../../chat/chatComponent";
+import {LoadingSpinner} from "../../general/loadingSpinner";
 
 @Component({
     selector: 'user-list',
     template: `
     <div class="side-nav fixed right-aligned" id="user-sidenav">
-        <ul id="user-list" class="collection with-header">
+        <loading *ngIf="!initComplete"></loading>
+        <ul id="user-list" *ngIf="initComplete" class="collection with-header">
             <li class="users-heading collection-header valign-wrapper"><h4 class="valign center-block"><i class="material-icons">people</i> Spelers</h4></li>
             <li class="collection-item row valign-wrapper" *ngFor="#user of users" [class.blue]="user._id === myUserId" [class.lighten-5]="user._id === myUserId">
                 <div class="col s4">
@@ -31,7 +32,7 @@ import {ChatComponent} from "../chat/chatComponent";
         <chatbox [sessionId]="circleSessionId" [userId]="myUserId"></chatbox>
      </div>
   `,
-    directives: [ROUTER_DIRECTIVES, ChatComponent]
+    directives: [ROUTER_DIRECTIVES, ChatComponent, LoadingSpinner]
 })
 
 export class CircleSessionUserList implements OnChanges {
@@ -42,6 +43,8 @@ export class CircleSessionUserList implements OnChanges {
     private service:UserService;
     private myUserId:string;
 
+    private initComplete:boolean = false;
+
     constructor(service:UserService) {
         this.service = service;
         this.myUserId = service.getUserId();
@@ -51,6 +54,7 @@ export class CircleSessionUserList implements OnChanges {
         if(this.userIds != undefined && this.userIds.length > 0 && this.users.length == 0) {
             this.service.getUsers(this.userIds).subscribe((us:User[]) => {
                 us.forEach((u:User) => this.users.push(u));
+                this.initComplete = true;
             });
         }
     }

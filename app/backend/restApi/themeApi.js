@@ -2,6 +2,10 @@
 var userApi_1 = require("./userApi");
 var themeManager_1 = require("../logic/themeManager");
 var card_1 = require("../model/card");
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the thememanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 var ThemeApi = (function () {
     function ThemeApi() {
     }
@@ -137,7 +141,7 @@ var ThemeApi = (function () {
         userApi_1.UserApi.getCurrentUserId(req.header('Bearer'), function (currentUserId) {
             if (currentUserId != null) {
                 var organisationId = req.params.id;
-                themeApi.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
+                ThemeApi.mgr.getThemesOfOrganisationById(organisationId, function (themes) {
                     res.send(themes);
                 });
             }

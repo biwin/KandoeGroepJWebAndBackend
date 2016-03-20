@@ -11,8 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var core_1 = require("angular2/core");
 var http_1 = require("angular2/http");
+var core_1 = require("angular2/core");
+/**
+ * Class that provides a wrapping for Http requests that will be used in the services to send data to the backend.
+ */
 var HttpWrapperService = (function () {
     function HttpWrapperService(http, path) {
         this.http = null;

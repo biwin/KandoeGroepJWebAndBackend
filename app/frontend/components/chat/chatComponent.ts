@@ -1,19 +1,18 @@
 /// <reference path="../../../../typings/socket.io.d.ts" />
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 
-import {Component,Input,NgZone,OnChanges,Inject} from "angular2/core";
-import {Router} from "angular2/router";
-import {Response} from "angular2/http";
-
-import {UserService} from "../../services/userService";
-import {User} from "../../../backend/model/user";
+import {Component, Input, OnChanges, NgZone} from "angular2/core";
 import {ChatMessage} from "../../../backend/model/chatMessage";
 import {CircleSessionService} from "../../services/circleSessionService";
+import {CORE_DIRECTIVES} from "angular2/common";
+import {LoadingSpinner} from "../general/loadingSpinner";
+import {SocketService} from "../../services/socketService";
 
 @Component({
     selector: 'chatbox',
     template: `
-    <div class="container">
+    <loading *ngIf="!initComplete"></loading>
+    <div [hidden]="!initComplete">
         <div class="row" id="message-list">
             <p *ngFor="#message of messages">{{message._userName}}: {{message._message}}</p>
          </div>
@@ -22,30 +21,33 @@ import {CircleSessionService} from "../../services/circleSessionService";
                     <input [(ngModel)]="messageToSend" (keyup)="typing($event)" placeholder="Typ een bericht..." type="text" autocomplete="off"/>
                 </div>
             </div>
-        </div>
+     </div>
     `,
-    directives: []
+    directives: [CORE_DIRECTIVES, LoadingSpinner]
 })
 
 export class ChatComponent implements OnChanges {
     @Input() private sessionId;
     @Input() private userId;
     private messages: ChatMessage[] = [];
-    private socket;
-    private zone: NgZone;
     private messageToSend: string = "";
     private initComplete:boolean = false;
     private service:CircleSessionService;
+    private webSocket:SocketService;
 
-    public constructor(service:CircleSessionService, @Inject('App.SocketUrl') socketUrl:string) {
-        this.zone = new NgZone({enableLongStackTrace: false});
-        this.socket = io.connect(socketUrl);
-        console.log('Socket URI: ' + socketUrl);
-        this.socket.emit('join session', JSON.stringify({sessionId: this.sessionId || 'Unknown', userId: this.userId || 'Unknown'}));
-        this.socket.on('send message', data => this.zone.run(() => {
-            this.messages.push(JSON.parse(data));
-        }));
+    public constructor(service:CircleSessionService, webSocket:SocketService) {
         this.service = service;
+        this.webSocket = webSocket;
+    }
+
+    prepareWebSocket() {
+        this.webSocket.joinSession(this.sessionId || 'Unknown');
+        this.webSocket.subscribeToChatReceive((data:any, zone:NgZone) => {
+            zone.run(() => {
+                this.messages.push(JSON.parse(data));
+                this.scrollToBottom();
+            });
+        });
     }
 
     typing($event:KeyboardEvent) {
@@ -56,17 +58,25 @@ export class ChatComponent implements OnChanges {
 
     ngOnChanges() {
         if(!this.initComplete && this.sessionId !== undefined) {
+            this.prepareWebSocket();
             this.service.getMessages(this.sessionId).subscribe((chatMessages:ChatMessage[]) => {
                 this.messages = chatMessages;
                 this.initComplete = true;
+                setTimeout(this.scrollToBottom, 1000);
             });
         }
     }
 
     submit() {
-        if(this.initComplete) {
-            this.socket.emit('send message', JSON.stringify(new ChatMessage(this.userId || 'Unknown', this.messageToSend || 'Unknown', this.sessionId, new Date())));
+        if(this.initComplete && this.messageToSend.trim().length > 0) {
+            this.webSocket.emitChatSend(new ChatMessage(this.userId || 'Unknown', this.messageToSend || 'Unknown', this.sessionId, new Date()));
             this.messageToSend = "";
         }
+    }
+
+    scrollToBottom() {
+        $('#message-list').animate({
+            scrollTop: $('#message-list')[0].scrollHeight
+        }, 500);
     }
 }

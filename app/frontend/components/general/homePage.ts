@@ -1,3 +1,6 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
+
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 
@@ -10,6 +13,7 @@ import {CircleSessionService} from "../../services/circleSessionService";
 import {SnapshotCard} from "../snapshot/snapshotCard";
 import {Snapshot} from "../../../backend/model/snapshot";
 import {SnapshotService} from "../../services/snapshotService";
+import {About} from "./about";
 
 @Component({
     selector: 'home-page',
@@ -40,6 +44,8 @@ import {SnapshotService} from "../../services/snapshotService";
                     </div>
                 </div>
             </div>
+            
+         <about-card *ngIf="!loading && circleSessionsInProgress.length <= 0 && circleSessionsPlanned.length <= 0 && circleSessionsStopped.length <= 0 && snapshots.length <= 0"></about-card>
 
         <h5 *ngIf="!loading && circleSessionsInProgress.length > 0">Bezig</h5>
         <div class="row">
@@ -71,7 +77,7 @@ import {SnapshotService} from "../../services/snapshotService";
 
      </div>
     `,
-    directives: [CORE_DIRECTIVES, CircleSessionCard, SnapshotCard]
+    directives: [CORE_DIRECTIVES, CircleSessionCard, SnapshotCard, About]
 })
 
 export class HomePage {

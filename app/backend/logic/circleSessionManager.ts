@@ -1,15 +1,27 @@
-import {CircleSession} from "../model/circleSession";
 import {CircleSessionDao} from "../dao/circleSessionDao";
-import {CardPosition} from "../model/cardPosition";
-import {GroupManager} from "./groupManager";
-import {ThemeManager} from "./themeManager";
-import {Theme} from "../model/theme";
-import {Group} from "../model/group";
-import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
+
+import {ChatManager} from "./chatManager";
 import {UserManager} from "./userManager";
+import {ThemeManager} from "./themeManager";
+import {GroupManager} from "./groupManager";
+import {SnapshotManager} from "./snapshotManager";
+
 import {User} from "../model/user";
-import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
 import {Card} from "../model/card";
+import {Group} from "../model/group";
+import {Theme} from "../model/theme";
+import {Snapshot} from "../model/snapshot";
+import {CardPosition} from "../model/cardPosition";
+import {CircleSession} from "../model/circleSession";
+import {CircleSessionCardWrapper} from "../model/circleSessionCardWrapper";
+import {CircleSessionCreateWrapper} from "../model/circleSessionCreateWrapper";
+
+
+/**
+ * Class that is responsible for managing what data will be send to the database layer for circlesession. 
+ * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, usermanager, thememanager, snapshotmanager and groupmanager when needed for an circlesession.
+ */
 export class CircleSessionManager {
     private _dao:CircleSessionDao;
 
@@ -101,9 +113,7 @@ export class CircleSessionManager {
                                 if (newPosition > 5) {
                                     callback(userId, null, "Card already in the middle!");
                                 } else {
-                                    var lastChangedUserId:string = c._userId;
-
-                                    this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, (c:CardPosition) => {
+                                    this._dao.updateCardPosition(sessionId, cardId, userId, c._userId, newPosition, (c:CardPosition) => {
                                         if (c != null) {
                                             this.nextPlayer(sessionId, (roundEnds:boolean, newPlayerId:string) => {
                                                 callback(newPlayerId, c);
@@ -144,10 +154,6 @@ export class CircleSessionManager {
         });
     }
 
-    removeCircleSessionById(circleSessionId:string, callback:(b:boolean) => any) {
-        this._dao.deleteCircleSessionById(circleSessionId, callback);
-    }
-
     getCircleSessionCards(circleSessionId:string, callback:(wrappers:CircleSessionCardWrapper[]) => any) {
         var tMgr:ThemeManager = new ThemeManager();
         var circleSessionCardWrappers:CircleSessionCardWrapper[] = [];
@@ -156,7 +162,8 @@ export class CircleSessionManager {
                 var a:number = 0;
                 cards.forEach((c:Card) => {
                     this._dao.cardPositionExists(circleSessionId, c._id, (b:boolean ) => {
-                        circleSessionCardWrappers.push(new CircleSessionCardWrapper(c, b));
+                        var wrapper: CircleSessionCardWrapper = new CircleSessionCardWrapper(c, b, c._id);
+                        circleSessionCardWrappers.push(wrapper);
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);
                         }
@@ -203,7 +210,10 @@ export class CircleSessionManager {
         this.getCircleSession(circleSessionId, (c:CircleSession) => {
             if (c._creatorId == currentUserId) {
                 this._dao.deleteCircleSessionById(circleSessionId, (b:boolean) => {
-                    this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+                    this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, (b:boolean) => {
+                        var chatMgr:ChatManager = new ChatManager();
+                        chatMgr.removeChatOfCircleSession(circleSessionId, callback);
+                    });
                 });
             }
         });
@@ -295,7 +305,10 @@ export class CircleSessionManager {
             if(c._creatorId !== userId) {
                 callback(false, "You're not the owner of this session!");
             } else {
-                this._dao.stopGame(sessionId, callback);
+                var snapshotManager:SnapshotManager = new SnapshotManager();
+                snapshotManager.createSnapshot(sessionId, (snapshot:Snapshot) =>{
+                    this._dao.stopGame(sessionId, callback);
+                });
             }
         });
     }

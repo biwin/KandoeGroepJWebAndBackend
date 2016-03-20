@@ -1,5 +1,9 @@
+"use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
+/**
+ * Class that is responsible for the connection with the dbb for snapshots
+ */
 var SnapshotDao = (function () {
     function SnapshotDao() {
         this._client = new mongodb_1.MongoClient();
@@ -21,7 +25,15 @@ var SnapshotDao = (function () {
             });
         });
     };
+    SnapshotDao.prototype.readSnapshotById = function (id, callback) {
+        this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('snapshots').find({ '_id': new mongodb_1.ObjectID(id) }).limit(1).next(function (err, doc) {
+                db.close();
+                callback(doc);
+            });
+        });
+    };
     return SnapshotDao;
-})();
+}());
 exports.SnapshotDao = SnapshotDao;
 //# sourceMappingURL=snaptshotDao.js.map

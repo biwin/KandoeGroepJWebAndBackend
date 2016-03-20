@@ -1,7 +1,10 @@
 "use strict";
 var circleMathToolbox_1 = require("./circleMathToolbox");
-var CircleSessionConstants = (function () {
-    function CircleSessionConstants() {
+/**
+ * Class that provides a toolbox that aids with forming the cards on the gameboard
+ */
+var CircleSessionOnCircleToolbox = (function () {
+    function CircleSessionOnCircleToolbox() {
         this._colors = [];
         this._colors.push("#f44336");
         this._colors.push("#E91E63");
@@ -25,38 +28,31 @@ var CircleSessionConstants = (function () {
         this._colors.push("#607D8B");
         this._colors.push("#DD2C00");
     }
-    CircleSessionConstants.prototype.CardColor = function (i) {
+    CircleSessionOnCircleToolbox.prototype.CardColor = function (i) {
         return this._colors[i % this._colors.length];
     };
-    Object.defineProperty(CircleSessionConstants.prototype, "HOVERED_COLOR", {
-        get: function () {
-            return "yellow";
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(CircleSessionConstants.prototype, "PANEL_DIMENSIONS", {
+    Object.defineProperty(CircleSessionOnCircleToolbox.prototype, "PANEL_DIMENSIONS", {
         get: function () {
             return 800;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CircleSessionConstants.prototype, "CENTER", {
+    Object.defineProperty(CircleSessionOnCircleToolbox.prototype, "CENTER", {
         get: function () {
             return 0;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CircleSessionConstants.prototype, "RING_WIDTH", {
+    Object.defineProperty(CircleSessionOnCircleToolbox.prototype, "RING_WIDTH", {
         get: function () {
             return 30;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CircleSessionConstants.prototype, "VIEWBOX", {
+    Object.defineProperty(CircleSessionOnCircleToolbox.prototype, "VIEWBOX", {
         get: function () {
             var min = (this.CENTER - this.PANEL_DIMENSIONS / 2);
             var str = min + ' ' + min + ' ';
@@ -66,12 +62,12 @@ var CircleSessionConstants = (function () {
         enumerable: true,
         configurable: true
     });
-    CircleSessionConstants.prototype.CircleRadius = function (n) {
+    CircleSessionOnCircleToolbox.prototype.CircleRadius = function (n) {
         if (n < 1 || n > 5)
             return NaN;
         return (this.PANEL_DIMENSIONS - this.RING_WIDTH) / 2 - ((n - 1) * this.PANEL_DIMENSIONS / 10);
     };
-    Object.defineProperty(CircleSessionConstants.prototype, "RINGS", {
+    Object.defineProperty(CircleSessionOnCircleToolbox.prototype, "RINGS", {
         get: function () {
             //true for inner ring
             var arr = [];
@@ -84,15 +80,15 @@ var CircleSessionConstants = (function () {
         enumerable: true,
         configurable: true
     });
-    CircleSessionConstants.prototype.YPOS_CIRCLE = function (depth, positionRatio) {
+    CircleSessionOnCircleToolbox.prototype.YPOS_CIRCLE = function (depth, positionRatio) {
         var angle = positionRatio * 360;
         return circleMathToolbox_1.CircleMathToolbox.POS_ON_CIRCLE(this.CENTER, this.CircleRadius(depth), angle, Math.sin);
     };
-    CircleSessionConstants.prototype.XPOS_CIRCLE = function (depth, positionRatio) {
+    CircleSessionOnCircleToolbox.prototype.XPOS_CIRCLE = function (depth, positionRatio) {
         var angle = positionRatio * 360;
         return circleMathToolbox_1.CircleMathToolbox.POS_ON_CIRCLE(this.CENTER, this.CircleRadius(depth), angle, Math.cos);
     };
-    return CircleSessionConstants;
+    return CircleSessionOnCircleToolbox;
 }());
-exports.CircleSessionConstants = CircleSessionConstants;
-//# sourceMappingURL=circleSessionConstants.js.map
+exports.CircleSessionOnCircleToolbox = CircleSessionOnCircleToolbox;
+//# sourceMappingURL=circleSessionCardOnCircleToolbox.js.map

@@ -1,9 +1,14 @@
-import {Injectable} from "angular2/core";
-import {HttpWrapperService} from "./httpWrapperService";
+import {Injectable, Inject} from "angular2/core";
 import {Observable} from "rxjs/Observable";
-import {Snapshot} from "../../backend/model/snapshot";
-import {Inject} from "angular2/core";
 
+import {HttpWrapperService} from "./httpWrapperService";
+
+import {Snapshot} from "../../backend/model/snapshot";
+
+/**
+ * Class that is responsible for a link between the frontend and the backend for snapshots.
+ * Uses the snapshot routes in the server.js file
+ */
 @Injectable()
 export class SnapshotService {
     private http:HttpWrapperService = null;
@@ -20,5 +25,9 @@ export class SnapshotService {
 
     createSnapshot(circleSessionId:string){
         return this.http.post(this.path + 'snapshots', JSON.stringify({_sessionId: circleSessionId}),true,true,true);
+    }
+
+    getById(snapshotId:string){
+        return this.http.get(this.path + 'snapshots/' + snapshotId, false,true,true)
     }
 }

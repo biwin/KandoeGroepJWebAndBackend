@@ -3,12 +3,13 @@ import {Router} from "angular2/router";
 import {UserService} from "../../services/userService";
 import {NgIf} from "angular2/common";
 import Request = Express.Request;
-import {Response} from "angular2/http";
+import {LoadingSpinner} from "../general/loadingSpinner";
 
 @Component({
     selector: 'profile',
     template: `
-        <div class="row container">
+        <loading *ngIf="loading || submitting"></loading>
+        <div [hidden]="loading || submitting" class="row container">
             <h5>Profiel</h5>
             <div class="card formCard">
                 <div class="card-content">
@@ -17,7 +18,7 @@ import {Response} from "angular2/http";
 
                         <div class="row"><div class="input-field col s6">
                             <input id="smallImageLink" [(ngModel)]="smallImageLinkString" type="text" class="form-control validate" ngControl="_smallImageLink" required #smallImageLink="ngForm">
-                            <label for="smallImageLink" [class.active]="smallImageLinkString" data-error="Oops!">Naam afbeelding</label>
+                            <label for="smallImageLink" [class.active]="smallImageLinkString" data-error="Oops!">Gebruikers afbeelding</label>
                         </div></div>
 
                         <div class="row"><div class="input-field col s6">
@@ -42,10 +43,13 @@ import {Response} from "angular2/http";
             </div>
         </div>
     `,
-    directives: [NgIf]
+    directives: [NgIf, LoadingSpinner]
 })
 
 export class Profile {
+    private submitting:boolean = false;
+    private loading:boolean = true;
+    
     private router: Router;
     private usernameString: string;
     private imageSource: string;
@@ -59,13 +63,18 @@ export class Profile {
             this.router.navigate(['UserLogin']);
         } else {
             this.usernameString = service.getUsername();
-            service.getImageLinks((smallImageLink: string, largeImageLink: string) => {this.smallImageLinkString = smallImageLink; this.largeImageLinkString = largeImageLink});
+            service.getImageLinks((smallImageLink: string, largeImageLink: string) => {
+                this.smallImageLinkString = smallImageLink; this.largeImageLinkString = largeImageLink;
+                this.loading = false;
+            });
             service.getUserPicture('large').subscribe((url: string) => this.imageSource = url);
         }
     }
 
     onChangeDetailsSubmit() {
+        this.submitting = true;
         this.service.changeProfile(this.usernameString, this.smallImageLinkString, this.largeImageLinkString).subscribe((token: string) => {
+            this.submitting = false;
             if (token != null) {
                 if (token != "nope") {
                     localStorage.setItem('token', token);

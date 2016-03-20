@@ -1,3 +1,5 @@
+///<reference path="../../../../typings/jquery/jquery.d.ts" />
+///<reference path="../../../../typings/materialize-css/materialize-css.d.ts"/>
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -13,14 +15,16 @@ var router_1 = require("angular2/router");
 var userService_1 = require("../../services/userService");
 var circleSessionService_1 = require("../../services/circleSessionService");
 var circleSession_1 = require("../../../backend/model/circleSession");
+var snapshotService_1 = require("../../services/snapshotService");
 var CircleSessionCard = (function () {
-    function CircleSessionCard(userService, circleService, router) {
+    function CircleSessionCard(userService, circleService, snapshotService, router) {
         this.onDelete = new core_1.EventEmitter();
         this.doAdd = false;
         this.email = "";
         this.router = router;
         this.userService = userService;
         this.circleService = circleService;
+        this.snapshotService = snapshotService;
         this.user = userService.getUserId();
     }
     CircleSessionCard.prototype.deleteCircleSession = function () {
@@ -28,6 +32,27 @@ var CircleSessionCard = (function () {
     };
     CircleSessionCard.prototype.openCard = function () {
         this.router.navigate(['/CircleSessionGame', { id: this.circleSession._id }]);
+    };
+    CircleSessionCard.prototype.makeSnapshot = function () {
+        var _this = this;
+        this.snapshotService.createSnapshot(this.circleSession._id).subscribe(function (snapshot) {
+            if (snapshot != null) {
+                Materialize.toast('Snapshot aangemaakt', 3000, 'rounded');
+                _this.router.navigate(['/Home']);
+            }
+            else {
+                Materialize.toast('Snapshot maken mislukt', 3000, 'rounded');
+            }
+        });
+    };
+    CircleSessionCard.prototype.stopGame = function () {
+        var _this = this;
+        this.circleService.stopGame(this.circleSession._id).subscribe(function (a) {
+            _this.circleSession._isStopped = a._isStopped;
+            _this.router.navigate(['/Home']);
+        }, function (r) {
+            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
+        });
     };
     CircleSessionCard.prototype.addUser = function () {
         var _this = this;
@@ -56,14 +81,6 @@ var CircleSessionCard = (function () {
     CircleSessionCard.prototype.ngAfterViewInit = function () {
         $('.tooltipped').tooltip({ delay: 50 });
     };
-    CircleSessionCard.prototype.stopGame = function () {
-        var _this = this;
-        this.circleService.stopGame(this.circleSession._id).subscribe(function (a) {
-            _this.circleSession._isStopped = a._isStopped;
-        }, function (r) {
-            Materialize.toast('Stoppen mislukt', 3000, 'rounded');
-        });
-    };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', circleSession_1.CircleSession)
@@ -75,9 +92,9 @@ var CircleSessionCard = (function () {
     CircleSessionCard = __decorate([
         core_1.Component({
             selector: 'circlesession-card',
-            template: "\n    <div class=\"col s4\">\n\n     <div class=\"modal\" id=\"{{'m' + circleSession._id}}\">\n        <div class=\"modal-content\">\n            <h4>Speler toevoegen?</h4>\n            <div class=\"input-field col s12\">\n                <input id=\"email\" type=\"email\" class=\"validate\" [(ngModel)]=\"email\">\n                <label for=\"email\">Email</label>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doAdd = false\">Annuleren</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doAdd = true\">Toevoegen</a>\n        </div>\n      </div>\n\n\n\n      <div class=\"card hoverable small\">\n      <i class=\"material-icons right green-text padding-5\" *ngIf=\"user === circleSession._currentPlayerId\">gamepad</i>\n\n      <div *ngIf=\"iamCreator\" class=\"card-action\">\n            <a *ngIf=\"!circleSession._inProgress\" (click)=\"addUser()\" class=\"black-text clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Speler toevoegen\"><i class=\"material-icons\">person_add</i></a>\n            <a *ngIf=\"circleSession._inProgress && !circleSession._isStopped\" (click)=\"stopGame()\" class=\"amber-text text-darken-3 clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Spel stoppen\"><i class=\"material-icons\">gavel</i></a>\n            <a (click)=\"deleteCircleSession()\" class=\"red-text clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Spel verwijderen\"><i class=\"material-icons\">delete</i></a>\n        </div>\n\n        <div (click)=\"openCard()\" class=\"card-content clickable scrollable\">\n            <span class=\"card-title truncate\" [attr.title]=\"circleSession._name\">{{circleSession._name}}</span>\n           <p class=\"black-text\">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>\n           <p class=\"black-text\">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>\n        </div>\n      </div>\n      </div>\n  "
+            template: "\n    <div class=\"col s4\">\n\n     <div class=\"modal\" id=\"{{'m' + circleSession._id}}\">\n        <div class=\"modal-content\">\n            <h4>Speler toevoegen?</h4>\n            <div class=\"input-field col s12\">\n                <input id=\"email\" type=\"email\" class=\"validate\" [(ngModel)]=\"email\">\n                <label for=\"email\">Email</label>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            <a class=\"modal-action modal-close waves-effect waves-red btn-flat red-text\" (click)=\"doAdd = false\">Annuleren</a>\n            <a class=\"modal-action modal-close waves-effect waves-green btn-flat green-text\" (click)=\"doAdd = true\">Toevoegen</a>\n        </div>\n      </div>\n\n\n\n      <div class=\"card hoverable small\">\n\n      <div *ngIf=\"iamCreator\" class=\"card-action\">\n            <a *ngIf=\"!circleSession._inProgress\" (click)=\"addUser()\" class=\"black-text clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Speler toevoegen\"><i class=\"material-icons\">person_add</i></a>\n            <a *ngIf=\"circleSession._inProgress && !circleSession._isStopped\" (click)=\"makeSnapshot()\" class=\"amber-text text-darken-3 clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Snapshot maken\"><i class=\"material-icons\">photo_camera</i></a>\n            <a *ngIf=\"circleSession._inProgress && !circleSession._isStopped\" (click)=\"stopGame()\" class=\"amber-text text-darken-3 clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Spel stoppen\"><i class=\"material-icons\">gavel</i></a>\n            <a (click)=\"deleteCircleSession()\" class=\"red-text clickable tooltipped\" data-position=\"bottom\" data-tooltip=\"Spel verwijderen\"><i class=\"material-icons\">delete</i></a>\n        </div>\n\n        <div (click)=\"openCard()\" class=\"card-content clickable scrollable\">\n            <i class=\"fa fa-gamepad fa-lg green-text right padding-5\" *ngIf=\"user === circleSession._currentPlayerId && !circleSession._isStopped\"></i>\n            <span class=\"card-title truncate\" [attr.title]=\"circleSession._name\">{{circleSession._name}}</span>\n            <p class=\"black-text\" *ngIf=\"!circleSession._isStopped\">{{circleSession._inProgress ? 'Spel bezig' : 'Start: ' + circleSession._startDate}}</p>\n            <p class=\"black-text\" *ngIf=\"!circleSession._isStopped\">Einde: {{circleSession._endPoint == null ? 'Onbeperkt spel' : circleSession._endPoint + ' rondes resterend'}}</p>\n            <p class=\"black-text\" *ngIf=\"circleSession._isStopped\">Spel afgesloten!</p>\n        </div>\n      </div>\n      </div>\n  "
         }), 
-        __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, router_1.Router])
+        __metadata('design:paramtypes', [userService_1.UserService, circleSessionService_1.CircleSessionService, snapshotService_1.SnapshotService, router_1.Router])
     ], CircleSessionCard);
     return CircleSessionCard;
 }());

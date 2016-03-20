@@ -1,12 +1,16 @@
-import {ChatManager} from "../logic/chatManager";
-import {ChatMessage} from "../model/chatMessage";
-import {Response} from "express";
-import {Request} from "express";
+import {Response, Request} from "express";
 
+import {ChatManager} from "../logic/chatManager";
+
+import {ChatMessage} from "../model/chatMessage";
+
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the chatmanager
+ */
 export class ChatApi {
     private static mgr:ChatManager = new ChatManager();
 
-    public static addMessage(message:string, callback:(isSaved:boolean, updatedMessage:ChatMessage) => any){
+    public static addMessage(message:string, callback:(updatedMessage:ChatMessage) => any){
         var messageObject:ChatMessage = JSON.parse(message);
         ChatApi.mgr.addMessage(messageObject, callback);
     }

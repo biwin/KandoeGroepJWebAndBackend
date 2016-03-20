@@ -13,8 +13,10 @@ var core_1 = require("angular2/core");
 var router_1 = require("angular2/router");
 var userService_1 = require("../../services/userService");
 var common_1 = require("angular2/common");
+var loadingSpinner_1 = require("../general/loadingSpinner");
 var UserLogin = (function () {
     function UserLogin(router, service) {
+        this.callInProgress = false;
         this.router = router;
         this.service = service;
     }
@@ -27,10 +29,12 @@ var UserLogin = (function () {
     };
     UserLogin.prototype.facebookLogin = function () {
         var _this = this;
+        this.callInProgress = true;
         FB.login(function (res) {
             if (res.authResponse) {
                 _this.getFacebookStandardData(function (id, name, email, pictureSmall, pictureLarge) {
                     _this.service.loginUserFacebook(id, name, email, pictureSmall, pictureLarge).subscribe(function (token) {
+                        _this.callInProgress = false;
                         if (token != null) {
                             if (token == "nope")
                                 _this.errorInfo = "Error";
@@ -47,11 +51,12 @@ var UserLogin = (function () {
     };
     UserLogin.prototype.setLoggedIn = function (token) {
         localStorage.setItem('token', token);
-        this.router.navigate(['Profile']);
+        this.router.navigate(['Home']);
         this.service.notifyLoggedIn();
     };
     UserLogin.prototype.onLoginSubmit = function () {
         var _this = this;
+        this.callInProgress = true;
         if (this.button == "login") {
             this.service.getUser(this.emailString, this.passwordString).subscribe(function (token) {
                 if (token != null) {
@@ -82,8 +87,8 @@ var UserLogin = (function () {
     UserLogin = __decorate([
         core_1.Component({
             selector: 'user-login',
-            template: "\n    <div class=\"row container\">\n        <div class=\"card formCard col s6 offset-s3\"><div class=\"card-content\">\n            <h5>Gebruiker log in</h5>\n            <form *ngIf=\"!service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onLoginSubmit()\">\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <input id=\"email\" type=\"email\" [(ngModel)]=\"emailString\" class=\"form-control validate\" ngControl=\"_email\" required #email=\"ngForm\">\n                    <label for=\"email\" data-error=\"Oops!\">Email</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <input id=\"password\" type=\"password\" [(ngModel)]=\"passwordString\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_password\" required #password=\"ngForm\">\n                    <label for=\"password\" data-error=\"Oops!\">Wachtwoord</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"col s12\">\n                    <p id=\"error\" style=\"color: #FF0000;\">{{errorInfo}}</p>\n                </div></div>\n\n                <div class=\"row\">\n                    <button (click)=\"button='login'\" type=\"submit\" id=\"loginButton\" class=\"btn waves-effect teal waves-light col s5\"><p>Log in<i class=\"material-icons right\">send</i></p></button>\n                    <button (click)=\"button='register'\" type=\"submit\" id=\"registerButton\" class=\"btn waves-effect red waves-light col s5 offset-s2\"><p>Registreer<i class=\"material-icons right\">send</i></p></button>\n                </div>\n\n                <div class=\"row\"><div class=\"col s4 offset-s4\">\n                    <h3 class=\"center-align\">OF</h3>\n                </div></div>\n\n                <div class=\"row\">\n                    <button (click)=\"facebookLogin()\" id=\"facebookButton\" class=\"btn waves-effect blue waves-light col s4 offset-s4\"><p><i class=\"fa fa-facebook-official left\"></i>Facebook</p></button>\n                </div>\n\n            </form>\n\n            <form *ngIf=\"service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onLogoutSubmit()\">\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <h2>U bent reeds ingelogd!</h2>\n                    <p style=\"word-wrap: break-word;\">Token: {{getToken()}}</p>\n                </div></div>\n\n                <div class=\"row\">\n                    <button type=\"submit\" id=\"logoutButton\" class=\"btn waves-effect teal waves-light col s2\"><p>Log uit<i class=\"material-icons right\">send</i></p></button>\n                </div>\n            </form>\n        </div></div>\n    </div>\n    ",
-            directives: [common_1.NgIf]
+            template: "\n    <loading *ngIf=\"callInProgress\"></loading>\n\n    <div [hidden]=\"callInProgress\" class=\"row container\">\n        <div class=\"card formCard col s6 offset-s3\"><div class=\"card-content\">\n            <h5>Gebruiker log in</h5>\n            <form *ngIf=\"!service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onLoginSubmit()\">\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <input id=\"email\" type=\"email\" [(ngModel)]=\"emailString\" class=\"form-control validate\" ngControl=\"_email\" required #email=\"ngForm\">\n                    <label for=\"email\" data-error=\"Oops!\">Email</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <input id=\"password\" type=\"password\" [(ngModel)]=\"passwordString\" class=\"form-control validate\" pattern=\"([a-zA-Z0-9]{4,16})\" ngControl=\"_password\" required #password=\"ngForm\">\n                    <label for=\"password\" data-error=\"Oops!\">Wachtwoord</label>\n                </div></div>\n\n                <div class=\"row\"><div class=\"col s12\">\n                    <p id=\"error\" style=\"color: #FF0000;\">{{errorInfo}}</p>\n                </div></div>\n\n                <div class=\"row\">\n                    <button (click)=\"button='login'\" type=\"submit\" id=\"loginButton\" class=\"btn waves-effect teal waves-light col s5\"><p>Log in<i class=\"material-icons right\">send</i></p></button>\n                    <button (click)=\"button='register'\" type=\"submit\" id=\"registerButton\" class=\"btn waves-effect red waves-light col s5 offset-s2\"><p>Registreer<i class=\"material-icons right\">send</i></p></button>\n                </div>\n\n                <div class=\"row\"><div class=\"col s4 offset-s4\">\n                    <h3 class=\"center-align\">OF</h3>\n                </div></div>\n\n                <div class=\"row\">\n                    <button (click)=\"facebookLogin()\" id=\"facebookButton\" class=\"btn waves-effect blue waves-light col s4 offset-s4\"><p><i class=\"fa fa-facebook-official left\"></i>Facebook</p></button>\n                </div>\n\n            </form>\n\n            <form *ngIf=\"service.isLoggedIn()\" class=\"col s12\" (ngSubmit)=\"onLogoutSubmit()\">\n                <div class=\"row\"><div class=\"input-field col s12\">\n                    <h2>U bent reeds ingelogd!</h2>\n                    <p style=\"word-wrap: break-word;\">Token: {{getToken()}}</p>\n                </div></div>\n\n                <div class=\"row\">\n                    <button type=\"submit\" id=\"logoutButton\" class=\"btn waves-effect teal waves-light col s2\"><p>Log uit<i class=\"material-icons right\">send</i></p></button>\n                </div>\n            </form>\n        </div></div>\n    </div>\n    ",
+            directives: [common_1.NgIf, loadingSpinner_1.LoadingSpinner]
         }), 
         __metadata('design:paramtypes', [router_1.Router, userService_1.UserService])
     ], UserLogin);

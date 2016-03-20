@@ -60,6 +60,7 @@ app.post('/api/circlesessions/:id/stopGame', CircleSessionApi.CircleSessionApi.s
 //region snapshot routes
 app.get('/api/snapshots', SnapshotApi.SnapshotApi.findAll);
 app.post('/api/snapshots', SnapshotApi.SnapshotApi.createSnapshot);
+app.get('/api/snapshots/:id', SnapshotApi.SnapshotApi.getById);
 //endregion
 
 //region organisation routes
@@ -68,13 +69,16 @@ app.post("/api/organisations", OrganisationAPI.OrganisationAPI.create);
 app.delete("/api/organisations/:id", OrganisationAPI.OrganisationAPI.delete);
 app.get("/api/organisations/:id/admins", OrganisationAPI.OrganisationAPI.getAdmins);
 app.get("/api/organisations/:id/groups", OrganisationAPI.OrganisationAPI.getGroups);
+app.delete("/api/organisations/:id/groups/:groupId", OrganisationAPI.OrganisationAPI.deleteGroupById);
 app.get("/api/organisations/:id/members", OrganisationAPI.OrganisationAPI.getMembers);
 app.delete("/api/organisations/:id/members/:memberId", OrganisationAPI.OrganisationAPI.deleteMemberById);
 app.get("/api/organisations/:id/themes", OrganisationAPI.OrganisationAPI.getThemes);
+app.delete("/api/organisations/:id/themes/:themeId", OrganisationAPI.OrganisationAPI.deleteThemeById);
 //endregion
 
 //region group routes
 app.get("/api/groups/:id", GroupAPI.GroupAPI.find);
+app.delete("/api/groups/:id", GroupAPI.GroupAPI.delete);
 app.post("/api/groups", GroupAPI.GroupAPI.create);
 app.get("/api/groups/:id/members", GroupAPI.GroupAPI.getMembers);
 app.get("/api/groups/:id/organisation", GroupAPI.GroupAPI.getOrganisation);
@@ -97,7 +101,7 @@ app.post('/api/user/login', function (req, res) {
     console.log(req.body);
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send({_message:'You are already logged in'});
+        res.send({_message: 'You are already logged in'});
     } else {
         UserApi.UserApi.getUser(req.body._email, req.body._password, res);
     }
@@ -106,7 +110,7 @@ app.post('/api/user/login', function (req, res) {
 app.post('/api/user/register', function (req, res) {
     var token = req.header('Bearer');
     if (token != null && token != "") {
-        res.send({_message:'You are already registered'});
+        res.send({_message: 'You are already registered'});
     } else {
         UserApi.UserApi.createUser(req.body._username, req.body._email, req.body._password, req.body._registrar, res);
     }
@@ -119,7 +123,7 @@ app.post('/api/user/change-profile', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.changeProfile(token, req.body._username, req.body._smallPicture, req.body._largePicture, res);
     } else {
-        res.send("{\"_message\":\"You are not logged in\"}");
+        res.send({_message:"You are not logged in"});
     }
 });
 
@@ -128,7 +132,7 @@ app.post('/api/user/get-picture', function (req, res) {
     if (token != null && token != "") {
         UserApi.UserApi.getPicture(token, req.body._type, res);
     } else {
-        res.send("{\"_message\":\"You are not logged in\"}");
+        res.send({_message:"You are not logged in"});
     }
 });
 
@@ -144,27 +148,32 @@ io.on('connection', function (socket) {
         var sessionId = object.sessionId;
         socket.join("kandoe-" + sessionId);
     });
-    socket.on('send message', function(message) {
-        var roomName = Object.keys(socket.rooms).filter(function(room) {
+    socket.on('send message', function (message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
             return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
-        ChatApi.ChatApi.addMessage(message, function(b, updatedMessage){
-            if(b === true) {
-                io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
-            }
+        ChatApi.ChatApi.addMessage(message, function (updatedMessage) {
+            io.to(roomName).emit('send message', JSON.stringify(updatedMessage));
         });
     });
-    socket.on('send move', function(message) {
-        var roomName = Object.keys(socket.rooms).filter(function(room) {
+    socket.on('send move', function (message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
             return room.lastIndexOf('kandoe-', 0) === 0;
         })[0];
 
         io.to(roomName).emit('send move', JSON.stringify(message));
     });
+    socket.on('init cards', function(message) {
+        var roomName = Object.keys(socket.rooms).filter(function (room) {
+            return room.lastIndexOf('kandoe-', 0) === 0;
+        })[0];
+
+        io.to(roomName).emit('init cards', JSON.stringify(message));
+    });
 });
 //endregion Socket.io
 
 http.listen(server_port, server_ip_address, function () {
-    console.log("Started listening to "+server_ip_address+" on port "+server_port+"!");
+    console.log("Started listening to " + server_ip_address + " on port " + server_port + "!");
 });

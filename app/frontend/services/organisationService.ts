@@ -3,11 +3,15 @@ import {Observable} from "rxjs/Observable";
 
 import {HttpWrapperService} from "./httpWrapperService";
 
-import {Organisation} from "../../backend/model/organisation";
-import {Group} from "../../backend/model/group";
 import {User} from "../../backend/model/user";
 import {Theme} from "../../backend/model/theme";
+import {Group} from "../../backend/model/group";
+import {Organisation} from "../../backend/model/organisation";
 
+/**
+ * Class that is responsible for a link between the frontend and the backend for organisations.
+ * Uses the organisation routes in the server.js file
+ */
 @Injectable()
 export class OrganisationService {
     private http: HttpWrapperService = null;
@@ -49,5 +53,13 @@ export class OrganisationService {
 
     deleteMemberFromOrganisationById(userId: string, organisationId: string): Observable<boolean> {
         return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, true);
+    }
+
+    deleteGroupFromOrganisationById(groupId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
+    }
+
+    deleteThemeFromOrganisationById(themeId: string, organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/themes/" + themeId, false, false, true);
     }
 }

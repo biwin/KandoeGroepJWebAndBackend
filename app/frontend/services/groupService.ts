@@ -3,10 +3,14 @@ import {Observable} from "rxjs/Observable";
 
 import {HttpWrapperService} from "./httpWrapperService";
 
-import {Group} from "../../backend/model/group";
 import {User} from "../../backend/model/user";
+import {Group} from "../../backend/model/group";
 import {Organisation} from "../../backend/model/organisation";
 
+/**
+ * Class that is responsible for a link between the frontend and the backend for groups.
+ * Uses the group routes in the server.js file
+ */
 @Injectable()
 export class GroupService {
     private http: HttpWrapperService = null;
@@ -23,6 +27,10 @@ export class GroupService {
 
     getGroupById(groupId: string): Observable<Group> {
         return this.http.get(this.path + "groups/" + groupId, false, true, true);
+    }
+
+    deleteGroupById(organisationId: string): Observable<boolean> {
+        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
     }
 
     getMembersOfGroupById(groupId: string): Observable<User[]> {

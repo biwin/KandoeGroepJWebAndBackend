@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * Class that provides a toolbox to calculate where cards on the gameboard should be placed
+ */
 var CircleMathToolbox = (function () {
     function CircleMathToolbox() {
     }

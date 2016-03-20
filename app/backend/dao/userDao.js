@@ -2,6 +2,9 @@
 "use strict";
 var mongodb_1 = require("mongodb");
 var daoConstants_1 = require("./daoConstants");
+/**
+ * Class that is responsible for the connection with the dbb for users
+ */
 var UserDao = (function () {
     function UserDao() {
         this.client = new mongodb_1.MongoClient();
@@ -307,6 +310,24 @@ var UserDao = (function () {
             db.collection('users').updateOne({ '_id': new mongodb_1.ObjectID(userId) }, { $push: { '_memberOfGroupIds': groupId } }, function (error, result) {
                 db.close();
                 callback(result.modifiedCount == 1);
+            });
+        });
+    };
+    UserDao.prototype.removeAllMembersFromGroupById = function (groupId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_memberOfGroupIds': { '$in': [groupId] } }, { $pull: { '_memberOfGroupIds': groupId } }, function (error, result) {
+                db.close();
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    };
+    UserDao.prototype.removeAllUsersFromOrganisationById = function (organisationId, callback) {
+        this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
+            db.collection('users').updateMany({ '_organisatorOf': { '$in': [organisationId] } }, { $pull: { '_organisatorOf': organisationId } }, function (error, result) {
+                db.collection('users').updateMany({ '_memberOf': { '$in': [organisationId] } }, { $pull: { '_memberOf': organisationId } }, function (error2, result2) {
+                    db.close();
+                    callback(result.modifiedCount == result.matchedCount && result2.modifiedCount == result2.matchedCount);
+                });
             });
         });
     };

@@ -1,7 +1,11 @@
 "use strict";
 var groupDao_1 = require("../dao/groupDao");
-var organisationManager_1 = require("./organisationManager");
 var userManager_1 = require("./userManager");
+var organisationManager_1 = require("./organisationManager");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for groups.
+ * Gains information from usermanager and organisationmanager when needed for a group.
+ */
 var GroupManager = (function () {
     function GroupManager() {
         this._dao = new groupDao_1.GroupDao();
@@ -34,7 +38,16 @@ var GroupManager = (function () {
         this._dao.getGroupById(groupId, callback);
     };
     GroupManager.prototype.removeGroupById = function (groupId, callback) {
-        this._dao.deleteGroupById(groupId, callback);
+        var _this = this;
+        var userManager = new userManager_1.UserManager();
+        var organisationManager = new organisationManager_1.OrganisationManager();
+        userManager.removeAllMembersFromGroupById(groupId, function (membersDeleted) {
+            organisationManager.deleteGroupIdFromOrganisation(groupId, function (referencesDeleted) {
+                _this._dao.deleteGroupById(groupId, function (groupDeleted) {
+                    callback(membersDeleted && referencesDeleted && groupDeleted);
+                });
+            });
+        });
     };
     GroupManager.prototype.getGroupsOfOrganisationById = function (organisationId, callback) {
         this._dao.getGroupsOfOrganisationById(organisationId, callback);

@@ -13,6 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var httpWrapperService_1 = require("./httpWrapperService");
+/**
+ * Class that is responsible for a link between the frontend and the backend for organisations.
+ * Uses the organisation routes in the server.js file
+ */
 var OrganisationService = (function () {
     function OrganisationService(http, path) {
         this.http = null;
@@ -42,6 +46,12 @@ var OrganisationService = (function () {
     };
     OrganisationService.prototype.deleteMemberFromOrganisationById = function (userId, organisationId) {
         return this.http.delete(this.path + "organisations/" + organisationId + "/members/" + userId, false, false, true);
+    };
+    OrganisationService.prototype.deleteGroupFromOrganisationById = function (groupId, organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/groups/" + groupId, false, false, true);
+    };
+    OrganisationService.prototype.deleteThemeFromOrganisationById = function (themeId, organisationId) {
+        return this.http.delete(this.path + "organisations/" + organisationId + "/themes/" + themeId, false, false, true);
     };
     OrganisationService = __decorate([
         core_1.Injectable(),

@@ -19,23 +19,22 @@ import {LoadingSpinner} from "../general/loadingSpinner";
     <div class="row container">
     <h5>Nieuw Spel</h5>
 
-    <div class="card formCard">
-
-    <loading *ngIf="themesLoading || groupsLoading"></loading>
-    <div [hidden]="themesLoading || groupsLoading" class="card-content">
+    <loading *ngIf="themesLoading || groupsLoading || submitting"></loading>
+    <div [hidden]="themesLoading || groupsLoading || submitting" class="card formCard">
+    <div class="card-content">
         <form (submit)="OnSubmit()" class="col s12">
       <div class="row">
         <div class="input-field col s3">
-                    <select class="browser-default" required [(ngModel)]="circleSession._groupId" id="group">
-                        <option value="" disabled>Groep</option>
-                        <option *ngFor="#group of _groups" value="{{group._id}}">{{group._name}}</option>
-                    </select>
+            <select class="browser-default" required [(ngModel)]="circleSession._groupId" id="group">
+                <option value="" disabled>Groep</option>
+                <option *ngFor="#group of _groups" value="{{group._id}}">{{group._name}}</option>
+            </select>
         </div>
        <div class="input-field col s3">
-                    <select class="browser-default" required [(ngModel)]="circleSession._themeId" id="theme">
-                        <option value="" disabled>Thema</option>
-                        <option *ngFor="#theme of _themes" value="{{theme._id}}">{{theme._name}}</option>
-                    </select>
+            <select class="browser-default" required [(ngModel)]="circleSession._themeId" id="theme">
+                <option value="" disabled>Thema</option>
+                <option *ngFor="#theme of _themes" value="{{theme._id}}">{{theme._name}}</option>
+            </select>
         </div>
       </div>
 
@@ -88,6 +87,7 @@ export class CircleSessionForm implements AfterViewInit {
 
     private groupsLoading:boolean = true;
     private themesLoading:boolean = true;
+    private submitting:boolean = false;
 
     private _currentUserId:string;
     private _groups:Group[] = [];
@@ -141,6 +141,7 @@ export class CircleSessionForm implements AfterViewInit {
     }
 
     private OnSubmit() {
+        this.submitting = true;
         this.circleSession._creatorId = this._currentUserId;
 
         if (this.circleSession._realTime)

@@ -159,6 +159,7 @@ svg circle.kandoeRing.inner {
 #message-list {
     overflow:auto !important;
     height: 40%;
+    padding-left: 20px;
     margin-bottom: 0 !important;
 }
 

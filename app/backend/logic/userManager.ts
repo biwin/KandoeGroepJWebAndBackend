@@ -1,10 +1,14 @@
+import {UserDao} from "../dao/userDao";
+
 import {ObjectID} from "mongodb";
 
-import {UserDao} from "../dao/userDao";
+import {User} from "../model/user";
 import {Group} from "../model/group";
 import {Organisation} from "../model/organisation";
-import {User} from "../model/user";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for users
+ */
 export class UserManager {
     private _dao: UserDao;
 
@@ -300,6 +304,14 @@ export class UserManager {
 
     addGroupIdToUserById(groupId: string, userId: string, callback: (added: boolean) => any) {
         this._dao.addGroupIdToUserById(groupId, userId, callback);
+    }
+
+    removeAllMembersFromGroupById(groupId: string, callback: (removed: boolean) => any) {
+        this._dao.removeAllMembersFromGroupById(groupId, callback);
+    }
+
+    removeAllUsersFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this._dao.removeAllUsersFromOrganisationById(organisationId, callback);
     }
 
     addOrganisationIdToUserById(organisationId: string, userId: string, isOrganisator: boolean, callback: (added: boolean) => any) {

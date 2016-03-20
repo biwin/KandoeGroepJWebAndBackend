@@ -13,6 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var httpWrapperService_1 = require("./httpWrapperService");
+/**
+ * Class that is responsible for a link between the frontend and the backend for groups.
+ * Uses the group routes in the server.js file
+ */
 var GroupService = (function () {
     function GroupService(http, path) {
         this.http = null;
@@ -24,6 +28,9 @@ var GroupService = (function () {
     };
     GroupService.prototype.getGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId, false, true, true);
+    };
+    GroupService.prototype.deleteGroupById = function (organisationId) {
+        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
     };
     GroupService.prototype.getMembersOfGroupById = function (groupId) {
         return this.http.get(this.path + "groups/" + groupId + "/members", false, true, true);

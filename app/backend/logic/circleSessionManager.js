@@ -1,9 +1,16 @@
 "use strict";
 var circleSessionDao_1 = require("../dao/circleSessionDao");
-var groupManager_1 = require("./groupManager");
-var themeManager_1 = require("./themeManager");
+var chatManager_1 = require("./chatManager");
 var userManager_1 = require("./userManager");
+var themeManager_1 = require("./themeManager");
+var groupManager_1 = require("./groupManager");
+var snapshotManager_1 = require("./snapshotManager");
 var circleSessionCardWrapper_1 = require("../model/circleSessionCardWrapper");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for circlesession.
+ * Uses circlesessionCardWrapper and createwrapper to simplify the imput the frontend should provide.
+ * Gains information from chatmanager, usermanager, thememanager, snapshotmanager and groupmanager when needed for an circlesession.
+ */
 var CircleSessionManager = (function () {
     function CircleSessionManager() {
         this._dao = new circleSessionDao_1.CircleSessionDao();
@@ -93,8 +100,7 @@ var CircleSessionManager = (function () {
                                     callback(userId, null, "Card already in the middle!");
                                 }
                                 else {
-                                    var lastChangedUserId = c._userId;
-                                    _this._dao.updateCardPosition(sessionId, cardId, userId, lastChangedUserId, newPosition, function (c) {
+                                    _this._dao.updateCardPosition(sessionId, cardId, userId, c._userId, newPosition, function (c) {
                                         if (c != null) {
                                             _this.nextPlayer(sessionId, function (roundEnds, newPlayerId) {
                                                 callback(newPlayerId, c);
@@ -135,9 +141,6 @@ var CircleSessionManager = (function () {
             }
         });
     };
-    CircleSessionManager.prototype.removeCircleSessionById = function (circleSessionId, callback) {
-        this._dao.deleteCircleSessionById(circleSessionId, callback);
-    };
     CircleSessionManager.prototype.getCircleSessionCards = function (circleSessionId, callback) {
         var _this = this;
         var tMgr = new themeManager_1.ThemeManager();
@@ -147,7 +150,8 @@ var CircleSessionManager = (function () {
                 var a = 0;
                 cards.forEach(function (c) {
                     _this._dao.cardPositionExists(circleSessionId, c._id, function (b) {
-                        circleSessionCardWrappers.push(new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b));
+                        var wrapper = new circleSessionCardWrapper_1.CircleSessionCardWrapper(c, b, c._id);
+                        circleSessionCardWrappers.push(wrapper);
                         if (++a == cards.length) {
                             callback(circleSessionCardWrappers);
                         }
@@ -197,7 +201,10 @@ var CircleSessionManager = (function () {
         this.getCircleSession(circleSessionId, function (c) {
             if (c._creatorId == currentUserId) {
                 _this._dao.deleteCircleSessionById(circleSessionId, function (b) {
-                    _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, callback);
+                    _this._dao.deleteCardPositionsByCircleSessionId(circleSessionId, function (b) {
+                        var chatMgr = new chatManager_1.ChatManager();
+                        chatMgr.removeChatOfCircleSession(circleSessionId, callback);
+                    });
                 });
             }
         });
@@ -289,7 +296,10 @@ var CircleSessionManager = (function () {
                 callback(false, "You're not the owner of this session!");
             }
             else {
-                _this._dao.stopGame(sessionId, callback);
+                var snapshotManager = new snapshotManager_1.SnapshotManager();
+                snapshotManager.createSnapshot(sessionId, function (snapshot) {
+                    _this._dao.stopGame(sessionId, callback);
+                });
             }
         });
     };

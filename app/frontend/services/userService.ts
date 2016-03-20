@@ -1,6 +1,6 @@
 import {Injectable, Inject} from "angular2/core";
-import {Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
+import {Response} from "angular2/http";
 
 import {HttpWrapperService} from "./httpWrapperService";
 
@@ -9,6 +9,10 @@ import {Group} from "../../backend/model/group";
 import {Organisation} from "../../backend/model/organisation";
 import {CircleSession} from "../../backend/model/circleSession";
 
+/**
+ * Class that is responsible for a link between the frontend and the backend for users.
+ * Uses the user routes in the server.js file
+ */
 @Injectable()
 export class UserService {
     private http: HttpWrapperService = null;
@@ -86,7 +90,7 @@ export class UserService {
     }
 
     getAllGroupsOfUser(userId: string): Observable<Group> {
-        return this.http.get(this.path + 'user/' + userId +'/groups', false, true, false);
+        return this.http.get(this.path + 'user/' + userId +'/groups', false, true, true);
     }
 
     getCircleSessionsOfCurrentUser(): Observable<CircleSession[]> {

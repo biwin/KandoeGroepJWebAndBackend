@@ -7,6 +7,9 @@ import {DaoConstants} from "./daoConstants";
 import {Theme} from "../model/theme";
 import {Card} from "../model/card";
 
+/**
+ * Class that is responsible for the connection with the dbb for themes and cards
+ */
 export class ThemeDao {
     private _client: MongoClient;
 
@@ -137,6 +140,26 @@ export class ThemeDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('themes').find({'_organisationId': organisationId}).toArray((err: MongoError, docs: Theme[]) => {
                 callback(docs);
+            });
+        });
+    }
+
+    removeAllThemesFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('themes').updateMany({'_organisationId': organisationId}, {$set: {'_organisationId': null}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == result.matchedCount);
+            });
+        });
+    }
+
+    deleteOrganisationFromThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
+            db.collection('themes').updateOne({'_id': new ObjectID(themeId)}, {$set: {'_organisationId': null}}, (error: MongoError, result: UpdateWriteOpResult) => {
+                db.close();
+
+                callback(result.modifiedCount == 1);
             });
         });
     }

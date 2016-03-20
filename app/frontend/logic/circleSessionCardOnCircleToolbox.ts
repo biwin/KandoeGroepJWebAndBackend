@@ -1,5 +1,9 @@
 import {CircleMathToolbox} from "./circleMathToolbox";
-export class CircleSessionConstants {
+
+/**
+ * Class that provides a toolbox that aids with forming the cards on the gameboard
+ */
+export class CircleSessionOnCircleToolbox {
     private _colors:string[] = [];
 
     constructor() {
@@ -30,10 +34,6 @@ export class CircleSessionConstants {
         return this._colors[i % this._colors.length];
     }
 
-    public get HOVERED_COLOR(): string {
-        return "yellow";
-    }
-
     public get PANEL_DIMENSIONS():number {
         return 800;
     }
@@ -62,7 +62,6 @@ export class CircleSessionConstants {
 
     public get RINGS(): boolean[] {
         //true for inner ring
-
         var arr: boolean[] = [];
 
         for(var i:number = 0; i < 4; i++) {

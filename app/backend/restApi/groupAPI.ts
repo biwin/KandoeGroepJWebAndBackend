@@ -7,6 +7,11 @@ import {GroupManager} from "../logic/groupManager";
 
 import {Group} from "../model/group";
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the groupmanager
+ * Uses the organisationApi to get group information when needed
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class GroupAPI {
     private static mgr: GroupManager = new GroupManager();
 
@@ -16,7 +21,7 @@ export class GroupAPI {
                 var group: Group = req.body;
                 group._memberIds = [currentUserId];
 
-                GroupAPI.mgr.createGroup(req.body, (g: Group) => {
+                GroupAPI.mgr.createGroup(group, (g: Group) => {
                     res.send(g);
                 });
             } else {
@@ -32,6 +37,24 @@ export class GroupAPI {
 
                 GroupAPI.mgr.getGroupById(groupId, (group: Group) => {
                     res.send(group);
+                });
+            } else {
+                res.status(401).send({error: 'Unauthorized'});
+            }
+        });
+    }
+
+    public static delete(req: Request, res: Response) {
+        UserApi.getCurrentUserId(req.header('Bearer'), (currentUserId: string) => {
+            if (currentUserId != null) {
+                var groupId: string = req.params.id;
+
+                GroupAPI.mgr.removeGroupById(groupId, (deleted: boolean) => {
+                    if(deleted) {
+                        res.send(deleted);
+                    } else {
+                        res.status(404).send("Group not found");
+                    }
                 });
             } else {
                 res.status(401).send({error: 'Unauthorized'});

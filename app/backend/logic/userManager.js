@@ -1,6 +1,9 @@
 "use strict";
-var mongodb_1 = require("mongodb");
 var userDao_1 = require("../dao/userDao");
+var mongodb_1 = require("mongodb");
+/**
+ * Class that is responsible for managing what data will be send to the database layer for users
+ */
 var UserManager = (function () {
     function UserManager() {
         this._dao = new userDao_1.UserDao();
@@ -274,6 +277,12 @@ var UserManager = (function () {
     };
     UserManager.prototype.addGroupIdToUserById = function (groupId, userId, callback) {
         this._dao.addGroupIdToUserById(groupId, userId, callback);
+    };
+    UserManager.prototype.removeAllMembersFromGroupById = function (groupId, callback) {
+        this._dao.removeAllMembersFromGroupById(groupId, callback);
+    };
+    UserManager.prototype.removeAllUsersFromOrganisationById = function (organisationId, callback) {
+        this._dao.removeAllUsersFromOrganisationById(organisationId, callback);
     };
     UserManager.prototype.addOrganisationIdToUserById = function (organisationId, userId, isOrganisator, callback) {
         this._dao.addOrganisationIdToUserById(organisationId, userId, isOrganisator, callback);

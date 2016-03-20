@@ -18,12 +18,12 @@ import {LoadingSpinner} from "../general/loadingSpinner";
         <div class="container">
             <div class="modal" id="mDelTheme">
                 <div class="modal-content">
-                    <h4>Thema verwijderen?</h4>
+                    <h4 class="red-text">Thema verwijderen?</h4>
                     <p>Bent u zeker dat u dit thema en alle bijhorende kaarten wilt verwijderen?</p>
                 </div>
                 <div class="modal-footer">
-                    <a class="modal-action modal-close waves-effect waves-green btn-flat" (click)="doDelete = false">Nee, ga terug</a>
-                    <a class="modal-action modal-close waves-effect waves-red btn-flat" (click)="doDelete = true">Ja, verwijder</a>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doDelete = false">Nee, ga terug</a>
+                    <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doDelete = true">Ja, verwijder</a>
                 </div>
             </div>
 
@@ -36,7 +36,8 @@ import {LoadingSpinner} from "../general/loadingSpinner";
 
             <loading *ngIf="loading"></loading>
 
-             <p *ngIf="!loading && themes.length==0">Je hebt nog geen thema's.</p>
+            <div *ngIf="!loading && themes.length==0" class="card"><div class="card-content"><p>Je hebt nog geen thema's.</p></div></div>
+             
 
             <div class="row">
                 <theme-card *ngFor="#theme of themes" [theme]="theme" (onDelete)="deleteTheme($event)">

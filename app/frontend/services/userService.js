@@ -13,6 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 var core_1 = require("angular2/core");
 var httpWrapperService_1 = require("./httpWrapperService");
+/**
+ * Class that is responsible for a link between the frontend and the backend for users.
+ * Uses the user routes in the server.js file
+ */
 var UserService = (function () {
     function UserService(http, path) {
         this.http = null;
@@ -79,7 +83,7 @@ var UserService = (function () {
         });
     };
     UserService.prototype.getAllGroupsOfUser = function (userId) {
-        return this.http.get(this.path + 'user/' + userId + '/groups', false, true, false);
+        return this.http.get(this.path + 'user/' + userId + '/groups', false, true, true);
     };
     UserService.prototype.getCircleSessionsOfCurrentUser = function () {
         return this.http.get(this.path + 'user/circlesessions', false, true, true);

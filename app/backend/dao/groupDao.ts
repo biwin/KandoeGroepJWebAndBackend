@@ -6,6 +6,9 @@ import {DaoConstants} from "./daoConstants";
 
 import {Group} from "../model/group";
 
+/**
+ * Class that is responsible for the connection with the dbb for groups
+ */
 export class GroupDao {
     private _client: MongoClient;
 

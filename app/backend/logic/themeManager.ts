@@ -1,11 +1,14 @@
 import {ThemeDao} from "../dao/themeDao";
 
-
 import {OrganisationManager} from "./organisationManager";
 
-import {Theme} from "../model/theme";
 import {Card} from "../model/card";
+import {Theme} from "../model/theme";
 
+/**
+ * Class that is responsible for managing what data will be send to the database layer for snapshots
+ * Gains information from organisationmanager when needed for a theme.
+ */
 export class ThemeManager {
     private _dao: ThemeDao;
 
@@ -109,5 +112,13 @@ export class ThemeManager {
 
     getThemesOfOrganisationById(organisationId: string, callback: (themes: Theme[]) => any) {
         this._dao.getThemesOfOrganisationById(organisationId, callback);
+    }
+
+    removeAllThemesFromOrganisationById(organisationId: string, callback: (removed: boolean) => any) {
+        this._dao.removeAllThemesFromOrganisationById(organisationId, callback);
+    }
+
+    deleteOrganisationFromThemeById(themeId: string, callback: (deleted: boolean) => any) {
+        this._dao.deleteOrganisationFromThemeById(themeId, callback);
     }
 }

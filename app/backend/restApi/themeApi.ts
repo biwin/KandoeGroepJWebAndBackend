@@ -4,9 +4,13 @@ import {UserApi} from "./userApi";
 
 import {ThemeManager} from "../logic/themeManager";
 
-import {Theme} from "../model/theme";
 import {Card} from "../model/card";
+import {Theme} from "../model/theme";
 
+/**
+ * Class that is responsible for exstracting data from the request and sending it to the thememanager
+ * Uses the userApi where needed to check if the request is authorized
+ */
 export class ThemeApi {
     private static mgr: ThemeManager = new ThemeManager();
 
@@ -142,7 +146,7 @@ export class ThemeApi {
             if (currentUserId != null) {
                 var organisationId: string = req.params.id;
 
-                themeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
+                ThemeApi.mgr.getThemesOfOrganisationById(organisationId, (themes: Theme[]) => {
                     res.send(themes);
                 });
             } else {
