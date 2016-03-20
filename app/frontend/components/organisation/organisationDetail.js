@@ -113,7 +113,6 @@ var OrganisationDetail = (function () {
             });
         }
     };
-    //TODO: styling van addGroup button
     OrganisationDetail.prototype.addGroup = function () {
         this.router.navigate(["/CreateGroup", { organisationId: this.organisation._id }]);
     };
@@ -144,7 +143,6 @@ var OrganisationDetail = (function () {
         var index = this.groups.findIndex(function (group) { return group._id == groupId; });
         this.groups.splice(index, 1);
     };
-    //TODO: styling van addMember/addAdmin button
     OrganisationDetail.prototype.addUser = function (isAdmin) {
         var _this = this;
         if (isAdmin) {
@@ -237,7 +235,6 @@ var OrganisationDetail = (function () {
             this.members.splice(index, 1);
         }
     };
-    //TODO: styling van addTheme button
     OrganisationDetail.prototype.addTheme = function () {
         this.router.navigate(["/CreateTheme", { organisationId: this.organisation._id }]);
     };

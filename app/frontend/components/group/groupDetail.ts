@@ -175,7 +175,6 @@ export class GroupDetail {
         }
     }
 
-    //TODO: styling van addMember button
     private addMember(): void {
         $('#addMemberModal').openModal({
             opacity: .75,
@@ -208,7 +207,6 @@ export class GroupDetail {
         this.loadMembers();
     }
 
-    //TODO: styling van deleteMember button
     private deleteMember(user: User, isAdmin: boolean): void {
         this.memberToDelete = user;
 

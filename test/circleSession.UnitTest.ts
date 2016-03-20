@@ -106,8 +106,10 @@ describe('CircleSession Unittest', () => {
                     organisationManager.removeOrganisationById(organisation._id, () => {
                         circleSessionManager.deleteCircleSession(user._id, circleSession._id, () => {
                             userManager.removeUserById(user._id, () => {
-                                themeManager.removeThemeById(theme._id, () => {
-                                    done();
+                                themeManager.deleteCardsFromTheme(theme._id, (n:number) => {
+                                    themeManager.removeThemeById(theme._id, () => {
+                                        done();
+                                    });    
                                 });
                             });
                         });

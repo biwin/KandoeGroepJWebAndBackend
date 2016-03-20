@@ -89,7 +89,7 @@ var UserDao = (function () {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('users').insertOne(user, function (error, result) {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 user._id = result.insertedId.toString();
                 db.close();
@@ -101,7 +101,7 @@ var UserDao = (function () {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').insertOne(g, function (error, result) {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 g._id = result.insertedId;
                 db.close();
@@ -129,7 +129,7 @@ var UserDao = (function () {
         this.client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').insertOne(o, function (error, result) {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 o._id = result.insertedId;
                 db.close();
@@ -155,7 +155,7 @@ var UserDao = (function () {
             });
         }
         catch (e) {
-            console.log(e);
+            console.warn(e);
         }
     };
     UserDao.prototype.addToOrganisation = function (oId, uId, callback) {
@@ -373,4 +373,3 @@ var UserDao = (function () {
     return UserDao;
 }());
 exports.UserDao = UserDao;
-//# sourceMappingURL=userDao.js.map

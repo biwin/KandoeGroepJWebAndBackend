@@ -87,8 +87,10 @@ describe('ThemeManager', function () {
         after(function (done) {
             this.timeout(0);
             try {
-                themeManager.removeThemeById(theme._id, function () {
-                    done();
+                themeManager.deleteCardsFromTheme(theme._id, function (n) {
+                    themeManager.removeThemeById(theme._id, function () {
+                        done();
+                    });
                 });
             }
             catch (e) {

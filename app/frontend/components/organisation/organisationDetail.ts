@@ -348,7 +348,6 @@ export class OrganisationDetail {
         }
     }
 
-    //TODO: styling van addGroup button
     private addGroup(): void {
         this.router.navigate(["/CreateGroup", {organisationId: this.organisation._id}]);
     }
@@ -384,7 +383,6 @@ export class OrganisationDetail {
         this.groups.splice(index, 1);
     }
 
-    //TODO: styling van addMember/addAdmin button
     private addUser(isAdmin: boolean): void {
         if(isAdmin) {
             this.headerText = "Admin";
@@ -479,7 +477,6 @@ export class OrganisationDetail {
         }
     }
 
-    //TODO: styling van addTheme button
     private addTheme(): void {
         this.router.navigate(["/CreateTheme", {organisationId: this.organisation._id}]);
     }

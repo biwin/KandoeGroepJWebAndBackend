@@ -41,15 +41,11 @@ export class SocketService {
     }
 
     emitCardInit(payload:any) {
-        console.log("JASPER IS WAT1");
         this.socket.emit('init cards', payload);
-        console.log("JASPER IS WAT2");
     }
     
     subscribeToCardInit(callback: (data:any, zone:NgZone) => any) {
-        console.log("JASPER 1");
         this.socket.on('init cards', (data:any) => {
-            console.log("JASPER 2: " + JSON.stringify(data));
             callback(data, this.zone);
         });
     }

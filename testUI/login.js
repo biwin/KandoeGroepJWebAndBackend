@@ -14,7 +14,7 @@ module.exports = {
                         if (result.value === 'Email is reeds in gebruik') {
                             browser.click('#loginButton').pause(10000);
                         }
-                        browser.assert.urlContains('profile').end();
+                        browser.assert.urlContains('#/');
                     });
             });
     }

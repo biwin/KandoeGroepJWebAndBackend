@@ -118,6 +118,7 @@ export class UserLogin {
         if (this.button == "login") {
             this.service.getUser(this.emailString, this.passwordString).subscribe((token: string) => {
                 if (token != null) {
+                    this.callInProgress = false;
                     if (token == "nope") this.errorInfo = "Incorrecte login informatie";
                     else this.setLoggedIn(token);
                 }
@@ -125,6 +126,7 @@ export class UserLogin {
         } else if (this.button == "register") {
             this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe((token: string) => {
                 if (token != null) {
+                    this.callInProgress = false;
                     if (token == "nope") this.errorInfo = "Email is reeds in gebruik";
                     else this.setLoggedIn(token);
                 }

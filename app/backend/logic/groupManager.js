@@ -87,4 +87,3 @@ var GroupManager = (function () {
     return GroupManager;
 }());
 exports.GroupManager = GroupManager;
-//# sourceMappingURL=groupManager.js.map

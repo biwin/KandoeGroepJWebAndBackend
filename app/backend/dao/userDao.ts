@@ -111,7 +111,7 @@ export class UserDao {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('users').insertOne(user, (error: MongoError, result) => {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
 
                 user._id = result.insertedId.toString();
@@ -127,7 +127,7 @@ export class UserDao {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('groups').insertOne(g, (error: MongoError, result) => {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 g._id = result.insertedId;
                 db.close();
@@ -160,7 +160,7 @@ export class UserDao {
         this.client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').insertOne(o, (error: MongoError, result) => {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 o._id = result.insertedId;
                 db.close();
@@ -186,7 +186,7 @@ export class UserDao {
                 })
             });
         } catch(e) {
-            console.log(e);
+            console.warn(e);
         }
     }
 

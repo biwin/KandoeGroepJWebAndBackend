@@ -20,7 +20,7 @@ export class OrganisationDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('organisations').insertOne(organisation, (error: MongoError, result: InsertOneWriteOpResult) => {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
 
                 organisation._id = result.insertedId.toString();

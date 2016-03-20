@@ -39,7 +39,6 @@ export class SnapshotManager {
         var snapshotCards:SnapshotCardWrapper[] = [];
         var date:Date = new Date();
         var timestamp:string = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
-        console.log(timestamp);
 
         this._csManager.getCircleSession(circleSessionId, (circleSession:CircleSession) => {
             gameName = circleSession._name;

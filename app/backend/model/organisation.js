@@ -12,4 +12,3 @@ var Organisation = (function () {
     return Organisation;
 }());
 exports.Organisation = Organisation;
-//# sourceMappingURL=organisation.js.map

@@ -60,6 +60,7 @@ var UserLogin = (function () {
         if (this.button == "login") {
             this.service.getUser(this.emailString, this.passwordString).subscribe(function (token) {
                 if (token != null) {
+                    _this.callInProgress = false;
                     if (token == "nope")
                         _this.errorInfo = "Incorrecte login informatie";
                     else
@@ -70,6 +71,7 @@ var UserLogin = (function () {
         else if (this.button == "register") {
             this.service.registerUser("", this.passwordString, this.emailString, "web").subscribe(function (token) {
                 if (token != null) {
+                    _this.callInProgress = false;
                     if (token == "nope")
                         _this.errorInfo = "Email is reeds in gebruik";
                     else

@@ -26,7 +26,6 @@ var SnapshotManager = (function () {
         var snapshotCards = [];
         var date = new Date();
         var timestamp = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
-        console.log(timestamp);
         this._csManager.getCircleSession(circleSessionId, function (circleSession) {
             gameName = circleSession._name;
             _this._uManager.getUsers(circleSession._userIds, function (users) {

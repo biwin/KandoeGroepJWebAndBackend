@@ -95,66 +95,6 @@ var UserManager = (function () {
     UserManager.prototype.getOrganisationById = function (oId, callback) {
         this._dao.readOrganisationById(oId, callback);
     };
-    UserManager.prototype.addToOrganisation = function (oId, uId, isOrganisator, callback) {
-        var _this = this;
-        this.userInOrganisation(oId, uId, function (alreadyInOrganisation) {
-            if (alreadyInOrganisation) {
-                callback(false);
-            }
-            else {
-                if (isOrganisator) {
-                    _this._dao.addOrganisatorToOrganisation(oId, uId, callback);
-                }
-                else {
-                    _this._dao.addMemberToOrganisation(oId, uId, callback);
-                }
-            }
-        });
-    };
-    UserManager.prototype.addToGroupById = function (uId, gId, callback) {
-        var _this = this;
-        this.userIdInGroup(gId, uId, function (alreadyInGroup) {
-            if (alreadyInGroup) {
-                callback(null);
-            }
-            else {
-                _this._dao.addToGroup(uId, gId, callback);
-            }
-        });
-    };
-    /*
-     * Returns false if the user doesn't exist or when the user couldn't be deleted.
-     */
-    UserManager.prototype.removeUserFromOrganisationByName = function (oName, uId, callback) {
-        var _this = this;
-        this.userInOrganisation(oName, uId, function (userAlreadyInOrganisation) {
-            if (!userAlreadyInOrganisation) {
-                callback(false);
-            }
-            else {
-                _this._dao.deleteUserFromOrganisation(oName, uId, function () {
-                    _this.getOrganisationById(oName, function (o) {
-                        callback(o == null);
-                    });
-                });
-            }
-        });
-    };
-    UserManager.prototype.removeUserFromOrganisationById = function (oId, uId, callback) {
-        this.userInOrganisation(oId, uId, function (userAlreadyInOrganisation) {
-            if (userAlreadyInOrganisation) {
-            }
-            else {
-            }
-            /*if (!userAlreadyInOrganisation) {
-                callback(false);
-            } else {
-                console.log("hi");
-                callback(true);
-                this._dao.deleteUserFromOrganisation(oId, uId, callback);
-            }*/
-        });
-    };
     UserManager.prototype.userExists = function (name, callback) {
         this._dao.readUser(name, function (u) {
             callback(u != null);
@@ -199,15 +139,9 @@ var UserManager = (function () {
             callback(false);
         });
     };
-    UserManager.prototype.userIdInGroup = function (gId, uId, callback) {
-        this._dao.readIsUserInGroup(gId, uId, function (inGroup) {
-            callback(inGroup);
-        });
-    };
     UserManager.prototype.getGroupByName = function (gName, callback) {
         this._dao.readGroupByName(gName, callback);
     };
-    // br = boolean reference verwijderd? bg = boolean group verwijderd?
     UserManager.prototype.removeGroupById = function (_id, callback) {
         var _this = this;
         this._dao.readGroupById(_id, function (g) {
@@ -239,7 +173,6 @@ var UserManager = (function () {
     };
     UserManager.prototype.changeProfileByEmail = function (email, newName, newSmallPicture, newLargePicture, callback) {
         var _this = this;
-        console.log("wtf Jasper: " + newName);
         this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, function (success) {
             if (success) {
                 _this._dao.readUserByEmail(email, callback);
@@ -304,4 +237,3 @@ var UserManager = (function () {
     return UserManager;
 }());
 exports.UserManager = UserManager;
-//# sourceMappingURL=userManager.js.map

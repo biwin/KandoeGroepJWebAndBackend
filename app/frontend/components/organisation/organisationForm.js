@@ -34,7 +34,6 @@ var OrganisationForm = (function () {
                 _this.router.navigate(["/OrganisationDetail", { id: o._id }]);
             }
             else {
-                //FIXME: unexpected end of input
                 _this.showError = true;
             }
         });

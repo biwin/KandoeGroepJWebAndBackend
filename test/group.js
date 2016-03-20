@@ -1,3 +1,5 @@
+/// <reference path="../typings/mocha/mocha.d.ts" />
+/// <reference path="../typings/chai/chai.d.ts" />
 "use strict";
 var assert = require('assert');
 var groupManager_1 = require("../app/backend/logic/groupManager");
@@ -22,11 +24,11 @@ describe("GroupManager", function () {
         var user;
         before(function (done) {
             this.timeout(0);
-            user = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
+            user = new user_1.User("Michaël", "test@GroupTesting.com", "password", "test");
             userManager.deleteTestUsers(function () {
                 userManager.registerUser(user, function (u) {
                     user = u;
-                    organisation = new organisation_1.Organisation("Delhaize", []);
+                    organisation = new organisation_1.Organisation("createGroupTestOrg", []);
                     organisation._organisatorIds.push(u._id);
                     organisationManager.createOrganisation(organisation, function (o) {
                         organisation = o;
@@ -79,7 +81,7 @@ describe("GroupManager", function () {
         var organisation;
         var group;
         before(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             organisation = new organisation_1.Organisation("Delhaize", []);
             organisationManager.createOrganisation(organisation, function (newOrganisation) {
                 organisation = newOrganisation;
@@ -95,7 +97,7 @@ describe("GroupManager", function () {
             });
         });
         it("Create group with the same name in the same organisation, should return null from database", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             var group2 = new group_1.Group("Voeding", "Ploeg voeding", organisation._id, []);
             groupManager.createGroup(group2, function (g) {
                 try {
@@ -108,7 +110,7 @@ describe("GroupManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             try {
                 groupManager.removeGroupById(group._id, function () {
                     organisationManager.removeOrganisationById(organisation._id, function () {
@@ -127,7 +129,7 @@ describe("GroupManager", function () {
         var member1;
         var member2;
         before(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             organisation = new organisation_1.Organisation("Delhaize", []);
             group = new group_1.Group("Voeding", "Ploeg voeding", "", []);
             member1 = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
@@ -139,6 +141,7 @@ describe("GroupManager", function () {
                         member2 = u2;
                         organisationManager.createOrganisation(organisation, function (o) {
                             organisation = o;
+                            group._organisationId = o._id;
                             groupManager.createGroup(group, function (g) {
                                 group = g;
                                 groupManager.addUserByEmailToGroupById(member1._email, group._id, function () {
@@ -153,7 +156,7 @@ describe("GroupManager", function () {
             });
         });
         it("Delete group, should also the references from users", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             groupManager.removeGroupById(group._id, function () {
                 try {
                     groupManager.getGroupById(group._id, function (g) {

@@ -131,15 +131,10 @@ export class CircleSessionPreGame implements OnChanges {
     }
 
     private prepareWebSocket() {
-        console.log("JASPER HI");
         this.webSocket.joinSession(this.circleSession._id || 'Unknown');
-        console.log("JASPER HI2");
         this.webSocket.subscribeToCardInit((data:any, zone:NgZone) => {
-            console.log("JASPER HI3");
             zone.run(() => {
-                console.log("JASPER HI4");
                 var dataObject:any = JSON.parse(data);
-                console.log("JASPER HI5");
                 this.circleSession._isPreGame = !dataObject._roundEnded;
                 this.circleSession._currentPlayerId = dataObject._currentPlayerId;
                 this.cards = this.cards.map((c:CircleSessionCardWrapper) => {

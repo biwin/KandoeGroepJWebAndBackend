@@ -40,7 +40,6 @@ var OrganisationsOverview = (function () {
         var userId = this.userService.getUserId();
         return organisation._organisatorIds.indexOf(userId) > -1;
     };
-    //TODO: styling van add button
     OrganisationsOverview.prototype.addOrganisation = function () {
         this.router.navigate(["/CreateOrganisation"]);
     };

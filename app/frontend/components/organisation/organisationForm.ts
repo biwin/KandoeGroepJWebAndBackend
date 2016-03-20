@@ -47,14 +47,11 @@ export class OrganisationForm {
 
     private OnSubmit(){
         this.submitting = true;
-        var userId: string = this.userService.getUserId();
-        this.organisation._organisatorIds.push(userId);
-
+ 
         this.organisationService.createOrganisation(this.organisation).subscribe((o: Organisation) => {
             if(o != null) {
                 this.router.navigate(["/OrganisationDetail", {id: o._id}]);
             } else {
-                //FIXME: unexpected end of input
                 this.showError = true;
             }
         });

@@ -95,8 +95,10 @@ describe('CircleSession Unittest', function () {
                     organisationManager.removeOrganisationById(organisation._id, function () {
                         circleSessionManager.deleteCircleSession(user._id, circleSession._id, function () {
                             userManager.removeUserById(user._id, function () {
-                                themeManager.removeThemeById(theme._id, function () {
-                                    done();
+                                themeManager.deleteCardsFromTheme(theme._id, function (n) {
+                                    themeManager.removeThemeById(theme._id, function () {
+                                        done();
+                                    });
                                 });
                             });
                         });

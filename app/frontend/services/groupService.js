@@ -30,7 +30,7 @@ var GroupService = (function () {
         return this.http.get(this.path + "groups/" + groupId, false, true, true);
     };
     GroupService.prototype.deleteGroupById = function (organisationId) {
-        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
+        return this.http.delete(this.path + "groups/" + organisationId, false, false, true);
     };
     GroupService.prototype.addMemberByEmailToGroupById = function (newUserMail, organisationId) {
         return this.http.post(this.path + 'organisations/' + organisationId, JSON.stringify({ 'email': newUserMail, 'isAdmin': isAdmin }), true, false, true);

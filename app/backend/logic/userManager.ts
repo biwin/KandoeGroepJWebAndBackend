@@ -109,64 +109,6 @@ export class UserManager {
         this._dao.readOrganisationById(oId, callback);
     }
 
-    addToOrganisation(oId: string, uId: string, isOrganisator: boolean, callback: (b: boolean) => any) {
-        this.userInOrganisation(oId, uId, (alreadyInOrganisation: boolean) => {
-            if (alreadyInOrganisation) {
-                callback(false);
-            } else {
-                if (isOrganisator) {
-                    this._dao.addOrganisatorToOrganisation(oId, uId, callback);
-                } else {
-                    this._dao.addMemberToOrganisation(oId, uId, callback);
-                }
-            }
-        });
-    }
-
-    addToGroupById(uId: string, gId: string, callback: (b: boolean) => any) {
-        this.userIdInGroup(gId, uId, (alreadyInGroup: boolean) => {
-            if (alreadyInGroup) {
-                callback(null);
-            } else {
-                this._dao.addToGroup(uId, gId, callback);
-            }
-        });
-    }
-
-    /*
-     * Returns false if the user doesn't exist or when the user couldn't be deleted.
-     */
-    removeUserFromOrganisationByName(oName: string, uId: string, callback: (b: boolean) => any) {
-        this.userInOrganisation(oName, uId, (userAlreadyInOrganisation: boolean) => {
-            if (!userAlreadyInOrganisation) {
-                callback(false);
-            } else {
-                this._dao.deleteUserFromOrganisation(oName, uId, () => {
-                    this.getOrganisationById(oName, (o: Organisation) => {
-                        callback(o == null);
-                    });
-                });
-            }
-        });
-    }
-
-    removeUserFromOrganisationById(oId: string, uId: string, callback: (b: boolean) => any) {
-        this.userInOrganisation(oId, uId, (userAlreadyInOrganisation: boolean) => {
-            if (userAlreadyInOrganisation) {
-
-            } else {
-
-            }
-            /*if (!userAlreadyInOrganisation) {
-                callback(false);
-            } else {
-                console.log("hi");
-                callback(true);
-                this._dao.deleteUserFromOrganisation(oId, uId, callback);
-            }*/
-        });
-    }
-
     userExists(name: string, callback: (b: boolean) => any) {
         this._dao.readUser(name, (u: User) => {
             callback(u != null);
@@ -217,16 +159,10 @@ export class UserManager {
         });
     }
 
-    private userIdInGroup(gId: string, uId: string, callback: (b: boolean) => any) {
-        this._dao.readIsUserInGroup(gId, uId, (inGroup: boolean) => {
-            callback(inGroup);
-        });
-    }
-
     getGroupByName(gName: string, callback: (g: Group) => any) {
         this._dao.readGroupByName(gName, callback);
     }
-    // br = boolean reference verwijderd? bg = boolean group verwijderd?
+
     removeGroupById(_id: string, callback: (b: boolean) => any) {
         this._dao.readGroupById(_id, (g: Group) => {
             this.getOrganisationById(g._organisationId, (o:Organisation) => {
@@ -262,7 +198,6 @@ export class UserManager {
     }
 
     changeProfileByEmail(email: string, newName: string, newSmallPicture: string, newLargePicture: string, callback: (u: User) => any) {
-        console.log("wtf Jasper: " + newName);
         this._dao.changeProfileByEmail(email, newName, newSmallPicture, newLargePicture, (success: boolean) => {
             if (success) {
                 this._dao.readUserByEmail(email, callback);

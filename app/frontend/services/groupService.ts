@@ -30,7 +30,7 @@ export class GroupService {
     }
 
     deleteGroupById(organisationId: string): Observable<boolean> {
-        return this.http.delete(this.path + "group/" + organisationId, false, false, true);
+        return this.http.delete(this.path + "groups/" + organisationId, false, false, true);
     }
 
     addMemberByEmailToGroupById(newUserMail: string, organisationId: string): Observable<string> {

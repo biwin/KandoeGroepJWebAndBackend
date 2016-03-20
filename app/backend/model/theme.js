@@ -20,4 +20,3 @@ var Theme = (function () {
     return Theme;
 }());
 exports.Theme = Theme;
-//# sourceMappingURL=theme.js.map

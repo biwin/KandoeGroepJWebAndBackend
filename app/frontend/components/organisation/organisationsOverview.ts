@@ -98,7 +98,6 @@ export class OrganisationsOverview{
         return organisation._organisatorIds.indexOf(userId) > -1;
     }
 
-    //TODO: styling van add button
     private addOrganisation(): void {
         this.router.navigate(["/CreateOrganisation"]);
     }

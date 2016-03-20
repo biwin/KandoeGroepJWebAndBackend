@@ -20,7 +20,7 @@ export class GroupDao {
         this._client.connect(DaoConstants.CONNECTION_URL, (err: any, db: Db) => {
             db.collection('groups').insertOne(group, (error: MongoError, result: InsertOneWriteOpResult) => {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
 
                 group._id = result.insertedId.toString();

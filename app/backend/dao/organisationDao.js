@@ -13,7 +13,7 @@ var OrganisationDao = (function () {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('organisations').insertOne(organisation, function (error, result) {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 organisation._id = result.insertedId.toString();
                 db.close();
@@ -113,4 +113,3 @@ var OrganisationDao = (function () {
     return OrganisationDao;
 }());
 exports.OrganisationDao = OrganisationDao;
-//# sourceMappingURL=organisationDao.js.map

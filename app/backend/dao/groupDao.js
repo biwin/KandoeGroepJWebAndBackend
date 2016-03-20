@@ -13,7 +13,7 @@ var GroupDao = (function () {
         this._client.connect(daoConstants_1.DaoConstants.CONNECTION_URL, function (err, db) {
             db.collection('groups').insertOne(group, function (error, result) {
                 if (error != null) {
-                    console.log(error.message);
+                    console.warn(error.message);
                 }
                 group._id = result.insertedId.toString();
                 db.close();
@@ -88,4 +88,3 @@ var GroupDao = (function () {
     return GroupDao;
 }());
 exports.GroupDao = GroupDao;
-//# sourceMappingURL=groupDao.js.map

@@ -81,7 +81,6 @@ var GroupDetail = (function () {
             });
         }
     };
-    //TODO: styling van addMember button
     GroupDetail.prototype.addMember = function () {
         var _this = this;
         $('#addMemberModal').openModal({
@@ -112,7 +111,6 @@ var GroupDetail = (function () {
         this.membersLoading = true;
         this.loadMembers();
     };
-    //TODO: styling van deleteMember button
     GroupDetail.prototype.deleteMember = function (user, isAdmin) {
         var _this = this;
         this.memberToDelete = user;
