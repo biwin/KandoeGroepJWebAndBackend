@@ -50,6 +50,7 @@ export class CircleSessionManager {
 
                             uMgr.getUserIdsByEmail(wrapper._userEmailAdresses, (users:string[]) => {
                                 if (users.length == 0) {
+                                    circleSession._currentPlayerId = circleSession._userIds[0];
                                     this._dao.createCircleSession(circleSession, callback);
                                 } else {
                                     var counter = 0;

@@ -11,7 +11,7 @@ var userManager:UserManager;
 var user:User;
 
 before(function (done:any) {
-    this.timeout(0);
+    this.timeout(50000);
     themeManager = new ThemeManager();
     userManager = new UserManager();
 
@@ -19,6 +19,7 @@ before(function (done:any) {
         userManager.registerUser(new User('Enio', 'test@robhendrickx.be', 'password', "test"), (u:User) => {
             try {
                 user = u;
+                assert.notEqual(u, null);
                 done();
             } catch (e) {
                 done(e);
@@ -31,7 +32,7 @@ describe('ThemeManager', () => {
     describe('createTheme', () => {
         var theme:Theme;
         it('Create theme, should return theme from database', function (done:any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             theme = new Theme('first', 'This is a sample theme', [user._id]);
             themeManager.createTheme(theme, (t:Theme) => {
@@ -51,7 +52,7 @@ describe('ThemeManager', () => {
         });
 
         after(function (done:any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             try {
                 themeManager.removeThemeById(theme._id, () => {
@@ -68,6 +69,7 @@ describe('ThemeManager', () => {
         var theme:Theme;
 
         before(function (done:any) {
+            this.timeout(50000);
             try {
                 theme = new Theme('Cafes', 'thema van cafes', [user._id]);
                 themeManager.createTheme(theme, (t:Theme) => {
@@ -80,7 +82,7 @@ describe('ThemeManager', () => {
         });
 
         it('Card must be added to a theme', function (done:any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             card = new Card('cafe de vissers', theme._id);
 
@@ -96,7 +98,7 @@ describe('ThemeManager', () => {
         });
 
         after(function (done:any) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 themeManager.deleteCardsFromTheme(theme._id, (n:number) => {
                     themeManager.removeThemeById(theme._id, () => {
@@ -110,8 +112,8 @@ describe('ThemeManager', () => {
     });
 });
 
-
 after(function (done:any) {
+    this.timeout(50000);
     userManager.deleteTestUsers(() => {
         done();
     })

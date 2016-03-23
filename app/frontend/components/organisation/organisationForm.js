@@ -27,8 +27,6 @@ var OrganisationForm = (function () {
     OrganisationForm.prototype.OnSubmit = function () {
         var _this = this;
         this.submitting = true;
-        var userId = this.userService.getUserId();
-        this.organisation._organisatorIds.push(userId);
         this.organisationService.createOrganisation(this.organisation).subscribe(function (o) {
             if (o != null) {
                 _this.router.navigate(["/OrganisationDetail", { id: o._id }]);

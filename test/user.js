@@ -7,16 +7,22 @@ var userManager_1 = require("../app/backend/logic/userManager");
 var user_1 = require("../app/backend/model/user");
 var userManager;
 before(function (done) {
-    this.timeout(0);
+    this.timeout(50000);
     userManager = new userManager_1.UserManager();
     done();
 });
 describe('UserManager', function () {
     //region user-tests
     describe('createUser', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
+        var user = new user_1.User('Jasper', 'createUserTest@testing.com', 'password', 'test');
+        before(function (done) {
+            this.timeout(100000);
+            userManager.deleteTestUsers(function () {
+                done();
+            });
+        });
         it('Register user, should return user from database', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             userManager.registerUser(user, function (u) {
                 try {
                     assert.equal(u._name, user._name);
@@ -28,7 +34,7 @@ describe('UserManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             try {
                 userManager.removeUser(user._name, function () {
                     done();
@@ -41,7 +47,7 @@ describe('UserManager', function () {
     });
     describe('getUserByName', function () {
         it('Read non-existing user, should return the null', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             userManager.getUser('I do not exist in the db', function (u) {
                 try {
                     assert.equal(null, u);
@@ -56,7 +62,7 @@ describe('UserManager', function () {
     describe('getUserByName', function () {
         var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.registerUser(user, function (u) {
                     user = u;
@@ -68,7 +74,7 @@ describe('UserManager', function () {
             }
         });
         it('Read existing user, should return the user', function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             userManager.getUser(user._name, function (u) {
                 try {
                     assert.equal(user._name, u._name);
@@ -80,7 +86,7 @@ describe('UserManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.removeUser(user._name, function () {
                     done();
@@ -96,15 +102,18 @@ describe('UserManager', function () {
             new user_1.User('Jan', 'getAllUsers2@testing.com', 'password', 'test'),
             new user_1.User('Enio', 'getAllUsers3@testing.com', 'password', 'test')];
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.deleteTestUsers(function () {
                     userManager.registerUser(users[0], function (u1) {
                         users[0] = u1;
+                        assert.notEqual(u1, null);
                         userManager.registerUser(users[1], function (u2) {
                             users[1] = u2;
+                            assert.notEqual(u2, null);
                             userManager.registerUser(users[2], function (u3) {
                                 users[2] = u3;
+                                assert.notEqual(u3, null);
                                 done();
                             });
                         });
@@ -116,7 +125,7 @@ describe('UserManager', function () {
             }
         });
         it('Read all existing users', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             try {
                 userManager.getAllUsers(function (userArray) {
                     var createdUsersFromGet = userArray.map(function (u) {
@@ -134,7 +143,7 @@ describe('UserManager', function () {
             }
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.removeUserById(users[0]._id, function () {
                     userManager.removeUserById(users[1]._id, function () {
@@ -150,12 +159,13 @@ describe('UserManager', function () {
         });
     });
     describe('getUserById', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
+        var user = new user_1.User('Jasper', 'getUserByIdTest@testing.com', 'password', 'test');
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.registerUser(user, function (u) {
                     user = u;
+                    assert.notEqual(u, null);
                     done();
                 });
             }
@@ -164,10 +174,10 @@ describe('UserManager', function () {
             }
         });
         it('Read existing user by id, should return the user', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             userManager.getUserById(user._id, function (u) {
                 try {
-                    assert.equal('Jasper', u._name);
+                    assert.equal(user._name, u._name);
                     done();
                 }
                 catch (e) {
@@ -176,7 +186,7 @@ describe('UserManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.removeUser(user._name, function () {
                     done();
@@ -189,8 +199,8 @@ describe('UserManager', function () {
     });
     describe('removeUser', function () {
         it('Delete non-existing user, should return false', function (done) {
-            this.timeout(0);
-            userManager.removeUser('Jasper', function (b) {
+            this.timeout(100000);
+            userManager.removeUser('I will not exist in the db', function (b) {
                 try {
                     assert.equal(b, false);
                     done();
@@ -202,11 +212,12 @@ describe('UserManager', function () {
         });
     });
     describe('removeUser', function () {
-        var user = new user_1.User('Jasper', 'jasper.catthoor@student.kdg.be', 'password', 'web');
+        var user = new user_1.User('Jasper', 'removeUser@testing.com', 'password', 'test');
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.registerUser(user, function (u) {
+                    assert.notEqual(u, null);
                     user = u;
                     done();
                 });
@@ -216,7 +227,7 @@ describe('UserManager', function () {
             }
         });
         it('Delete existing user, should return true', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             userManager.removeUser(user._name, function (b) {
                 try {
                     assert.equal(b, true);

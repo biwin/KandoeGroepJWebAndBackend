@@ -9,13 +9,14 @@ var themeManager;
 var userManager;
 var user;
 before(function (done) {
-    this.timeout(0);
+    this.timeout(50000);
     themeManager = new themeManager_1.ThemeManager();
     userManager = new userManager_1.UserManager();
     userManager.deleteTestUsers(function () {
         userManager.registerUser(new user_1.User('Enio', 'test@robhendrickx.be', 'password', "test"), function (u) {
             try {
                 user = u;
+                assert.notEqual(u, null);
                 done();
             }
             catch (e) {
@@ -28,7 +29,7 @@ describe('ThemeManager', function () {
     describe('createTheme', function () {
         var theme;
         it('Create theme, should return theme from database', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             theme = new theme_1.Theme('first', 'This is a sample theme', [user._id]);
             themeManager.createTheme(theme, function (t) {
                 themeManager.getTheme(t._id, function (themeGet) {
@@ -46,7 +47,7 @@ describe('ThemeManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 themeManager.removeThemeById(theme._id, function () {
                     done();
@@ -61,6 +62,7 @@ describe('ThemeManager', function () {
         var card;
         var theme;
         before(function (done) {
+            this.timeout(50000);
             try {
                 theme = new theme_1.Theme('Cafes', 'thema van cafes', [user._id]);
                 themeManager.createTheme(theme, function (t) {
@@ -73,7 +75,7 @@ describe('ThemeManager', function () {
             }
         });
         it('Card must be added to a theme', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             card = new card_1.Card('cafe de vissers', theme._id);
             themeManager.getTheme(theme._id, function (getTheme) {
                 themeManager.createCard(card, function (c) {
@@ -85,7 +87,7 @@ describe('ThemeManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 themeManager.deleteCardsFromTheme(theme._id, function (n) {
                     themeManager.removeThemeById(theme._id, function () {
@@ -100,6 +102,7 @@ describe('ThemeManager', function () {
     });
 });
 after(function (done) {
+    this.timeout(50000);
     userManager.deleteTestUsers(function () {
         done();
     });

@@ -237,3 +237,4 @@ var UserManager = (function () {
     return UserManager;
 }());
 exports.UserManager = UserManager;
+//# sourceMappingURL=userManager.js.map

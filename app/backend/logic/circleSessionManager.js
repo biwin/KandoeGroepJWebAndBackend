@@ -34,6 +34,7 @@ var CircleSessionManager = (function () {
                             circleSession._userIds = us;
                             uMgr.getUserIdsByEmail(wrapper._userEmailAdresses, function (users) {
                                 if (users.length == 0) {
+                                    circleSession._currentPlayerId = circleSession._userIds[0];
                                     _this._dao.createCircleSession(circleSession, callback);
                                 }
                                 else {

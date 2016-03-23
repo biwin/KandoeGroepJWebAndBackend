@@ -18,6 +18,7 @@ var organisationManager: OrganisationManager;
 var userManager: UserManager;
 
 before(function(done: any) {
+    this.timeout(50000);
     organisationManager = new OrganisationManager();
     userManager = new UserManager();
 
@@ -30,13 +31,13 @@ describe("OrganisationManager", () => {
         var user: User;
 
         before(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
-            user = new User("MichaelDeBoey", "michael.deboey@student.kdg.be", "password", "test");
+            user = new User("MichaelDeBoey", "organisationTest@tests.be", "password", "test");
             userManager.registerUser(user, (u: User) => {
                 try {
                     user = u;
-
+                    assert.notEqual(u, null);
                     done();
                 } catch(e) {
                     done(e);
@@ -45,7 +46,7 @@ describe("OrganisationManager", () => {
         });
 
         it("Create organisation, should return organisation from database", function(done: any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             organisation = new Organisation("Delhaize", []);
             organisation._organisatorIds.push(user._id);
@@ -70,7 +71,7 @@ describe("OrganisationManager", () => {
         });
 
         after(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             try {
                 userManager.removeUserById(user._id, () => {
@@ -88,7 +89,7 @@ describe("OrganisationManager", () => {
         var organisation: Organisation;
 
         before(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             organisationManager.createOrganisation(new Organisation("Delhaize", []), (o: Organisation) => {
                 try {
@@ -102,7 +103,7 @@ describe("OrganisationManager", () => {
         });
 
         it("Create organisation with the same name, should return null from database", function(done: any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             var organisation2 = new Organisation("Delhaize", []);
             organisationManager.createOrganisation(organisation2, (o: Organisation) => {
@@ -117,7 +118,7 @@ describe("OrganisationManager", () => {
         });
 
         after(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             try {
                 organisationManager.removeOrganisationById(organisation._id, () => {
@@ -140,7 +141,7 @@ describe("OrganisationManager", () => {
         var themeManager: ThemeManager = new ThemeManager();
         
         before(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             organisation = new Organisation("Delhaize", []);
             admin = new User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
@@ -179,7 +180,7 @@ describe("OrganisationManager", () => {
         });
         
         it("Delete organisation, should also delete all groups and delete the references from users and themes", function(done: any) {
-            this.timeout(0);
+            this.timeout(100000);
             
             organisationManager.removeOrganisationById(organisation._id, () => {
                 try {
@@ -211,7 +212,7 @@ describe("OrganisationManager", () => {
         });
         
         after(function(done: any) {
-            this.timeout(0);
+            this.timeout(50000);
 
             try {
                 userManager.removeUserById(admin._id, () => {
@@ -229,6 +230,7 @@ describe("OrganisationManager", () => {
 });
 
 after(function(done: any) {
+    this.timeout(50000);
     userManager.deleteTestUsers(() => {
         done();
     })

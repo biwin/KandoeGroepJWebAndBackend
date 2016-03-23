@@ -23,7 +23,7 @@ describe("GroupManager", function () {
         var organisation;
         var user;
         before(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             user = new user_1.User("Michaël", "test@GroupTesting.com", "password", "test");
             userManager.deleteTestUsers(function () {
                 userManager.registerUser(user, function (u) {
@@ -38,10 +38,11 @@ describe("GroupManager", function () {
             });
         });
         it("Create group, should return group from database", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             group = new group_1.Group("Voeding", "Ploeg voeding", organisation._id, [user._id]);
             groupManager.createGroup(group, function (g) {
                 try {
+                    assert.notEqual(g, null);
                     groupManager.getGroupById(g._id, function (newGroup) {
                         assert.equal(group._name, newGroup._name);
                         assert.equal(group._description, newGroup._description);
@@ -62,7 +63,7 @@ describe("GroupManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             try {
                 userManager.removeUserById(user._id, function () {
                     groupManager.removeGroupById(group._id, function () {
@@ -82,10 +83,10 @@ describe("GroupManager", function () {
         var group;
         before(function (done) {
             this.timeout(100000);
-            organisation = new organisation_1.Organisation("Delhaize", []);
+            organisation = new organisation_1.Organisation("CreateGroupTwiceOrganisation", []);
             organisationManager.createOrganisation(organisation, function (newOrganisation) {
                 organisation = newOrganisation;
-                groupManager.createGroup(new group_1.Group("Voeding", "Ploeg voeding", newOrganisation._id, []), function (g) {
+                groupManager.createGroup(new group_1.Group("CreateGroupTwiceGroup", "Ploeg voeding", newOrganisation._id, []), function (g) {
                     try {
                         group = g;
                         done();
@@ -98,7 +99,7 @@ describe("GroupManager", function () {
         });
         it("Create group with the same name in the same organisation, should return null from database", function (done) {
             this.timeout(100000);
-            var group2 = new group_1.Group("Voeding", "Ploeg voeding", organisation._id, []);
+            var group2 = new group_1.Group("CreateGroupTwiceGroup", "Ploeg voeding", organisation._id, []);
             groupManager.createGroup(group2, function (g) {
                 try {
                     assert.equal(g, null);
@@ -130,10 +131,10 @@ describe("GroupManager", function () {
         var member2;
         before(function (done) {
             this.timeout(100000);
-            organisation = new organisation_1.Organisation("Delhaize", []);
+            organisation = new organisation_1.Organisation("RemoveGroupByIdOrg", []);
             group = new group_1.Group("Voeding", "Ploeg voeding", "", []);
-            member1 = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
-            member2 = new user_1.User("Michaël2", "michael.deboey.2@student.kdg.be", "password", "test");
+            member1 = new user_1.User("Michaël", "removeGroupTests@tests.be", "password", "test");
+            member2 = new user_1.User("Michaël2", "removeGroupTests@tests.com", "password", "test");
             userManager.deleteTestUsers(function () {
                 userManager.registerUser(member1, function (u1) {
                     member1 = u1;
@@ -141,7 +142,12 @@ describe("GroupManager", function () {
                         member2 = u2;
                         organisationManager.createOrganisation(organisation, function (o) {
                             organisation = o;
-                            group._organisationId = o._id;
+                            try {
+                                group._organisationId = o._id;
+                            }
+                            catch (e) {
+                                done(e);
+                            }
                             groupManager.createGroup(group, function (g) {
                                 group = g;
                                 groupManager.addUserByEmailToGroupById(member1._email, group._id, function () {
@@ -176,11 +182,13 @@ describe("GroupManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             try {
-                userManager.removeUserById(member1._id, function () {
-                    userManager.removeUserById(member2._id, function () {
-                        done();
+                organisationManager.removeOrganisationById(organisation._id, function (b) {
+                    userManager.removeUserById(member1._id, function () {
+                        userManager.removeUserById(member2._id, function () {
+                            done();
+                        });
                     });
                 });
             }
@@ -191,6 +199,7 @@ describe("GroupManager", function () {
     });
 });
 after(function (done) {
+    this.timeout(100000);
     userManager.deleteTestUsers(function () {
         done();
     });

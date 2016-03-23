@@ -14,6 +14,7 @@ var theme_1 = require("../app/backend/model/theme");
 var organisationManager;
 var userManager;
 before(function (done) {
+    this.timeout(50000);
     organisationManager = new organisationManager_1.OrganisationManager();
     userManager = new userManager_1.UserManager();
     done();
@@ -23,11 +24,12 @@ describe("OrganisationManager", function () {
         var organisation;
         var user;
         before(function (done) {
-            this.timeout(0);
-            user = new user_1.User("MichaelDeBoey", "michael.deboey@student.kdg.be", "password", "test");
+            this.timeout(50000);
+            user = new user_1.User("MichaelDeBoey", "organisationTest@tests.be", "password", "test");
             userManager.registerUser(user, function (u) {
                 try {
                     user = u;
+                    assert.notEqual(u, null);
                     done();
                 }
                 catch (e) {
@@ -36,7 +38,7 @@ describe("OrganisationManager", function () {
             });
         });
         it("Create organisation, should return organisation from database", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             organisation = new organisation_1.Organisation("Delhaize", []);
             organisation._organisatorIds.push(user._id);
             organisationManager.createOrganisation(organisation, function (o) {
@@ -56,7 +58,7 @@ describe("OrganisationManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.removeUserById(user._id, function () {
                     organisationManager.removeOrganisationById(organisation._id, function () {
@@ -72,7 +74,7 @@ describe("OrganisationManager", function () {
     describe("createOrganisationTwice", function () {
         var organisation;
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             organisationManager.createOrganisation(new organisation_1.Organisation("Delhaize", []), function (o) {
                 try {
                     organisation = o;
@@ -84,7 +86,7 @@ describe("OrganisationManager", function () {
             });
         });
         it("Create organisation with the same name, should return null from database", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             var organisation2 = new organisation_1.Organisation("Delhaize", []);
             organisationManager.createOrganisation(organisation2, function (o) {
                 try {
@@ -97,7 +99,7 @@ describe("OrganisationManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 organisationManager.removeOrganisationById(organisation._id, function () {
                     done();
@@ -117,7 +119,7 @@ describe("OrganisationManager", function () {
         var groupManager = new groupManager_1.GroupManager();
         var themeManager = new themeManager_1.ThemeManager();
         before(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             organisation = new organisation_1.Organisation("Delhaize", []);
             admin = new user_1.User("Michaël", "michael.deboey@student.kdg.be", "password", "test");
             member = new user_1.User("Michaël2", "michael.deboey.2@student.kdg.be", "password", "test");
@@ -148,7 +150,7 @@ describe("OrganisationManager", function () {
             });
         });
         it("Delete organisation, should also delete all groups and delete the references from users and themes", function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             organisationManager.removeOrganisationById(organisation._id, function () {
                 try {
                     organisationManager.getOrganisationById(organisation._id, function (o) {
@@ -174,7 +176,7 @@ describe("OrganisationManager", function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(50000);
             try {
                 userManager.removeUserById(admin._id, function () {
                     userManager.removeUserById(member._id, function () {
@@ -191,6 +193,7 @@ describe("OrganisationManager", function () {
     });
 });
 after(function (done) {
+    this.timeout(50000);
     userManager.deleteTestUsers(function () {
         done();
     });

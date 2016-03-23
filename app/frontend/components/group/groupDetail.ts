@@ -17,6 +17,21 @@ import {Organisation} from "../../../backend/model/organisation";
 @Component({
     selector: 'group-detail',
     template: `
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <h4>{{headerText}} toevoegen?</h4>
+            
+            <div class="input-field col s12">
+                <input id="email" type="email" class="validate" [(ngModel)]="newUserEmail">
+                <label for="email">Email</label>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat red-text" (click)="doAddMembr = false">Annuleren</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat green-text" (click)="doAddMembr = true">Toevoegen</a>
+        </div>
+    </div>
     <div class="modal" id="deleteMemberModal">
         <div class="modal-content">
             <h4 class="red-text">{{memberToDelete._name}} verwijderen?</h4>
@@ -110,10 +125,12 @@ export class GroupDetail {
     private membersLoading: boolean = true;
 
     private memberToDelete: User = User.empty();
+    private newUserEmail:string = "";
     private contentText: string;
     private isLastAdmin: boolean = false;
     private doDeleteMmbr: boolean = false;
     private doDeleteGrp: boolean = false;
+    private doAddMembr: boolean = false;
 
     public constructor(router: Router, routeParam: RouteParams, groupService: GroupService, userService: UserService) {
         var groupId: string = routeParam.params["id"];
@@ -189,13 +206,15 @@ export class GroupDetail {
             this.groupService.addMemberByEmailToGroupById(this.newUserEmail, this.group._id).subscribe((userId: string) => {
                 if(userId != null) {
                     Materialize.toast("Lid toegevoegd.", 3000, 'rounded');
-                    
+                    this.doAddMembr = false;
                     this.addMemberToArray(userId);
                 } else {
                     Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+                    this.doAddMembr = false;
                 }
             }, (err: any) => {
                 Materialize.toast("Lid toevoegen mislukt.", 3000, 'rounded');
+                this.doAddMembr = false;
             });
         }
     }

@@ -23,7 +23,7 @@ var circleSessionManager:CircleSessionManager;
 var groupManager:GroupManager;
 
 before(function (done:any) {
-    this.timeout(0);
+    this.timeout(100000);
 
     themeManager = new ThemeManager();
     userManager = new UserManager();
@@ -45,9 +45,9 @@ describe('CircleSession Unittest', () => {
 
     describe('CardPositions in a CircleSession', () => {
         before(function (done:any) {
-            this.timeout(0);
+            this.timeout(100000);
 
-            user = new User("Enio", "enio.serluppens@protester.eu", "mykandoepass01", "test");
+            user = new User("Enio", "cardpositionstest@protester.eu", "mykandoepass01", "test");
             userManager.deleteTestUsers(() => {
                 userManager.registerUser(user, (registerdUser:User)=> {
                     try {
@@ -84,7 +84,7 @@ describe('CircleSession Unittest', () => {
             });
         });
         it("Game should be played. A card has been picked and then placed onto the ring (position = 1)", function (done:any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             circleSessionManager.initCardsForSession(user._id, circleSession._id, [card._id], (preGameEnded:boolean, currentUserId:string, errMessage?:string) => {
                 circleSessionManager.getCardPositions(circleSession._id, (cardpositions:CardPosition[]) => {
@@ -99,7 +99,7 @@ describe('CircleSession Unittest', () => {
             });
         });
         after(function (done:any) {
-            this.timeout(0);
+            this.timeout(100000);
 
             try {
                 groupManager.removeGroupById(group._id, (b:boolean) => {

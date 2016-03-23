@@ -19,6 +19,7 @@ var userManager;
 var groupManager;
 var organisationManager;
 before(function (done) {
+    this.timeout(10000);
     circleSessionManager = new circleSessionManager_1.CircleSessionManager();
     themeManager = new themeManager_1.ThemeManager();
     userManager = new userManager_1.UserManager();
@@ -35,7 +36,7 @@ describe('CircleSessionManager', function () {
         var group = new group_1.Group("CreateCSTestGroup", "test group", "", []);
         var circleSession;
         before(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             userManager.deleteTestUsers(function () {
                 themeManager.createTheme(theme, function (t) {
                     theme = t;
@@ -68,7 +69,7 @@ describe('CircleSessionManager', function () {
             });
         });
         it('Created circlesession should contain the users from the group', function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             circleSession = new circleSession_1.CircleSession(group._id, [], theme._id, "", "", "", false, false, 0, false, false, false);
             var circleSessionWrapper = new circleSessionCreateWrapper_1.CircleSessionCreateWrapper(circleSession, []);
             circleSessionManager.createCircleSession(circleSessionWrapper, function (c) {
@@ -84,7 +85,7 @@ describe('CircleSessionManager', function () {
             });
         });
         after(function (done) {
-            this.timeout(0);
+            this.timeout(100000);
             circleSessionManager.deleteCircleSession("", circleSession._id, function () {
                 groupManager.removeGroupById(group._id, function (bg) {
                     organisationManager.removeOrganisationById(org._id, function (b) {

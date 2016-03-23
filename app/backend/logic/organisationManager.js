@@ -104,3 +104,4 @@ var OrganisationManager = (function () {
     return OrganisationManager;
 }());
 exports.OrganisationManager = OrganisationManager;
+//# sourceMappingURL=organisationManager.js.map
