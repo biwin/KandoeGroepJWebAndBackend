@@ -2,3 +2,4 @@
 test-reports.xml
 npm-debug.log
 selenium-debug.log
+node_modules/
